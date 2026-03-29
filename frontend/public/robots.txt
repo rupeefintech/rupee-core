@@ -1,0 +1,39 @@
+User-agent: *
+Allow: /
+Allow: /sitemap.xml
+Allow: /ifsc/
+
+# Specific crawl rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0.5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+# Disallow sensitive paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /?*
+
+# Allow search engines to crawl static files
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+
+# Sitemap location (served from backend at /sitemap.xml)
+Sitemap: https://bankinfohub.com/sitemap.xml

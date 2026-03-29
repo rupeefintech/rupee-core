@@ -1,0 +1,16 @@
+{
+  "routes": [
+    { "handle": "filesystem" },
+
+    { "src": "^/sitemap.xml$", "dest": "https://api.rupeepedia.in/sitemap.xml" },
+    { "src": "^/sitemap-static.xml$", "dest": "https://api.rupeepedia.in/sitemap-static.xml" },
+    { "src": "^/sitemap-calculators.xml$", "dest": "https://api.rupeepedia.in/sitemap-calculators.xml" },
+    { "src": "^/sitemap-ifsc-1.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-1.xml" },
+    { "src": "^/sitemap-ifsc-2.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-2.xml" },
+    { "src": "^/sitemap-ifsc-3.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-3.xml" },
+    { "src": "^/sitemap-ifsc-4.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-4.xml" },
+    { "src": "^/robots.txt$", "dest": "https://api.rupeepedia.in/robots.txt" },
+
+    { "src": ".*", "dest": "/index.html" }
+  ]
+}

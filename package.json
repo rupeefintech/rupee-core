@@ -1,0 +1,20 @@
+{
+  "name": "rupee-core",
+  "version": "1.0.0",
+  "description": "Fintech data platform - rupeepedia.in",
+  "private": true,
+  "scripts": {
+    "start": "cd backend && npm start",
+    "build": "cd backend && npm ci && npx prisma generate && npm run build",
+    "dev": "concurrently --names 'API,WEB' --prefix-colors 'blue,green' 'cd backend && npm run dev' 'cd frontend && npm run dev'",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && npm run seed:sample",
+    "sync": "python3 scripts/sync_ifsc.py",
+    "sync:stats": "python3 scripts/sync_ifsc.py --stats",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

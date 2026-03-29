@@ -1,0 +1,476 @@
+{
+    "Bank of Baroda": {
+        "short_name": "Bank of Baroda-Bank",
+        "bank_type": "1908",
+        "website": "",
+        "bank_code": "BANK"
+    },
+    "Bank of India": {
+        "short_name": "Bank of India-Bank",
+        "bank_type": "1906",
+        "website": "",
+        "bank_code": "BANK"
+    },
+    "Bank of Maharashtra": {
+        "short_name": "Bank of Maharashtra-Bank",
+        "bank_type": "1935",
+        "website": "",
+        "bank_code": "BANK"
+    },
+    "Canara Bank": {
+        "short_name": "Canara Bank",
+        "bank_type": "1906",
+        "website": "",
+        "bank_code": "CANA"
+    },
+    "Central Bank of India": {
+        "short_name": "Central Bank of India-Bank",
+        "bank_type": "1911",
+        "website": "",
+        "bank_code": "CENT"
+    },
+    "Indian Bank": {
+        "short_name": "Indian Bank",
+        "bank_type": "1907",
+        "website": "",
+        "bank_code": "INDI"
+    },
+    "Indian Overseas Bank": {
+        "short_name": "Indian Overseas Bank",
+        "bank_type": "1937",
+        "website": "",
+        "bank_code": "INDI"
+    },
+    "Punjab and Sind Bank": {
+        "short_name": "Punjab and Sind Bank",
+        "bank_type": "1908",
+        "website": "",
+        "bank_code": "PUNJ"
+    },
+    "Punjab National Bank": {
+        "short_name": "Punjab National Bank",
+        "bank_type": "1894",
+        "website": "",
+        "bank_code": "PUNJ"
+    },
+    "State Bank of India": {
+        "short_name": "State Bank of India-Bank",
+        "bank_type": "1955",
+        "website": "",
+        "bank_code": "STAT"
+    },
+    "UCO Bank": {
+        "short_name": "UCO Bank",
+        "bank_type": "1943",
+        "website": "",
+        "bank_code": "UCOB"
+    },
+    "Union Bank of India": {
+        "short_name": "Union Bank of India-Bank",
+        "bank_type": "1919",
+        "website": "",
+        "bank_code": "UNIO"
+    },
+    "Axis Bank": {
+        "short_name": "Axis Bank",
+        "bank_type": "1993",
+        "website": "",
+        "bank_code": "AXIS"
+    },
+    "Bandhan Bank": {
+        "short_name": "Bandhan Bank",
+        "bank_type": "2015",
+        "website": "",
+        "bank_code": "BAND"
+    },
+    "CSB Bank": {
+        "short_name": "CSB Bank",
+        "bank_type": "1920",
+        "website": "",
+        "bank_code": "CSBB"
+    },
+    "City Union Bank": {
+        "short_name": "City Union Bank",
+        "bank_type": "1904",
+        "website": "",
+        "bank_code": "CITY"
+    },
+    "DCB Bank": {
+        "short_name": "DCB Bank",
+        "bank_type": "1930",
+        "website": "",
+        "bank_code": "DCBB"
+    },
+    "Dhanlaxmi Bank": {
+        "short_name": "Dhanlaxmi Bank",
+        "bank_type": "1927",
+        "website": "",
+        "bank_code": "DHAN"
+    },
+    "Federal Bank": {
+        "short_name": "Federal Bank",
+        "bank_type": "1931",
+        "website": "",
+        "bank_code": "FEDE"
+    },
+    "HDFC Bank": {
+        "short_name": "HDFC Bank",
+        "bank_type": "1994",
+        "website": "",
+        "bank_code": "HDFC"
+    },
+    "ICICI Bank": {
+        "short_name": "ICICI Bank",
+        "bank_type": "1994",
+        "website": "",
+        "bank_code": "ICIC"
+    },
+    "IDBI Bank": {
+        "short_name": "IDBI Bank",
+        "bank_type": "1964",
+        "website": "",
+        "bank_code": "IDBI"
+    },
+    "IDFC First Bank": {
+        "short_name": "IDFC First Bank",
+        "bank_type": "2015",
+        "website": "",
+        "bank_code": "IDFC"
+    },
+    "IndusInd Bank": {
+        "short_name": "IndusInd Bank",
+        "bank_type": "1994",
+        "website": "",
+        "bank_code": "INDU"
+    },
+    "Jammu & Kashmir Bank": {
+        "short_name": "Jammu & Kashmir Bank",
+        "bank_type": "1938",
+        "website": "",
+        "bank_code": "JAMM"
+    },
+    "Karnataka Bank": {
+        "short_name": "Karnataka Bank",
+        "bank_type": "1924",
+        "website": "",
+        "bank_code": "KARN"
+    },
+    "Karur Vysya Bank": {
+        "short_name": "Karur Vysya Bank",
+        "bank_type": "1916",
+        "website": "",
+        "bank_code": "KARU"
+    },
+    "Kotak Mahindra Bank": {
+        "short_name": "Kotak Mahindra Bank",
+        "bank_type": "2003",
+        "website": "",
+        "bank_code": "KOTA"
+    },
+    "Nainital Bank": {
+        "short_name": "Nainital Bank",
+        "bank_type": "1922",
+        "website": "",
+        "bank_code": "NAIN"
+    },
+    "RBL Bank": {
+        "short_name": "RBL Bank",
+        "bank_type": "1943",
+        "website": "",
+        "bank_code": "RBLB"
+    },
+    "South Indian Bank": {
+        "short_name": "South Indian Bank",
+        "bank_type": "1929",
+        "website": "",
+        "bank_code": "SOUT"
+    },
+    "Tamilnad Mercantile Bank": {
+        "short_name": "Tamilnad Mercantile Bank",
+        "bank_type": "1921",
+        "website": "",
+        "bank_code": "TAMI"
+    },
+    "Yes Bank": {
+        "short_name": "Yes Bank",
+        "bank_type": "2004",
+        "website": "",
+        "bank_code": "YESB"
+    },
+    "Andhra Pradesh": {
+        "short_name": "Andhra Pradesh-Bank",
+        "bank_type": "Andhra Pradesh Grameena Bank",
+        "website": "",
+        "bank_code": "ANDH"
+    },
+    "Arunachal Pradesh": {
+        "short_name": "Arunachal Pradesh-Bank",
+        "bank_type": "Arunachal Pradesh Rural Bank",
+        "website": "",
+        "bank_code": "ARUN"
+    },
+    "Assam": {
+        "short_name": "Assam-Bank",
+        "bank_type": "Assam Gramin Bank",
+        "website": "",
+        "bank_code": "ASSA"
+    },
+    "Bihar": {
+        "short_name": "Bihar-Bank",
+        "bank_type": "Bihar Gramin Bank",
+        "website": "",
+        "bank_code": "BIHA"
+    },
+    "Chhattisgarh": {
+        "short_name": "Chhattisgarh-Bank",
+        "bank_type": "Chhattisgarh Gramin Bank",
+        "website": "",
+        "bank_code": "CHHA"
+    },
+    "Gujarat": {
+        "short_name": "Gujarat-Bank",
+        "bank_type": "Gujarat Gramin Bank",
+        "website": "",
+        "bank_code": "GUJA"
+    },
+    "Haryana": {
+        "short_name": "Haryana-Bank",
+        "bank_type": "Haryana Gramin Bank",
+        "website": "",
+        "bank_code": "HARY"
+    },
+    "Himachal Pradesh": {
+        "short_name": "Himachal Pradesh-Bank",
+        "bank_type": "Himachal Pradesh Gramin Bank",
+        "website": "",
+        "bank_code": "HIMA"
+    },
+    "Jammu And Kashmir": {
+        "short_name": "Jammu And Kashmir-Bank",
+        "bank_type": "Jammu and Kashmir Grameen Bank",
+        "website": "",
+        "bank_code": "JAMM"
+    },
+    "Jharkhand": {
+        "short_name": "Jharkhand-Bank",
+        "bank_type": "Jharkhand Gramin Bank",
+        "website": "",
+        "bank_code": "JHAR"
+    },
+    "Karnataka": {
+        "short_name": "Karnataka-Bank",
+        "bank_type": "Karnataka Grameena Bank",
+        "website": "",
+        "bank_code": "KARN"
+    },
+    "Kerala": {
+        "short_name": "Kerala-Bank",
+        "bank_type": "Kerala Grameena Bank",
+        "website": "",
+        "bank_code": "KERA"
+    },
+    "Madhya Pradesh": {
+        "short_name": "Madhya Pradesh-Bank",
+        "bank_type": "Madhya Pradesh Gramin Bank",
+        "website": "",
+        "bank_code": "MADH"
+    },
+    "Maharashtra": {
+        "short_name": "Maharashtra-Bank",
+        "bank_type": "Maharashtra Gramin Bank",
+        "website": "",
+        "bank_code": "MAHA"
+    },
+    "Manipur": {
+        "short_name": "Manipur-Bank",
+        "bank_type": "Manipur Rural Bank",
+        "website": "",
+        "bank_code": "MANI"
+    },
+    "Meghalaya": {
+        "short_name": "Meghalaya-Bank",
+        "bank_type": "Meghalaya Rural Bank",
+        "website": "",
+        "bank_code": "MEGH"
+    },
+    "Mizoram": {
+        "short_name": "Mizoram-Bank",
+        "bank_type": "Mizoram Rural Bank",
+        "website": "",
+        "bank_code": "MIZO"
+    },
+    "Nagaland": {
+        "short_name": "Nagaland-Bank",
+        "bank_type": "Nagaland Rural Bank",
+        "website": "",
+        "bank_code": "NAGA"
+    },
+    "Odisha": {
+        "short_name": "Odisha-Bank",
+        "bank_type": "Odisha Grameen Bank",
+        "website": "",
+        "bank_code": "ODIS"
+    },
+    "Puducherry": {
+        "short_name": "Puducherry-Bank",
+        "bank_type": "Puducherry Grama Bank",
+        "website": "",
+        "bank_code": "PUDU"
+    },
+    "Punjab": {
+        "short_name": "Punjab-Bank",
+        "bank_type": "Punjab Gramin Bank",
+        "website": "",
+        "bank_code": "PUNJ"
+    },
+    "Rajasthan": {
+        "short_name": "Rajasthan-Bank",
+        "bank_type": "Rajasthan Gramin Bank",
+        "website": "",
+        "bank_code": "RAJA"
+    },
+    "Tamil Nadu": {
+        "short_name": "Tamil Nadu-Bank",
+        "bank_type": "Tamil Nadu Grama Bank",
+        "website": "",
+        "bank_code": "TAMI"
+    },
+    "Telangana": {
+        "short_name": "Telangana-Bank",
+        "bank_type": "Telangana Grameena Bank",
+        "website": "",
+        "bank_code": "TELA"
+    },
+    "Tripura": {
+        "short_name": "Tripura-Bank",
+        "bank_type": "Tripura Gramin Bank",
+        "website": "",
+        "bank_code": "TRIP"
+    },
+    "Uttar Pradesh": {
+        "short_name": "Uttar Pradesh-Bank",
+        "bank_type": "Uttar Pradesh Gramin Bank",
+        "website": "",
+        "bank_code": "UTTA"
+    },
+    "Uttarakhand": {
+        "short_name": "Uttarakhand-Bank",
+        "bank_type": "Uttarakhand Gramin Bank",
+        "website": "",
+        "bank_code": "UTTA"
+    },
+    "West Bengal": {
+        "short_name": "West Bengal-Bank",
+        "bank_type": "West Bengal Gramin Bank",
+        "website": "",
+        "bank_code": "WEST"
+    },
+    "Coastal Local Area Bank": {
+        "short_name": "Coastal Local Area Bank",
+        "bank_type": "1999",
+        "website": "",
+        "bank_code": "COAS"
+    },
+    "Krishna Bhima Samruddhi Local Area Bank": {
+        "short_name": "Krishna Bhima Samruddhi Local Area Bank",
+        "bank_type": "2001",
+        "website": "",
+        "bank_code": "KRIS"
+    },
+    "Airtel Payments Bank": {
+        "short_name": "Airtel Payments Bank",
+        "bank_type": "2017",
+        "website": "",
+        "bank_code": "AIRT"
+    },
+    "India Post Payments Bank": {
+        "short_name": "India Post Payments Bank",
+        "bank_type": "2018",
+        "website": "",
+        "bank_code": "INDI"
+    },
+    "Jio Payments Bank": {
+        "short_name": "Jio Payments Bank",
+        "bank_type": "2018",
+        "website": "",
+        "bank_code": "JIOP"
+    },
+    "NSDL Payments Bank": {
+        "short_name": "NSDL Payments Bank",
+        "bank_type": "2018",
+        "website": "",
+        "bank_code": "NSDL"
+    },
+    "AU Small Finance Bank": {
+        "short_name": "AU Small Finance Bank",
+        "bank_type": "2017",
+        "website": "",
+        "bank_code": "AUSM"
+    },
+    "Capital Small Finance Bank": {
+        "short_name": "Capital Small Finance Bank",
+        "bank_type": "2016",
+        "website": "",
+        "bank_code": "CAPI"
+    },
+    "Equitas Small Finance Bank": {
+        "short_name": "Equitas Small Finance Bank",
+        "bank_type": "2016",
+        "website": "",
+        "bank_code": "EQUI"
+    },
+    "ESAF Small Finance Bank": {
+        "short_name": "ESAF Small Finance Bank",
+        "bank_type": "2017",
+        "website": "",
+        "bank_code": "ESAF"
+    },
+    "Fino Small Finance Bank": {
+        "short_name": "Fino Small Finance Bank",
+        "bank_type": "2017",
+        "website": "",
+        "bank_code": "FINO"
+    },
+    "Jana Small Finance Bank": {
+        "short_name": "Jana Small Finance Bank",
+        "bank_type": "2018",
+        "website": "",
+        "bank_code": "JANA"
+    },
+    "Shivalik Small Finance Bank": {
+        "short_name": "Shivalik Small Finance Bank",
+        "bank_type": "2021",
+        "website": "",
+        "bank_code": "SHIV"
+    },
+    "Slice Small Finance Bank": {
+        "short_name": "Slice Small Finance Bank",
+        "bank_type": "2017",
+        "website": "",
+        "bank_code": "SLIC"
+    },
+    "Suryoday Small Finance Bank": {
+        "short_name": "Suryoday Small Finance Bank",
+        "bank_type": "2017",
+        "website": "",
+        "bank_code": "SURY"
+    },
+    "Ujjivan Small Finance Bank": {
+        "short_name": "Ujjivan Small Finance Bank",
+        "bank_type": "2017",
+        "website": "",
+        "bank_code": "UJJI"
+    },
+    "Unity Small Finance Bank": {
+        "short_name": "Unity Small Finance Bank",
+        "bank_type": "2021",
+        "website": "",
+        "bank_code": "UNIT"
+    },
+    "Utkarsh Small Finance Bank": {
+        "short_name": "Utkarsh Small Finance Bank",
+        "bank_type": "2018",
+        "website": "",
+        "bank_code": "UTKA"
+    }
+}

@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model State {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(100)
+  code      String?    @db.VarChar(10)
+  branches  Branch[]
+  districts District[]
+}
+
+model District {
+  id       Int      @id @default(autoincrement())
+  name     String   @db.VarChar(100)
+  stateId  Int      @map("state_id")
+  state    State    @relation(fields: [stateId], references: [id])
+  branches Branch[]
+
+  @@unique([name, stateId])
+  @@index([stateId])
+}
+
+model Bank {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique @db.VarChar(100)
+  shortName    String?  @map("short_name") @db.VarChar(20)
+  bankCode     String?  @map("bank_code") @db.VarChar(10)
+  bankType     String?  @map("bank_type") @db.VarChar(30)
+  headquarters String?  @db.VarChar(100)
+  website      String?
+  logoUrl      String?  @map("logo_url") @db.Text
+  branches     Branch[]
+}
+
+
+
+model Branch {
+  id          Int       @id @default(autoincrement())
+  ifsc        String    @unique @db.VarChar(11)
+  micr        String?   @db.VarChar(9)
+  bankId      Int       @map("bank_id")
+  bank        Bank      @relation(fields: [bankId], references: [id])
+  branchName  String    @map("branch_name") @db.VarChar(200)
+  address     String?   @db.Text
+  city        String?   @db.VarChar(100)
+  centre      String?   @db.VarChar(100)
+  districtId  Int?      @map("district_id")
+  district    District? @relation(fields: [districtId], references: [id])
+  stateId     Int       @map("state_id")
+  state       State     @relation(fields: [stateId], references: [id])
+  pincode     String?   @db.VarChar(6)
+  phone       String?   @db.VarChar(50)
+  neft        Boolean   @default(true)
+  rtgs        Boolean   @default(true)
+  imps        Boolean   @default(true)
+  upi         Boolean   @default(true)
+  latitude    Float?
+  longitude   Float?
+  swift       String?   @db.VarChar(11)
+  iso3166     String?   @db.VarChar(10)
+  bankCode    String?   @map("bank_code") @db.VarChar(10)
+  lastUpdated DateTime? @map("last_updated")
+
+  @@index([bankId])
+  @@index([stateId])
+  @@index([districtId])
+  @@index([pincode])
+  @@index([micr])
+}
+
+model SearchLog {
+  id           Int      @id @default(autoincrement())
+  searchType   String?  @map("search_type") @db.VarChar(20)
+  query        String?  @db.VarChar(200)
+  resultsCount Int?     @map("results_count")
+  ipHash       String?  @map("ip_hash") @db.VarChar(16)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("search_logs")
+}
+
+model SyncLog {
+  id            Int       @id @default(autoincrement())
+  releaseTag    String?   @map("release_tag")
+  releaseDate   String?   @map("release_date")
+  recordsSynced Int       @default(0) @map("records_synced")
+  durationSecs  Float?    @map("duration_secs")
+  status        String?
+  errorMsg      String?   @map("error_msg") @db.Text
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@map("sync_log")
+}
