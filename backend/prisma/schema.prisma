@@ -8,14 +8,24 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// ─── State ───────────────────────────────────────────────────────────────────
 model State {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique @db.VarChar(100)
-  code      String?    @db.VarChar(10)
-  branches  Branch[]
-  districts District[]
+  id      Int     @id @default(autoincrement())
+  name    String  @unique @db.VarChar(100)
+  code    String? @db.VarChar(10)
+  // NEW fields
+  logoUrl String? @map("logo_url") @db.Text
+  slug    String? @unique @db.VarChar(120)
+  isoCode String? @map("iso_code") @db.VarChar(10)
+
+  // Relations
+  branches           Branch[]
+  districts          District[]
+  cities             City[]
+  bankStatePresences BankStatePresence[]
 }
 
+// ─── District ────────────────────────────────────────────────────────────────
 model District {
   id       Int      @id @default(autoincrement())
   name     String   @db.VarChar(100)
@@ -27,54 +37,130 @@ model District {
   @@index([stateId])
 }
 
-model Bank {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique @db.VarChar(100)
-  shortName    String?  @map("short_name") @db.VarChar(20)
-  bankCode     String?  @map("bank_code") @db.VarChar(10)
-  bankType     String?  @map("bank_type") @db.VarChar(30)
-  headquarters String?  @db.VarChar(100)
-  website      String?
-  logoUrl      String?  @map("logo_url") @db.Text
-  branches     Branch[]
+// ─── City (NEW) ──────────────────────────────────────────────────────────────
+model City {
+  id             Int      @id @default(autoincrement())
+  name           String   @db.VarChar(100)
+  stateId        Int      @map("state_id")
+  state          State    @relation(fields: [stateId], references: [id])
+  slug           String?  @db.VarChar(120)
+  normalizedName String?  @map("normalized_name") @db.VarChar(100)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  branches Branch[]
+
+  @@unique([name, stateId])
+  @@index([stateId])
 }
 
+// ─── BanksMaster (consolidates Bank) ─────────────────────────────────────────
+model BanksMaster {
+  id             Int      @id @default(autoincrement())
+  name           String   @unique @db.VarChar(100)
+  // Existing fields preserved
+  shortName      String?  @map("short_name") @db.VarChar(100)
+  bankCode       String?  @map("bank_code") @db.VarChar(10)
+  bankType       String?  @map("bank_type") @db.VarChar(30)
+  headquarters   String?  @db.VarChar(100)
+  website        String?
+  logoUrl        String?  @map("logo_url") @db.Text
+  // NEW fields
+  normalizedName String?  @map("normalized_name") @db.VarChar(150)
+  slug           String?  @unique @db.VarChar(120)
+  ifscPrefix     String?  @map("ifsc_prefix") @db.VarChar(10)
+  isActive       Boolean  @default(true) @map("is_active")
+  mergedIntoId   Int?     @map("merged_into_id")
+  isCurated      Boolean  @default(false) @map("is_curated")
+  subType        String?  @map("sub_type") @db.VarChar(50)
+  sourceRbi      Boolean  @default(false) @map("source_rbi")
+  sourceRazorpay Boolean  @default(false) @map("source_razorpay")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
 
+  // Relations
+  branches           Branch[]
+  bankStatePresences BankStatePresence[]
 
+  @@map("Bank")
+}
+
+// ─── Branch ──────────────────────────────────────────────────────────────────
 model Branch {
-  id          Int       @id @default(autoincrement())
-  ifsc        String    @unique @db.VarChar(11)
-  micr        String?   @db.VarChar(9)
-  bankId      Int       @map("bank_id")
-  bank        Bank      @relation(fields: [bankId], references: [id])
-  branchName  String    @map("branch_name") @db.VarChar(200)
-  address     String?   @db.Text
-  city        String?   @db.VarChar(100)
-  centre      String?   @db.VarChar(100)
-  districtId  Int?      @map("district_id")
-  district    District? @relation(fields: [districtId], references: [id])
-  stateId     Int       @map("state_id")
-  state       State     @relation(fields: [stateId], references: [id])
-  pincode     String?   @db.VarChar(6)
-  phone       String?   @db.VarChar(50)
-  neft        Boolean   @default(true)
-  rtgs        Boolean   @default(true)
-  imps        Boolean   @default(true)
-  upi         Boolean   @default(true)
+  id          Int         @id @default(autoincrement())
+  ifsc        String      @unique @db.VarChar(11)
+  micr        String?     @db.VarChar(9)
+  bankId      Int         @map("bank_id")
+  bank        BanksMaster @relation(fields: [bankId], references: [id])
+  branchName  String      @map("branch_name") @db.VarChar(200)
+  address     String?     @db.Text
+  city        String?     @db.VarChar(100)
+  centre      String?     @db.VarChar(100)
+  districtId  Int?        @map("district_id")
+  district    District?   @relation(fields: [districtId], references: [id])
+  stateId     Int         @map("state_id")
+  state       State       @relation(fields: [stateId], references: [id])
+  pincode     String?     @db.VarChar(6)
+  phone       String?     @db.VarChar(50)
+  neft        Boolean     @default(true)
+  rtgs        Boolean     @default(true)
+  imps        Boolean     @default(true)
+  upi         Boolean     @default(true)
   latitude    Float?
   longitude   Float?
-  swift       String?   @db.VarChar(11)
-  iso3166     String?   @db.VarChar(10)
-  bankCode    String?   @map("bank_code") @db.VarChar(10)
-  lastUpdated DateTime? @map("last_updated")
+  swift       String?     @db.VarChar(11)
+  iso3166     String?     @db.VarChar(10)
+  bankCode    String?     @map("bank_code") @db.VarChar(10)
+  lastUpdated DateTime?   @map("last_updated")
+  // NEW fields
+  cityId      Int?        @map("city_id")
+  cityRef     City?       @relation(fields: [cityId], references: [id])
+  isActive    Boolean     @default(true) @map("is_active")
+  lastSynced  DateTime?   @map("last_synced")
+  source      String?     @db.VarChar(50)
 
   @@index([bankId])
   @@index([stateId])
   @@index([districtId])
   @@index([pincode])
   @@index([micr])
+  @@index([cityId])
 }
 
+// ─── BankStatePresence (NEW) ─────────────────────────────────────────────────
+model BankStatePresence {
+  id            Int         @id @default(autoincrement())
+  bankId        Int         @map("bank_id")
+  bank          BanksMaster @relation(fields: [bankId], references: [id])
+  stateId       Int         @map("state_id")
+  state         State       @relation(fields: [stateId], references: [id])
+  branchesCount Int         @default(0) @map("branches_count")
+  lastVerified  DateTime?   @map("last_verified")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at")
+
+  @@unique([bankId, stateId])
+  @@index([bankId])
+  @@index([stateId])
+  @@map("bank_state_presence")
+}
+
+// ─── DataOverride (NEW) ──────────────────────────────────────────────────────
+model DataOverride {
+  id         Int      @id @default(autoincrement())
+  entityType String   @map("entity_type") @db.VarChar(50)
+  entityId   Int      @map("entity_id")
+  fieldName  String   @map("field_name") @db.VarChar(100)
+  oldValue   String?  @map("old_value") @db.Text
+  newValue   String?  @map("new_value") @db.Text
+  reason     String?  @db.Text
+  createdBy  String?  @map("created_by") @db.VarChar(100)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@map("data_overrides")
+}
+
+// ─── SearchLog (UNCHANGED) ───────────────────────────────────────────────────
 model SearchLog {
   id           Int      @id @default(autoincrement())
   searchType   String?  @map("search_type") @db.VarChar(20)
@@ -86,15 +172,24 @@ model SearchLog {
   @@map("search_logs")
 }
 
+// ─── SyncLog (EVOLVED) ──────────────────────────────────────────────────────
 model SyncLog {
-  id            Int       @id @default(autoincrement())
-  releaseTag    String?   @map("release_tag")
-  releaseDate   String?   @map("release_date")
-  recordsSynced Int       @default(0) @map("records_synced")
-  durationSecs  Float?    @map("duration_secs")
-  status        String?
-  errorMsg      String?   @map("error_msg") @db.Text
-  createdAt     DateTime  @default(now()) @map("created_at")
+  id             Int       @id @default(autoincrement())
+  releaseTag     String?   @map("release_tag")
+  releaseDate    String?   @map("release_date")
+  recordsSynced  Int       @default(0) @map("records_synced")
+  durationSecs   Float?    @map("duration_secs")
+  status         String?
+  errorMsg       String?   @map("error_msg") @db.Text
+  createdAt      DateTime  @default(now()) @map("created_at")
+  // NEW fields
+  syncType       String?   @map("sync_type") @db.VarChar(50)
+  source         String?   @db.VarChar(50)
+  recordsAdded   Int?      @map("records_added")
+  recordsUpdated Int?      @map("records_updated")
+  recordsDeleted Int?      @map("records_deleted")
+  notes          String?   @db.Text
+  completedAt    DateTime? @map("completed_at")
 
   @@map("sync_log")
 }
