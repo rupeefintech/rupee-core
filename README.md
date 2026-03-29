@@ -1,0 +1,1 @@
+# Rupee - Powering rupeepedia.in
