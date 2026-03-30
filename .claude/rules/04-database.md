@@ -28,12 +28,10 @@
 |---|---|---|---|
 | `name` | `name` | Official bank name (unique) | Yes - display, search |
 | `shortName` | `short_name` | Short display name, used as URL slug in v1 routes | Yes - bank lookup by slug |
-| `bankCode` | `bank_code` | 4-char IFSC prefix (e.g., HDFC, SBIN). Derived from actual branch IFSC codes. | Yes - display |
+| `bankCode` | `bank_code` | 4-char IFSC prefix (e.g., HDFC, SBIN). Derived from actual branch IFSC codes. | Yes - display, lookup |
 | `bankType` | `bank_type` | Public/Private/Cooperative/RRB/etc. | Yes - filtering, display |
 | `logoUrl` | `logo_url` | Bank logo CDN URL | Yes - UI display |
-| `ifscPrefix` | `ifsc_prefix` | Same as bankCode. Derived from most common `LEFT(ifsc, 4)` across bank's branches. | No - DB reference only |
-| `normalizedName` | `normalized_name` | `LOWER(name)` for dedup | No - DB indexing/dedup only |
-| `slug` | `slug` | URL-friendly name with id suffix | No - not used yet, shortName serves as slug |
+| `slug` | `slug` | URL-friendly name with id suffix | Yes - SEO URLs |
 | `isActive` | `is_active` | Whether bank is operational | Yes - filter in all queries |
 | `mergedIntoId` | `merged_into_id` | FK to bank it merged into | Yes - admin merge endpoint |
 | `isCurated` | `is_curated` | Human-verified flag | No - future use |
@@ -41,7 +39,11 @@
 | `sourceRbi` | `source_rbi` | Data sourced from RBI | No - audit only |
 | `sourceRazorpay` | `source_razorpay` | Data sourced from Razorpay | No - audit only |
 
-**Fields not used in code** (`ifscPrefix`, `normalizedName`, `slug`, `isCurated`, `subType`, `sourceRbi`, `sourceRazorpay`) exist for data management and future features. Don't query them in API responses.
+**Fields not used in code** (`isCurated`, `subType`, `sourceRbi`, `sourceRazorpay`) exist for data management and future features. Don't query them in API responses.
+
+**Dropped fields** (removed as redundant):
+- `ifscPrefix` — was identical to `bankCode`
+- `normalizedName` — use Prisma `mode: 'insensitive'` instead of a stored column
 
 ## Raw SQL: Use DB Column Names
 
@@ -72,7 +74,7 @@ npx prisma generate          # Regenerate client
 - City unique on (name, stateId)
 - BankStatePresence unique on (bankId, stateId) - rebuild after every sync
 - BanksMaster.slug unique - uses `name-slugified-{id}` pattern
-- BanksMaster.bankCode and ifscPrefix must always equal `LEFT(branch.ifsc, 4)` from the bank's most common IFSC prefix. Cooperative banks often route through sponsor banks (HDFC, ICIC, UTIB) but their IFSC prefix is their own unique code.
+- BanksMaster.bankCode must equal the most common `LEFT(branch.ifsc, 4)` across the bank's branches. Cooperative banks route through sponsor banks (HDFC, ICIC, UTIB) but their IFSC prefix is their own unique code — always derive from actual IFSC data, not metadata.
 
 ## State Table Quirks
 

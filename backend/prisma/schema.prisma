@@ -65,9 +65,7 @@ model BanksMaster {
   website        String?
   logoUrl        String?  @map("logo_url") @db.Text
   // NEW fields
-  normalizedName String?  @map("normalized_name") @db.VarChar(150)
   slug           String?  @unique @db.VarChar(120)
-  ifscPrefix     String?  @map("ifsc_prefix") @db.VarChar(10)
   isActive       Boolean  @default(true) @map("is_active")
   mergedIntoId   Int?     @map("merged_into_id")
   isCurated      Boolean  @default(false) @map("is_curated")
