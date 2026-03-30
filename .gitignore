@@ -21,3 +21,7 @@ scripts/.cache/
 scripts/sync.log
 *.log
 frontend/public/sitemap.xml
+
+# Database backups
+backup_consolidation_*.sql
+*.backup.*

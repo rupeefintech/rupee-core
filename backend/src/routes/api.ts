@@ -39,7 +39,7 @@ router.get('/banks', async (_req: Request, res: Response) => {
   const cached = await cacheGet(KEY)
   if (cached) { res.json(cached); return }
 
-  const banks = await prisma.bank.findMany({
+  const banks = await prisma.banksMaster.findMany({
     select: {
       id: true, name: true,
       shortName: true, bankType: true, headquarters: true, website: true,
@@ -153,7 +153,7 @@ router.get('/branches', async (req: Request, res: Response) => {
   const cached = await cacheGet(KEY)
   if (cached) { res.json(cached); return }
 
-  const bank = await prisma.bank.findFirst({
+  const bank = await prisma.banksMaster.findFirst({
     where: { name: { equals: bankName, mode: 'insensitive' } },
   })
 
@@ -270,7 +270,7 @@ router.get('/city/:cityName', async (req: Request, res: Response) => {
 router.get('/bank/:bankSlug', async (req: Request, res: Response) => {
 
   const { bankSlug } = req.params;
-  const bank = await prisma.bank.findFirst({
+  const bank = await prisma.banksMaster.findFirst({
     where: {
       shortName: {
         equals: bankSlug,
@@ -314,7 +314,7 @@ router.get('/state/:bankSlug/:stateSlug', async (req: Request, res: Response) =>
   const { bankSlug, stateSlug } = req.params;
 
   // Find bank
-  const bank = await prisma.bank.findFirst({
+  const bank = await prisma.banksMaster.findFirst({
     where: {
       shortName: {
         equals: bankSlug,
@@ -355,7 +355,7 @@ router.get('/banks/:bankSlug/states', async (req: Request, res: Response) => {
   const { bankSlug } = req.params;
  
   // Find bank
-  const bank = await prisma.bank.findFirst({
+  const bank = await prisma.banksMaster.findFirst({
     where: {
       shortName: {
         equals: bankSlug,
@@ -413,7 +413,7 @@ router.get('/banks/:bankSlug/states', async (req: Request, res: Response) => {
 router.get('/city/:bankSlug/:stateSlug/:citySlug', async (req: Request, res: Response) => {
   const { bankSlug, stateSlug, citySlug } = req.params;
 
-  const bank = await prisma.bank.findFirst({
+  const bank = await prisma.banksMaster.findFirst({
     where: {
       shortName: {
         equals: bankSlug,
@@ -449,7 +449,7 @@ router.get('/state/:bankSlug/:stateSlug/districts', async (req: Request, res: Re
   const { bankSlug, stateSlug } = req.params;
  
   // Find bank
-  const bank = await prisma.bank.findFirst({
+  const bank = await prisma.banksMaster.findFirst({
     where: {
       shortName: {
         equals: bankSlug,
@@ -514,7 +514,7 @@ router.get('/state/:bankSlug/:stateSlug/districts', async (req: Request, res: Re
 router.get('/city/:bankSlug/:stateSlug/:districtSlug', async (req: Request, res: Response) => {
   const { bankSlug, stateSlug, districtSlug } = req.params;
  
-  const bank = await prisma.bank.findFirst({
+  const bank = await prisma.banksMaster.findFirst({
     where: {
       shortName: {
         equals: bankSlug,
@@ -774,7 +774,7 @@ router.get('/stats', async (_req: Request, res: Response) => {
 
   const [total_branches, total_banks, total_states, upi_enabled] = await Promise.all([
     prisma.branch.count(),
-    prisma.bank.count(),
+    prisma.banksMaster.count(),
     prisma.state.count(),
     prisma.branch.count({ where: { upi: true } }),
   ])
