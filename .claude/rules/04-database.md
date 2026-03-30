@@ -28,10 +28,10 @@
 |---|---|---|---|
 | `name` | `name` | Official bank name (unique) | Yes - display, search |
 | `shortName` | `short_name` | Short display name, used as URL slug in v1 routes | Yes - bank lookup by slug |
-| `bankCode` | `bank_code` | 4-char code (e.g., HDFC, ICIC) | Yes - display |
+| `bankCode` | `bank_code` | 4-char IFSC prefix (e.g., HDFC, SBIN). Derived from actual branch IFSC codes. | Yes - display |
 | `bankType` | `bank_type` | Public/Private/Cooperative/RRB/etc. | Yes - filtering, display |
 | `logoUrl` | `logo_url` | Bank logo CDN URL | Yes - UI display |
-| `ifscPrefix` | `ifsc_prefix` | First 4 chars of IFSC (same as bankCode) | No - DB reference only |
+| `ifscPrefix` | `ifsc_prefix` | Same as bankCode. Derived from most common `LEFT(ifsc, 4)` across bank's branches. | No - DB reference only |
 | `normalizedName` | `normalized_name` | `LOWER(name)` for dedup | No - DB indexing/dedup only |
 | `slug` | `slug` | URL-friendly name with id suffix | No - not used yet, shortName serves as slug |
 | `isActive` | `is_active` | Whether bank is operational | Yes - filter in all queries |
@@ -72,6 +72,7 @@ npx prisma generate          # Regenerate client
 - City unique on (name, stateId)
 - BankStatePresence unique on (bankId, stateId) - rebuild after every sync
 - BanksMaster.slug unique - uses `name-slugified-{id}` pattern
+- BanksMaster.bankCode and ifscPrefix must always equal `LEFT(branch.ifsc, 4)` from the bank's most common IFSC prefix. Cooperative banks often route through sponsor banks (HDFC, ICIC, UTIB) but their IFSC prefix is their own unique code.
 
 ## State Table Quirks
 
