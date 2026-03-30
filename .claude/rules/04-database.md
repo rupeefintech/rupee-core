@@ -76,9 +76,8 @@ npx prisma generate          # Regenerate client
 - BanksMaster.slug unique - uses `name-slugified-{id}` pattern
 - BanksMaster.bankCode must equal the most common `LEFT(branch.ifsc, 4)` across the bank's branches. Cooperative banks route through sponsor banks (HDFC, ICIC, UTIB) but their IFSC prefix is their own unique code — always derive from actual IFSC data, not metadata.
 
-## State Table Quirks
+## State Table
 
-- 43 rows but some are duplicates/misspellings (e.g., "Madhy Pradesh", "Uttarkhand", "Odhisa")
-- Some are districts incorrectly entered as states ("Ludhiana", "Dakshin Kannad")
-- Fix: re-point all references (Branch, District, City, BankStatePresence) to correct state, then delete bad rows
-- 7 states have `code: NULL` - these are the bad entries
+- 36 valid states/UTs, all with non-NULL `code`
+- Previously had 7 bad entries (misspellings like "Madhy Pradesh", districts like "Ludhiana") — cleaned up 2026-03-29
+- All branches, districts, cities, and presence rows were re-pointed to correct states before deletion
