@@ -1,10 +1,10 @@
 // backend/src/routes/bankData.ts
-// Add these routes to your Express app
+// V2 cascade filtering routes - uses actual Prisma schema field names
 // Import in index.ts: app.use(bankDataRouter)
 
 import { Router, Request, Response } from 'express';
 import { prisma } from '../lib/prisma';
-import { cache } from '../lib/cache';
+import { cacheGet, cacheSet } from '../lib/cache';
 
 const router = Router();
 
@@ -20,47 +20,42 @@ const router = Router();
 router.get('/api/v2/banks/with-presence', async (req: Request, res: Response) => {
   try {
     const cacheKey = 'banks_with_presence';
-
-    // Try cache first
-    const cached = await cache.get(cacheKey);
-    if (cached) {
-      return res.json({ data: JSON.parse(cached) });
-    }
+    const cached = await cacheGet(cacheKey);
+    if (cached) { res.json(cached); return }
 
     const banks = await prisma.banksMaster.findMany({
-      where: { is_active: true },
+      where: { isActive: true },
       select: {
         id: true,
         name: true,
-        short_code: true,
-        logo_url: true,
-        bank_type: true,
-        bankStatePresence: {
+        shortName: true,
+        logoUrl: true,
+        bankType: true,
+        bankStatePresences: {
           select: {
-            state_id: true,
-            branches_count: true,
+            stateId: true,
+            branchesCount: true,
           },
         },
       },
       orderBy: { name: 'asc' },
     });
 
-    const transformed = banks.map((b) => ({
+    const data = banks.map((b) => ({
       id: b.id,
       name: b.name,
-      short_code: b.short_code,
-      logo_url: b.logo_url,
-      bank_type: b.bank_type,
-      states: b.bankStatePresence.map((p) => ({
-        id: p.state_id,
-        count: p.branches_count || 0,
+      short_name: b.shortName,
+      logo_url: b.logoUrl,
+      bank_type: b.bankType,
+      states: b.bankStatePresences.map((p) => ({
+        id: p.stateId,
+        count: p.branchesCount,
       })),
     }));
 
-    // Cache for 24 hours
-    await cache.set(cacheKey, JSON.stringify(transformed), 86400);
-
-    res.json({ data: transformed });
+    const out = { data, count: data.length };
+    await cacheSet(cacheKey, out, 86400);
+    res.json(out);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch banks' });
   }
@@ -68,43 +63,34 @@ router.get('/api/v2/banks/with-presence', async (req: Request, res: Response) =>
 
 /**
  * GET /api/v2/banks/:bankId/states
- * Fetch states where a specific bank operates
+ * Fetch states where a specific bank operates (cascade step 1)
  * Cached: 24 hours per bank
  */
 router.get('/api/v2/banks/:bankId/states', async (req: Request, res: Response) => {
   try {
-    const { bankId } = req.params;
+    const bankId = parseInt(req.params.bankId);
     const cacheKey = `bank_${bankId}_states`;
-
-    // Try cache
-    const cached = await cache.get(cacheKey);
-    if (cached) {
-      return res.json({ data: JSON.parse(cached) });
-    }
+    const cached = await cacheGet(cacheKey);
+    if (cached) { res.json(cached); return }
 
     const presence = await prisma.bankStatePresence.findMany({
-      where: { bank_id: parseInt(bankId) },
+      where: { bankId },
       include: {
-        state: {
-          select: { id: true, name: true, code: true },
-        },
+        state: { select: { id: true, name: true, code: true } },
       },
-      orderBy: {
-        state: { name: 'asc' },
-      },
+      orderBy: { state: { name: 'asc' } },
     });
 
-    const formatted = presence.map((p) => ({
+    const data = presence.map((p) => ({
       id: p.state.id,
       name: p.state.name,
       code: p.state.code,
-      branches_count: p.branches_count || 0,
+      branches_count: p.branchesCount,
     }));
 
-    // Cache for 24 hours
-    await cache.set(cacheKey, JSON.stringify(formatted), 86400);
-
-    res.json({ data: formatted });
+    const out = { data, count: data.length };
+    await cacheSet(cacheKey, out, 86400);
+    res.json(out);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch states for bank' });
   }
@@ -112,40 +98,34 @@ router.get('/api/v2/banks/:bankId/states', async (req: Request, res: Response) =
 
 /**
  * GET /api/v2/banks/:bankId/states/:stateId/districts
- * Fetch districts for a bank in a specific state
+ * Fetch districts for a bank in a specific state (cascade step 2a)
  * Cached: 24 hours
  */
 router.get(
   '/api/v2/banks/:bankId/states/:stateId/districts',
   async (req: Request, res: Response) => {
     try {
-      const { bankId, stateId } = req.params;
+      const bankId = parseInt(req.params.bankId);
+      const stateId = parseInt(req.params.stateId);
       const cacheKey = `bank_${bankId}_state_${stateId}_districts`;
-
-      const cached = await cache.get(cacheKey);
-      if (cached) {
-        return res.json({ data: JSON.parse(cached) });
-      }
+      const cached = await cacheGet(cacheKey);
+      if (cached) { res.json(cached); return }
 
       const districts = await prisma.district.findMany({
         where: {
-          state_id: parseInt(stateId),
+          stateId,
           branches: {
-            some: {
-              bank_id: parseInt(bankId),
-              is_active: true,
-            },
+            some: { bankId, isActive: true },
           },
         },
         select: { id: true, name: true },
         orderBy: { name: 'asc' },
       });
 
-      const result = districts.map((d) => ({ id: d.id, name: d.name }));
-
-      await cache.set(cacheKey, JSON.stringify(result), 86400);
-
-      res.json({ data: result });
+      const data = districts.map((d) => ({ id: d.id, name: d.name }));
+      const out = { data, count: data.length };
+      await cacheSet(cacheKey, out, 86400);
+      res.json(out);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch districts' });
     }
@@ -154,39 +134,30 @@ router.get(
 
 /**
  * GET /api/v2/banks/:bankId/states/:stateId/cities
- * Fetch cities where a bank operates in a state
+ * Fetch cities where a bank operates in a state (cascade step 2b)
  * Cached: 24 hours
  */
 router.get(
   '/api/v2/banks/:bankId/states/:stateId/cities',
   async (req: Request, res: Response) => {
     try {
-      const { bankId, stateId } = req.params;
+      const bankId = parseInt(req.params.bankId);
+      const stateId = parseInt(req.params.stateId);
       const cacheKey = `bank_${bankId}_state_${stateId}_cities`;
-
-      const cached = await cache.get(cacheKey);
-      if (cached) {
-        return res.json({ data: JSON.parse(cached) });
-      }
+      const cached = await cacheGet(cacheKey);
+      if (cached) { res.json(cached); return }
 
       const cities = await prisma.branch.findMany({
-        where: {
-          bank_id: parseInt(bankId),
-          state_id: parseInt(stateId),
-          is_active: true,
-        },
+        where: { bankId, stateId, isActive: true },
         select: { city: true },
         distinct: ['city'],
         orderBy: { city: 'asc' },
       });
 
-      const result = cities
-        .filter((c) => c.city)
-        .map((c) => ({ name: c.city }));
-
-      await cache.set(cacheKey, JSON.stringify(result), 86400);
-
-      res.json({ data: result });
+      const data = cities.filter((c) => c.city).map((c) => ({ name: c.city }));
+      const out = { data, count: data.length };
+      await cacheSet(cacheKey, out, 86400);
+      res.json(out);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch cities' });
     }
@@ -195,51 +166,49 @@ router.get(
 
 /**
  * GET /api/v2/banks/:bankId/states/:stateId/cities/:city/branches
- * Fetch branches for a bank in a specific city
- * NOT cached (frequently changing, small result set)
+ * Fetch branches for a bank in a specific city (cascade step 3)
  */
 router.get(
   '/api/v2/banks/:bankId/states/:stateId/cities/:city/branches',
   async (req: Request, res: Response) => {
     try {
-      const { bankId, stateId, city } = req.params;
+      const bankId = parseInt(req.params.bankId);
+      const stateId = parseInt(req.params.stateId);
+      const city = decodeURIComponent(req.params.city);
 
       const branches = await prisma.branch.findMany({
         where: {
-          bank_id: parseInt(bankId),
-          state_id: parseInt(stateId),
-          city: {
-            equals: decodeURIComponent(city),
-            mode: 'insensitive',
-          },
-          is_active: true,
+          bankId,
+          stateId,
+          city: { equals: city, mode: 'insensitive' },
+          isActive: true,
         },
         include: {
           bank: { select: { name: true } },
           state: { select: { name: true } },
           district: { select: { name: true } },
         },
-        orderBy: { branch_name: 'asc' },
+        orderBy: { branchName: 'asc' },
       });
 
-      res.json({
-        data: branches.map((b) => ({
-          id: b.id,
-          ifsc: b.ifsc,
-          branch_name: b.branch_name,
-          address: b.address,
-          city: b.city,
-          district: b.district?.name,
-          state: b.state.name,
-          pincode: b.pincode,
-          phone: b.phone,
-          micr: b.micr,
-          neft: b.neft,
-          rtgs: b.rtgs,
-          imps: b.imps,
-          upi: b.upi,
-        })),
-      });
+      const data = branches.map((b) => ({
+        id: b.id,
+        ifsc: b.ifsc,
+        branch_name: b.branchName,
+        address: b.address,
+        city: b.city,
+        district: b.district?.name ?? '',
+        state: b.state.name,
+        pincode: b.pincode,
+        phone: b.phone,
+        micr: b.micr,
+        neft: b.neft,
+        rtgs: b.rtgs,
+        imps: b.imps,
+        upi: b.upi,
+      }));
+
+      res.json({ data, count: data.length });
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch branches' });
     }
@@ -251,37 +220,41 @@ router.get(
 // ============================================
 
 /**
- * GET /api/v2/search/banks
- * Search banks by name (for autocomplete)
- * Query: ?q=hdfc&limit=10
+ * GET /api/v2/search/banks?q=hdfc&limit=10
+ * Search banks by name (autocomplete)
  */
 router.get('/api/v2/search/banks', async (req: Request, res: Response) => {
   try {
-    const { q, limit = '10' } = req.query;
+    const q = String(req.query.q || '').trim();
+    const limit = Math.min(parseInt(String(req.query.limit || '10')), 20);
 
-    if (!q || typeof q !== 'string') {
-      return res.json({ data: [] });
-    }
+    if (!q) { res.json({ data: [] }); return }
 
     const banks = await prisma.banksMaster.findMany({
       where: {
-        is_active: true,
-        name: {
-          contains: q,
-          mode: 'insensitive',
-        },
+        isActive: true,
+        name: { contains: q, mode: 'insensitive' },
       },
       select: {
         id: true,
         name: true,
-        logo_url: true,
-        bank_type: true,
+        shortName: true,
+        logoUrl: true,
+        bankType: true,
       },
-      take: Math.min(parseInt(limit as string), 20),
+      take: limit,
       orderBy: { name: 'asc' },
     });
 
-    res.json({ data: banks });
+    const data = banks.map((b) => ({
+      id: b.id,
+      name: b.name,
+      short_name: b.shortName,
+      logo_url: b.logoUrl,
+      bank_type: b.bankType,
+    }));
+
+    res.json({ data });
   } catch (error) {
     res.status(500).json({ error: 'Search failed' });
   }
@@ -294,37 +267,38 @@ router.get('/api/v2/search/banks', async (req: Request, res: Response) => {
  */
 router.get('/api/v2/ifsc/:code', async (req: Request, res: Response) => {
   try {
-    const { code } = req.params;
-    const cacheKey = `ifsc_${code.toUpperCase()}`;
+    const ifsc = req.params.code.toUpperCase().trim();
+    const cacheKey = `ifsc_v2_${ifsc}`;
+    const cached = await cacheGet(cacheKey);
+    if (cached) { res.json(cached); return }
 
-    const cached = await cache.get(cacheKey);
-    if (cached) {
-      return res.json({ data: JSON.parse(cached) });
-    }
-
-    const branch = await prisma.branch.findFirst({
-      where: { ifsc: code.toUpperCase() },
+    const branch = await prisma.branch.findUnique({
+      where: { ifsc },
       include: {
-        bank: { select: { id: true, name: true, logo_url: true } },
-        state: { select: { name: true } },
+        bank: { select: { id: true, name: true, shortName: true, logoUrl: true, bankType: true } },
+        state: { select: { name: true, code: true } },
         district: { select: { name: true } },
       },
     });
 
     if (!branch) {
-      return res.status(404).json({ error: 'IFSC code not found' });
+      res.status(404).json({ error: 'IFSC code not found' });
+      return
     }
 
-    const result = {
+    const data = {
       ifsc: branch.ifsc,
       bank_id: branch.bank.id,
       bank_name: branch.bank.name,
-      bank_logo: branch.bank.logo_url,
-      branch_name: branch.branch_name,
+      short_name: branch.bank.shortName,
+      bank_logo: branch.bank.logoUrl,
+      bank_type: branch.bank.bankType,
+      branch_name: branch.branchName,
       address: branch.address,
       city: branch.city,
-      district: branch.district?.name,
+      district: branch.district?.name ?? '',
       state: branch.state.name,
+      state_code: branch.state.code,
       pincode: branch.pincode,
       phone: branch.phone,
       micr: branch.micr,
@@ -336,10 +310,9 @@ router.get('/api/v2/ifsc/:code', async (req: Request, res: Response) => {
       longitude: branch.longitude,
     };
 
-    // Cache for 7 days
-    await cache.set(cacheKey, JSON.stringify(result), 604800);
-
-    res.json({ data: result });
+    const out = { data };
+    await cacheSet(cacheKey, out, 604800);
+    res.json(out);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch IFSC details' });
   }
@@ -351,33 +324,20 @@ router.get('/api/v2/ifsc/:code', async (req: Request, res: Response) => {
 
 /**
  * GET /api/v2/admin/sync-status
- * Check last sync details
+ * Check last sync + totals
  */
 router.get('/api/v2/admin/sync-status', async (req: Request, res: Response) => {
   try {
-    const lastSync = await prisma.dataSyncLog.findFirst({
-      orderBy: { created_at: 'desc' },
-      take: 1,
-    });
-
-    const stats = await prisma.banksMaster.aggregate({
-      _count: {
-        id: true,
-      },
-      where: { is_active: true },
-    });
-
-    const branchCount = await prisma.branch.aggregate({
-      _count: {
-        id: true,
-      },
-      where: { is_active: true },
-    });
+    const [lastSync, bankCount, branchCount] = await Promise.all([
+      prisma.syncLog.findFirst({ orderBy: { createdAt: 'desc' } }),
+      prisma.banksMaster.count({ where: { isActive: true } }),
+      prisma.branch.count({ where: { isActive: true } }),
+    ]);
 
     res.json({
       data: {
-        total_banks: stats._count.id,
-        total_branches: branchCount._count.id,
+        total_banks: bankCount,
+        total_branches: branchCount,
         last_sync: lastSync,
       },
     });
@@ -388,27 +348,25 @@ router.get('/api/v2/admin/sync-status', async (req: Request, res: Response) => {
 
 /**
  * POST /api/v2/admin/rebuild-presence
- * Rebuild bank_state_presence table (admin only)
+ * Rebuild bank_state_presence table
  */
 router.post('/api/v2/admin/rebuild-presence', async (req: Request, res: Response) => {
   try {
-    // Clear existing
     await prisma.bankStatePresence.deleteMany({});
 
-    // Rebuild from branches
-    const result = await prisma.$executeRaw`
-      INSERT INTO "BankStatePresence" ("bank_id", "state_id", "branches_count", "last_verified", "created_at", "updated_at")
-      SELECT 
-        b."id",
+    await prisma.$executeRaw`
+      INSERT INTO "bank_state_presence" ("bank_id", "state_id", "branches_count", "last_verified", "created_at", "updated_at")
+      SELECT
+        bk."id",
         br."state_id",
         COUNT(br."id"),
         NOW(),
         NOW(),
         NOW()
-      FROM "BanksMaster" b
-      JOIN "Branch" br ON b."id" = br."bank_id"
-      WHERE b."is_active" = true AND br."is_active" = true
-      GROUP BY b."id", br."state_id"
+      FROM "Bank" bk
+      JOIN "Branch" br ON bk."id" = br."bank_id"
+      WHERE bk."is_active" = true AND br."is_active" = true
+      GROUP BY bk."id", br."state_id"
     `;
 
     res.json({ success: true, message: 'Presence table rebuilt' });
@@ -419,26 +377,20 @@ router.post('/api/v2/admin/rebuild-presence', async (req: Request, res: Response
 
 /**
  * POST /api/v2/admin/mark-bank-merged
- * Mark a bank as merged into another
- * Body: { source_bank_id, target_bank_id }
+ * Body: { sourceBankId, targetBankId }
  */
 router.post('/api/v2/admin/mark-bank-merged', async (req: Request, res: Response) => {
   try {
-    const { source_bank_id, target_bank_id } = req.body;
+    const { sourceBankId, targetBankId } = req.body;
 
-    // Update source bank
     await prisma.banksMaster.update({
-      where: { id: source_bank_id },
-      data: {
-        is_active: false,
-        merged_into_id: target_bank_id,
-      },
+      where: { id: sourceBankId },
+      data: { isActive: false, mergedIntoId: targetBankId },
     });
 
-    // Reassign branches
     await prisma.branch.updateMany({
-      where: { bank_id: source_bank_id },
-      data: { bank_id: target_bank_id },
+      where: { bankId: sourceBankId },
+      data: { bankId: targetBankId },
     });
 
     res.json({ success: true, message: 'Bank marked as merged' });
