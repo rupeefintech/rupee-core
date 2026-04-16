@@ -69,14 +69,14 @@ export default function MutualFundCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">Mutual Fund Returns Calculator</h1>
-          <p className="text-blue-100 text-sm max-w-md mx-auto">Calculate expected returns on your lumpsum mutual fund investment. Compare across fund categories.</p>
+          <p className="text-indigo-100 text-sm max-w-md mx-auto">Calculate expected returns on your lumpsum mutual fund investment. Compare across fund categories.</p>
         </div>
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-blue-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <SliderInput
@@ -115,14 +115,14 @@ export default function MutualFundCalculatorPage() {
                       placeholder="Enter current/final value"
                       value={finalValue}
                       onChange={e => setFinalValue(e.target.value.replace(/[^0-9]/g, ''))}
-                      className="w-full pl-7 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+                      className="w-full pl-7 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-indigo-400"
                     />
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3">
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl p-5 text-white">
+                <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl p-5 text-white">
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">
                     {impliedCAGR !== null ? 'Implied CAGR' : 'Est. Returns'}
                   </div>
@@ -136,12 +136,12 @@ export default function MutualFundCalculatorPage() {
 
                 <div className="bg-slate-50 rounded-xl p-4 space-y-2">
                   <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Return Metrics</div>
-                  <div className="flex justify-between text-sm"><span className="text-slate-500">Absolute Return</span><span className="font-bold text-blue-600">{displayAbsRet.toFixed(2)}%</span></div>
-                  <div className="flex justify-between text-sm"><span className="text-slate-500">CAGR (Annualised)</span><span className="font-bold text-blue-600">{displayCAGR.toFixed(2)}%</span></div>
+                  <div className="flex justify-between text-sm"><span className="text-slate-500">Absolute Return</span><span className="font-bold text-indigo-600">{displayAbsRet.toFixed(2)}%</span></div>
+                  <div className="flex justify-between text-sm"><span className="text-slate-500">CAGR (Annualised)</span><span className="font-bold text-indigo-600">{displayCAGR.toFixed(2)}%</span></div>
                   <div className="flex justify-between text-sm"><span className="text-slate-500">Wealth Multiplier</span><span className="font-bold text-slate-700">{(displayMaturity / invested).toFixed(2)}x</span></div>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 text-xs text-blue-700">
+                <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-xs text-indigo-700">
                   For SIP-based return calculation, use the <a href="/calculators/xirr" className="font-bold underline">XIRR Calculator →</a>
                 </div>
               </div>
@@ -165,10 +165,10 @@ export default function MutualFundCalculatorPage() {
                   {MF_CATEGORIES.map(cat => {
                     const val = invested * Math.pow(1 + cat.typical / 100, years);
                     return (
-                      <tr key={cat.label} className={`border-t border-slate-50 hover:bg-slate-50 ${cat.typical === returnRate ? 'bg-blue-50' : ''}`}>
+                      <tr key={cat.label} className={`border-t border-slate-50 hover:bg-slate-50 ${cat.typical === returnRate ? 'bg-indigo-50' : ''}`}>
                         <td className="px-4 py-3 font-medium text-slate-700">{cat.label}</td>
                         <td className="px-4 py-3 text-center">
-                          <span className={`px-2 py-0.5 rounded text-xs font-semibold ${cat.typical >= 14 ? 'bg-green-100 text-green-700' : cat.typical >= 10 ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>{cat.typical}%</span>
+                          <span className={`px-2 py-0.5 rounded text-xs font-semibold ${cat.typical >= 14 ? 'bg-indigo-200 text-indigo-800' : cat.typical >= 10 ? 'bg-indigo-100 text-indigo-700' : 'bg-indigo-50 text-indigo-600'}`}>{cat.typical}%</span>
                         </td>
                         <td className="px-4 py-3 text-right font-bold text-slate-800">{fmtShort(val)}</td>
                       </tr>
@@ -196,7 +196,7 @@ export default function MutualFundCalculatorPage() {
             </div>
           </div>
 
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-700 leading-relaxed">
+          <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4 text-xs text-indigo-700 leading-relaxed">
             <strong>Disclaimer:</strong> Returns shown are estimated. Actual mutual fund returns vary with market conditions and fund performance. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor.
           </div>
         </div>

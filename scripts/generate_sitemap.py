@@ -89,7 +89,17 @@ def generate_sitemap():
             ('/', '1.0', 'weekly', today),
             ('/ifsc-finder', '0.9', 'weekly', today),
             ('/about', '0.8', 'monthly', today),
+
+                # ✅ NEW BLOG SECTION
+            ('/money-guides', '0.9', 'weekly', today),
+
+            # ✅ BLOG PAGES
+            ('/money-guides/pan-rules-2026', '0.8', 'monthly', today),
+            ('/money-guides/pan-limit-2026', '0.8', 'monthly', today),
+            ('/money-guides/pan-mandatory-transactions-2026', '0.8', 'monthly', today),
         ]
+
+       
         
         print("Adding static pages...")
         for path, priority, changefreq, lastmod in static_pages:
@@ -100,6 +110,23 @@ def generate_sitemap():
             xml_lines.append(f'    <priority>{priority}</priority>')
             xml_lines.append('  </url>')
         
+        print("Adding blog pages...")
+
+        blog_slugs = [
+            "pan-rules-2026",
+            "pan-limit-2026",
+            "pan-mandatory-transactions-2026",
+        ]
+
+        for slug in blog_slugs:
+            xml_lines.append('  <url>')
+            xml_lines.append(f'    <loc>{base_url}/money-guides/{slug}</loc>')
+            xml_lines.append(f'    <lastmod>{today}</lastmod>')
+            xml_lines.append('    <changefreq>monthly</changefreq>')
+            xml_lines.append('    <priority>0.8</priority>')
+            xml_lines.append('  </url>')
+
+
         # Add IFSC pages
         print("Adding IFSC pages...")
         for i, (ifsc_code, last_updated) in enumerate(branches):

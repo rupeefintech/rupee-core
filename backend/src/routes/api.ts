@@ -4,6 +4,20 @@ import { cacheGet, cacheSet, cacheFlush } from '../lib/cache'
 
 const router = Router()
 
+// ── In-memory cache for hot endpoints ────────────────────────────────────────
+const memCache = new Map<string, { data: any; expires: number }>()
+
+function memGet(key: string): any | null {
+  const entry = memCache.get(key)
+  if (!entry) return null
+  if (Date.now() > entry.expires) { memCache.delete(key); return null }
+  return entry.data
+}
+
+function memSet(key: string, data: any, ttlSec = 3600): void {
+  memCache.set(key, { data, expires: Date.now() + ttlSec * 1000 })
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function ipHash(req: Request): string {
@@ -21,14 +35,22 @@ async function logSearch(type: string, query: string, count: number, req: Reques
 // ── GET /api/states ──────────────────────────────────────────────────────────
 router.get('/states', async (_req: Request, res: Response) => {
   const KEY = 'states'
-  const cached = await cacheGet(KEY)
-  if (cached) { res.json(cached); return }
 
+  // 1. In-memory cache (instant)
+  const mem = memGet(KEY)
+  if (mem) { res.json(mem); return }
+
+  // 2. Redis cache
+  const cached = await cacheGet(KEY)
+  if (cached) { memSet(KEY, cached); res.json(cached); return }
+
+  // 3. DB query
   const states = await prisma.state.findMany({
-    select: { id: true, name: true, code: true },
+    select: { id: true, name: true, code: true, logoUrl: true },
     orderBy: { name: 'asc' },
   })
   const out = { data: states, count: states.length }
+  memSet(KEY, out)
   await cacheSet(KEY, out)
   res.json(out)
 })
@@ -36,13 +58,21 @@ router.get('/states', async (_req: Request, res: Response) => {
 // ── GET /api/banks ───────────────────────────────────────────────────────────
 router.get('/banks', async (_req: Request, res: Response) => {
   const KEY = 'banks'
-  const cached = await cacheGet(KEY)
-  if (cached) { res.json(cached); return }
 
+  // 1. In-memory cache (instant)
+  const mem = memGet(KEY)
+  if (mem) { res.json(mem); return }
+
+  // 2. Redis cache
+  const cached = await cacheGet(KEY)
+  if (cached) { memSet(KEY, cached); res.json(cached); return }
+
+  // 3. DB query — only active banks
   const banks = await prisma.banksMaster.findMany({
+    where: { isActive: true },
     select: {
-      id: true, name: true,
-      shortName: true, bankType: true, headquarters: true, website: true,
+      id: true, name: true, slug: true,
+      shortName: true, bankType: true, headquarters: true, website: true, logoUrl: true,
     },
     orderBy: { name: 'asc' },
   })
@@ -51,13 +81,16 @@ router.get('/banks', async (_req: Request, res: Response) => {
   const data = banks.map(b => ({
     id:           b.id,
     name:         b.name,
+    slug:         b.slug,
     short_name:   b.shortName,
     bank_type:    b.bankType,
     headquarters: b.headquarters,
     website:      b.website,
+    logo_url:     b.logoUrl || null,
   }))
 
   const out = { data, count: data.length }
+  memSet(KEY, out)
   await cacheSet(KEY, out)
   res.json(out)
 })
@@ -272,10 +305,7 @@ router.get('/bank/:bankSlug', async (req: Request, res: Response) => {
   const { bankSlug } = req.params;
   const bank = await prisma.banksMaster.findFirst({
     where: {
-      shortName: {
-        equals: bankSlug,
-        mode: 'insensitive'
-      }
+      slug: bankSlug
     }
   });
 
@@ -296,6 +326,7 @@ router.get('/bank/:bankSlug', async (req: Request, res: Response) => {
 
   const data = {
     bank: bank.name,
+    logo_url: bank.logoUrl,
     total_branches: branches.length,
     branches: branches.map(b => ({
       ifsc: b.ifsc,
@@ -309,6 +340,49 @@ router.get('/bank/:bankSlug', async (req: Request, res: Response) => {
   res.json({ data });
 });
 
+// ── GET /api/bank/:bankSlug/cities/:stateSlug ─ Cities for bank+state ────────
+router.get('/bank/:bankSlug/cities/:stateSlug', async (req: Request, res: Response) => {
+  const { bankSlug, stateSlug } = req.params;
+
+  const bank = await prisma.banksMaster.findFirst({
+    where: { slug: bankSlug }
+  });
+  if (!bank) return res.status(404).json({ error: 'Bank not found' });
+
+  const state = await prisma.state.findFirst({
+    where: { name: { equals: stateSlug, mode: 'insensitive' } }
+  });
+  if (!state) return res.status(404).json({ error: 'State not found' });
+
+  const branches = await prisma.branch.findMany({
+    where: { bankId: bank.id, stateId: state.id, city: { not: null } },
+    select: { city: true },
+    distinct: ['city'],
+    orderBy: { city: 'asc' },
+  });
+
+  // Normalize city names: collapse variants like "Ranga Reddy"/"Rangareddi"/"Rangareddy"
+  // by removing spaces, hyphens and lowercasing to detect duplicates, keeping the most common spelling
+  const rawCities = branches.filter(b => b.city).map(b => b.city!);
+  const normalize = (s: string) => s.toLowerCase().replace(/[\s\-'\.]/g, '');
+  const grouped = new Map<string, string[]>();
+  for (const c of rawCities) {
+    const key = normalize(c);
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key)!.push(c);
+  }
+  // Pick the first alphabetical variant as canonical (title-cased naturally from DB)
+  const cities = Array.from(grouped.values())
+    .map(variants => ({ city: variants.sort()[0] }))
+    .sort((a, b) => a.city.localeCompare(b.city));
+
+  res.json({
+    bank: { id: bank.id, name: bank.name, shortName: bank.shortName, logo_url: bank.logoUrl },
+    state: { id: state.id, name: state.name, logo_url: state.logoUrl },
+    cities,
+    totalCities: cities.length,
+  });
+});
 
 router.get('/state/:bankSlug/:stateSlug', async (req: Request, res: Response) => {
   const { bankSlug, stateSlug } = req.params;
@@ -316,10 +390,7 @@ router.get('/state/:bankSlug/:stateSlug', async (req: Request, res: Response) =>
   // Find bank
   const bank = await prisma.banksMaster.findFirst({
     where: {
-      shortName: {
-        equals: bankSlug,
-        mode: 'insensitive'
-      }
+      slug: bankSlug
     }
   });
 
@@ -357,10 +428,7 @@ router.get('/banks/:bankSlug/states', async (req: Request, res: Response) => {
   // Find bank
   const bank = await prisma.banksMaster.findFirst({
     where: {
-      shortName: {
-        equals: bankSlug,
-        mode: 'insensitive'
-      }
+      slug: bankSlug
     }
   });
   if (!bank) return res.status(404).json({ error: 'Bank not found' });
@@ -378,6 +446,7 @@ router.get('/banks/:bankSlug/states', async (req: Request, res: Response) => {
       id: true,
       name: true,
       code: true,
+      logoUrl: true,
       _count: {
         select: {
           branches: {
@@ -388,19 +457,21 @@ router.get('/banks/:bankSlug/states', async (req: Request, res: Response) => {
     },
     orderBy: { name: 'asc' }
   });
- 
+
   const formattedStates = states.map(state => ({
     id: state.id,
     name: state.name,
     code: state.code,
+    logo_url: state.logoUrl,
     branchCount: state._count.branches
   }));
- 
+
   res.json({
     bank: {
       id: bank.id,
       name: bank.name,
-      shortName: bank.shortName  
+      shortName: bank.shortName,
+      logo_url: bank.logoUrl,
     },
     states: formattedStates,
     totalStates: formattedStates.length
@@ -412,33 +483,57 @@ router.get('/banks/:bankSlug/states', async (req: Request, res: Response) => {
 // ═══════════════════════════════════════════════════════════════════════════
 router.get('/city/:bankSlug/:stateSlug/:citySlug', async (req: Request, res: Response) => {
   const { bankSlug, stateSlug, citySlug } = req.params;
+  const page  = Math.max(1, parseInt(req.query.page as string) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 20));
+  const skip  = (page - 1) * limit;
 
   const bank = await prisma.banksMaster.findFirst({
-    where: {
-      shortName: {
-        equals: bankSlug,
-        mode: 'insensitive'
-      }
-    }
+    where: { slug: bankSlug }
   });
   if (!bank) return res.status(404).json({ error: 'Bank not found' });
 
-   const state = await prisma.state.findFirst({
-    where: {
-      name: {
-        equals: stateSlug,
-        mode: 'insensitive'
-      }
-    }
+  const state = await prisma.state.findFirst({
+    where: { name: { equals: stateSlug, mode: 'insensitive' } }
   });
   if (!state) return res.status(404).json({ error: 'State not found' });
 
-  const branches = await prisma.branch.findMany({
-    where: { bankId: bank.id, stateId: state.id, city: citySlug.toLowerCase() },
-    orderBy: { branchName: 'asc' },
-  });
+  // Find all city name variants that normalize to the same key (e.g. "ranga reddy" matches "rangareddi", "rangareddy")
+  const normalizeName = (s: string) => s.toLowerCase().replace(/[\s\-'\.]/g, '');
+  const targetKey = normalizeName(citySlug);
 
-  res.json({ bank, state, city: citySlug, branches });
+  const allCityNames = await prisma.branch.findMany({
+    where: { bankId: bank.id, stateId: state.id, city: { not: null } },
+    select: { city: true },
+    distinct: ['city'],
+  });
+  const matchingCities = allCityNames
+    .filter(b => b.city && normalizeName(b.city) === targetKey)
+    .map(b => b.city!);
+
+  // If no normalized match, fall back to exact match
+  const cityFilter = matchingCities.length > 0
+    ? { in: matchingCities }
+    : { equals: citySlug, mode: 'insensitive' as const };
+
+  const where = { bankId: bank.id, stateId: state.id, city: cityFilter as any };
+
+  const [branches, totalCount] = await Promise.all([
+    prisma.branch.findMany({ where, orderBy: { branchName: 'asc' }, skip, take: limit }),
+    prisma.branch.count({ where }),
+  ]);
+
+  res.json({
+    bank: { id: bank.id, name: bank.name, shortName: bank.shortName, logo_url: bank.logoUrl },
+    state: { id: state.id, name: state.name, logo_url: state.logoUrl },
+    city: citySlug,
+    branches,
+    pagination: {
+      page, limit, totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+      hasNext: page * limit < totalCount,
+      hasPrev: page > 1,
+    },
+  });
 });
 
 
@@ -451,10 +546,7 @@ router.get('/state/:bankSlug/:stateSlug/districts', async (req: Request, res: Re
   // Find bank
   const bank = await prisma.banksMaster.findFirst({
     where: {
-      shortName: {
-        equals: bankSlug,
-        mode: 'insensitive'
-      }
+      slug: bankSlug
     }
   });
   if (!bank) return res.status(404).json({ error: 'Bank not found' });
@@ -516,10 +608,7 @@ router.get('/city/:bankSlug/:stateSlug/:districtSlug', async (req: Request, res:
  
   const bank = await prisma.banksMaster.findFirst({
     where: {
-      shortName: {
-        equals: bankSlug,
-        mode: 'insensitive'
-      }
+      slug: bankSlug
     }
   });
   if (!bank) return res.status(404).json({ error: 'Bank not found' });
@@ -664,6 +753,7 @@ router.get('/ifsc/:ifsc', async (req: Request, res: Response) => {
     short_name:    branch.bank.shortName,
     bank_type:     branch.bank.bankType,
     bank_website:  branch.bank.website,
+    bank_logo_url: branch.bank.logoUrl,
     state_name:    branch.state.name,
     state_code:    branch.state.code,
     district_name: branch.district?.name ?? '',
@@ -832,6 +922,7 @@ router.get('/api/ifsc/:code', async (req, res) => {
             bankType: true,
             website: true,
             headquarters: true,
+            logoUrl: true,
           },
         },
         state: {
@@ -876,6 +967,7 @@ router.get('/api/ifsc/:code', async (req, res) => {
         type: branch.bank.bankType,
         website: branch.bank.website,
         headquarters: branch.bank.headquarters,
+        logo_url: branch.bank.logoUrl,
       },
       services: {
         neft: branch.neft,
@@ -1010,5 +1102,876 @@ router.get('/debug/states', async (req: Request, res: Response) => {
   });
   res.json({ states });
 });
+
+
+
+/**Products related API Calls --  */
+
+// ── GET /api/credit-cards/stats ─────────────────────────────────────────────
+router.get('/credit-cards/stats', async (_req: Request, res: Response) => {
+  const KEY = 'cc_stats'
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const [totalCards, freeCards] = await Promise.all([
+    prisma.product.count({ where: { isActive: true } }),
+    prisma.product.count({ where: { isActive: true, details: { annualFee: { equals: 0 } } } }),
+  ])
+
+  const avgResult = await prisma.product.aggregate({
+    where: { isActive: true, rating: { not: null } },
+    _avg: { rating: true },
+  })
+
+  const banks = await prisma.product.findMany({
+    where: { isActive: true },
+    select: { bankId: true },
+    distinct: ['bankId'],
+  })
+
+  const categories = await prisma.productOffer.findMany({
+    where: { isActive: true, category: { not: null } },
+    select: { category: true },
+    distinct: ['category'],
+  })
+
+  const data = {
+    totalCards,
+    totalBanks: banks.length,
+    totalCategories: categories.length,
+    avgRating: Math.round((avgResult._avg.rating || 0) * 10) / 10,
+    freeCards,
+  }
+  await cacheSet(KEY, data, 600)
+  res.json(data)
+})
+
+// ── GET /api/credit-cards/categories ────────────────────────────────────────
+router.get('/credit-cards/categories', async (_req: Request, res: Response) => {
+  const KEY = 'cc_categories'
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const cats = await prisma.productOffer.groupBy({
+    by: ['category'],
+    where: { isActive: true, category: { not: null } },
+    _count: { id: true },
+    orderBy: { _count: { id: 'desc' } },
+  })
+
+  const data = cats
+    .filter((c) => c.category)
+    .map((c, i) => ({
+      id: i + 1,
+      name: c.category!,
+      cardCount: c._count.id,
+    }))
+
+  await cacheSet(KEY, data, 600)
+  res.json(data)
+})
+
+// ── GET /api/credit-cards/banks ─────────────────────────────────────────────
+router.get('/credit-cards/banks', async (_req: Request, res: Response) => {
+  const KEY = 'cc_banks'
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const results = await prisma.product.groupBy({
+    by: ['bankId'],
+    where: { isActive: true },
+    _count: { id: true },
+    orderBy: { _count: { id: 'desc' } },
+  })
+
+  const bankIds = results.map((r) => r.bankId)
+  const banks = await prisma.banksMaster.findMany({
+    where: { id: { in: bankIds } },
+    select: { id: true, name: true },
+  })
+  const bankMap = new Map(banks.map((b) => [b.id, b.name]))
+
+  const data = results.map((r) => ({
+    id: r.bankId,
+    name: bankMap.get(r.bankId) || 'Unknown',
+    cardCount: r._count.id,
+  }))
+
+  await cacheSet(KEY, data, 600)
+  res.json(data)
+})
+
+// ── GET /api/credit-cards/featured ──────────────────────────────────────────
+router.get('/credit-cards/featured', async (_req: Request, res: Response) => {
+  const KEY = 'cc_featured'
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const products = await prisma.product.findMany({
+    where: { isActive: true, isFeatured: true },
+    include: {
+      bank: { select: { name: true, slug: true, logoUrl: true } },
+      details: true,
+      offers: { where: { isActive: true }, take: 1, orderBy: { version: 'desc' } },
+    },
+    orderBy: { rating: 'desc' },
+    take: 8,
+  })
+
+  const cards = products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    network: p.network,
+    rating: p.rating,
+    totalRatings: p.totalRatings,
+    bank: { name: p.bank.name, slug: p.bank.slug, logo: p.bank.logoUrl || null },
+    annualFee: p.details?.annualFee ?? 0,
+    topBenefit: p.offers[0]?.title || null,
+  }))
+
+  await cacheSet(KEY, cards, 600)
+  res.json(cards)
+})
+
+//Fetch Products
+router.get('/products', async (req: Request, res: Response) => {
+  try {
+    // STEP 1: Read query params
+    const { category, page = '1', limit = '10' } = req.query
+
+    const pageNum = Number(page)
+    const limitNum = Number(limit)
+    const skip = (pageNum - 1) * limitNum
+
+    // STEP 2: Cache key
+    const CACHE_KEY = `products_${category}_${page}_${limit}`
+
+    const cached = await cacheGet(CACHE_KEY)
+    if (cached) {
+      return res.json(cached)
+    }
+
+    // STEP 3: Read additional query params
+    const { search, bank, annualFeeMax, sortBy } = req.query
+
+    const where: any = {
+      isActive: true,
+      ...(category && { category: String(category) })
+    }
+    if (search) {
+      where.OR = [
+        { name: { contains: String(search), mode: 'insensitive' } },
+        { bank: { name: { contains: String(search), mode: 'insensitive' } } }
+      ]
+    }
+    if (bank) {
+      where.bank = { name: String(bank) }
+    }
+    if (annualFeeMax) {
+      where.details = { annualFee: { lte: Number(annualFeeMax) } }
+    }
+
+    // Sort order
+    let orderBy: any = { rating: 'desc' }
+    if (sortBy === 'annualFee') orderBy = { details: { annualFee: 'asc' } }
+    else if (sortBy === 'newest') orderBy = { createdAt: 'desc' }
+
+    // Fetch from DB
+    const products = await prisma.product.findMany({
+      where,
+      include: {
+        bank: {
+          select: {
+            name: true,
+            slug: true,
+            logoUrl: true
+          }
+        },
+        details: true,
+        offers: {
+          where: { isActive: true },
+          orderBy: { createdAt: 'desc' },
+          take: 1
+        },
+        features: {
+          include: { feature: true }
+        }
+      },
+      skip,
+      take: limitNum,
+      orderBy
+    })
+
+    // Total count for pagination
+    const total = await prisma.product.count({ where })
+
+    // STEP 4: Format response
+    const formatted = products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      category: p.category,
+      network: p.network,
+      isFeatured: p.isFeatured,
+      isPopular: p.isPopular,
+      rating: p.rating,
+      totalRatings: p.totalRatings,
+      cardImageUrl: p.cardImageUrl,
+      applyUrl: p.applyUrl,
+
+      bank: {
+        name: p.bank.name,
+        slug: p.bank.slug,
+        logo: p.bank.logoUrl || null
+      },
+
+      annualFee: p.details?.annualFee ?? 0,
+      joiningFee: p.details?.joiningFee ?? 0,
+      rewardType: p.details?.rewardType ?? null,
+
+      offer: p.offers[0]
+        ? {
+            title: p.offers[0].title,
+            rewardRate: p.offers[0].rewardRate,
+            rewardCap: p.offers[0].rewardCap,
+            category: p.offers[0].category
+          }
+        : null,
+
+      features: p.features.map((f) => f.feature.name)
+    }))
+
+    const result = {
+      page: pageNum,
+      limit: limitNum,
+      count: formatted.length,
+      total,
+      products: formatted
+    }
+
+    // STEP 5: Cache result
+    await cacheSet(CACHE_KEY, result, 300)
+
+    // STEP 6: Send response
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+
+/**For a given product (credit card), return:
+Basic info
+Bank info
+Full details
+ALL offers (active + past versions) */
+router.get('/products/:slug', async (req: Request, res: Response) => {
+  try {
+    const { slug } = req.params
+
+    if (!slug) {
+      return res.status(400).json({ error: 'Slug is required' })
+    }
+
+    // STEP 1: Cache key
+    const CACHE_KEY = `product_detail_${slug}`
+
+    const cached = await cacheGet(CACHE_KEY)
+    if (cached) {
+      return res.json(cached)
+    }
+
+    // STEP 2: Fetch product
+    const product = await prisma.product.findUnique({
+      where: { slug },
+      include: {
+        bank: {
+          select: {
+            name: true,
+            slug: true,
+            logoUrl: true
+          }
+        },
+        details: true,
+
+        // 🔥 IMPORTANT: fetch ALL offers (not just active)
+        offers: {
+          orderBy: {
+            createdAt: 'desc'
+          }
+        },
+
+        features: {
+          include: {
+            feature: true
+          }
+        }
+      }
+    })
+
+    // STEP 3: Not found
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' })
+    }
+
+    // STEP 4: Format response
+    const formatted = {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      category: product.category,
+      network: product.network,
+      isFeatured: product.isFeatured,
+      isPopular: product.isPopular,
+      rating: product.rating,
+      totalRatings: product.totalRatings,
+      cardImageUrl: product.cardImageUrl,
+      applyUrl: product.applyUrl,
+
+      bank: {
+        name: product.bank.name,
+        slug: product.bank.slug,
+        logo: product.bank.logoUrl || null
+      },
+
+      details: {
+        annualFee: product.details?.annualFee ?? null,
+        joiningFee: product.details?.joiningFee ?? null,
+        minIncome: product.details?.minIncome ?? null,
+        loungeAccess: product.details?.loungeAccess ?? null,
+        rewardType: product.details?.rewardType ?? null
+      },
+
+      // Offer history
+      offers: product.offers.map((o) => ({
+        title: o.title,
+        description: o.description,
+        rewardRate: o.rewardRate,
+        rewardCap: o.rewardCap,
+        category: o.category,
+        isActive: o.isActive,
+        validFrom: o.validFrom,
+        validTo: o.validTo,
+        version: o.version
+      })),
+
+      // Features (tags)
+      features: product.features.map((f) => f.feature.name)
+    }
+
+    // STEP 5: Cache
+    await cacheSet(CACHE_KEY, formatted, 300)
+
+    // STEP 6: Response
+    res.json(formatted)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+
+/**Allow users to compare 2–3 credit cards side-by-side
+Return:
+Basic info
+Fees
+Active offer
+Key features */
+
+router.get('/compare', async (req: Request, res: Response) => {
+  try {
+    const { ids } = req.query
+
+    if (!ids) {
+      return res.status(400).json({ error: 'Product IDs required' })
+    }
+
+    // Convert "1,2,3" → [1,2,3]
+    const idArray = String(ids)
+      .split(',')
+      .map((id) => Number(id.trim()))
+      .filter(Boolean)
+
+    if (idArray.length < 2) {
+      return res.status(400).json({ error: 'At least 2 products required for comparison' })
+    }
+
+    // STEP 1: Cache
+    const CACHE_KEY = `compare_${idArray.join('_')}`
+
+    const cached = await cacheGet(CACHE_KEY)
+    if (cached) {
+      return res.json(cached)
+    }
+
+    // STEP 2: Fetch products
+    const products = await prisma.product.findMany({
+      where: {
+        id: { in: idArray },
+        isActive: true
+      },
+      include: {
+        bank: {
+          select: {
+            name: true,
+            slug: true,
+            logoUrl: true
+          }
+        },
+        details: true,
+        offers: {
+          where: {
+            isActive: true
+          },
+          take: 1
+        },
+        features: {
+          include: {
+            feature: true
+          }
+        }
+      }
+    })
+
+    // STEP 3: Format response
+    const formatted = products.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+
+      bank: {
+        name: p.bank.name,
+        logo: p.bank.logoUrl
+      },
+
+      fees: {
+        annualFee: p.details?.annualFee ?? null,
+        joiningFee: p.details?.joiningFee ?? null
+      },
+
+      offer: p.offers[0]
+        ? {
+            title: p.offers[0].title,
+            rewardRate: p.offers[0].rewardRate,
+            rewardCap: p.offers[0].rewardCap
+          }
+        : null,
+
+      features: p.features.map((f) => f.feature.name)
+    }))
+
+    const result = {
+      count: formatted.length,
+      products: formatted
+    }
+
+    // STEP 4: Cache
+    await cacheSet(CACHE_KEY, result, 300)
+
+    // STEP 5: Response
+    res.json(result)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+/**Allow you (or future UI) to:
+
+Create product
+Add/update product details
+Add new offer (with versioning logic 🔥)
+Update product */
+
+router.post('/admin/products', async (req: Request, res: Response) => {
+  try {
+    const { name, slug, category, bankId, network } = req.body
+
+    if (!name || !slug || !category || !bankId) {
+      return res.status(400).json({ error: 'Missing required fields' })
+    }
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        slug,
+        category,
+        bankId,
+        network
+      }
+    })
+
+    res.json(product)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to create product' })
+  }
+})
+
+//ADD / UPDATE PRODUCT DETAILS
+router.post('/admin/products/:id/details', async (req: Request, res: Response) => {
+  try {
+    const productId = Number(req.params.id)
+
+    const {
+      annualFee,
+      joiningFee,
+      minIncome,
+      loungeAccess,
+      rewardType
+    } = req.body
+
+    const details = await prisma.productDetails.upsert({
+      where: { productId },
+      update: {
+        annualFee,
+        joiningFee,
+        minIncome,
+        loungeAccess,
+        rewardType
+      },
+      create: {
+        productId,
+        annualFee,
+        joiningFee,
+        minIncome,
+        loungeAccess,
+        rewardType
+      }
+    })
+
+    res.json(details)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to save product details' })
+  }
+})
+
+//ADD OFFER (VERSIONING LOGIC)
+router.post('/admin/products/:id/offers', async (req: Request, res: Response) => {
+  try {
+    const productId = Number(req.params.id)
+
+    const {
+      title,
+      description,
+      rewardType,
+      rewardRate,
+      rewardCap,
+      category
+    } = req.body
+
+    // STEP 1: get current active offer
+    const existing = await prisma.productOffer.findFirst({
+      where: {
+        productId,
+        isActive: true
+      },
+      orderBy: {
+        version: 'desc'
+      }
+    })
+
+    let nextVersion = 1
+
+    if (existing) {
+      nextVersion = existing.version + 1
+
+      // deactivate old
+      await prisma.productOffer.updateMany({
+        where: {
+          productId,
+          isActive: true
+        },
+        data: {
+          isActive: false,
+          validTo: new Date()
+        }
+      })
+    }
+
+    // STEP 2: create new offer
+    const newOffer = await prisma.productOffer.create({
+      data: {
+        productId,
+        title,
+        description,
+        rewardType,
+        rewardRate,
+        rewardCap,
+        category,
+
+        version: nextVersion,
+        isActive: true,
+        validFrom: new Date(),
+
+        source: 'manual'
+      }
+    })
+
+    res.json(newOffer)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to add offer' })
+  }
+})
+
+//UPDATE PRODUCT BASIC INFO
+router.put('/admin/products/:id', async (req: Request, res: Response) => {
+  try {
+    const productId = Number(req.params.id)
+
+    const { name, slug, isActive, network } = req.body
+
+    const updated = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        name,
+        slug,
+        isActive,
+        network
+      }
+    })
+
+    res.json(updated)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to update product' })
+  }
+})
+
+//--------------------
+//Add a temporary test route:Product
+router.get('/test-product', async (req, res) => {
+  try {
+    const product = await prisma.product.create({
+    data: {
+        name: "HDFC Millennia Credit Card",
+        slug: "hdfc-millennia-credit-card",
+        category: "credit_card",
+        bankId: 780 // replace with actual HDFC id
+      }
+    })
+
+    res.json(product)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to create product' })
+  }
+})
+
+//Add a temporary test route:Add Product Details
+router.get('/test-productdetails', async (req, res) => {
+  try {
+    const productdetails = await prisma.productDetails.create({
+      data: {
+        productId: 3,
+        annualFee: 1000,
+        joiningFee: 1000,
+        minIncome: 300000,
+        loungeAccess: 4,
+        rewardType: "cashback"
+      }
+    })
+
+    res.json(productdetails)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to create product details' })
+  }
+})
+
+
+//Add a temporary test route:Add Product Offers
+router.get('/test-productoffer', async (req, res) => {
+  try {
+    const productoffer = await prisma.productOffer.create({
+    data: {
+      productId: 3,
+      title: "5% Cashback on Amazon & Flipkart",
+      description: "Earn 5% cashback on major online platforms",
+
+      rewardType: "cashback",
+      rewardRate: 5,
+      rewardCap: 500,
+      category: "shopping",
+
+      version: 1,
+      isActive: true,
+      validFrom: new Date(),
+
+      source: "manual"
+    }
+  })
+
+    res.json(productoffer)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to create product offer details' })
+  }
+})
+
+
+//Add a temporary test route:Deactivate current offer
+router.get('/test-deactiveCurrnetOffer', async (req, res) => {
+  try {
+    const deactiveCurrnetOffer =await prisma.productOffer.updateMany({
+      where: { productId: 3, isActive: true },
+      data: {
+        isActive: false,
+        validTo: new Date()
+      }
+    })
+
+    res.json(deactiveCurrnetOffer)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to Deactivate Offer' })
+  }
+})
+
+//Add a temporary test route:Add new version
+router.get('/test-addNewVersionOffer', async (req, res) => {
+  try {
+    const addNewVersionOffer =await prisma.productOffer.create({
+    data: {
+      productId: 3,
+      title: "10% Cashback (Festive Offer)",
+      rewardType: "cashback",
+      rewardRate: 10,
+      rewardCap: 1000,
+
+      version: 2,
+      isActive: true,
+      validFrom: new Date(),
+
+      source: "manual"
+    }
+  })
+
+    res.json(addNewVersionOffer)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to add new version of the product' })
+  }
+})
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── Blog Endpoints ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+// GET /api/blogs — paginated list with optional category/search filter
+router.get('/blogs', async (req: Request, res: Response) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page as string) || 1)
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 12))
+    const category = (req.query.category as string)?.trim() || undefined
+    const search = (req.query.search as string)?.trim() || undefined
+    const skip = (page - 1) * limit
+
+    const where: any = { isPublished: true }
+    if (category) where.category = category
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ]
+    }
+
+    const [blogs, total] = await Promise.all([
+      prisma.blog.findMany({
+        where,
+        select: {
+          id: true, slug: true, title: true, description: true,
+          category: true, tags: true, coverImage: true, readTime: true,
+          isFeatured: true, publishedAt: true,
+        },
+        orderBy: { publishedAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.blog.count({ where }),
+    ])
+
+    res.json({ blogs, total, page, limit, totalPages: Math.ceil(total / limit) })
+  } catch (err) {
+    console.error('GET /api/blogs error:', err)
+    res.status(500).json({ error: 'Failed to fetch blogs' })
+  }
+})
+
+// GET /api/blogs/categories — distinct categories with counts
+router.get('/blogs/categories', async (_req: Request, res: Response) => {
+  try {
+    const categories = await prisma.blog.groupBy({
+      by: ['category'],
+      where: { isPublished: true },
+      _count: { id: true },
+      orderBy: { category: 'asc' },
+    })
+
+    res.json(categories.map((c) => ({ category: c.category, count: c._count.id })))
+  } catch (err) {
+    console.error('GET /api/blogs/categories error:', err)
+    res.status(500).json({ error: 'Failed to fetch blog categories' })
+  }
+})
+
+// GET /api/blogs/featured — featured blogs for homepage
+router.get('/blogs/featured', async (_req: Request, res: Response) => {
+  try {
+    const blogs = await prisma.blog.findMany({
+      where: { isPublished: true, isFeatured: true },
+      select: {
+        id: true, slug: true, title: true, description: true,
+        category: true, coverImage: true, readTime: true, publishedAt: true,
+      },
+      orderBy: { publishedAt: 'desc' },
+      take: 5,
+    })
+
+    res.json(blogs)
+  } catch (err) {
+    console.error('GET /api/blogs/featured error:', err)
+    res.status(500).json({ error: 'Failed to fetch featured blogs' })
+  }
+})
+
+// GET /api/blogs/:slug — single blog with full content
+router.get('/blogs/:slug', async (req: Request, res: Response) => {
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: { slug: req.params.slug },
+    })
+
+    if (!blog || !blog.isPublished) {
+      res.status(404).json({ error: 'Blog not found' })
+      return
+    }
+
+    // Fetch related blogs (same category, exclude current)
+    const related = await prisma.blog.findMany({
+      where: {
+        isPublished: true,
+        category: blog.category,
+        id: { not: blog.id },
+      },
+      select: {
+        slug: true, title: true, description: true,
+        category: true, coverImage: true, readTime: true, publishedAt: true,
+      },
+      orderBy: { publishedAt: 'desc' },
+      take: 3,
+    })
+
+    res.json({ ...blog, related })
+  } catch (err) {
+    console.error('GET /api/blogs/:slug error:', err)
+    res.status(500).json({ error: 'Failed to fetch blog' })
+  }
+})
 
 export default router

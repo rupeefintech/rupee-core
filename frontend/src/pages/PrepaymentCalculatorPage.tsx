@@ -76,14 +76,14 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50">
-        <div className="bg-gradient-to-br from-teal-600 to-teal-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">{isHome ? 'Home' : 'Personal'} Loan Prepayment Calculator</h1>
-          <p className="text-teal-100 text-sm max-w-md mx-auto">See exactly how much interest you save and how many months you cut off by making a lump sum prepayment.</p>
+          <p className="text-indigo-100 text-sm max-w-md mx-auto">See exactly how much interest you save and how many months you cut off by making a lump sum prepayment.</p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-teal-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <SliderInput
@@ -92,7 +92,7 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                   display={fmtINR(loanAmt)}
                   onChange={setLoanAmt}
                   parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))}
-                  color="teal"
+                  color="blue"
                   isZero={loanAmt === 0}
                 />
                 <SliderInput
@@ -100,14 +100,14 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                   value={rate} min={5} max={24} step={0.1}
                   display={`${rate.toFixed(1)}%`}
                   onChange={setRate}
-                  color="teal"
+                  color="blue"
                 />
                 <SliderInput
                   label="Loan Tenure"
                   value={tenure} min={1} max={isHome ? 30 : 7} step={1}
                   display={`${tenure} Yr`}
                   onChange={setTenure}
-                  color="teal"
+                  color="blue"
                 />
                 <SliderInput
                   label="Prepayment Amount"
@@ -115,7 +115,7 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                   display={fmtINR(prepayAmt)}
                   onChange={setPrepayAmt}
                   parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))}
-                  color="teal"
+                  color="blue"
                   isZero={prepayAmt === 0}
                 />
                 <SliderInput
@@ -123,11 +123,11 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                   value={prepayMonth} min={1} max={Math.max(tenure * 12 - 1, 1)} step={1}
                   display={`Month ${prepayMonth}`}
                   onChange={setPrepayMonth}
-                  color="teal"
+                  color="blue"
                 />
               </div>
 
-              <div className="bg-gradient-to-br from-teal-600 to-teal-800 rounded-lg p-5 text-white flex flex-col gap-3">
+              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-5 text-white flex flex-col gap-3">
                 <div>
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Interest Saved</div>
                   <div className="text-3xl font-bold tracking-tight text-green-300">{fmtShort(Math.max(intSaved, 0))}</div>

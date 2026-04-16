@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -L -o /tmp/payment.html -w \"%{http_code}\" \"https://bankonic.org/type/payment-banks\")",
+      "Read(//c/Users/pavan/Downloads/**)",
+      "Bash(python -c \":*)",
+      "Bash(npx prisma:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node -e \":*)",
+      "Bash(node -e ':*)",
+      "Bash(npx vite:*)"
+    ]
+  }
+}

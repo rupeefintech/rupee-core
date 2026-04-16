@@ -27,11 +27,13 @@ model State {
 
 // ─── District ────────────────────────────────────────────────────────────────
 model District {
-  id       Int      @id @default(autoincrement())
-  name     String   @db.VarChar(100)
-  stateId  Int      @map("state_id")
-  state    State    @relation(fields: [stateId], references: [id])
-  branches Branch[]
+  id             Int      @id @default(autoincrement())
+  name           String   @db.VarChar(100)
+  stateId        Int      @map("state_id")
+  state          State    @relation(fields: [stateId], references: [id])
+  slug           String?  @db.VarChar(120)
+  normalizedName String?  @map("normalized_name") @db.VarChar(100)
+  branches       Branch[]
 
   @@unique([name, stateId])
   @@index([stateId])
@@ -79,6 +81,10 @@ model BanksMaster {
   branches           Branch[]
   bankStatePresences BankStatePresence[]
 
+  //Products 
+  products Product[]
+
+  @@index([isActive])
   @@map("Bank")
 }
 
@@ -190,4 +196,149 @@ model SyncLog {
   completedAt    DateTime? @map("completed_at")
 
   @@map("sync_log")
+}
+
+//────────────Credit card related
+//────────────Product (Core Entity)
+model Product {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(150)
+  slug String @unique @db.VarChar(180)
+
+  category String @db.VarChar(50) // credit_card, loan, savings_account
+
+  bankId Int         @map("bank_id")
+  bank   BanksMaster @relation(fields: [bankId], references: [id])
+
+  network String? @db.VarChar(50) // Visa, Mastercard, RuPay
+
+  cardImageUrl String? @map("card_image_url") @db.Text
+  applyUrl     String? @map("apply_url") @db.Text
+
+  isFeatured Boolean @default(false) @map("is_featured")
+  isPopular  Boolean @default(false) @map("is_popular")
+  isActive   Boolean @default(true) @map("is_active")
+
+  rating       Float? @default(0)
+  totalRatings Int    @default(0) @map("total_ratings")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  details  ProductDetails?
+  offers   ProductOffer[]
+  features ProductFeatureMapping[]
+
+  @@index([bankId])
+  @@index([category])
+}
+
+//────────────ProductDetails (Semi-Stable Fields)
+model ProductDetails {
+  id        Int     @id @default(autoincrement())
+  productId Int     @unique @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  annualFee  Float? @map("annual_fee")
+  joiningFee Float? @map("joining_fee")
+
+  minIncome   Float?  @map("min_income")
+  eligibility String? @db.Text
+
+  loungeAccess Int? @map("lounge_access")
+
+  rewardType String? @map("reward_type") // cashback, points, miles
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+//ProductOffer (VERSIONED — MOST IMPORTANT)
+model ProductOffer {
+  id Int @id @default(autoincrement())
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  title       String  @db.VarChar(200)
+  description String? @db.Text
+
+  // Structured fields
+  rewardType String? @map("reward_type")
+  rewardRate Float?  @map("reward_rate")
+  rewardCap  Float?  @map("reward_cap")
+  category   String? @db.VarChar(100) // shopping, travel, fuel
+
+  // Versioning fields
+  version  Int     @default(1)
+  isActive Boolean @default(true) @map("is_active")
+
+  validFrom DateTime? @map("valid_from")
+  validTo   DateTime? @map("valid_to")
+
+  source    String? @db.VarChar(50) // manual, scraper
+  sourceUrl String? @db.Text
+
+  lastCheckedAt DateTime? @map("last_checked_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([productId])
+  @@index([isActive])
+}
+
+//Feature (Tag System)
+model Feature {
+  id   Int     @id @default(autoincrement())
+  name String  @unique @db.VarChar(100)
+  slug String? @unique @db.VarChar(120)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  products ProductFeatureMapping[]
+}
+
+//ProductFeatureMapping (Many-to-Many)
+model ProductFeatureMapping {
+  id Int @id @default(autoincrement())
+
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id])
+
+  featureId Int     @map("feature_id")
+  feature   Feature @relation(fields: [featureId], references: [id])
+
+  @@unique([productId, featureId])
+  @@index([productId])
+  @@index([featureId])
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  @@map("admins")  // map the model to the correct table
+}
+
+// ─── Blog ───────────────────────────────────────────────────────────────────
+model Blog {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique @db.VarChar(200)
+  title       String   @db.VarChar(300)
+  description String   @db.Text
+  category    String   @db.VarChar(50)
+  tags        String[] @default([])
+  coverImage  String?  @map("cover_image") @db.Text
+  content     String   @db.Text
+  readTime    String?  @map("read_time") @db.VarChar(20)
+  isPublished Boolean  @default(true) @map("is_published")
+  isFeatured  Boolean  @default(false) @map("is_featured")
+  publishedAt DateTime @default(now()) @map("published_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([isPublished, publishedAt])
+  @@map("blogs")
 }

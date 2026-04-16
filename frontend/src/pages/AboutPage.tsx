@@ -29,9 +29,7 @@ export default function AboutPage() {
       <section className="hero-bg py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <motion.div {...fadeUp()}>
-            <div className="w-16 h-16 bg-brand-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-              <IndianRupee className="w-8 h-8 text-white" />
-            </div>
+            <img src="/logo.png" alt="Rupeepedia" className="h-20 w-auto mx-auto mb-6 mix-blend-multiply" />
             <h1 className="font-display text-4xl sm:text-5xl font-bold text-brand-900 mb-6 leading-tight">
               About RupeePedia
             </h1>

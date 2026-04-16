@@ -59,20 +59,20 @@ export default function SWPCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-violet-50">
-        <div className="bg-gradient-to-br from-violet-600 to-violet-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">SWP Calculator</h1>
-          <p className="text-violet-100 text-sm max-w-md mx-auto">Calculate how long your investment corpus will last with regular monthly withdrawals.</p>
+          <p className="text-indigo-100 text-sm max-w-md mx-auto">Calculate how long your investment corpus will last with regular monthly withdrawals.</p>
         </div>
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-violet-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <SliderInput label="Total investment"           value={investment} min={10000} max={10000000} step={10000} display={fmtINR(investment)} onChange={setInvestment} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="violet" />
-                <SliderInput label="Withdrawal per month"       value={withdrawal} min={500}   max={100000}   step={500}   display={fmtINR(withdrawal)} onChange={setWithdrawal} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="violet" />
-                <SliderInput label="Expected return rate (p.a)" value={rate}       min={1}     max={20}       step={0.5}   display={`${rate}%`}         onChange={setRate}       color="violet" />
-                <SliderInput label="Time period"                value={years}      min={1}     max={30}       step={1}     display={`${years} Yr`}      onChange={setYears}      color="violet" />
+                <SliderInput label="Total investment"           value={investment} min={10000} max={10000000} step={10000} display={fmtINR(investment)} onChange={setInvestment} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="blue" />
+                <SliderInput label="Withdrawal per month"       value={withdrawal} min={500}   max={100000}   step={500}   display={fmtINR(withdrawal)} onChange={setWithdrawal} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="blue" />
+                <SliderInput label="Expected return rate (p.a)" value={rate}       min={1}     max={20}       step={0.5}   display={`${rate}%`}         onChange={setRate}       color="blue" />
+                <SliderInput label="Time period"                value={years}      min={1}     max={30}       step={1}     display={`${years} Yr`}      onChange={setYears}      color="blue" />
               </div>
 
               <div className="flex flex-col justify-center">
@@ -95,12 +95,12 @@ export default function SWPCalculatorPage() {
                     </div>
                   )}
                   {finalValue > 0 && (
-                    <div className="bg-violet-50 border border-violet-100 rounded-lg p-3 text-xs text-violet-700 mt-2">
+                    <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-3 text-xs text-indigo-700 mt-2">
                       ✓ Corpus sustains {years} years of withdrawals with {fmtShort(finalValue)} remaining.
                     </div>
                   )}
                 </div>
-                <button className="mt-4 bg-violet-600 text-white font-bold text-sm rounded-xl py-3 hover:bg-violet-700 transition-colors">
+                <button className="mt-4 bg-indigo-600 text-white font-bold text-sm rounded-xl py-3 hover:bg-indigo-700 transition-colors">
                   Start Investing →
                 </button>
               </div>

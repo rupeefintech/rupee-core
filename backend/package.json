@@ -1,7 +1,7 @@
 {
-  "name": "bankinfohub-backend",
+  "name": "rupee-backend",
   "version": "1.0.0",
-  "description": "BankInfoHub API - Indian Bank IFSC Finder Backend",
+  "description": "RupeeFintech - Indian Bank IFSC Finder Backend",
   "main": "src/index.ts",
   "scripts": {
     "postinstall": "prisma generate",
@@ -11,6 +11,7 @@
     "seed:sample": "npx tsx src/seed-sample.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.89.0",
     "@prisma/client": "^5.13.0",
     "@upstash/redis": "^1.31.0",
     "compression": "^1.7.4",

@@ -16,23 +16,47 @@ const API_BASE = buildApiBase();
 
 export const apiClient = axios.create({
   baseURL: API_BASE,
-  timeout: 10000,
+  timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
 });
+
+export interface BlogSummary {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  coverImage: string | null;
+  readTime: string | null;
+  isFeatured: boolean;
+  publishedAt: string;
+}
+
+export interface BlogDetail extends BlogSummary {
+  content: string;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
+  related: BlogSummary[];
+}
 
 export interface State {
   id: number;
   name: string;
   code: string;
+  logo_url?: string;
 }
 
 export interface Bank {
   id: number;
   name: string;
+  slug?: string;
   short_name: string;
   bank_type: string;
   headquarters: string;
   website: string;
+  logo_url?: string;
 }
 
 export interface District {
@@ -74,6 +98,7 @@ export interface BranchDetail {
   district_name: string;
   google_maps_url: string;
   bank_headquarters?: string;
+  bank_logo_url?: string;
 }
 
 export interface NearbyBranch {
@@ -302,6 +327,84 @@ getCityPage: async (slug: string): Promise<{
   }
 },
 
+// ── CASCADE FLOW METHODS ────────────────────────────────────────────────────
 
+  // Bank → States (with logos and branch counts)
+  getStatesByBank: async (bankSlug: string): Promise<{
+    bank: { id: number; name: string; shortName: string; logo_url?: string };
+    states: { id: number; name: string; code: string; logo_url?: string; branchCount: number }[];
+    totalStates: number;
+  }> => {
+    try {
+      const response = await apiClient.get(`/banks/${bankSlug}/states`);
+      const data = unwrapResponse(response);
+      return data;
+    } catch (error: any) {
+      console.error('Error fetching states for bank:', error);
+      throw new Error(`Failed to fetch states: ${error.message}`);
+    }
+  },
+
+  // Bank + State → Cities
+  getCities: async (bankSlug: string, stateSlug: string): Promise<{
+    bank: { id: number; name: string; shortName: string; logo_url?: string };
+    state: { id: number; name: string; logo_url?: string };
+    cities: { city: string }[];
+    totalCities: number;
+  }> => {
+    try {
+      const response = await apiClient.get(`/bank/${bankSlug}/cities/${stateSlug}`);
+      const data = unwrapResponse(response);
+      return data;
+    } catch (error: any) {
+      console.error('Error fetching cities:', error);
+      throw new Error(`Failed to fetch cities: ${error.message}`);
+    }
+  },
+
+  // Bank + State + City → Branches (paginated)
+  getBranchesByCity: async (bankSlug: string, stateSlug: string, citySlug: string, page = 1, limit = 20): Promise<{
+    bank: any;
+    state: any;
+    city: string;
+    branches: any[];
+    pagination: { page: number; limit: number; totalCount: number; totalPages: number; hasNext: boolean; hasPrev: boolean };
+  }> => {
+    try {
+      const response = await apiClient.get(`/city/${bankSlug}/${stateSlug}/${citySlug}`, { params: { page, limit } });
+      const data = unwrapResponse(response);
+      return data;
+    } catch (error: any) {
+      console.error('Error fetching branches by city:', error);
+      throw new Error(`Failed to fetch branches: ${error.message}`);
+    }
+  },
+
+  // ── Blog API ────────────────────────────────────────────────────────────────
+  getBlogs: async (params?: { page?: number; limit?: number; category?: string; search?: string }): Promise<{
+    blogs: BlogSummary[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> => {
+    const response = await apiClient.get('/blogs', { params });
+    return unwrapResponse(response);
+  },
+
+  getBlogBySlug: async (slug: string): Promise<BlogDetail> => {
+    const response = await apiClient.get(`/blogs/${slug}`);
+    return unwrapResponse(response);
+  },
+
+  getBlogCategories: async (): Promise<{ category: string; count: number }[]> => {
+    const response = await apiClient.get('/blogs/categories');
+    return unwrapResponse(response);
+  },
+
+  getFeaturedBlogs: async (): Promise<BlogSummary[]> => {
+    const response = await apiClient.get('/blogs/featured');
+    return unwrapResponse(response);
+  },
 
 };

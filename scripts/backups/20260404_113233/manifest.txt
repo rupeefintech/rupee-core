@@ -1,0 +1,12 @@
+Backup created: 2026-04-04T11:33:01.110630
+Total rows: 236,278
+
+states.csv: 36 rows
+districts.csv: 41,237 rows
+cities.csv: 11,980 rows
+banks.csv: 1,347 rows
+branches.csv: 178,780 rows
+bank_state_presence.csv: 2,808 rows
+data_overrides.csv: 0 rows
+search_logs.csv: 74 rows
+sync_log.csv: 35 rows

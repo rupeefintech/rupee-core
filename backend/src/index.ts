@@ -8,6 +8,8 @@ import morgan from 'morgan'
 import rateLimit from 'express-rate-limit'
 import dotenv from 'dotenv'
 import apiRouter from './routes/api'
+import authRoutes from './routes/authRoutes'
+import adminRoutes from './routes/adminRoutes'
 
 dotenv.config()
 
@@ -20,7 +22,7 @@ app.use(cors({
   origin: NODE_ENV === 'development'
     ? true
     : (process.env.CORS_ORIGIN || '*'),
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }))
 app.use(compression() as any)
@@ -32,6 +34,13 @@ app.use('/api/', rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 }))
+
+// Routes
+app.use("/api/auth", authRoutes)
+app.use("/api/admin", adminRoutes)
+
+// Test route
+app.get("/ping", (req, res) => res.send("pong"))
 
 // ════════════════════════════════════════════════════════════════════════════
 // SEO Routes - Sitemaps and Robots
@@ -294,8 +303,34 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: 'Internal server error' })
 })
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`\n🏦  BankInfoHub API  →  http://localhost:${PORT}  [${NODE_ENV}]\n`)
+
+  // Wait for Neon serverless DB to wake up before doing anything
+  try {
+    const { ensureDbReady } = await import('./lib/prisma')
+    await ensureDbReady()
+    console.log('  ✓ Database connection ready')
+  } catch {
+    console.warn('  ⚠ Database not reachable — API will retry on first request')
+  }
+
+  // Warm up cache: pre-load banks & states into memory on startup
+  try {
+    const http = await import('http')
+    const fetch = (path: string) => new Promise<void>((resolve) => {
+      http.get(`http://localhost:${PORT}${path}`, (res) => {
+        res.resume()
+        res.on('end', resolve)
+      }).on('error', () => resolve())
+    })
+    await Promise.all([
+      fetch('/api/states').then(() => console.log('  ✓ States cache warmed')),
+      fetch('/api/banks').then(() => console.log('  ✓ Banks cache warmed')),
+    ])
+  } catch {
+    console.warn('  ⚠ Cache warm-up failed (non-critical)')
+  }
 })
 
 export default app

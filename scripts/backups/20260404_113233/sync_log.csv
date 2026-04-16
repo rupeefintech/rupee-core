@@ -1,0 +1,36 @@
+id,release_tag,release_date,records_synced,duration_secs,status,error_msg,created_at,completed_at,notes,records_added,records_deleted,records_updated,source,sync_type
+1,,,0,0.0,failed,"relation ""SyncLog"" does not exist
+LINE 1: INSERT INTO ""SyncLog""(""releaseTag"",""releaseDate"",""recordsSyn...
+                    ^
+",2026-03-17 13:32:24.927000,,,,,,,
+2,v2.0.56,2026-03-12,177683,283.16786646842957,SUCCESS,,2026-03-17 13:43:52.588000,,,,,,,
+3,v2.0.57,2026-03-23,178670,278.1033434867859,SUCCESS,,2026-03-28 07:32:05.755000,,,,,,,
+4,v2.0.57,2026-03-23,178670,350.6797847747803,SUCCESS,,2026-03-28 08:02:03.653000,,,,,,,
+5,,,0,0.0,failed,"null value in column ""short_name"" of relation ""banks_master"" violates not-null constraint
+DETAIL:  Failing row contains (1, Nawanagar Co-operative Bank, null, IBKL, null, null, 2026-03-28 16:20:40.767003, 2026-03-28 16:20:40.767003).
+",2026-03-28 16:20:42.585000,,,,,,,
+6,,,0,0.0,failed,"null value in column ""short_name"" of relation ""banks_master"" violates not-null constraint
+DETAIL:  Failing row contains (2, Nawanagar Co-operative Bank, null, IBKL, null, null, 2026-03-28 16:29:16.971066, 2026-03-28 16:29:16.971066).
+",2026-03-28 16:29:18.959000,,,,,,,
+7,,,0,0.0,failed,"null value in column ""short_name"" of relation ""banks_master"" violates not-null constraint
+DETAIL:  Failing row contains (3, Nawanagar Co-operative Bank, null, IBKL, null, null, 2026-03-28 16:34:05.586299, 2026-03-28 16:34:05.586299).
+",2026-03-28 16:34:08.254000,,,,,,,
+8,,,0,0.0,failed,"duplicate key value violates unique constraint ""banks_master_bank_code_key""
+DETAIL:  Key (bank_code)=(SVCB) already exists.
+",2026-03-28 16:49:07.069000,,,,,,,
+9,,,0,0.0,failed,"duplicate key value violates unique constraint ""banks_master_bank_code_key""
+DETAIL:  Key (bank_code)=(SVCB) already exists.
+",2026-03-28 16:50:36.024000,,,,,,,
+10,,,0,0.0,failed,"duplicate key value violates unique constraint ""banks_master_bank_code_unique_idx""
+DETAIL:  Key (bank_code)=(SVCB) already exists.
+",2026-03-28 16:57:25.370000,,,,,,,
+11,,,0,0.0,failed,"invalid input value for enum bank_type_enum: ""1916""
+LINE 345: ...UES ('Karur Vysya Bank','Karur Vysya Bank','KVBL','1916','')
+                                                               ^
+",2026-03-28 16:59:50.797000,,,,,,,
+12,,,0,0.0,failed,name 'meta' is not defined,2026-03-28 17:18:44.403000,,,,,,,
+13,,,0,0.0,failed,name 'meta' is not defined,2026-03-28 17:21:58.340000,,,,,,,
+14,,,0,0.0,failed,"value too long for type character varying(20)
+",2026-03-28 17:25:06.528000,,,,,,,
+15,v2.0.57,2026-03-23,178670,223.65785336494446,SUCCESS,,2026-03-28 17:39:28.897000,,,,,,,
+16,v2.0.57,2026-03-23,178670,210.40591621398926,SUCCESS,,2026-03-28 17:50:19.563000,,,,,,,

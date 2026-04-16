@@ -50,23 +50,23 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">{isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator</h1>
-          <p className="text-blue-100 text-sm max-w-md mx-auto">Find out the maximum loan amount you are eligible for based on your monthly income.</p>
+          <p className="text-indigo-100 text-sm max-w-md mx-auto">Find out the maximum loan amount you are eligible for based on your monthly income.</p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <SliderInput label="Net Monthly Income"        value={income}      min={10000} max={500000}           step={5000} display={fmtINR(income)}           onChange={setIncome}      parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="indigo" isZero={income === 0} />
-                <SliderInput label="Existing EMI Obligations"  value={obligations} min={0}     max={200000}           step={1000} display={fmtINR(obligations)}       onChange={setObligations} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="indigo" />
-                <SliderInput label="Interest Rate (p.a.)"      value={rate}        min={isHome ? 7 : 10} max={24}    step={0.1}  display={`${rate.toFixed(1)}%`}     onChange={setRate}        color="indigo" />
-                <SliderInput label="Loan Tenure"               value={tenure}      min={1}     max={isHome ? 30 : 7}  step={1}    display={`${tenure} Yr`}            onChange={setTenure}      color="indigo" />
+                <SliderInput label="Net Monthly Income"        value={income}      min={10000} max={500000}           step={5000} display={fmtINR(income)}           onChange={setIncome}      parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="blue" isZero={income === 0} />
+                <SliderInput label="Existing EMI Obligations"  value={obligations} min={0}     max={200000}           step={1000} display={fmtINR(obligations)}       onChange={setObligations} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="blue" />
+                <SliderInput label="Interest Rate (p.a.)"      value={rate}        min={isHome ? 7 : 10} max={24}    step={0.1}  display={`${rate.toFixed(1)}%`}     onChange={setRate}        color="blue" />
+                <SliderInput label="Loan Tenure"               value={tenure}      min={1}     max={isHome ? 30 : 7}  step={1}    display={`${tenure} Yr`}            onChange={setTenure}      color="blue" />
               </div>
 
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-lg p-5 text-white flex flex-col gap-4">
+              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-5 text-white flex flex-col gap-4">
                 <div>
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Maximum Loan Eligibility</div>
                   <div className="text-3xl font-bold tracking-tight">{maxLoan > 0 ? fmtShort(maxLoan) : 'Not Eligible'}</div>

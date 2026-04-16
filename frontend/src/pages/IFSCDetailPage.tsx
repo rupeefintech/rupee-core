@@ -403,28 +403,47 @@ export default function IFSCDetailPage() {
           </nav>
 
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-            <span className="inline-flex items-center gap-2 bg-brand-100 text-brand-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-4 border border-brand-200">
-              <Shield className="w-3.5 h-3.5" /> RBI Verified &bull; {branch.bank_name}
-            </span>
-            <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-900 leading-tight mb-2">
-              {branch.ifsc} IFSC Code – {branch.bank_name} {branchTitle}, {toTitleCase(branch.city || '')}
-            </h1>
-            <p className="text-gray-500 text-base">
-              {branch.bank_name} &mdash; {branchTitle} Branch &bull; {toTitleCase(branch.city || '')}, {branch.state_name}
-            </p>
-            {/* ✅ ADD HERE */}
-            <p className="text-sm mt-2 text-gray-500">
-              Explore:
-              <Link to={`/bank/${bankSlug(branch.bank_name)}`}>
+            {/* Bank identity bar */}
+            <div className="flex items-center gap-4 mb-5">
+              {branch.bank_logo_url ? (
+                <img
+                  src={branch.bank_logo_url}
+                  alt={branch.bank_name}
+                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain flex-shrink-0"
+                />
+              ) : (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-brand-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <Building2 className="w-8 h-8 text-brand-400" />
+                </div>
+              )}
+              <div>
+                <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2.5 py-1 rounded-full mb-2 border border-emerald-200 uppercase tracking-wider">
+                  <Shield className="w-3 h-3" /> RBI Verified
+                </span>
+                <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-900 leading-tight">
+                  {branch.bank_name}
+                </h1>
+                <p className="text-gray-500 text-sm sm:text-base mt-1">
+                  {branchTitle} Branch &bull; {toTitleCase(branch.city || '')}, {branch.state_name} &bull; <span className="ifsc-mono font-semibold text-brand-600">{branch.ifsc}</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Explore links */}
+            <div className="flex flex-wrap items-center gap-2 mt-4">
+              <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">Explore:</span>
+              <Link to={`/bank/${bankSlug(branch.bank_name)}`} className="text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-full font-medium transition-all border border-brand-100">
                 {branch.bank_name} IFSC Codes
               </Link>
-              <Link to={`/state/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}`}>
+              <Link to={`/state/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}`} className="text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-full font-medium transition-all border border-brand-100">
                 {branch.state_name} branches
               </Link>
-              <Link to={`/city/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}/${branch.city?.toLowerCase()}`}>
-                {toTitleCase(branch.city || '')} branches
-              </Link>
-            </p>
+              {branch.city && (
+                <Link to={`/city/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}/${branch.city.toLowerCase()}`} className="text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-full font-medium transition-all border border-brand-100">
+                  {toTitleCase(branch.city)} branches
+                </Link>
+              )}
+            </div>
           </motion.div>
 
           <motion.div
@@ -436,7 +455,7 @@ export default function IFSCDetailPage() {
               What is IFSC Code {branch.ifsc}?
             </h2>
             <p className="text-sm text-gray-600 leading-relaxed">
-              The IFSC code {branch.ifsc} belongs to {branch.bank_name} {branchTitle} branch in {toTitleCase(branch.city || '')}, {branch.state_name}. It is used for NEFT, RTGS, and IMPS fund transfers.
+              The IFSC code <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span> belongs to <strong className="font-semibold text-gray-800">{branch.bank_name}</strong> {branchTitle} branch in {toTitleCase(branch.city || '')}, {branch.state_name}. It is used for NEFT, RTGS, and IMPS fund transfers.
             </p>
           </motion.div>
 
@@ -503,140 +522,90 @@ export default function IFSCDetailPage() {
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
           className="card p-6 sm:p-8"
         >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-5 flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-brand-600" /> Branch Details
-          </h2>
-          <div className="divide-y divide-gray-100">
-            {[
-              { label: 'Bank',         value: branch.bank_name },
-              { label: 'Branch',       value: branchTitle },
-              { label: 'Address',      value: toTitleCase(branch.address || '') },
-              { label: 'City',         value: toTitleCase(branch.city || '') },
-              { label: 'District',     value: branch.district_name },
-              { label: 'State',        value: branch.state_name },
-              { label: 'Pincode',      value: branch.pincode,     mono: true },
-              { label: 'Phone',        value: branch.phone },
-              { label: 'SWIFT Code',   value: branch.swift,       mono: true },
-              { label: 'Bank Type',    value: branch.bank_type },
-            ].filter(r => r.value).map(row => (
-              <div key={row.label} className="grid grid-cols-3 gap-2 py-3">
-                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide col-span-1 self-center">
-                  {row.label}
-                </span>
-                <span className={`text-sm font-medium text-brand-900 col-span-2 ${row.mono ? 'ifsc-mono' : ''}`}>
-                  {row.value}
-                </span>
-              </div>
-            ))}
-          </div>
+          {/* Two-column layout: Bank card + Branch info */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          {/* Maps + Website links */}
-          <div className="flex flex-wrap gap-3 mt-5 pt-5 border-t border-gray-100">
-            {branch.google_maps_url && (
-              <a
-                href={branch.google_maps_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-brand-600 hover:text-brand-800 font-medium border border-brand-200 rounded-lg px-4 py-2 hover:bg-brand-50 transition-all"
-              >
-                <MapPin className="w-4 h-4" /> View on Google Maps
-              </a>
-            )}
-            {branch.bank_website && (
-              <a
-                href={branch.bank_website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-brand-600 hover:text-brand-800 font-medium border border-brand-200 rounded-lg px-4 py-2 hover:bg-brand-50 transition-all"
-              >
-                <ExternalLink className="w-4 h-4" /> {branch.bank_name} Official Site
-              </a>
-            )}
-          </div>
-        </motion.div>
-
-        {/* ─ 3. How to Use This IFSC ─ */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="card p-6 sm:p-8"
-        >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-1">
-            How to Use {branch.ifsc} for Fund Transfers
-          </h2>
-          <p className="text-sm text-gray-500 mb-6">
-            Step-by-step guide to send money to <strong className="font-semibold text-gray-700">{branch.bank_name} {branchTitle}</strong> using this IFSC code.
-          </p>
-
-          <div className="space-y-4">
-
-            {/* NEFT */}
-            {!!branch.neft && (
-              <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 bg-brand-100 rounded-lg flex items-center justify-center">
-                    <Wifi className="w-4 h-4 text-brand-600" />
+            {/* Left: Bank identity card */}
+            <div className="lg:col-span-1">
+              <div className="bg-gradient-to-br from-brand-50 to-blue-50 rounded-2xl p-5 border border-brand-100 h-full">
+                <div className="flex flex-col items-center text-center">
+                  {branch.bank_logo_url ? (
+                    <img
+                      src={branch.bank_logo_url}
+                      alt={branch.bank_name}
+                      className="w-24 h-24 object-contain mb-3"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-3">
+                      <Building2 className="w-12 h-12 text-brand-300" />
+                    </div>
+                  )}
+                  <h3 className="font-display text-lg font-bold text-brand-900">{branch.bank_name}</h3>
+                  {branch.bank_type && (
+                    <span className="text-xs text-brand-500 bg-brand-100 px-3 py-1 rounded-full mt-2 font-medium border border-brand-200">
+                      {branch.bank_type}
+                    </span>
+                  )}
+                  <div className="w-full mt-4 space-y-2">
+                    {branch.bank_website && (
+                      <a
+                        href={branch.bank_website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 text-xs text-brand-600 hover:text-brand-800 font-medium bg-white border border-brand-200 rounded-xl px-4 py-2.5 hover:bg-brand-50 transition-all w-full"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" /> Official Website
+                      </a>
+                    )}
+                    {branch.google_maps_url && (
+                      <a
+                        href={branch.google_maps_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 text-xs text-brand-600 hover:text-brand-800 font-medium bg-white border border-brand-200 rounded-xl px-4 py-2.5 hover:bg-brand-50 transition-all w-full"
+                      >
+                        <MapPin className="w-3.5 h-3.5" /> View on Maps
+                      </a>
+                    )}
                   </div>
-                  <h3 className="font-semibold text-brand-900 text-sm">Via NEFT — National Electronic Fund Transfer</h3>
                 </div>
-                <ol className="space-y-2 text-sm text-gray-600 list-decimal list-inside leading-relaxed">
-                  <li>Log in to your bank's net banking portal or mobile app.</li>
-                  <li>Go to <em>Fund Transfer</em> → <em>Add Beneficiary</em>.</li>
-                  <li>Enter the beneficiary's name, account number, and IFSC code <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span>.</li>
-                  <li>Wait for the beneficiary to activate — typically within 30 minutes to a few hours.</li>
-                  <li>Once active, enter the amount and confirm with your OTP.</li>
-                </ol>
-                <p className="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
-                  <Zap className="w-3 h-3" /> NEFT is available 24×7, 365 days. No minimum amount. Transfers settle in near real-time batches.
-                </p>
               </div>
-            )}
+            </div>
 
-            {/* RTGS */}
-            {!!branch.rtgs && (
-              <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 bg-brand-100 rounded-lg flex items-center justify-center">
-                    <Zap className="w-4 h-4 text-brand-600" />
+            {/* Right: Branch details table */}
+            <div className="lg:col-span-2">
+              <h2 className="font-display text-xl font-bold text-brand-900 mb-4 flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-brand-600" /> Branch Details
+              </h2>
+              <div className="divide-y divide-gray-100">
+                {[
+                  { label: 'Branch',       value: branchTitle,      icon: '🏢' },
+                  { label: 'Address',      value: toTitleCase(branch.address || ''), icon: '📍' },
+                  { label: 'City',         value: toTitleCase(branch.city || ''),     icon: '🌆' },
+                  { label: 'District',     value: branch.district_name,              icon: '📌' },
+                  { label: 'State',        value: branch.state_name,                 icon: '🗺️' },
+                  { label: 'Pincode',      value: branch.pincode,     mono: true,    icon: '📮' },
+                  { label: 'Phone',        value: branch.phone,                      icon: '📞' },
+                  { label: 'SWIFT Code',   value: branch.swift,       mono: true,    icon: '🔗' },
+                ].filter(r => r.value).map(row => (
+                  <div key={row.label} className="flex items-start gap-3 py-3.5 group">
+                    <span className="text-sm mt-0.5 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity">{row.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5">
+                        {row.label}
+                      </span>
+                      <span className={`text-sm font-medium text-brand-900 ${row.mono ? 'ifsc-mono' : ''}`}>
+                        {row.value}
+                      </span>
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-brand-900 text-sm">Via RTGS — Real Time Gross Settlement</h3>
-                </div>
-                <ol className="space-y-2 text-sm text-gray-600 list-decimal list-inside leading-relaxed">
-                  <li>Log in to net banking or mobile app.</li>
-                  <li>Navigate to <em>Fund Transfer</em> → <em>RTGS Transfer</em>.</li>
-                  <li>Add beneficiary with account number and IFSC <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span>.</li>
-                  <li>Enter the amount — <strong className="font-semibold">minimum ₹2,00,000</strong> for RTGS.</li>
-                  <li>Confirm with OTP. Funds are credited instantly.</li>
-                </ol>
-                <p className="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
-                  <Zap className="w-3 h-3" /> RTGS is for high-value transfers. Settlement is immediate. Available 24×7. No upper limit.
-                </p>
+                ))}
               </div>
-            )}
-
-            {/* IMPS */}
-            {!!branch.imps && (
-              <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 bg-brand-100 rounded-lg flex items-center justify-center">
-                    <CreditCard className="w-4 h-4 text-brand-600" />
-                  </div>
-                  <h3 className="font-semibold text-brand-900 text-sm">Via IMPS — Immediate Payment Service</h3>
-                </div>
-                <ol className="space-y-2 text-sm text-gray-600 list-decimal list-inside leading-relaxed">
-                  <li>Open your bank's mobile app or net banking.</li>
-                  <li>Select <em>IMPS Transfer</em> and add the beneficiary with account number and IFSC <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span>.</li>
-                  <li>Enter the amount and confirm with OTP or mPIN.</li>
-                  <li>Money is credited to the beneficiary's account instantly.</li>
-                </ol>
-                <p className="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
-                  <Zap className="w-3 h-3" /> IMPS supports up to ₹5,00,000 per transaction. Instant, 24×7, available via mobile, internet banking, and ATM.
-                </p>
-              </div>
-            )}
+            </div>
           </div>
         </motion.div>
 
-        {/* ─ 4. Transaction Charges ─ */}
+        {/* ─ 3. Transaction Charges ─ */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
           className="card p-6 sm:p-8"
@@ -693,15 +662,120 @@ export default function IFSCDetailPage() {
               <strong className="font-semibold text-gray-800">{branch.bank_name}, {branchTitle}</strong> branch
               located in {toTitleCase(branch.city || '')}, {branch.state_name}.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+          </div>
+        </motion.div>
+
+        {/* ─ 5b. How to Use This IFSC (Colorful Cards) ─ */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.29 }}
+          className="card p-6 sm:p-8"
+        >
+          <h2 className="font-display text-2xl font-bold text-brand-900 mb-2">
+            How to Use {branch.ifsc} for Bank Transfers (NEFT/RTGS/IMPS/UPI)
+          </h2>
+          <p className="text-sm text-gray-500 mb-6">
+            Use this IFSC code when transferring money to any account at <strong className="text-gray-700">{branch.bank_name} {branchTitle}</strong> branch. Here's how different transfer methods work:
+          </p>
+
+          {/* Transfer method cards - colorful */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {/* NEFT Card */}
+            <div className="rounded-2xl border-2 border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-5 relative overflow-hidden">
+              <div className="absolute top-3 right-3 text-3xl opacity-20">💸</div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-9 h-9 bg-blue-500 rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
+                  <Wifi className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="font-bold text-blue-900 text-lg">NEFT</h3>
+              </div>
+              <p className="text-xs text-gray-500 mb-4 leading-relaxed">National Electronic Funds Transfer. Batch settlements.</p>
+              <div className="space-y-2.5">
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Timing:</strong> 24x7 Available</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Limit:</strong> No minimum or maximum limit</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Charges:</strong> &#8377;0-25 based on amount</p>
+                </div>
+              </div>
+            </div>
+
+            {/* RTGS Card */}
+            <div className="rounded-2xl border-2 border-violet-100 bg-gradient-to-br from-violet-50 to-purple-50 p-5 relative overflow-hidden">
+              <div className="absolute top-3 right-3 text-3xl opacity-20">&#9889;</div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-9 h-9 bg-violet-500 rounded-xl flex items-center justify-center shadow-md shadow-violet-200">
+                  <Zap className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="font-bold text-violet-900 text-lg">RTGS</h3>
+              </div>
+              <p className="text-xs text-gray-500 mb-4 leading-relaxed">Real Time Gross Settlement. Instant settlement. Best for high-value transfers.</p>
+              <div className="space-y-2.5">
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Timing:</strong> 24x7 Available</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Limit:</strong> Min &#8377;2 Lakhs</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Charges:</strong> &#8377;25-55 based on amount</p>
+                </div>
+              </div>
+            </div>
+
+            {/* IMPS Card */}
+            <div className="rounded-2xl border-2 border-rose-100 bg-gradient-to-br from-rose-50 to-pink-50 p-5 relative overflow-hidden">
+              <div className="absolute top-3 right-3 text-3xl opacity-20">&#128640;</div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-9 h-9 bg-rose-500 rounded-xl flex items-center justify-center shadow-md shadow-rose-200">
+                  <CreditCard className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="font-bold text-rose-900 text-lg">IMPS</h3>
+              </div>
+              <p className="text-xs text-gray-500 mb-4 leading-relaxed">Immediate Payment Service. Instant. Mobile and internet banking.</p>
+              <div className="space-y-2.5">
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Timing:</strong> Instant (24x7)</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Limit:</strong> Max &#8377;5 Lakhs per transaction</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Charges:</strong> &#8377;0-15 based on bank</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Step-by-step guide */}
+          <div className="rounded-2xl border-2 border-gray-100 bg-gradient-to-br from-gray-50 to-slate-50 p-6">
+            <h3 className="font-display text-lg font-bold text-brand-900 mb-5 flex items-center gap-2">
+              &#128203; Step-by-Step: How to Transfer Money Using This IFSC Code
+            </h3>
+            <div className="space-y-4">
               {[
-                { title: 'NEFT', desc: 'National Electronic Funds Transfer. Available 24×7. No minimum amount. Batch settlements.' },
-                { title: 'RTGS', desc: 'Real Time Gross Settlement. Instant settlement. Minimum ₹2 lakh. Best for high-value transfers.' },
-                { title: 'IMPS', desc: 'Immediate Payment Service. Instant. Up to ₹5 lakh per transaction. Mobile and internet banking.' },
-              ].map(item => (
-                <div key={item.title} className="bg-brand-50 rounded-xl p-4 border border-brand-100">
-                  <p className="font-semibold text-brand-800 text-sm mb-1">{item.title}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+                { step: 1, color: 'bg-blue-500', text: 'Log in to your bank\'s net banking or mobile banking app' },
+                { step: 2, color: 'bg-violet-500', text: 'Go to "Add Beneficiary" or "Manage Payee" section' },
+                { step: 3, color: 'bg-emerald-500', text: <>Enter beneficiary's account number and <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span> as IFSC code</> },
+                { step: 4, color: 'bg-amber-500', text: 'Verify details and complete beneficiary activation (usually instant or 30 minutes)' },
+                { step: 5, color: 'bg-rose-500', text: 'Select NEFT/RTGS/IMPS, enter amount, and confirm the transfer' },
+              ].map(({ step, color, text }) => (
+                <div key={step} className="flex items-start gap-4">
+                  <div className={`w-8 h-8 ${color} rounded-full flex items-center justify-center flex-shrink-0 shadow-sm`}>
+                    <span className="text-white text-sm font-bold">{step}</span>
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed pt-1.5">{text}</p>
                 </div>
               ))}
             </div>

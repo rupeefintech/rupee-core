@@ -1,6 +1,9 @@
 // File: frontend/src/pages/EMICalculatorPage.tsx
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from "react-router-dom";
+
+
 
 type LoanType = 'home' | 'personal' | 'car' | 'education' | 'business';
 
@@ -52,14 +55,14 @@ function DonutChart({ principal, interest }: { principal: number; interest: numb
   return (
     <svg width="100" height="100" viewBox="0 0 100 100">
       {/* Interest arc (background) */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#fbbf24" strokeWidth="14"
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#93c5fd" strokeWidth="14"
         strokeDasharray={`${iDash} ${pDash}`}
         strokeDashoffset={-pDash}
         strokeLinecap="butt"
         style={{ transform: 'rotate(-90deg)', transformOrigin: '50px 50px' }}
       />
       {/* Principal arc */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#60a5fa" strokeWidth="14"
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#2563eb" strokeWidth="14"
         strokeDasharray={`${pDash} ${iDash}`}
         strokeDashoffset={0}
         strokeLinecap="butt"
@@ -138,6 +141,14 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
     });
   };
 
+  const getLoanProfile = () => {
+    if (amount <= 300000) return "low";
+    if (amount <= 1000000) return "medium";
+    return "high";
+  };
+
+const profile = getLoanProfile();
+
   const loanLabels: Record<LoanType, string> = {
     home: 'Home Loan', personal: 'Personal Loan', car: 'Car Loan', education: 'Education Loan', business: 'Business Loan',   };
 
@@ -180,9 +191,9 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
 
         {/* Hero — same gradient style as IFSCDetailPage */}
-        <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-10 px-4 text-center">
+        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">{d.title}</h1>
-          <p className="text-blue-100 text-sm max-w-md mx-auto">
+          <p className="text-indigo-100 text-sm max-w-md mx-auto">
             Calculate your monthly EMI instantly. Plan smarter with full amortization schedule & payment breakdown.
           </p>
         </div>
@@ -190,7 +201,7 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
 
           {/* ── MAIN CALCULATOR CARD ── */}
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-blue-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
 
             {/* Loan type tabs */}
             <div className="flex gap-2 flex-wrap mb-6">
@@ -200,8 +211,8 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                   onClick={() => setLoanType(t)}
                   className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
                     loanType === t
-                      ? 'bg-blue-600 border-blue-600 text-white'
-                      : 'border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'
+                      ? 'bg-indigo-600 border-indigo-600 text-white'
+                      : 'border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600'
                   }`}
                 >
                   {loanLabels[t]}
@@ -224,12 +235,12 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                         const raw = Number(e.target.value.replace(/[^0-9]/g, ''));
                         if (!isNaN(raw)) setAmount(Math.min(Math.max(raw, d.min), d.max));
                       }}
-                      className="bg-blue-50 text-blue-700 text-sm font-bold px-3 py-1 rounded-lg w-32 text-center border border-transparent focus:border-blue-400 focus:outline-none"
+                      className="bg-indigo-50 text-indigo-700 text-sm font-bold px-3 py-1 rounded-lg w-32 text-center border border-transparent focus:border-indigo-400 focus:outline-none"
                     />
                   </div>
                   <input type="range" min={d.min} max={d.max} step={d.step} value={amount}
                     onChange={(e) => setAmount(Number(e.target.value))}
-                    className="w-full accent-blue-600 cursor-pointer" />
+                    className="w-full accent-indigo-600 cursor-pointer" />
                   <div className="flex justify-between text-xs text-slate-400 mt-1">
                     <span>{d.minL}</span><span>{d.maxL}</span>
                   </div>
@@ -246,12 +257,12 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                         const raw = parseFloat(e.target.value.replace(/[^0-9.]/g, ''));
                         if (!isNaN(raw)) setRate(Math.min(Math.max(raw, 5), 24));
                       }}
-                      className="bg-blue-50 text-blue-700 text-sm font-bold px-3 py-1 rounded-lg w-20 text-center border border-transparent focus:border-blue-400 focus:outline-none cursor-text"
+                      className="bg-indigo-50 text-indigo-700 text-sm font-bold px-3 py-1 rounded-lg w-20 text-center border border-transparent focus:border-indigo-400 focus:outline-none cursor-text"
                     />
                   </div>
                   <input type="range" min={5} max={24} step={0.1} value={rate}
                     onChange={(e) => setRate(Number(e.target.value))}
-                    className="w-full accent-blue-600 cursor-pointer" />
+                    className="w-full accent-indigo-600 cursor-pointer" />
                   <div className="flex justify-between text-xs text-slate-400 mt-1">
                     <span>5%</span><span>24%</span>
                   </div>
@@ -268,12 +279,12 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                         const raw = parseInt(e.target.value.replace(/[^0-9]/g, ''));
                         if (!isNaN(raw)) setTenure(Math.min(Math.max(raw, 1), d.maxT));
                       }}
-                      className="bg-blue-50 text-blue-700 text-sm font-bold px-3 py-1 rounded-lg w-20 text-center border border-transparent focus:border-blue-400 focus:outline-none cursor-text"
+                      className="bg-indigo-50 text-indigo-700 text-sm font-bold px-3 py-1 rounded-lg w-20 text-center border border-transparent focus:border-indigo-400 focus:outline-none cursor-text"
                     />
                   </div>
                   <input type="range" min={1} max={d.maxT} step={1} value={tenure}
                     onChange={(e) => setTenure(Number(e.target.value))}
-                    className="w-full accent-blue-600 cursor-pointer" />
+                    className="w-full accent-indigo-600 cursor-pointer" />
                   <div className="flex justify-between text-xs text-slate-400 mt-1">
                     <span>1 Yr</span><span>{d.maxT} Yr</span>
                   </div>
@@ -281,7 +292,7 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
               </div>
 
               {/* RIGHT: Result panel */}
-              <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg p-5 text-white flex flex-col gap-4">
+              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-5 text-white flex flex-col gap-4">
                 <div>
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Monthly EMI</div>
                   <div className="text-3xl font-bold tracking-tight">{fmtINR(emi)}</div>
@@ -293,21 +304,21 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                   <DonutChart principal={amount} interest={interest} />
                   <div className="flex flex-col gap-2 text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-blue-300 flex-shrink-0"></span>
+                      <span className="w-3 h-3 rounded-full bg-indigo-300 flex-shrink-0"></span>
                       <div>
                         <div className="text-xs opacity-70">Principal Amount</div>
                         <div className="font-bold">{fmtINR(amount)}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-yellow-300 flex-shrink-0"></span>
+                      <span className="w-3 h-3 rounded-full bg-indigo-300 flex-shrink-0"></span>
                       <div>
                         <div className="text-xs opacity-70">Total Interest</div>
                         <div className="font-bold">{fmtINR(interest)}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-purple-300 flex-shrink-0"></span>
+                      <span className="w-3 h-3 rounded-full bg-indigo-200 flex-shrink-0"></span>
                       <div>
                         <div className="text-xs opacity-70">Total Payable</div>
                         <div className="font-bold">{fmtINR(total)}</div>
@@ -325,9 +336,15 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                   <span className="opacity-80">Principal constitutes</span>
                   <span className="font-bold">{100 - iPct}%</span>
                 </div>
-                <button className="bg-white text-blue-700 font-bold text-sm rounded-lg py-3 hover:opacity-90 transition-opacity mt-1">
+                <p className="text-indigo-200 text-sm">
+                  🎯 Based on your profile, you are eligible for {profile === "low" ? "instant small loans" : profile === "medium" ? "low-interest personal loans" : "premium bank offers"}
+                </p>
+                <Link
+                  to={`/loans?amount=${amount}&emi=${Math.round(emi)}&type=${loanType}`}
+                  className="bg-white text-indigo-700 font-bold text-sm rounded-lg py-3 text-center block"
+                >
                   Check Best Loan Offers →
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -336,13 +353,13 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
               <h2 className="text-lg font-bold text-slate-900 mb-3">Year-wise Payment Breakdown</h2>
               <div className="flex gap-3 flex-wrap mb-4">
                 <span className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-blue-600"></span>Principal <strong className="ml-1">{fmtShort(amount)}</strong>
+                  <span className="w-2 h-2 rounded-full bg-indigo-600"></span>Principal <strong className="ml-1">{fmtShort(amount)}</strong>
                 </span>
                 <span className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-amber-400"></span>Interest <strong className="ml-1">{fmtShort(interest)}</strong>
+                  <span className="w-2 h-2 rounded-full bg-indigo-300"></span>Interest <strong className="ml-1">{fmtShort(interest)}</strong>
                 </span>
                 <span className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>Total <strong className="ml-1">{fmtShort(total)}</strong>
+                  <span className="w-2 h-2 rounded-full bg-indigo-800"></span>Total <strong className="ml-1">{fmtShort(total)}</strong>
                 </span>
               </div>
               <div className="space-y-1.5">
@@ -350,8 +367,8 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                   <div key={year} className="flex items-center gap-2 text-xs">
                     <span className="w-8 text-right text-slate-400 flex-shrink-0">Y{year}</span>
                     <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden flex">
-                      <div className="h-full bg-blue-600 rounded-l-full transition-all" style={{ width: `${pPct}%` }} />
-                      <div className="h-full bg-amber-400 transition-all"              style={{ width: `${100 - pPct}%` }} />
+                      <div className="h-full bg-indigo-600 rounded-l-full transition-all" style={{ width: `${pPct}%` }} />
+                      <div className="h-full bg-indigo-300 transition-all"              style={{ width: `${100 - pPct}%` }} />
                     </div>
                     <span className="text-slate-400 min-w-[110px] text-right">{fmtShort(yp)} / {fmtShort(yi)}</span>
                   </div>
@@ -367,8 +384,8 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                   <button key={v} onClick={() => setAmortView(v)}
                     className={`px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
                       amortView === v
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'border-slate-200 text-slate-500 hover:border-blue-300 hover:text-blue-600'
+                        ? 'bg-indigo-600 text-white border-indigo-600'
+                        : 'border-slate-200 text-slate-500 hover:border-indigo-300 hover:text-indigo-600'
                     }`}>
                     {v.charAt(0).toUpperCase() + v.slice(1)}
                   </button>
@@ -390,8 +407,8 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                       <tr key={i} className="border-t border-slate-50 hover:bg-slate-50 transition-colors">
                         <td className="px-4 py-3 font-medium text-slate-700">{row.period}</td>
                         <td className="px-4 py-3 text-right text-slate-600">{fmtINR(row.emi)}</td>
-                        <td className="px-4 py-3 text-right text-blue-600 font-medium">{fmtINR(row.principal)}</td>
-                        <td className="px-4 py-3 text-right text-amber-600 font-medium">{fmtINR(row.interest)}</td>
+                        <td className="px-4 py-3 text-right text-indigo-600 font-medium">{fmtINR(row.principal)}</td>
+                        <td className="px-4 py-3 text-right text-indigo-500 font-medium">{fmtINR(row.interest)}</td>
                         <td className="px-4 py-3 text-right text-slate-600">{fmtINR(row.balance)}</td>
                       </tr>
                     ))}
@@ -416,9 +433,9 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
               Each EMI has two parts — <strong className="text-slate-800">principal repayment</strong> and <strong className="text-slate-800">interest payment</strong>.
               Early EMIs are mostly interest; over time the principal component increases. This is the <em>reducing balance method</em> used by most Indian banks.
             </p>
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-              <p className="text-sm font-semibold text-blue-800 mb-3">EMI Formula</p>
-              <code className="block bg-white border border-blue-100 rounded-lg px-4 py-2 text-blue-700 font-mono text-sm mb-3">
+            <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4">
+              <p className="text-sm font-semibold text-indigo-800 mb-3">EMI Formula</p>
+              <code className="block bg-white border border-indigo-100 rounded-lg px-4 py-2 text-indigo-700 font-mono text-sm mb-3">
                 EMI = P × r × (1+r)ⁿ / [(1+r)ⁿ - 1]
               </code>
               <div className="grid grid-cols-2 gap-2">
@@ -429,8 +446,8 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                   ['EMI', 'Equated Monthly Instalment'],
                 ].map(([k, v]) => (
                   <div key={k} className="flex gap-2 items-start text-xs">
-                    <span className="bg-blue-200 text-blue-800 px-2 py-0.5 rounded font-bold flex-shrink-0">{k}</span>
-                    <span className="text-blue-700">{v}</span>
+                    <span className="bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded font-bold flex-shrink-0">{k}</span>
+                    <span className="text-indigo-700">{v}</span>
                   </div>
                 ))}
               </div>
@@ -461,7 +478,7 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
             <div className="overflow-x-auto rounded-lg border border-slate-100">
               <table className="w-full text-sm border-collapse">
                 <thead>
-                  <tr className="bg-blue-600 text-white">
+                  <tr className="bg-indigo-600 text-white">
                     <th className="text-left px-4 py-3 text-xs font-semibold">Loan Type</th>
                     <th className="text-center px-4 py-3 text-xs font-semibold">Typical Rate</th>
                     <th className="text-center px-4 py-3 text-xs font-semibold">Max Tenure</th>
@@ -481,9 +498,9 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                       <td className="px-4 py-3 font-medium text-slate-700">{row.type}</td>
                       <td className="px-4 py-3 text-center">
                         <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                          row.badge === 'green'  ? 'bg-green-100 text-green-700' :
-                          row.badge === 'red'    ? 'bg-red-100 text-red-700' :
-                                                   'bg-yellow-100 text-yellow-700'
+                          row.badge === 'green'  ? 'bg-indigo-100 text-indigo-700' :
+                          row.badge === 'red'    ? 'bg-indigo-200 text-indigo-800' :
+                                                   'bg-indigo-50 text-indigo-600'
                         }`}>{row.rate}</span>
                       </td>
                       <td className="px-4 py-3 text-center text-slate-600">{row.tenure}</td>
@@ -508,7 +525,7 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
                 ['Consider a balance transfer',         'If your current rate is high, transfer to a lender offering better rates. Even 0.5% reduction helps over long tenure.'],
               ].map(([title, desc], i) => (
                 <div key={i} className="flex gap-3 text-sm items-start">
-                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                  <span className="bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                     {i + 1}
                   </span>
                   <div>
@@ -544,7 +561,7 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
           </div>
 
           {/* ── DISCLAIMER ── */}
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-xs text-blue-700 leading-relaxed">
+          <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4 text-xs text-indigo-700 leading-relaxed">
             <strong>Disclaimer:</strong> This EMI calculator is for informational purposes only. RupeePedia does not guarantee accuracy for all lender-specific scenarios. Actual EMI, rates, and approval are subject to the lender's terms and your creditworthiness. Please consult your bank or financial advisor before making borrowing decisions.
           </div>
 

@@ -1,0 +1,37 @@
+id,name,code,iso_code,logo_url,slug
+1,Maharashtra,IN-MH,IN-MH,/images/states/maharashtra.webp,maharashtra
+2,Telangana,IN-TG,IN-TG,/images/states/telangana.webp,telangana
+3,Bihar,IN-BR,IN-BR,/images/states/bihar.webp,bihar
+4,Rajasthan,IN-RJ,IN-RJ,/images/states/rajasthan.webp,rajasthan
+5,Uttar Pradesh,IN-UP,IN-UP,/images/states/uttar-pradesh.webp,uttar-pradesh
+6,Delhi,IN-DL,IN-DL,/images/states/delhi.webp,delhi
+7,Haryana,IN-HR,IN-HR,/images/states/haryana.webp,haryana
+8,Andhra Pradesh,IN-AP,IN-AP,/images/states/andhra-pradesh.webp,andhra-pradesh
+9,Himachal Pradesh,IN-HP,IN-HP,/images/states/himachal-pradesh.webp,himachal-pradesh
+10,Gujarat,IN-GJ,IN-GJ,/images/states/gujarat.webp,gujarat
+11,Dadra And Nagar Haveli And Daman And Diu,IN-DH,IN-DH,/images/states/dadra-and-nagar-haveli-and-daman-and-diu.webp,dadra-and-nagar-haveli-and-daman-and-diu
+12,Goa,IN-GA,IN-GA,/images/states/goa.webp,goa
+13,Madhya Pradesh,IN-MP,IN-MP,/images/states/madhya-pradesh.webp,madhya-pradesh
+14,Chhattisgarh,IN-CT,IN-CT,/images/states/chhattisgarh.webp,chhattisgarh
+15,Kerala,IN-KL,IN-KL,/images/states/kerala.webp,kerala
+16,Tamil Nadu,IN-TN,IN-TN,/images/states/tamil-nadu.webp,tamil-nadu
+17,Uttarakhand,IN-UT,IN-UT,/images/states/uttarakhand.webp,uttarakhand
+18,Odisha,IN-OR,IN-OR,/images/states/odisha.webp,odisha
+19,West Bengal,IN-WB,IN-WB,/images/states/west-bengal.webp,west-bengal
+20,Karnataka,IN-KA,IN-KA,/images/states/karnataka.webp,karnataka
+21,Punjab,IN-PB,IN-PB,/images/states/punjab.webp,punjab
+22,Jharkhand,IN-JH,IN-JH,/images/states/jharkhand.webp,jharkhand
+23,Assam,IN-AS,IN-AS,/images/states/assam.webp,assam
+25,Chandigarh,IN-CH,IN-CH,/images/states/chandigarh.webp,chandigarh
+26,Jammu And Kashmir,IN-JK,IN-JK,/images/states/jammu-and-kashmir,jammu-and-kashmir
+27,Puducherry,IN-PY,IN-PY,/images/states/puducherry.webp,puducherry
+28,Meghalaya,IN-ML,IN-ML,/images/states/meghalaya.webp,meghalaya
+29,Sikkim,IN-SK,IN-SK,/images/states/sikkim.webp,sikkim
+30,Tripura,IN-TR,IN-TR,/images/states/tripura.webp,tripura
+31,Nagaland,IN-NL,IN-NL,/images/states/nagaland.webp,nagaland
+32,Arunachal Pradesh,IN-AR,IN-AR,/images/states/arunachal-pradesh.webp,arunachal-pradesh
+33,Mizoram,IN-MZ,IN-MZ,/images/states/mizoram.webp,mizoram
+34,Manipur,IN-MN,IN-MN,/images/states/manipur.webp,manipur
+35,Andaman And Nicobar Islands,IN-AN,IN-AN,/images/states/andaman-and-nicobar-islands.webp,andaman-and-nicobar-islands
+39,Lakshadweep,IN-LD,IN-LD,/images/states/lakshadweep.webp,lakshadweep
+42,Ladakh,IN-LA,IN-LA,/images/states/,ladakh

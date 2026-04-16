@@ -1,0 +1,9 @@
+function cleanSlug(slug) {
+  return slug
+    .replace(/-\d+$/, "") // remove trailing -number
+    .replace(/'/g, "");   // remove apostrophes
+}
+
+// Example
+const input = "people's-co-operative-bank-2913";
+console.log(cleanSlug(input));

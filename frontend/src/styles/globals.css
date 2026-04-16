@@ -65,6 +65,27 @@
     font-family: 'JetBrains Mono', monospace;
     letter-spacing: 0.1em;
   }
+
+  /* Admin form inputs */
+  .form-input {
+    @apply w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white;
+  }
+}
+
+/* Thin scrollbar utility */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 3px;
+}
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.1) transparent;
 }
 
 /* Custom scrollbar */
@@ -99,6 +120,40 @@
 
 .step-inactive {
   @apply bg-gray-100 text-gray-400;
+}
+
+/* Markdown list styling */
+.md-ul > .md-li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.md-ul > .md-li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  min-width: 6px;
+  border-radius: 50%;
+  background: #3b68b5;
+  margin-top: 0.6rem;
+}
+.md-ol {
+  counter-reset: md-counter;
+}
+.md-ol > .md-li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  counter-increment: md-counter;
+}
+.md-ol > .md-li::before {
+  content: counter(md-counter) '.';
+  display: inline-block;
+  min-width: 1.5rem;
+  font-weight: 700;
+  color: #3b68b5;
+  margin-top: 0;
 }
 
 /* Loading skeleton */
