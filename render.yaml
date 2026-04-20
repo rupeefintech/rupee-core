@@ -1,7 +1,7 @@
 services:
   # ── Backend API ──────────────────────────────────────────────────────────────
   - type: web
-    name: rupee-api
+    name: rupeepedia-backend
     env: node
     plan: free
     rootDir: .
