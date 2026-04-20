@@ -132,11 +132,8 @@ const CreditCards: React.FC = () => {
       if (feeMax) params.set("annualFeeMax", feeMax);
       if (sortBy) params.set("sortBy", sortBy);
 
-      // Add a generic search/products method to api client, or use:
-      // For now, fetch directly or add: api.searchProducts(params)
-      fetch(`/api/products?${params.toString()}`)
-        .then((res) => res.json())
-        .then((data) => setCards(data.products || []))
+      apiClient.get(`/products?${params.toString()}`)
+        .then((res) => setCards(res.data.products || []))
         .catch(() => setCards([]))
         .finally(() => setLoading(false));
     }, search ? 300 : 0);
