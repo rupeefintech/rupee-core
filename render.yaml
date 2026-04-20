@@ -1,0 +1,29 @@
+services:
+  # ── Backend API ──────────────────────────────────────────────────────────────
+  - type: web
+    name: rupee-api
+    env: node
+    plan: free
+    rootDir: .
+    buildCommand: cd backend && npm ci && npx prisma generate && npm run build
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://rupeepedia.in
+      - key: CORS_ORIGIN
+        value: https://rupeepedia.in
+      # Set these in Render dashboard (sensitive):
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
