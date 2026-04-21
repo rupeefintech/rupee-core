@@ -3,6 +3,9 @@
   "outputDirectory": "frontend/dist",
   "installCommand": "echo 'skip root install'",
   "framework": null,
+  "env": {
+    "VITE_API_URL": "https://rupeepedia-backend.onrender.com"
+  },
   "build": {
     "env": {
       "VITE_API_URL": "https://rupeepedia-backend.onrender.com"
