@@ -24,7 +24,7 @@ jobs:
         run: cd backend && npx prisma generate
 
       - name: Generate blog post
-        run: cd backend && npx ts-node scripts/generate-blog.ts
+        run: cd backend && npx tsx scripts/generate-blog.ts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
