@@ -8,7 +8,12 @@
       "Bash(npx tsc:*)",
       "Bash(node -e \":*)",
       "Bash(node -e ':*)",
-      "Bash(npx vite:*)"
+      "Bash(npx vite:*)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(cat /d/IFSCCode/rupee/frontend/.env*)",
+      "Bash(cat /d/IFSCCode/rupee/backend/.env*)"
     ]
   }
 }

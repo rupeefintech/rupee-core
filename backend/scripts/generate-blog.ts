@@ -28,7 +28,8 @@ async function fetchCoverImage(keywords: string[]): Promise<string | null> {
     const query = keywords.slice(0, 3).join(' ') + ' india rupee';
     const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=1&client_id=${accessKey}`;
     const res = await fetch(url);
-    const data = await res.json() as { results?: { urls: { regular: string } }[] };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = (await res.json()) as any as { results?: { urls: { regular: string } }[] };
 
     if (data.results && data.results.length > 0) {
       // Use regular size (1080px wide) for good quality without being too large
