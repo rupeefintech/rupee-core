@@ -3,8 +3,11 @@ import axios from 'axios';
 const PROD_BACKEND = 'https://rupeepedia-backend.onrender.com/api';
 
 function buildApiBase(): string {
+  // In production always use the known backend — env var cannot be trusted
+  if (import.meta.env.PROD) return PROD_BACKEND;
+
   const raw = (import.meta.env.VITE_API_URL as string | undefined)?.trim();
-  if (!raw) return import.meta.env.PROD ? PROD_BACKEND : '/api';
+  if (!raw) return '/api';
 
   // If it's a relative path (e.g. "/api"), use as-is (Vite dev proxy can handle it)
   if (raw.startsWith('/')) return raw.replace(/\/+$/, '') || '/api';
