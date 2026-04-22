@@ -134,6 +134,37 @@ Axios timeout: 30s (Neon cold starts can be slow).
 
 TanStack Query stale times: 5min for lists, 1h for IFSC detail pages.
 
+### Typed API Methods (`src/utils/api.ts`)
+
+**IFSC / Cascade**
+- `api.getBanks()` → all banks with `slug`, `logo_url`
+- `api.getStates()` → all states with `logo_url`
+- `api.getStatesByBank(bankSlug)` → states where bank operates (with `branchCount`)
+- `api.getCities(bankSlug, stateSlug)` → cities for bank+state
+- `api.getBranchesByCity(bankSlug, stateSlug, citySlug, page, limit)` → paginated branches
+- `api.getByIfsc(ifsc)` → full branch detail
+- `api.getNearbyBranches(ifsc)` → nearby branches (same bank+city)
+- `api.getDistricts(stateId, bankId?)` → districts for state/bank
+- `api.getBranches(bankId, stateId, districtId?)` → branch list
+- `api.getBankPage(slug)` → SEO bank page data
+- `api.getStatePage(slug)` → SEO state page data
+- `api.getCityPage(slug)` → SEO city page data
+- `api.getStats()` → DB stats (total branches, banks, states)
+- `api.search(q)` → IFSC / branch name search
+
+**Blog**
+- `api.getBlogs(params)` → paginated list (page, limit, category, search)
+- `api.getBlogBySlug(slug)` → full blog with related articles
+- `api.getBlogCategories()` → category counts
+- `api.getFeaturedBlogs()` → featured blogs (max 5)
+
+**Products (Credit Cards)**
+- `apiClient.get('/products?...')` → product listing with filters
+- `apiClient.get('/products/:slug')` → product detail with offers + features
+- `apiClient.get('/credit-cards/stats')` → stats
+- `apiClient.get('/credit-cards/categories')` → categories
+- `apiClient.get('/credit-cards/banks')` → banks with cards
+
 ## Design System
 
 - **Colors:** `brand-50` to `brand-950` (blue), `gold-400/500/600`

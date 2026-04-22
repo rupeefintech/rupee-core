@@ -95,6 +95,8 @@ GET /api/bank/:slug                               → SEO bank page — all bran
 GET /api/state/:slug                              → SEO state page — all branches
 GET /api/city/:slug                               → SEO city page — all branches
 GET /api/stats                                    → DB stats (total branches, banks, states)
+GET /api/pincode/:pincode                         → all branches in a pincode
+GET /api/states/:slug/banks                       → banks operating in a state
 ```
 
 ### Products
