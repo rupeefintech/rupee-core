@@ -1,16 +1,4 @@
 services:
-  # ── Frontend Static Site ─────────────────────────────────────────────────────
-  - type: web
-    name: rupeepedia-frontend
-    env: static
-    buildCommand: cd frontend && npm ci && npm run build
-    staticPublishPath: frontend/dist
-    pullRequestPreviewsEnabled: false
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-
   # ── Backend API ──────────────────────────────────────────────────────────────
   - type: web
     name: rupeepedia-backend
