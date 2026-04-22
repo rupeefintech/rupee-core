@@ -12,7 +12,7 @@
 | Data Fetching | Axios + TanStack Query | — |
 | Animations | Framer Motion | 11 |
 | SEO | React Helmet Async | 2 |
-| Markdown | react-markdown + remark-gfm | — |
+| Markdown | react-markdown + remark-gfm + rehype-raw + rehype-slug | — |
 | Notifications | react-hot-toast | — |
 
 ## File Structure
@@ -44,26 +44,109 @@ frontend/
   .env                # Local dev (VITE_API_URL=http://localhost:3001)
   .env.production     # Production reference (overridden by hardcoded PROD_BACKEND)
   vite.config.ts
-  vercel.json         # Used by frontend/vercel.json for SPA rewrites + sitemap proxies
+  vercel.json         # SPA rewrites + sitemap proxy routes
   tailwind.config.js
   tsconfig.json
 ```
 
+## All Routes
+
+### Public Pages
+```
+/                                → HomePage (hero, explore cards, calculators grid)
+/ifsc-finder                     → IFSCFinderPage (cascade search: Bank→State→City→Branch)
+/bank/:bankSlug                  → BankPage (bank profile + states list)
+/state/:bankSlug/:stateSlug      → StatePage (cities for bank+state)
+/city/:bankSlug/:stateSlug/:city → CityPage (branches in city, paginated)
+/ifsc/:ifsc                      → IFSCDetailPage (full branch details, JSON-LD)
+/credit-cards                    → CreditCards (listing with filters, compare bar)
+/credit-cards/compare            → CreditCardCompare (side-by-side, up to 3 cards)
+/credit-cards/:slug              → CreditCardDetail (card detail, offers, features)
+/bank-accounts                   → BankAccounts (stub)
+/loans                           → Loans (stub)
+/money-guides                    → BlogListingPage (paginated, category tabs, search)
+/money-guides/:slug              → BlogDetailPage (Markdown, TOC sidebar, related posts)
+/calculators                     → CalculatorsIndexPage (directory)
+/calculators/emi                 → EMICalculatorPage
+/calculators/home-loan-emi       → Home Loan EMI
+/calculators/sip                 → SIPCalculatorPage
+/calculators/lumpsum             → Lumpsum Calculator
+/calculators/goal-sip            → Goal SIP
+/calculators/swp                 → SWP Calculator
+/calculators/step-up-sip         → Step-Up SIP
+/calculators/fd                  → FDCalculatorPage
+/calculators/rd                  → RD Calculator
+/calculators/ppf                 → PPF Calculator
+/calculators/nps                 → NPS Calculator
+/calculators/cagr                → CAGR Calculator
+/calculators/xirr                → XIRR Calculator
+/calculators/gst                 → GST Calculator
+/calculators/salary              → SalaryCalculatorPage
+/calculators/hra                 → HRACalculatorPage
+/calculators/income-tax          → IncomeTaxCalculator
+/calculators/mutual-fund         → MutualFundCalculatorPage
+/calculators/home-loan-eligibility     → EligibilityCalculatorPage
+/calculators/personal-loan-eligibility → EligibilityCalculatorPage
+/calculators/home-prepayment     → PrepaymentCalculatorPage
+/calculators/personal-prepayment → PrepaymentCalculatorPage
+/about                           → AboutPage
+```
+
+### Admin Pages (JWT-protected)
+```
+/admin/login                     → Login page
+/admin/dashboard                 → Stats overview
+/admin/credit-cards              → Manage credit cards
+/admin/credit-cards/new          → Add new card
+/admin/credit-cards/:slug        → View card detail
+/admin/credit-cards/:slug/edit   → Edit card
+```
+
+## Key UX Pattern: Cascade Filtering
+
+Core IFSC user flow: **Bank → State → City → Branch → IFSC detail**
+
+- Each dropdown narrows the next
+- States only shows states where the selected bank has branches (via `getStatesByBank`)
+- Breadcrumb navigation on all cascade pages
+
+## Calculator Layout
+
+All calculator pages use `CalculatorLayout` wrapper with `ToolsSidebar`:
+- Left: calculator inputs, results, charts
+- Right sidebar: links to related calculators
+- All calculators are **client-side only** — no API calls
+
 ## API Client
 
-Two axios instances exist:
+Two axios instances:
 
-**`src/utils/api.ts` → `apiClient`**
-Used by all public-facing pages.
+**`src/utils/api.ts` → `apiClient`** — public pages
+**`src/admin/utils/adminApi.ts` → `adminApi`** — admin pages (auto-attaches JWT, redirects on 401)
 
-**`src/admin/utils/adminApi.ts` → `adminApi`**
-Used by all admin pages. Automatically attaches JWT token from `localStorage` and redirects to `/admin/login` on 401/403.
-
-Both resolve the backend URL via the same logic:
+Both resolve backend URL at build time:
 ```ts
 if (import.meta.env.PROD) return 'https://rupeepedia-backend.onrender.com/api'
-// dev: falls through to VITE_API_URL=http://localhost:3001 → http://localhost:3001/api
+// dev: uses VITE_API_URL=http://localhost:3001 → http://localhost:3001/api
 ```
+
+Axios timeout: 30s (Neon cold starts can be slow).
+
+TanStack Query stale times: 5min for lists, 1h for IFSC detail pages.
+
+## Design System
+
+- **Colors:** `brand-50` to `brand-950` (blue), `gold-400/500/600`
+- **Fonts:** Playfair Display (headings via `.font-display`), DM Sans (body), JetBrains Mono (IFSC codes via `.ifsc-mono`)
+- **Reusable classes:** `.card`, `.btn-primary`, `.btn-secondary`, `.hero-bg`, `.ifsc-mono`
+- **IFSC transfer badges:** NEFT=blue, RTGS=violet, IMPS=rose, UPI=green
+
+## Images & Logos
+
+- Bank logos: `<img src={bank.logo_url}>` — path like `/images/banks/Hdfc_Bank.webp`
+- State logos: `<img src={state.logo_url}>` — path like `/images/states/andhra-pradesh.webp`
+- Blog covers: Unsplash URLs stored in `coverImage` field
+- Always check `logo_url` before rendering `<img>` — 718 banks have no logo
 
 ## Build Commands
 
@@ -82,17 +165,10 @@ npm run preview
 
 - **Platform:** Vercel
 - **Domain:** rupeepedia.in
-- **Root directory in Vercel:** `frontend/`
-- **Build command:** `npm run build` (auto-detected by Vercel)
+- **Root directory in Vercel project:** `frontend/`
+- **Build command:** `npm run build` (auto-detected)
 - **Output directory:** `dist`
 - **SPA routing:** all paths rewrite to `/index.html` via `frontend/vercel.json`
-- **Sitemap routes:** proxied to `https://rupeepedia-backend.onrender.com` via `frontend/vercel.json`
-- **Trigger:** auto-deploys on every push to `main`
-
-## Environment Variables
-
-| Variable | Dev | Production |
-|---|---|---|
-| `VITE_API_URL` | `http://localhost:3001` | Not needed — `PROD_BACKEND` is hardcoded |
-
-No env vars need to be set in the Vercel dashboard. The backend URL is hardcoded in `api.ts` and `adminApi.ts` for production builds.
+- **Sitemap routes:** proxied to backend via `frontend/vercel.json`
+- **Trigger:** auto-deploys on push to `main`
+- **Env vars:** none needed in dashboard — backend URL is hardcoded in `api.ts`
