@@ -1,5 +1,5 @@
 import { useState } from "react"
-import axios from "axios"
+import { adminApi } from "../utils/adminApi"
 
 export default function AddProduct() {
   const [step, setStep] = useState(1)
@@ -18,25 +18,21 @@ export default function AddProduct() {
 
   const [offers, setOffers] = useState([{ title: "", description: "" }])
 
-  const token = localStorage.getItem("token")
-
   // FINAL SUBMIT
   const handleSubmit = async () => {
     // 1. Create product
-    const res = await axios.post("/api/admin/products", product, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    const res = await adminApi.post("/admin/products", product)
 
     const productId = res.data.id
 
     // 2. Add details
-    await axios.post("/api/admin/product-details", {
+    await adminApi.post("/admin/product-details", {
       ...details,
       product_id: productId
     })
 
     // 3. Add offers
-    await axios.post("/api/admin/product-offers", {
+    await adminApi.post("/admin/product-offers", {
       product_id: productId,
       offers
     })
