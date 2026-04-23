@@ -1005,71 +1005,6 @@ router.get('/api/ifsc/:code', async (req, res) => {
 });
 
 /**
- * GET /sitemap.xml
- * Dynamic XML sitemap for all IFSC codes
- */
-export const handleSitemapXml = async (req: Request, res: Response) => {
-  try {
-    // Check cache first
-    const cacheKey = 'sitemap:xml';
-    const cached = await cacheGet(cacheKey);
-    if (cached) {
-      res.setHeader('Content-Type', 'application/xml');
-      return res.send(cached);
-    }
-
-    // Get all IFSC codes
-    const branches = await prisma.branch.findMany({
-      select: {
-        ifsc: true,
-        lastUpdated: true,
-      },
-      orderBy: {
-        lastUpdated: 'desc',
-      },
-    });
-
-    // Build XML sitemap
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-
-    // Add static pages
-    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
-    const staticPages = ['/', '/about', '/ifsc-finder'];
-
-    for (const page of staticPages) {
-      xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}${page}</loc>\n`;
-      xml += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
-      xml += '    <changefreq>weekly</changefreq>\n';
-      xml += '    <priority>1.0</priority>\n';
-      xml += '  </url>\n';
-    }
-
-    // Add all IFSC pages
-    for (const branch of branches) {
-      xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
-      xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.8</priority>\n';
-      xml += '  </url>\n';
-    }
-
-    xml += '</urlset>';
-
-    // Cache for 24 hours
-    await cacheSet(cacheKey, xml, 86400);
-
-    res.setHeader('Content-Type', 'application/xml');
-    res.send(xml);
-  } catch (error) {
-    console.error('Error generating sitemap:', error);
-    res.status(500).send('Error generating sitemap');
-  }
-};
-
-/**
  * GET /robots.txt
  * Allow search engines to crawl, point to sitemap
  */
@@ -1091,7 +1026,6 @@ Crawl-delay: 1
 };
 
 // Register routes
-router.get('/sitemap.xml', handleSitemapXml);
 router.get('/robots.txt', handleRobotsTxt);
 
 
