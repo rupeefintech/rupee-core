@@ -63,7 +63,9 @@ After any data changes, flush Redis: `node -e "require('@upstash/redis').Redis({
 
 ## Rules
 
-See `docs/rules/` for detailed guidelines on architecture, backend, frontend, database, data sync, and SEO.
+See `docs/setup/` for backend, frontend, database, prisma, SEO, and data-sync guidelines.
+See `docs/modules/` for per-feature docs (IFSC finder, credit cards, blogs, calculators, admin).
+See `docs/architecture.md` for system overview and data model.
 
 ## Running Locally
 
