@@ -192,6 +192,13 @@ npm run build        # tsc + vite build → outputs to dist/
 npm run preview
 ```
 
+## Data Fetching
+
+- Use TanStack Query for all API calls
+- API base: `/api` (proxied in dev via Vite config to localhost:3001)
+- Stale time: 5min for lists, 1h for IFSC details
+- Frontend runs on port 3000 (`strictPort: true`), backend on 3001
+
 ## Deployment (Vercel)
 
 - **Platform:** Vercel
@@ -203,3 +210,5 @@ npm run preview
 - **Sitemap routes:** proxied to backend via `frontend/vercel.json`
 - **Trigger:** auto-deploys on push to `main`
 - **Env vars:** none needed in dashboard — backend URL is hardcoded in `api.ts`
+
+

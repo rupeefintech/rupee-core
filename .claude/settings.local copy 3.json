@@ -19,13 +19,7 @@
       "Bash(curl -s \"https://rupeepedia-backend.onrender.com/api/products?limit=10\")",
       "WebFetch(domain:rupeepedia.in)",
       "Bash(curl -s -L -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 Chrome/124 Safari/537.36\" https://rupeepedia.in/assets/index-xFQawzNY.js -o /tmp/rupee_bundle.js)",
-      "Read(//tmp/**)",
-      "Bash(git -C d:/IFSCCode/rupee diff --stat)",
-      "Bash(git -C d:/IFSCCode/rupee status)",
-      "Bash(rm d:/IFSCCode/rupee/docs/rules/06-seo-and-urls.md)",
-      "Bash(git -C d:/IFSCCode/rupee add -A)",
-      "Bash(git -C d:/IFSCCode/rupee commit -m 'docs: delete 06-seo-and-urls.md — content fully moved to docs/setup/seo.md *)",
-      "Bash(git -C d:/IFSCCode/rupee push origin main)"
+      "Read(//tmp/**)"
     ]
   }
 }

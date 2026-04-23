@@ -236,3 +236,23 @@ npx prisma studio         # GUI to browse data
 | `NODE_ENV` | `production` |
 | `FRONTEND_URL` | `https://rupeepedia.in` |
 | `CORS_ORIGIN` | `https://rupeepedia.in` |
+
+
+
+## Backend Scripts
+
+| Script | Purpose |
+|---|---|
+| `backend/scripts/create-blog-table.ts` | Creates blogs table via raw SQL |
+| `backend/scripts/generate-blog.ts` | AI blog generator (Claude + Unsplash) |
+| `backend/scripts/blog-topics.ts` | 60 blog topics queue |
+| `backend/scripts/seed-blogs.ts` | Seeds pre-written blog content |
+| `backend/scripts/seed-credit-cards.ts` | Seeds credit card products |
+
+
+## Frontend Compatibility
+
+API responses map camelCase Prisma fields to snake_case for frontend:
+```ts
+{ branch_name: b.branchName, bank_name: b.bank.name, state_name: b.state.name, logo_url: b.logoUrl }
+```
