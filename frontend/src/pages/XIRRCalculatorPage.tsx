@@ -105,14 +105,14 @@ export default function XIRRCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">XIRR Calculator</h1>
-          <p className="text-indigo-100 text-sm max-w-md mx-auto">Calculate the Extended Internal Rate of Return on your SIP investments with multiple cash flows.</p>
+          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate the Extended Internal Rate of Return on your SIP investments with multiple cash flows.</p>
         </div>
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
 
             {/* Frequency selector */}
             <div className="mb-6">
@@ -120,7 +120,7 @@ export default function XIRRCalculatorPage() {
               <div className="flex gap-2 flex-wrap">
                 {FREQ_OPTIONS.map((f, i) => (
                   <button key={i} onClick={() => setFreq(i)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${freq === i ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-200 text-slate-600 hover:border-indigo-300'}`}>
+                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${freq === i ? 'bg-brand-600 border-brand-600 text-white' : 'border-slate-200 text-slate-600 hover:border-brand-300'}`}>
                     {f.label}
                   </button>
                 ))}
@@ -133,14 +133,14 @@ export default function XIRRCalculatorPage() {
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Start Date</label>
                   <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-indigo-400" />
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-brand-400" />
                 </div>
 
                 {/* End / Maturity date */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">Maturity Date</label>
                   <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-indigo-400" />
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-brand-400" />
                 </div>
 
                 {/* SIP amount */}
@@ -150,7 +150,7 @@ export default function XIRRCalculatorPage() {
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
                     <input type="number" value={sipAmount} onChange={e => setSipAmount(e.target.value)}
                       placeholder="e.g. 10000"
-                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-slate-800 font-semibold focus:outline-none ${!P ? 'border-red-300 bg-red-50' : 'border-slate-200 focus:border-indigo-400'}`} />
+                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-slate-800 font-semibold focus:outline-none ${!P ? 'border-red-300 bg-red-50' : 'border-slate-200 focus:border-brand-400'}`} />
                   </div>
                 </div>
 
@@ -161,14 +161,14 @@ export default function XIRRCalculatorPage() {
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
                     <input type="number" value={maturity} onChange={e => setMaturity(e.target.value)}
                       placeholder="e.g. 500000"
-                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-slate-800 font-semibold focus:outline-none ${!MV ? 'border-red-300 bg-red-50' : 'border-slate-200 focus:border-indigo-400'}`} />
+                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-slate-800 font-semibold focus:outline-none ${!MV ? 'border-red-300 bg-red-50' : 'border-slate-200 focus:border-brand-400'}`} />
                   </div>
                 </div>
               </div>
 
               {/* Result */}
               <div className="flex flex-col gap-4">
-                <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl p-5 text-white">
+                <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-xl p-5 text-white">
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Your XIRR</div>
                   <div className={`text-4xl font-bold tracking-tight ${!xirr ? 'opacity-30' : ''}`}>
                     {xirr !== null ? `${xirr.toFixed(2)}%` : '—'}
@@ -189,7 +189,7 @@ export default function XIRRCalculatorPage() {
                   )}
                 </div>
 
-                <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-xs text-indigo-700 leading-relaxed">
+                <div className="bg-brand-50 border border-brand-100 rounded-xl p-4 text-xs text-brand-700 leading-relaxed">
                   <strong>How it works:</strong> XIRR treats each {FREQ_OPTIONS[freq].label.toLowerCase()} instalment of {P ? fmtINR(P) : '₹—'} as a negative cash flow, and the maturity value as a positive cash flow. It then finds the annual discount rate that makes the NPV of all these flows equal to zero.
                 </div>
               </div>

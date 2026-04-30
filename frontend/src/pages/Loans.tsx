@@ -58,7 +58,7 @@ const Loans: React.FC = () => {
 
      
       {amount > 0 && (
-        <div className="bg-blue-50 p-4 rounded mb-6">
+        <div className="bg-brand-50 p-4 rounded mb-6">
           <p className="text-sm">
             Showing best loan options for ₹{amount.toLocaleString()}
           </p>
@@ -92,7 +92,7 @@ const Loans: React.FC = () => {
               ✔ {loan.whyRecommended}
             </p>
 
-            <button className="bg-blue-600 text-white px-4 py-2 rounded w-full">
+            <button className="bg-brand-600 text-white px-4 py-2 rounded w-full">
               Check Loan Offers →
             </button>
 

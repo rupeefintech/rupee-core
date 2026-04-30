@@ -14,43 +14,43 @@
   }
 
   body {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    background: #f0f4ff;
-    color: #0f2347;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #ffffff;
+    color: #0f172a;
     min-height: 100vh;
   }
 
   h1, h2, h3 {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
 @layer components {
   .glass {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.85);
   }
 
   .card {
-    @apply bg-white rounded-2xl shadow-sm border border-blue-50;
+    @apply bg-white rounded-2xl shadow-sm border border-violet-50;
   }
 
   .btn-primary {
-    @apply bg-brand-700 hover:bg-brand-800 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:shadow-lg active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
+    @apply bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-brand-500/25 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-brand-50 text-brand-700 font-semibold px-6 py-3 rounded-xl border-2 border-brand-200 transition-all duration-200 hover:border-brand-400;
+    @apply bg-white hover:bg-brand-50 text-brand-600 font-semibold px-6 py-3 rounded-xl border-2 border-brand-200 transition-all duration-200 hover:border-brand-400;
   }
 
   .select-field {
-    @apply w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:outline-none bg-white text-brand-900 font-body transition-colors duration-200 appearance-none cursor-pointer disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed;
+    @apply w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:outline-none bg-white text-gray-900 font-sans transition-colors duration-200 appearance-none cursor-pointer disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed;
   }
 
   .input-field {
-    @apply w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:outline-none bg-white text-brand-900 font-body transition-colors duration-200;
+    @apply w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-brand-500 focus:outline-none bg-white text-gray-900 font-sans transition-colors duration-200;
   }
 
   .badge-success {
@@ -68,7 +68,7 @@
 
   /* Admin form inputs */
   .form-input {
-    @apply w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white;
+    @apply w-full p-2.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none bg-white;
   }
 }
 
@@ -93,25 +93,26 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f0f4ff;
+  background: #F5F3FF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #93c5fd;
+  background: #C4B5FD;
   border-radius: 3px;
 }
 
-/* Gradient mesh background */
+/* Hero gradient background — light mesh with violet blobs */
 .hero-bg {
-  background: 
-    radial-gradient(ellipse 80% 60% at 20% -10%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 110%, rgba(30, 58, 138, 0.12) 0%, transparent 60%),
-    linear-gradient(135deg, #eff6ff 0%, #f0f4ff 40%, #dbeafe 100%);
+  background:
+    radial-gradient(ellipse 70% 60% at 10% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 90% 80%, rgba(99, 102, 241, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 60% 10%, rgba(245, 158, 11, 0.07) 0%, transparent 60%),
+    #ffffff;
 }
 
-/* Step indicator animation */
+/* Step indicator */
 .step-active {
-  @apply bg-brand-700 text-white shadow-lg;
-  box-shadow: 0 0 0 4px rgba(29, 78, 216, 0.2);
+  @apply bg-brand-600 text-white shadow-lg;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
 }
 
 .step-done {
@@ -135,7 +136,7 @@
   height: 6px;
   min-width: 6px;
   border-radius: 50%;
-  background: #3b68b5;
+  background: #7C3AED;
   margin-top: 0.6rem;
 }
 .md-ol {
@@ -152,7 +153,7 @@
   display: inline-block;
   min-width: 1.5rem;
   font-weight: 700;
-  color: #3b68b5;
+  color: #7C3AED;
   margin-top: 0;
 }
 
@@ -163,7 +164,7 @@
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #f0f4ff 25%, #dbeafe 50%, #f0f4ff 75%);
+  background: linear-gradient(90deg, #F5F3FF 25%, #EDE9FE 50%, #F5F3FF 75%);
   background-size: 1000px 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;
@@ -184,7 +185,7 @@
   .responsive-table td::before {
     content: attr(data-label);
     font-weight: 600;
-    color: #1e3a8a;
+    color: #7C3AED;
     display: block;
     font-size: 0.7rem;
     text-transform: uppercase;

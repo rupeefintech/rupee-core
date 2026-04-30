@@ -20,14 +20,14 @@ const CONFIG: Record<FDType, {
   minYears: number; maxYears: number; defaultYears: number;
   color: 'blue'; accent: string;
 }> = {
-  fd:  { title: 'FD Calculator',  desc: 'Calculate your Fixed Deposit maturity amount and interest earned.',          isMonthly: false, minAmt: 1000, maxAmt: 10000000, defaultAmt: 100000, minRate: 3, maxRate: 9.5, defaultRate: 7.0, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-indigo-600 to-indigo-800'  },
-  rd:  { title: 'RD Calculator',  desc: 'Calculate your Recurring Deposit maturity amount with monthly deposits.',    isMonthly: true,  minAmt: 100,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 3, maxRate: 8.5, defaultRate: 6.5, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-indigo-600 to-indigo-800'  },
-  ppf: { title: 'PPF Calculator', desc: 'Calculate Public Provident Fund maturity with current 7.1% interest rate.', isMonthly: true,  minAmt: 500,  maxAmt: 12500,    defaultAmt: 5000,   minRate: 7, maxRate: 8,   defaultRate: 7.1, minYears: 15, maxYears: 15, defaultYears: 15, color: 'blue', accent: 'from-indigo-600 to-indigo-800'  },
-  nps: { title: 'NPS Calculator', desc: 'Estimate your NPS pension corpus and monthly pension at retirement.',        isMonthly: true,  minAmt: 500,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 8, maxRate: 14,  defaultRate: 10,  minYears: 10, maxYears: 40, defaultYears: 20, color: 'blue', accent: 'from-indigo-600 to-indigo-800'  },
+  fd:  { title: 'FD Calculator',  desc: 'Calculate your Fixed Deposit maturity amount and interest earned.',          isMonthly: false, minAmt: 1000, maxAmt: 10000000, defaultAmt: 100000, minRate: 3, maxRate: 9.5, defaultRate: 7.0, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-brand-700 to-brand-900'  },
+  rd:  { title: 'RD Calculator',  desc: 'Calculate your Recurring Deposit maturity amount with monthly deposits.',    isMonthly: true,  minAmt: 100,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 3, maxRate: 8.5, defaultRate: 6.5, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-brand-700 to-brand-900'  },
+  ppf: { title: 'PPF Calculator', desc: 'Calculate Public Provident Fund maturity with current 7.1% interest rate.', isMonthly: true,  minAmt: 500,  maxAmt: 12500,    defaultAmt: 5000,   minRate: 7, maxRate: 8,   defaultRate: 7.1, minYears: 15, maxYears: 15, defaultYears: 15, color: 'blue', accent: 'from-brand-700 to-brand-900'  },
+  nps: { title: 'NPS Calculator', desc: 'Estimate your NPS pension corpus and monthly pension at retirement.',        isMonthly: true,  minAmt: 500,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 8, maxRate: 14,  defaultRate: 10,  minYears: 10, maxYears: 40, defaultYears: 20, color: 'blue', accent: 'from-brand-700 to-brand-900'  },
 };
 
 const borderMap: Record<string, string> = {
-  blue: 'border-indigo-600',
+  blue: 'border-brand-600',
 };
 
 export default function FDCalculatorPage({ type = 'fd' }: Props) {
@@ -100,7 +100,7 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
         <div className={`bg-gradient-to-br ${cfg.accent} text-white py-10 px-4 text-center`}>
           <h1 className="text-2xl font-bold mb-2">{cfg.title}</h1>
           <p className="text-white/80 text-sm max-w-md mx-auto">{cfg.desc}</p>
@@ -204,10 +204,10 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                 <p className="text-sm text-slate-600 leading-relaxed mb-4">
                   A Fixed Deposit locks your money with a bank for a chosen tenure at a fixed interest rate. Indian banks compound FD interest <strong className="text-slate-800">quarterly</strong>, meaning your interest earns interest every 3 months. The longer the tenure and higher the rate, the greater the compounding benefit.
                 </p>
-                <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4 mb-4">
-                  <p className="text-sm font-semibold text-indigo-800 mb-2">FD Maturity Formula (Quarterly Compounding)</p>
-                  <code className="block bg-white rounded px-3 py-2 text-indigo-700 font-mono text-sm mb-2">M = P × (1 + r/4)^(4×t)</code>
-                  <div className="grid grid-cols-2 gap-1 text-xs text-indigo-700">
+                <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 mb-4">
+                  <p className="text-sm font-semibold text-brand-800 mb-2">FD Maturity Formula (Quarterly Compounding)</p>
+                  <code className="block bg-white rounded px-3 py-2 text-brand-700 font-mono text-sm mb-2">M = P × (1 + r/4)^(4×t)</code>
+                  <div className="grid grid-cols-2 gap-1 text-xs text-brand-700">
                     <span><strong>P</strong> = Principal amount</span>
                     <span><strong>r</strong> = Annual interest rate</span>
                     <span><strong>t</strong> = Tenure in years</span>
@@ -232,10 +232,10 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                     { icon: '💰', title: 'Contribution', desc: '₹500 min to ₹1.5L max per year. Can invest in lump sum or 12 instalments.' },
                     { icon: '🔒', title: 'Lock-in', desc: '15 years minimum. Partial withdrawal allowed from Year 7. Extendable in 5-year blocks.' },
                   ].map(f => (
-                    <div key={f.title} className="bg-indigo-50 rounded-lg p-3 border border-indigo-100">
+                    <div key={f.title} className="bg-brand-50 rounded-lg p-3 border border-brand-100">
                       <div className="text-xl mb-1">{f.icon}</div>
-                      <div className="font-semibold text-xs text-indigo-800 mb-1">{f.title}</div>
-                      <div className="text-xs text-indigo-700">{f.desc}</div>
+                      <div className="font-semibold text-xs text-brand-800 mb-1">{f.title}</div>
+                      <div className="text-xs text-brand-700">{f.desc}</div>
                     </div>
                   ))}
                 </div>
@@ -251,10 +251,10 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                     { title: 'Asset Classes', items: ['E (Equity) — up to 75%', 'C (Corporate Bonds)', 'G (Government Securities)', 'A (Alternate Assets)'] },
                     { title: 'Tax Benefits', items: ['80C deduction up to ₹1.5L', '80CCD(1B) extra ₹50,000', 'Employer contribution deductible up to 10% of salary', '60% lump sum at maturity is tax-free'] },
                   ].map(col => (
-                    <div key={col.title} className="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
-                      <div className="font-semibold text-sm text-indigo-800 mb-2">{col.title}</div>
+                    <div key={col.title} className="bg-brand-50 rounded-lg p-4 border border-brand-100">
+                      <div className="font-semibold text-sm text-brand-800 mb-2">{col.title}</div>
                       <ul className="space-y-1">
-                        {col.items.map(item => <li key={item} className="text-xs text-indigo-700 flex gap-2"><span className="flex-shrink-0">•</span>{item}</li>)}
+                        {col.items.map(item => <li key={item} className="text-xs text-brand-700 flex gap-2"><span className="flex-shrink-0">•</span>{item}</li>)}
                       </ul>
                     </div>
                   ))}
@@ -269,12 +269,12 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
             <div className="overflow-x-auto rounded-lg border border-slate-100">
               <table className="w-full text-sm border-collapse">
                 <thead>
-                  <tr className="bg-indigo-600 text-white">
+                  <tr className="bg-brand-600 text-white">
                     <th className="text-left px-4 py-3 text-xs font-semibold">Feature</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'fd' ? 'bg-indigo-700' : ''}`}>FD</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'rd' ? 'bg-indigo-700' : ''}`}>RD</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'ppf' ? 'bg-indigo-700' : ''}`}>PPF</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'nps' ? 'bg-indigo-700' : ''}`}>NPS</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'fd' ? 'bg-brand-700' : ''}`}>FD</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'rd' ? 'bg-brand-700' : ''}`}>RD</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'ppf' ? 'bg-brand-700' : ''}`}>PPF</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'nps' ? 'bg-brand-700' : ''}`}>NPS</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -288,10 +288,10 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                   ].map(([feature, fd, rd, ppf, nps], i) => (
                     <tr key={i} className="border-t border-slate-50 hover:bg-slate-50">
                       <td className="px-4 py-3 font-medium text-slate-700">{feature}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'fd' ? 'font-bold text-indigo-700 bg-indigo-50' : ''}`}>{fd}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'rd' ? 'font-bold text-indigo-700 bg-indigo-50' : ''}`}>{rd}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'ppf' ? 'font-bold text-indigo-700 bg-indigo-50' : ''}`}>{ppf}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'nps' ? 'font-bold text-indigo-700 bg-indigo-50' : ''}`}>{nps}</td>
+                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'fd' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{fd}</td>
+                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'rd' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{rd}</td>
+                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'ppf' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{ppf}</td>
+                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'nps' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{nps}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -299,7 +299,7 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
             </div>
           </div>
 
-          <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4 text-xs text-indigo-700 leading-relaxed">
+          <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 text-xs text-brand-700 leading-relaxed">
             <strong>Disclaimer:</strong> Calculations are indicative. Actual returns may vary based on compounding frequency, premature withdrawal penalties, and changes in interest rates. Consult your bank or financial advisor.
           </div>
         </div>

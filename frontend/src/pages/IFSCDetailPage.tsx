@@ -71,7 +71,7 @@ function IFSCBreakdown({ ifsc }: { ifsc: string }) {
     <div className="flex items-stretch rounded-xl overflow-hidden border-2 border-brand-200 w-fit text-center">
       <div className="bg-brand-700 text-white px-5 py-3">
         <p className="ifsc-mono text-xl font-bold tracking-widest">{bank}</p>
-        <p className="text-xs text-blue-200 mt-1">Bank code</p>
+        <p className="text-xs text-brand-200 mt-1">Bank code</p>
       </div>
       <div className="bg-brand-100 text-brand-500 px-3 py-3 border-x-2 border-brand-200">
         <p className="ifsc-mono text-xl font-bold">{zero}</p>
@@ -527,7 +527,7 @@ export default function IFSCDetailPage() {
 
             {/* Left: Bank identity card */}
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-brand-50 to-blue-50 rounded-2xl p-5 border border-brand-100 h-full">
+              <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-5 border border-brand-100 h-full">
                 <div className="flex flex-col items-center text-center">
                   {branch.bank_logo_url ? (
                     <img
@@ -680,13 +680,13 @@ export default function IFSCDetailPage() {
           {/* Transfer method cards - colorful */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             {/* NEFT Card */}
-            <div className="rounded-2xl border-2 border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-5 relative overflow-hidden">
+            <div className="rounded-2xl border-2 border-brand-100 bg-gradient-to-br from-brand-50 to-brand-100 p-5 relative overflow-hidden">
               <div className="absolute top-3 right-3 text-3xl opacity-20">💸</div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-9 h-9 bg-blue-500 rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
+                <div className="w-9 h-9 bg-brand-500 rounded-xl flex items-center justify-center shadow-md shadow-brand-200">
                   <Wifi className="w-5 h-5 text-white" />
                 </div>
-                <h3 className="font-bold text-blue-900 text-lg">NEFT</h3>
+                <h3 className="font-bold text-brand-900 text-lg">NEFT</h3>
               </div>
               <p className="text-xs text-gray-500 mb-4 leading-relaxed">National Electronic Funds Transfer. Batch settlements.</p>
               <div className="space-y-2.5">
@@ -765,7 +765,7 @@ export default function IFSCDetailPage() {
             </h3>
             <div className="space-y-4">
               {[
-                { step: 1, color: 'bg-blue-500', text: 'Log in to your bank\'s net banking or mobile banking app' },
+                { step: 1, color: 'bg-brand-500', text: 'Log in to your bank\'s net banking or mobile banking app' },
                 { step: 2, color: 'bg-violet-500', text: 'Go to "Add Beneficiary" or "Manage Payee" section' },
                 { step: 3, color: 'bg-emerald-500', text: <>Enter beneficiary's account number and <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span> as IFSC code</> },
                 { step: 4, color: 'bg-amber-500', text: 'Verify details and complete beneficiary activation (usually instant or 30 minutes)' },

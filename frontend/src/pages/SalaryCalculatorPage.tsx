@@ -260,11 +260,11 @@ export default function SalaryCalculatorPage() {
 
         {/* Hero */}
 
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4">
 
           <div className="max-w-5xl mx-auto">
 
-            <nav className="flex items-center gap-1.5 text-indigo-100 text-sm mb-4">
+            <nav className="flex items-center gap-1.5 text-brand-100 text-sm mb-4">
 
               <Link to="/" className="hover:text-white">Home</Link>
 
@@ -286,7 +286,7 @@ export default function SalaryCalculatorPage() {
 
             </h1>
 
-            <p className="text-indigo-100 max-w-lg">
+            <p className="text-brand-100 max-w-lg">
 
               Calculate your in-hand salary from CTC with full breakdown &mdash; Basic, HRA, EPF, tax under Old &amp; New regime.
 
@@ -330,7 +330,7 @@ export default function SalaryCalculatorPage() {
 
                         regime === r
 
-                          ? "bg-indigo-600 text-white shadow-sm"
+                          ? "bg-brand-600 text-white shadow-sm"
 
                           : "text-gray-500 hover:text-gray-700"
 
@@ -382,7 +382,7 @@ export default function SalaryCalculatorPage() {
 
                     onChange={(e) => setCtc(Math.max(0, Number(e.target.value)))}
 
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
 
                   />
 
@@ -396,7 +396,7 @@ export default function SalaryCalculatorPage() {
 
                     onChange={(e) => setCtc(Number(e.target.value))}
 
-                    className="w-full mt-2 accent-indigo-600"
+                    className="w-full mt-2 accent-brand-600"
 
                   />
 
@@ -424,7 +424,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setBasicPct(Number(e.target.value))}
 
-                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-indigo-400"
+                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-brand-400"
 
                     />
 
@@ -442,7 +442,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setHraPct(Number(e.target.value))}
 
-                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-indigo-400"
+                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-brand-400"
 
                     />
 
@@ -460,7 +460,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setEpfPct(Number(e.target.value))}
 
-                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-indigo-400"
+                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-brand-400"
 
                     />
 
@@ -494,7 +494,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setSec80c(Math.min(150000, Number(e.target.value)))}
 
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-400"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400"
 
                     />
 
@@ -512,7 +512,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setSec80d(Number(e.target.value))}
 
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-400"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400"
 
                     />
 
@@ -530,7 +530,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setRentPaid(Number(e.target.value))}
 
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-400"
+                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400"
 
                     />
 
@@ -546,7 +546,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={() => setIsMetro(!isMetro)}
 
-                      className="accent-indigo-600 w-4 h-4"
+                      className="accent-brand-600 w-4 h-4"
 
                     />
 
@@ -570,13 +570,13 @@ export default function SalaryCalculatorPage() {
 
               {/* In-Hand Highlight */}
 
-              <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg">
+              <div className="bg-gradient-to-r from-brand-700 to-brand-800 rounded-2xl p-6 text-white shadow-lg">
 
                 <div className="grid grid-cols-2 gap-4">
 
                   <div>
 
-                    <p className="text-indigo-100 text-xs font-medium mb-1">Monthly In-Hand</p>
+                    <p className="text-brand-100 text-xs font-medium mb-1">Monthly In-Hand</p>
 
                     <p className="text-3xl font-bold">{fmtM(breakdown.netAnnualSalary)}</p>
 
@@ -584,7 +584,7 @@ export default function SalaryCalculatorPage() {
 
                   <div>
 
-                    <p className="text-indigo-100 text-xs font-medium mb-1">Annual In-Hand</p>
+                    <p className="text-brand-100 text-xs font-medium mb-1">Annual In-Hand</p>
 
                     <p className="text-3xl font-bold">{fmt(breakdown.netAnnualSalary)}</p>
 
@@ -650,7 +650,7 @@ export default function SalaryCalculatorPage() {
 
                   <h3 className="text-sm font-bold text-gray-800">Tax Calculation ({regime === "new" ? "New Regime" : "Old Regime"})</h3>
 
-                  <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-semibold">FY 2025-26</span>
+                  <span className="text-xs bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full font-semibold">FY 2025-26</span>
 
                 </div>
 
@@ -846,7 +846,7 @@ function Row({ label, yearly, isBold, isHighlight, isGreen, isRed, isDeduct, sub
 
   const textColor = isGreen ? "text-green-600" : isRed ? "text-red-600" : isDeduct ? "text-red-500" : "text-gray-800";
 
-  const bg = isHighlight ? "bg-indigo-50" : "";
+  const bg = isHighlight ? "bg-brand-50" : "";
 
   const font = isBold ? "font-semibold" : "font-normal";
 

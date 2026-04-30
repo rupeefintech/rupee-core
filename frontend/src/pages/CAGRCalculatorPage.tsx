@@ -55,15 +55,15 @@ export default function CAGRCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">CAGR Calculator</h1>
-          <p className="text-indigo-100 text-sm max-w-md mx-auto">Calculate the Compound Annual Growth Rate of any investment instantly.</p>
+          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate the Compound Annual Growth Rate of any investment instantly.</p>
         </div>
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
           {/* Main card */}
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Inputs */}
               <div className="space-y-5">
@@ -75,7 +75,7 @@ export default function CAGRCalculatorPage() {
                       type="number" value={initial}
                       onChange={e => setInitial(e.target.value)}
                       placeholder="e.g. 100000"
-                      className={`w-full pl-7 pr-4 py-3 border rounded-lg text-slate-800 font-semibold focus:outline-none text-sm ${!P ? 'border-red-300 bg-red-50 focus:border-red-400' : 'border-slate-200 focus:border-indigo-400'}`}
+                      className={`w-full pl-7 pr-4 py-3 border rounded-lg text-slate-800 font-semibold focus:outline-none text-sm ${!P ? 'border-red-300 bg-red-50 focus:border-red-400' : 'border-slate-200 focus:border-brand-400'}`}
                     />
                   </div>
                   {!P && <p className="text-xs text-red-500 mt-1">Please enter initial investment</p>}
@@ -89,7 +89,7 @@ export default function CAGRCalculatorPage() {
                       type="number" value={final}
                       onChange={e => setFinal(e.target.value)}
                       placeholder="e.g. 200000"
-                      className={`w-full pl-7 pr-4 py-3 border rounded-lg text-slate-800 font-semibold focus:outline-none text-sm ${!F ? 'border-red-300 bg-red-50 focus:border-red-400' : 'border-slate-200 focus:border-indigo-400'}`}
+                      className={`w-full pl-7 pr-4 py-3 border rounded-lg text-slate-800 font-semibold focus:outline-none text-sm ${!F ? 'border-red-300 bg-red-50 focus:border-red-400' : 'border-slate-200 focus:border-brand-400'}`}
                     />
                   </div>
                   {!F && <p className="text-xs text-red-500 mt-1">Please enter final value</p>}
@@ -102,7 +102,7 @@ export default function CAGRCalculatorPage() {
                       type="number" value={duration}
                       onChange={e => setDuration(e.target.value)}
                       placeholder="e.g. 5"
-                      className={`w-full pr-10 pl-4 py-3 border rounded-lg text-slate-800 font-semibold focus:outline-none text-sm ${!N ? 'border-red-300 bg-red-50 focus:border-red-400' : 'border-slate-200 focus:border-indigo-400'}`}
+                      className={`w-full pr-10 pl-4 py-3 border rounded-lg text-slate-800 font-semibold focus:outline-none text-sm ${!N ? 'border-red-300 bg-red-50 focus:border-red-400' : 'border-slate-200 focus:border-brand-400'}`}
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">Yr</span>
                   </div>
@@ -119,7 +119,7 @@ export default function CAGRCalculatorPage() {
 
               {/* Result */}
               <div className="flex flex-col gap-4">
-                <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl p-5 text-white">
+                <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-xl p-5 text-white">
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">CAGR</div>
                   <div className={`text-4xl font-bold tracking-tight ${!isValid ? 'opacity-30' : ''}`}>
                     {isValid ? `${cagr.toFixed(2)}%` : '—'}
@@ -140,7 +140,7 @@ export default function CAGRCalculatorPage() {
                   <div className="bg-slate-50 rounded-xl p-4 space-y-2">
                     <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">All Return Metrics</div>
                     <div className="flex justify-between text-sm"><span className="text-slate-500">Absolute Return</span><span className={`font-bold ${absoluteRet >= 0 ? 'text-green-600' : 'text-red-600'}`}>{absoluteRet.toFixed(2)}%</span></div>
-                    <div className="flex justify-between text-sm"><span className="text-slate-500">CAGR (Annualised)</span><span className={`font-bold ${cagr >= 0 ? 'text-indigo-600' : 'text-red-600'}`}>{cagr.toFixed(2)}%</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-slate-500">CAGR (Annualised)</span><span className={`font-bold ${cagr >= 0 ? 'text-brand-600' : 'text-red-600'}`}>{cagr.toFixed(2)}%</span></div>
                     <div className="flex justify-between text-sm"><span className="text-slate-500">Wealth Multiplier</span><span className="font-bold text-slate-700">{multiplier.toFixed(2)}x</span></div>
                     <div className="flex justify-between text-sm"><span className="text-slate-500">Duration</span><span className="font-bold text-slate-700">{N} years</span></div>
                   </div>
@@ -169,8 +169,8 @@ export default function CAGRCalculatorPage() {
                         const val = P * Math.pow(1 + r / 100, N);
                         const gain = val - P;
                         return (
-                          <tr key={r} className={`border-t border-slate-50 hover:bg-slate-50 ${Math.abs(cagr - r) < 0.5 && isValid ? 'bg-indigo-50' : ''}`}>
-                            <td className="px-4 py-3 font-bold text-indigo-600">{r}%</td>
+                          <tr key={r} className={`border-t border-slate-50 hover:bg-slate-50 ${Math.abs(cagr - r) < 0.5 && isValid ? 'bg-brand-50' : ''}`}>
+                            <td className="px-4 py-3 font-bold text-brand-600">{r}%</td>
                             <td className="px-4 py-3 text-right font-bold text-slate-800">{fmtShort(val)}</td>
                             <td className="px-4 py-3 text-right text-green-600">+{fmtShort(gain)}</td>
                             <td className="px-4 py-3 text-right text-slate-600">{(val / P).toFixed(2)}x</td>
@@ -189,10 +189,10 @@ export default function CAGRCalculatorPage() {
             <h2 className="text-lg font-bold text-slate-900 mb-4">About CAGR</h2>
             <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
               <p>CAGR (Compound Annual Growth Rate) is the most widely used metric to compare investment performance. Unlike simple percentage return, CAGR accounts for the time value of money and gives a standardised annual rate.</p>
-              <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-4">
-                <p className="font-semibold text-indigo-800 mb-2">Formula</p>
-                <code className="block bg-white rounded px-3 py-2 text-indigo-700 font-mono text-sm">CAGR = [(Final Value ÷ Initial Value)^(1÷N) − 1] × 100</code>
-                <p className="text-xs text-indigo-600 mt-2">Where N = number of years</p>
+              <div className="bg-brand-50 border border-brand-100 rounded-lg p-4">
+                <p className="font-semibold text-brand-800 mb-2">Formula</p>
+                <code className="block bg-white rounded px-3 py-2 text-brand-700 font-mono text-sm">CAGR = [(Final Value ÷ Initial Value)^(1÷N) − 1] × 100</code>
+                <p className="text-xs text-brand-600 mt-2">Where N = number of years</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 {[

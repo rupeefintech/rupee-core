@@ -17,13 +17,13 @@ interface Props {
 }
 
 const colorMap: Record<string, { bg: string; text: string; accent: string; focus: string }> = {
-  blue:   { bg: 'bg-blue-50',   text: 'text-blue-700',   accent: 'accent-blue-600',   focus: 'focus:border-blue-400'   },
+  blue:   { bg: 'bg-brand-50',   text: 'text-brand-700',   accent: 'accent-brand-600',  focus: 'focus:border-brand-400'   },
   green:  { bg: 'bg-green-50',  text: 'text-green-700',  accent: 'accent-green-600',  focus: 'focus:border-green-400'  },
   amber:  { bg: 'bg-amber-50',  text: 'text-amber-700',  accent: 'accent-amber-600',  focus: 'focus:border-amber-400'  },
   violet: { bg: 'bg-violet-50', text: 'text-violet-700', accent: 'accent-violet-600', focus: 'focus:border-violet-400' },
   rose:   { bg: 'bg-rose-50',   text: 'text-rose-700',   accent: 'accent-rose-600',   focus: 'focus:border-rose-400'   },
   teal:   { bg: 'bg-teal-50',   text: 'text-teal-700',   accent: 'accent-teal-600',   focus: 'focus:border-teal-400'   },
-  indigo: { bg: 'bg-indigo-50', text: 'text-indigo-700', accent: 'accent-indigo-600', focus: 'focus:border-indigo-400' },
+  indigo: { bg: 'bg-brand-50', text: 'text-brand-700', accent: 'accent-brand-600', focus: 'focus:border-brand-400' },
   orange: { bg: 'bg-orange-50', text: 'text-orange-700', accent: 'accent-orange-600', focus: 'focus:border-orange-400' },
   purple: { bg: 'bg-purple-50', text: 'text-purple-700', accent: 'accent-purple-600', focus: 'focus:border-purple-400' },
 };

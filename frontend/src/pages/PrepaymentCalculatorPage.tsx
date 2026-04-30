@@ -76,14 +76,14 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">{isHome ? 'Home' : 'Personal'} Loan Prepayment Calculator</h1>
-          <p className="text-indigo-100 text-sm max-w-md mx-auto">See exactly how much interest you save and how many months you cut off by making a lump sum prepayment.</p>
+          <p className="text-brand-100 text-sm max-w-md mx-auto">See exactly how much interest you save and how many months you cut off by making a lump sum prepayment.</p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <SliderInput
@@ -127,7 +127,7 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                 />
               </div>
 
-              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-5 text-white flex flex-col gap-3">
+              <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-lg p-5 text-white flex flex-col gap-3">
                 <div>
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Interest Saved</div>
                   <div className="text-3xl font-bold tracking-tight text-green-300">{fmtShort(Math.max(intSaved, 0))}</div>

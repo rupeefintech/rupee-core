@@ -60,20 +60,20 @@ export default function StepUpSIPPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-rose-50">
-        <div className="bg-gradient-to-br from-rose-500 to-rose-700 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-white to-brand-50">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">Step-Up SIP Calculator</h1>
-          <p className="text-rose-100 text-sm max-w-md mx-auto">See how increasing your SIP every year accelerates your wealth creation dramatically.</p>
+          <p className="text-brand-200 text-sm max-w-md mx-auto">See how increasing your SIP every year accelerates your wealth creation dramatically.</p>
         </div>
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-rose-500 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <SliderInput label="Initial monthly SIP"        value={monthly} min={500} max={200000} step={500}  display={fmtINR(monthly)} onChange={setMonthly} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="rose" />
-                <SliderInput label="Annual step-up rate"        value={stepUp}  min={5}   max={50}     step={5}    display={`${stepUp}%`}    onChange={setStepUp}  color="rose" />
-                <SliderInput label="Expected return rate (p.a)" value={rate}    min={1}   max={30}     step={0.5}  display={`${rate}%`}      onChange={setRate}    color="rose" />
-                <SliderInput label="Time period"                value={years}   min={1}   max={40}     step={1}    display={`${years} Yr`}   onChange={setYears}   color="rose" />
+                <SliderInput label="Initial monthly SIP"        value={monthly} min={500} max={200000} step={500}  display={fmtINR(monthly)} onChange={setMonthly} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="purple" />
+                <SliderInput label="Annual step-up rate"        value={stepUp}  min={5}   max={50}     step={5}    display={`${stepUp}%`}    onChange={setStepUp}  color="purple" />
+                <SliderInput label="Expected return rate (p.a)" value={rate}    min={1}   max={30}     step={0.5}  display={`${rate}%`}      onChange={setRate}    color="purple" />
+                <SliderInput label="Time period"                value={years}   min={1}   max={40}     step={1}    display={`${years} Yr`}   onChange={setYears}   color="purple" />
               </div>
 
               <div className="flex flex-col justify-center gap-4">
@@ -91,17 +91,17 @@ export default function StepUpSIPPage() {
                     <span className="text-base font-bold text-slate-900">{fmtShort(corpus)}</span>
                   </div>
                   <div className="mt-4 h-10 rounded-xl overflow-hidden flex text-white text-sm font-bold">
-                    <div className="flex items-center justify-center bg-orange-400" style={{ width: `${Math.round((invested / corpus) * 100)}%` }}>
+                    <div className="flex items-center justify-center bg-brand-400" style={{ width: `${Math.round((invested / corpus) * 100)}%` }}>
                       {Math.round((invested / corpus) * 100)}%
                     </div>
-                    <div className="flex items-center justify-center bg-rose-500 flex-1">
+                    <div className="flex items-center justify-center bg-brand-600 flex-1">
                       {Math.round((gains / corpus) * 100)}%
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-rose-50 border border-rose-100 rounded-xl p-4">
-                  <div className="text-xs font-semibold text-rose-700 mb-2">vs Flat SIP (₹{monthly.toLocaleString('en-IN')}/mo)</div>
+                <div className="bg-brand-50 border border-brand-100 rounded-xl p-4">
+                  <div className="text-xs font-semibold text-brand-700 mb-2">vs Flat SIP (₹{monthly.toLocaleString('en-IN')}/mo)</div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500">Flat SIP corpus</span>
                     <span className="font-semibold">{fmtShort(flatCorpus)}</span>
@@ -131,7 +131,7 @@ export default function StepUpSIPPage() {
                     {yearData.map(row => (
                       <tr key={row.year} className="border-t border-slate-50 hover:bg-slate-50">
                         <td className="px-4 py-2.5 font-medium text-slate-700">Year {row.year}</td>
-                        <td className="px-4 py-2.5 text-right text-rose-600 font-medium">{fmtINR(row.sip)}</td>
+                        <td className="px-4 py-2.5 text-right text-brand-600 font-medium">{fmtINR(row.sip)}</td>
                         <td className="px-4 py-2.5 text-right text-slate-600">{fmtINR(row.invested)}</td>
                         <td className="px-4 py-2.5 text-right font-bold text-slate-800">{fmtINR(row.corpus)}</td>
                       </tr>

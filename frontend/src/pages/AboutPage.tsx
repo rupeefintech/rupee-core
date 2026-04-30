@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Shield, Search, Calculator,
-  Building2, MapPin, Zap, ChevronRight, IndianRupee,
+  Building2, Zap, ChevronRight,
   BookOpen, Users, Lock,
 } from 'lucide-react';
 
@@ -29,7 +29,7 @@ export default function AboutPage() {
       <section className="hero-bg py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <motion.div {...fadeUp()}>
-            <img src="/logo.png" alt="Rupeepedia" className="h-20 w-auto mx-auto mb-6 mix-blend-multiply" />
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-700 flex items-center justify-center text-white font-black text-3xl shadow-xl shadow-brand-500/30 mx-auto mb-6 select-none">₹</div>
             <h1 className="font-display text-4xl sm:text-5xl font-bold text-brand-900 mb-6 leading-tight">
               About RupeePedia
             </h1>
@@ -89,32 +89,24 @@ export default function AboutPage() {
               {
                 icon: <Calculator className="w-5 h-5 text-brand-600" />,
                 title: 'EMI Calculator',
-                desc: 'Calculate loan EMIs instantly for home loans, car loans, and personal loans. Adjust principal, interest rate, and tenure to find the right plan.',
+                desc: 'Calculate loan EMIs instantly for home, car, and personal loans. Adjust principal, interest rate, and tenure. All calculations run in your browser.',
                 href: '/calculators/emi',
-                cta: 'Coming Soon',
-                live: false,
+                cta: 'Try Calculator',
+                live: true,
               },
               {
                 icon: <Zap className="w-5 h-5 text-brand-600" />,
-                title: 'SIP & Investment Calculator',
-                desc: 'Plan your SIP investments, calculate FD/RD returns, and estimate compound interest. All client-side — your data never leaves your device.',
+                title: 'SIP & Investment Calculators',
+                desc: 'Plan SIP investments, calculate FD/RD returns, PPF, NPS, CAGR, XIRR and more. 15+ tools — all client-side, your data never leaves your device.',
                 href: '/calculators/sip',
-                cta: 'Coming Soon',
-                live: false,
+                cta: 'Try Calculator',
+                live: true,
               },
               {
                 icon: <BookOpen className="w-5 h-5 text-brand-600" />,
                 title: 'Banking Guides',
                 desc: 'Deep-dive explainers on NEFT, RTGS, IMPS, UPI, MICR, and SWIFT. Transaction charges, operating hours, and step-by-step transfer instructions.',
-                href: '/guide/what-is-neft',
-                cta: 'Coming Soon',
-                live: false,
-              },
-              {
-                icon: <MapPin className="w-5 h-5 text-brand-600" />,
-                title: 'Pincode Branch Search',
-                desc: 'Find all bank branches near any Indian pincode. The only IFSC platform to offer pincode-based search — a unique feature not available on competitors.',
-                href: '/ifsc/pin',
+                href: '/money-guides',
                 cta: 'Coming Soon',
                 live: false,
               },
@@ -164,7 +156,7 @@ export default function AboutPage() {
             ].map(stat => (
               <div key={stat.label}>
                 <p className="font-display text-2xl font-bold text-white">{stat.value}</p>
-                <p className="text-blue-200 text-sm mt-1">{stat.label}</p>
+                <p className="text-brand-200 text-sm mt-1">{stat.label}</p>
               </div>
             ))}
           </div>

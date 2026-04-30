@@ -41,7 +41,7 @@ const components: Components = {
   a: ({ href, children, ...props }) => {
     if (href?.startsWith('/')) {
       return (
-        <Link to={href} className="text-blue-600 hover:text-blue-800 font-semibold underline underline-offset-2 decoration-blue-200 hover:decoration-blue-400 transition">
+        <Link to={href} className="text-brand-600 hover:text-brand-800 font-semibold underline underline-offset-2 decoration-brand-200 hover:decoration-brand-400 transition">
           {children}
         </Link>
       );
@@ -51,7 +51,7 @@ const components: Components = {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-blue-600 hover:text-blue-800 font-semibold underline underline-offset-2 decoration-blue-200 hover:decoration-blue-400 transition"
+        className="text-brand-600 hover:text-brand-800 font-semibold underline underline-offset-2 decoration-brand-200 hover:decoration-brand-400 transition"
         {...props}
       >
         {children}
@@ -79,7 +79,7 @@ const components: Components = {
 
   blockquote: ({ children, ...props }) => {
     const text = String(children);
-    let style = { border: 'border-blue-400', bg: 'bg-blue-50', icon: '💡', label: 'Info', labelColor: 'text-blue-700', labelBg: 'bg-blue-100' };
+    let style = { border: 'border-brand-400', bg: 'bg-brand-50', icon: '💡', label: 'Info', labelColor: 'text-brand-700', labelBg: 'bg-brand-100' };
 
     if (text.includes('⚠') || text.includes('Warning')) {
       style = { border: 'border-amber-400', bg: 'bg-amber-50', icon: '⚠️', label: 'Warning', labelColor: 'text-amber-700', labelBg: 'bg-amber-100' };
@@ -126,7 +126,7 @@ const components: Components = {
   ),
 
   tr: ({ children, ...props }) => (
-    <tr className="even:bg-gray-50 hover:bg-blue-50/50 transition-colors" {...props}>
+    <tr className="even:bg-gray-50 hover:bg-brand-50/50 transition-colors" {...props}>
       {children}
     </tr>
   ),
@@ -203,7 +203,7 @@ const components: Components = {
     // Individual concept card
     if (className === 'concept-card') {
       return (
-        <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md hover:border-blue-200 transition-all" {...props}>
+        <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md hover:border-brand-200 transition-all" {...props}>
           {children}
         </div>
       );
@@ -219,7 +219,7 @@ const components: Components = {
     // Highlight box
     if (className === 'highlight-box') {
       return (
-        <div className="my-8 bg-gradient-to-r from-brand-50 to-blue-50 rounded-xl border border-brand-100 p-6" {...props}>
+        <div className="my-8 bg-gradient-to-r from-brand-50 to-brand-100 rounded-xl border border-brand-100 p-6" {...props}>
           {children}
         </div>
       );

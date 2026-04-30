@@ -59,14 +59,14 @@ export default function SWPCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">SWP Calculator</h1>
-          <p className="text-indigo-100 text-sm max-w-md mx-auto">Calculate how long your investment corpus will last with regular monthly withdrawals.</p>
+          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate how long your investment corpus will last with regular monthly withdrawals.</p>
         </div>
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <SliderInput label="Total investment"           value={investment} min={10000} max={10000000} step={10000} display={fmtINR(investment)} onChange={setInvestment} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="blue" />
@@ -95,12 +95,12 @@ export default function SWPCalculatorPage() {
                     </div>
                   )}
                   {finalValue > 0 && (
-                    <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-3 text-xs text-indigo-700 mt-2">
+                    <div className="bg-brand-50 border border-brand-100 rounded-lg p-3 text-xs text-brand-700 mt-2">
                       ✓ Corpus sustains {years} years of withdrawals with {fmtShort(finalValue)} remaining.
                     </div>
                   )}
                 </div>
-                <button className="mt-4 bg-indigo-600 text-white font-bold text-sm rounded-xl py-3 hover:bg-indigo-700 transition-colors">
+                <button className="mt-4 bg-brand-600 text-white font-bold text-sm rounded-xl py-3 hover:bg-brand-700 transition-colors">
                   Start Investing →
                 </button>
               </div>

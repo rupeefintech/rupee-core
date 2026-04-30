@@ -9,7 +9,7 @@ const categories = ['All', 'Tax', 'Banking', 'Investment', 'Credit Cards', 'Loan
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
   Tax:            { bg: 'bg-purple-50', text: 'text-purple-700' },
-  Banking:        { bg: 'bg-blue-50',   text: 'text-blue-700' },
+  Banking:        { bg: 'bg-brand-50',   text: 'text-brand-700' },
   Investment:     { bg: 'bg-emerald-50', text: 'text-emerald-700' },
   'Credit Cards': { bg: 'bg-amber-50',  text: 'text-amber-700' },
   Loans:          { bg: 'bg-rose-50',   text: 'text-rose-700' },
@@ -210,7 +210,7 @@ function FeaturedCard({ blog }: { blog: BlogSummary }) {
           <span className={`text-[10px] font-bold uppercase tracking-wider ${catColor.text} mb-2`}>
             Featured
           </span>
-          <h2 className="text-xl sm:text-2xl font-bold text-brand-900 mb-3 group-hover:text-blue-700 transition leading-tight">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-900 mb-3 group-hover:text-brand-700 transition leading-tight">
             {blog.title}
           </h2>
           <p className="text-sm text-gray-500 mb-4 line-clamp-3">
@@ -253,7 +253,7 @@ function BlogCard({ blog }: { blog: BlogSummary }) {
         <span className={`inline-block text-[10px] font-bold ${catColor.text} ${catColor.bg} px-2 py-0.5 rounded-full w-fit mb-2`}>
           {blog.category}
         </span>
-        <h3 className="font-semibold text-gray-800 group-hover:text-blue-600 transition mb-2 line-clamp-2 leading-snug">
+        <h3 className="font-semibold text-gray-800 group-hover:text-brand-600 transition mb-2 line-clamp-2 leading-snug">
           {blog.title}
         </h3>
         <p className="text-xs text-gray-400 line-clamp-2 mb-3 flex-1">

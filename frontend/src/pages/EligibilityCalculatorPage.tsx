@@ -50,14 +50,14 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">{isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator</h1>
-          <p className="text-indigo-100 text-sm max-w-md mx-auto">Find out the maximum loan amount you are eligible for based on your monthly income.</p>
+          <p className="text-brand-100 text-sm max-w-md mx-auto">Find out the maximum loan amount you are eligible for based on your monthly income.</p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <SliderInput label="Net Monthly Income"        value={income}      min={10000} max={500000}           step={5000} display={fmtINR(income)}           onChange={setIncome}      parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="blue" isZero={income === 0} />
@@ -66,7 +66,7 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
                 <SliderInput label="Loan Tenure"               value={tenure}      min={1}     max={isHome ? 30 : 7}  step={1}    display={`${tenure} Yr`}            onChange={setTenure}      color="blue" />
               </div>
 
-              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-5 text-white flex flex-col gap-4">
+              <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-lg p-5 text-white flex flex-col gap-4">
                 <div>
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Maximum Loan Eligibility</div>
                   <div className="text-3xl font-bold tracking-tight">{maxLoan > 0 ? fmtShort(maxLoan) : 'Not Eligible'}</div>

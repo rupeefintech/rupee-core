@@ -55,9 +55,9 @@ export default function HRACalculatorPage() {
           Metro City (Delhi, Mumbai, Chennai, Kolkata)
         </label>
 
-        <div className="bg-indigo-50 p-4 rounded">
+        <div className="bg-brand-50 p-4 rounded">
           <p className="text-sm">HRA Exemption</p>
-          <p className="font-bold text-lg text-indigo-700">
+          <p className="font-bold text-lg text-brand-700">
             ₹{Math.round(exemption).toLocaleString()} / month
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function HRACalculatorPage() {
       </div>
 
       {/* 💰 Monetization */}
-      <div className="bg-indigo-50 p-5 rounded">
+      <div className="bg-brand-50 p-5 rounded">
         <p className="mb-3">
           Planning to buy a house? Save more with the right home loan.
         </p>

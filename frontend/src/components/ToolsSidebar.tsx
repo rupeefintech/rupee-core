@@ -7,17 +7,17 @@ import {
 import { useState } from 'react';
 
 const quickLinks = [
-  { label: 'IFSC Finder', desc: '1.78L+ branches', path: '/ifsc-finder', icon: Search, gradient: 'from-indigo-500 to-indigo-700' },
-  { label: 'Credit Cards', desc: 'Compare & apply', path: '/credit-cards', icon: CreditCard, gradient: 'from-indigo-500 to-indigo-700' },
-  { label: 'Bank Accounts', desc: 'Savings & current', path: '/accounts', icon: PiggyBank, gradient: 'from-indigo-500 to-indigo-700' },
-  { label: 'All Banks', desc: '1,350+ banks', path: '/ifsc-finder', icon: Landmark, gradient: 'from-indigo-500 to-indigo-700' },
+  { label: 'IFSC Finder',  desc: '1.78L+ branches', path: '/ifsc-finder',  icon: Search,   gradient: 'from-brand-600 to-brand-800' },
+  { label: 'Credit Cards', desc: 'Compare & apply',  path: '/credit-cards', icon: CreditCard, gradient: 'from-brand-600 to-brand-800' },
+  { label: 'Bank Accounts',desc: 'Savings & current',path: '/accounts',     icon: PiggyBank, gradient: 'from-brand-600 to-brand-800' },
+  { label: 'All Banks',    desc: '1,350+ banks',     path: '/ifsc-finder',  icon: Landmark,  gradient: 'from-brand-600 to-brand-800' },
 ];
 
-const catColors: Record<string, { text: string; bg: string; activeBg: string; border: string; gradient: string }> = {
-  blue:   { text: 'text-indigo-600', bg: 'bg-indigo-50', activeBg: 'bg-indigo-600', border: 'border-indigo-100', gradient: 'from-indigo-500 to-indigo-700' },
-  green:  { text: 'text-indigo-600', bg: 'bg-indigo-50', activeBg: 'bg-indigo-600', border: 'border-indigo-100', gradient: 'from-indigo-500 to-indigo-700' },
-  purple: { text: 'text-indigo-600', bg: 'bg-indigo-50', activeBg: 'bg-indigo-600', border: 'border-indigo-100', gradient: 'from-indigo-500 to-indigo-700' },
-  amber:  { text: 'text-indigo-600', bg: 'bg-indigo-50', activeBg: 'bg-indigo-600', border: 'border-indigo-100', gradient: 'from-indigo-500 to-indigo-700' },
+const catColors: Record<string, { text: string; bg: string; activeBg: string; border: string }> = {
+  blue:   { text: 'text-brand-600', bg: 'bg-brand-50', activeBg: 'bg-brand-600', border: 'border-brand-100' },
+  green:  { text: 'text-brand-600', bg: 'bg-brand-50', activeBg: 'bg-brand-600', border: 'border-brand-100' },
+  purple: { text: 'text-brand-600', bg: 'bg-brand-50', activeBg: 'bg-brand-600', border: 'border-brand-100' },
+  amber:  { text: 'text-brand-600', bg: 'bg-brand-50', activeBg: 'bg-brand-600', border: 'border-brand-100' },
 };
 
 export default function ToolsSidebar() {
@@ -34,7 +34,7 @@ export default function ToolsSidebar() {
 
       {/* ── Explore ── */}
       <div className="rounded-xl overflow-hidden border border-gray-200">
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 px-4 py-3 flex items-center gap-2">
+        <div className="bg-gradient-to-r from-brand-700 to-brand-900 px-4 py-3 flex items-center gap-2">
           <Compass size={14} className="text-white/70" />
           <h3 className="text-xs font-bold text-white tracking-wide">Explore</h3>
         </div>
@@ -67,7 +67,7 @@ export default function ToolsSidebar() {
 
       {/* ── All Calculators ── */}
       <div className="rounded-xl overflow-hidden border border-gray-200">
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 px-4 py-3 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-brand-700 to-brand-900 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calculator size={14} className="text-white/70" />
             <h3 className="text-xs font-bold text-white tracking-wide">Calculators</h3>
@@ -89,7 +89,7 @@ export default function ToolsSidebar() {
                 <button
                   onClick={() => setOpenCat(isOpen ? -1 : catIdx)}
                   className={`w-full flex items-center gap-2.5 px-4 py-3 text-left transition-colors ${
-                    hasActive ? `${colors.bg}` : 'hover:bg-gray-50'
+                    hasActive ? colors.bg : 'hover:bg-gray-50'
                   }`}
                 >
                   <div className={`w-6 h-6 rounded-md flex items-center justify-center ${
@@ -118,14 +118,12 @@ export default function ToolsSidebar() {
                           className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all ${
                             active
                               ? `${colors.activeBg} text-white font-semibold shadow-sm`
-                              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                              : 'text-gray-600 hover:bg-brand-50 hover:text-brand-700'
                           }`}
                         >
                           <Icon size={13} className={active ? 'text-white/80' : 'text-gray-400'} />
                           <span className="flex-1">{item.label}</span>
-                          {active && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
-                          )}
+                          {active && <span className="w-1.5 h-1.5 rounded-full bg-white/60" />}
                         </Link>
                       );
                     })}
@@ -138,51 +136,50 @@ export default function ToolsSidebar() {
       </div>
 
       {/* ── Financial Guides ── */}
-      <div className="rounded-xl overflow-hidden bg-gradient-to-br from-brand-700 to-brand-900 p-[1px]">
-        <div className="rounded-[11px] bg-gradient-to-br from-brand-700 to-brand-900 p-4 relative overflow-hidden">
-          <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/[0.04] rounded-full" />
-          <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/[0.03] rounded-full" />
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-2">
-              <BookOpen size={14} className="text-gold-400" />
-              <h3 className="text-xs font-bold text-white tracking-wide">Financial Guides</h3>
-            </div>
-            <p className="text-[11px] text-white/50 leading-relaxed mb-3">
-              PAN rules, tax-saving strategies, and smart money habits.
-            </p>
-            <Link
-              to="/money-guides"
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-lg transition"
-            >
-              Read Guides <ArrowRight size={11} />
-            </Link>
+      <div className="rounded-xl bg-gradient-to-br from-brand-700 to-brand-900 p-4 relative overflow-hidden">
+        <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/[0.04] rounded-full" />
+        <div className="absolute -left-4 -bottom-4 w-20 h-20 bg-white/[0.03] rounded-full" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-2">
+            <BookOpen size={14} className="text-accent-400" />
+            <h3 className="text-xs font-bold text-white tracking-wide">Financial Guides</h3>
           </div>
+          <p className="text-[11px] text-white/50 leading-relaxed mb-3">
+            PAN rules, tax-saving strategies, and smart money habits.
+          </p>
+          <Link
+            to="/money-guides"
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-lg transition"
+          >
+            Read Guides <ArrowRight size={11} />
+          </Link>
         </div>
       </div>
 
-      {/* ── Need Help? ── */}
+      {/* ── Quick Search ── */}
       <div className="rounded-xl overflow-hidden border border-gray-200">
-        <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 px-4 py-3 flex items-center gap-2">
+        <div className="bg-gradient-to-r from-brand-700 to-brand-900 px-4 py-3 flex items-center gap-2">
           <Search size={14} className="text-white/70" />
           <h3 className="text-xs font-bold text-white tracking-wide">Quick Search</h3>
         </div>
         <div className="bg-white p-3 space-y-1.5">
           {[
-            { label: 'What is EMI?', path: '/calculators/emi' },
-            { label: 'Best credit card for cashback', path: '/credit-cards?category=Cashback' },
-            { label: 'How to find IFSC code', path: '/ifsc-finder' },
+            { label: 'What is EMI?',                    path: '/calculators/emi' },
+            { label: 'Best credit card for cashback',   path: '/credit-cards?category=Cashback' },
+            { label: 'How to find IFSC code',           path: '/ifsc-finder' },
           ].map((q) => (
             <Link
               key={q.label}
               to={q.path}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] text-gray-600 hover:bg-indigo-50 hover:text-indigo-700 transition group"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-[11px] text-gray-600 hover:bg-brand-50 hover:text-brand-700 transition group"
             >
-              <ArrowRight size={11} className="text-gray-300 group-hover:text-indigo-500 transition" />
+              <ArrowRight size={11} className="text-gray-300 group-hover:text-brand-500 transition" />
               {q.label}
             </Link>
           ))}
         </div>
       </div>
+
     </aside>
   );
 }

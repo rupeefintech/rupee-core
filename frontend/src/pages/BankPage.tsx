@@ -49,14 +49,14 @@ export default function BankPage() {
 
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1 text-sm text-gray-500 mb-6">
-          <Link to="/" className="hover:text-blue-600">Home</Link>
+          <Link to="/" className="hover:text-brand-600">Home</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-gray-800 font-medium">{bankInfo?.name ?? bank}</span>
         </nav>
 
         {isLoading && (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600" />
           </div>
         )}
 
@@ -78,7 +78,7 @@ export default function BankPage() {
                 <Link
                   key={s.id}
                   to={`/state/${bank}/${s.name.toLowerCase()}`}
-                  className="group flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all"
+                  className="group flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-xl hover:border-brand-300 hover:shadow-md transition-all"
                 >
                   {s.logo_url ? (
                     <img
@@ -87,12 +87,12 @@ export default function BankPage() {
                       className="w-10 h-10 object-contain rounded-lg flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-5 h-5 text-blue-500" />
+                    <div className="w-10 h-10 bg-brand-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-5 h-5 text-brand-500" />
                     </div>
                   )}
                   <div className="min-w-0">
-                    <p className="font-medium text-gray-900 text-sm truncate group-hover:text-blue-700">
+                    <p className="font-medium text-gray-900 text-sm truncate group-hover:text-brand-700">
                       {s.name}
                     </p>
                     <p className="text-xs text-gray-400">

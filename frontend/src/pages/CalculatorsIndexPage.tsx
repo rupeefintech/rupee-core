@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import { calculatorCategories } from '../utils/calculators';
 
 const colorMap: Record<string, { card: string; iconBg: string; iconColor: string }> = {
-  blue:   { card: 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300',   iconBg: 'bg-indigo-100',   iconColor: 'text-indigo-600' },
-  green:  { card: 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300',   iconBg: 'bg-indigo-100',   iconColor: 'text-indigo-600' },
-  purple: { card: 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300',   iconBg: 'bg-indigo-100',   iconColor: 'text-indigo-600' },
-  amber:  { card: 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:border-indigo-300',   iconBg: 'bg-indigo-100',   iconColor: 'text-indigo-600' },
+  blue:   { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
+  green:  { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
+  purple: { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
+  amber:  { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
 };
 
 export default function CalculatorsIndexPage() {
@@ -19,9 +19,9 @@ export default function CalculatorsIndexPage() {
 
       <div className="min-h-screen bg-gray-50">
         {/* Hero */}
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-12 px-4 text-center">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-12 px-4 text-center">
           <h1 className="text-3xl font-bold mb-3">Financial Calculators</h1>
-          <p className="text-indigo-100 text-sm max-w-lg mx-auto">
+          <p className="text-brand-100 text-sm max-w-lg mx-auto">
             Free, accurate calculators to help you make smarter financial decisions — EMI, SIP, FD, eligibility and more.
           </p>
         </div>

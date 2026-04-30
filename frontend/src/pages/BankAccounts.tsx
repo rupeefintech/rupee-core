@@ -14,7 +14,7 @@ const BankAccounts: React.FC = () => {
       </p>
 
       {/* 🔥 Coming Soon Section */}
-      <div className="bg-blue-50 p-6 rounded mb-8 text-center">
+      <div className="bg-brand-50 p-6 rounded mb-8 text-center">
         <h2 className="text-xl font-semibold mb-2">
           🚀 Bank Account Comparison Coming Soon
         </h2>
@@ -25,7 +25,7 @@ const BankAccounts: React.FC = () => {
 
         <Link
           to="/credit-cards"
-          className="bg-blue-600 text-white px-4 py-2 rounded inline-block"
+          className="bg-brand-600 text-white px-4 py-2 rounded inline-block"
         >
           Explore Credit Cards →
         </Link>

@@ -44,6 +44,8 @@ const MutualFundCalculatorPage = lazy(() => import("./pages/MutualFundCalculator
 const CAGRCalculatorPage = lazy(() => import("./pages/CAGRCalculatorPage"));
 const XIRRCalculatorPage = lazy(() => import("./pages/XIRRCalculatorPage"));
 const Loans = lazy(() => import("./pages/Loans"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
 
 function App() {
   return (
@@ -120,6 +122,8 @@ function PublicLayout() {
             <Route path="/money-guides" element={<BlogListingPage />} />
             <Route path="/money-guides/:slug" element={<BlogDetailPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             <Route path="/credit-cards" element={<CreditCards />} />
             <Route path="/credit-cards/compare" element={<CreditCardCompare />} />
             <Route path="/credit-cards/:slug" element={<CreditCardDetail />} />

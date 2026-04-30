@@ -81,22 +81,22 @@ export default function TaxCalculatorPage() {
 
       <div className="min-h-screen bg-[#F8FAFC]">
         {/* CLEANER HERO */}
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-12 px-4">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-12 px-4">
           <div className="max-w-6xl mx-auto">
-            <nav className="flex items-center gap-2 text-indigo-200 text-xs uppercase tracking-wider mb-6">
+            <nav className="flex items-center gap-2 text-brand-200 text-xs uppercase tracking-wider mb-6">
               <Link to="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronRight className="w-3 h-3 text-indigo-300" />
+              <ChevronRight className="w-3 h-3 text-brand-300" />
               <Link to="/calculators" className="hover:text-white transition-colors">Calculators</Link>
-              <ChevronRight className="w-3 h-3 text-indigo-300" />
+              <ChevronRight className="w-3 h-3 text-brand-300" />
               <span className="text-white font-medium">Income Tax</span>
             </nav>
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
                 <h1 className="text-4xl font-extrabold flex items-center gap-3">
-                  <Calculator className="text-indigo-200 w-10 h-10" /> Tax <span className="text-indigo-200">Calculator</span>
+                  <Calculator className="text-brand-200 w-10 h-10" /> Tax <span className="text-brand-200">Calculator</span>
                 </h1>
-                <p className="text-indigo-100 mt-3 text-lg max-w-md border-l-2 border-indigo-300/30 pl-4">
+                <p className="text-brand-100 mt-3 text-lg max-w-md border-l-2 border-brand-300/30 pl-4">
                   Assessment Year 2026-27 comparison engine.
                 </p>
               </div>
@@ -111,8 +111,8 @@ export default function TaxCalculatorPage() {
             <div className="lg:col-span-7 space-y-6">
               <Card>
                 <div className="flex items-center gap-2 mb-6 border-b pb-4">
-                  <div className="p-2 bg-indigo-50 rounded-lg">
-                    <IndianRupee className="w-5 h-5 text-indigo-600" />
+                  <div className="p-2 bg-brand-50 rounded-lg">
+                    <IndianRupee className="w-5 h-5 text-brand-600" />
                   </div>
                   <h3 className="font-bold text-slate-800">Earnings & Investment</h3>
                 </div>
@@ -131,9 +131,9 @@ export default function TaxCalculatorPage() {
                     <Input label="HRA Exemption" value={hra} onChange={setHra} />
                     <Input label="Home Loan Interest (24b)" value={homeLoan} onChange={setHomeLoan} />
                     <Input label="NPS (80CCD 1B)" value={nps} onChange={setNps} />
-                    <div className="flex items-center gap-2 px-3 py-2 bg-indigo-50/50 rounded-xl border border-indigo-100">
-                      <Info className="w-4 h-4 text-indigo-500" />
-                      <p className="text-xs text-indigo-700">₹75,000 Std. Deduction applied automatically.</p>
+                    <div className="flex items-center gap-2 px-3 py-2 bg-brand-50/50 rounded-xl border border-brand-100">
+                      <Info className="w-4 h-4 text-brand-500" />
+                      <p className="text-xs text-brand-700">₹75,000 Std. Deduction applied automatically.</p>
                     </div>
                   </div>
                 </div>
@@ -143,7 +143,7 @@ export default function TaxCalculatorPage() {
             {/* RESULTS SECTION */}
             <div className="lg:col-span-5 space-y-6">
               {/* SAVINGS CARD */}
-              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white p-8 rounded-3xl shadow-xl shadow-indigo-500/20 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white p-8 rounded-3xl shadow-xl shadow-brand-500/20 relative overflow-hidden">
                 <TrendingDown className="absolute -right-4 -bottom-4 w-32 h-32 opacity-10" />
                 <div className="relative z-10">
                   <h2 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-1">Recommended Regime</h2>
@@ -157,7 +157,7 @@ export default function TaxCalculatorPage() {
 
               <Card>
                 <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
+                  <span className="w-1.5 h-6 bg-brand-600 rounded-full"></span>
                   Comparison Summary
                 </h3>
                 
@@ -169,11 +169,11 @@ export default function TaxCalculatorPage() {
                    
                    <div className="px-4 py-2 space-y-3">
                       <Row label="Old Regime Tax" value={result.oldTax} isEmphasis color="text-slate-700" />
-                      <Row label="New Regime Tax" value={result.newTax} isEmphasis color="text-indigo-600" />
+                      <Row label="New Regime Tax" value={result.newTax} isEmphasis color="text-brand-600" />
                    </div>
                 </div>
 
-                <button className="w-full mt-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/30 flex items-center justify-center gap-2">
+                <button className="w-full mt-6 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2">
                    Download Detailed Report
                 </button>
               </Card>
@@ -195,7 +195,7 @@ function Card({ children }: any) {
 function Input({ label, value, onChange, placeholder }: any) {
   return (
     <div className="group">
-      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block group-focus-within:text-indigo-600 transition-colors">
+      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block group-focus-within:text-brand-600 transition-colors">
         {label}
       </label>
       <div className="relative">
@@ -205,7 +205,7 @@ function Input({ label, value, onChange, placeholder }: any) {
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all font-semibold text-slate-700"
+          className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all font-semibold text-slate-700"
         />
       </div>
     </div>

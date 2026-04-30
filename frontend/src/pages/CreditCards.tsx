@@ -41,10 +41,10 @@ interface FilterOption {
 
 /* ─── Constants ─── */
 const NETWORK_COLORS: Record<string, string> = {
-  Visa: "bg-blue-100 text-blue-700 border-blue-200",
+  Visa: "bg-brand-100 text-brand-700 border-brand-200",
   Mastercard: "bg-orange-100 text-orange-700 border-orange-200",
   RuPay: "bg-green-100 text-green-700 border-green-200",
-  Amex: "bg-indigo-100 text-indigo-700 border-indigo-200",
+  Amex: "bg-brand-100 text-brand-700 border-brand-200",
   Diners: "bg-purple-100 text-purple-700 border-purple-200",
 };
 
@@ -444,7 +444,7 @@ const CreditCards: React.FC = () => {
         )}
 
         {/* ─── Guide Section ─── */}
-        <div className="mt-16 bg-gradient-to-br from-brand-50 to-blue-50 rounded-2xl p-8 border border-brand-100">
+        <div className="mt-16 bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-8 border border-brand-100">
           <h2 className="text-2xl font-bold text-brand-900 mb-5 font-display">
             How to Choose the Right Credit Card?
           </h2>

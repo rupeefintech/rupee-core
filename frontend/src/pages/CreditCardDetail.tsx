@@ -300,7 +300,7 @@ export default function CreditCardDetail() {
             </div>
 
             {/* Eligibility CTA */}
-            <div className="bg-gradient-to-br from-brand-50 to-blue-50 rounded-xl border border-brand-100 p-6">
+            <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-xl border border-brand-100 p-6">
               <h3 className="text-sm font-bold text-brand-900 mb-2 uppercase tracking-wider">Check Eligibility</h3>
               <p className="text-xs text-gray-500 mb-3">
                 {card.details.minIncome

@@ -282,8 +282,8 @@ export default function IFSCFinderPage() {
                   {opt.icon ? (
                     <img src={opt.icon} alt="" className="w-7 h-7 object-contain rounded-md flex-shrink-0" />
                   ) : (
-                    <span className="w-7 h-7 bg-blue-50 rounded-md flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-4 h-4 text-blue-500" />
+                    <span className="w-7 h-7 bg-brand-50 rounded-md flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-4 h-4 text-brand-500" />
                     </span>
                   )}
                   <span>{highlighted}</span>
@@ -365,8 +365,8 @@ export default function IFSCFinderPage() {
                   }}
                   className={`flex items-center gap-2.5 p-3 rounded-xl border transition-all text-left
                     ${matchedBank && String(matchedBank.id) === selectedBank
-                      ? 'border-blue-400 bg-blue-50 shadow-sm'
-                      : 'border-gray-200 hover:border-blue-300 hover:shadow-sm bg-white'}`}
+                      ? 'border-brand-400 bg-brand-50 shadow-sm'
+                      : 'border-gray-200 hover:border-brand-300 hover:shadow-sm bg-white'}`}
                 >
                   <img src={b.logo} alt={b.name} className="w-8 h-8 object-contain flex-shrink-0" />
                   <span className="text-sm font-medium text-gray-800 truncate">{b.name}</span>
@@ -390,7 +390,7 @@ export default function IFSCFinderPage() {
           <div className="bg-gray-50 rounded-xl p-4 mb-4">
             <h3 className="font-semibold text-brand-800 mb-2">IFSC Code Format</h3>
             <p className="text-gray-600 text-sm leading-relaxed">
-              An IFSC code like <span className="font-mono bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">HDFC0001234</span> has three parts:
+              An IFSC code like <span className="font-mono bg-brand-50 text-brand-700 px-1.5 py-0.5 rounded">HDFC0001234</span> has three parts:
             </p>
             <ul className="mt-2 space-y-1 text-sm text-gray-600">
               <li><strong>First 4 characters</strong> — Bank code (e.g., HDFC = HDFC Bank)</li>

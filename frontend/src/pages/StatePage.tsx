@@ -55,16 +55,16 @@ export default function StatePage() {
 
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1 text-sm text-gray-500 mb-6">
-          <Link to="/" className="hover:text-blue-600">Home</Link>
+          <Link to="/" className="hover:text-brand-600">Home</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to={`/bank/${bank}`} className="hover:text-blue-600">{bankInfo?.name ?? bank}</Link>
+          <Link to={`/bank/${bank}`} className="hover:text-brand-600">{bankInfo?.name ?? bank}</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-gray-800 font-medium">{stateInfo?.name ?? toTitleCase(state ?? '')}</span>
         </nav>
 
         {isLoading && (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600" />
           </div>
         )}
 
@@ -86,9 +86,9 @@ export default function StatePage() {
                 <Link
                   key={c.city}
                   to={`/city/${bank}/${state}/${c.city.toLowerCase()}`}
-                  className="p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all"
+                  className="p-4 bg-white border border-gray-200 rounded-xl hover:border-brand-300 hover:shadow-md transition-all"
                 >
-                  <p className="font-medium text-gray-900 text-sm hover:text-blue-700">
+                  <p className="font-medium text-gray-900 text-sm hover:text-brand-700">
                     {toTitleCase(c.city)}
                   </p>
                 </Link>

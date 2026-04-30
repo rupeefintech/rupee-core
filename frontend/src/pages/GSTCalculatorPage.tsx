@@ -48,20 +48,20 @@ export default function GSTCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
-        <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 text-white py-10 px-4 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
           <h1 className="text-2xl font-bold mb-2">GST Calculator</h1>
-          <p className="text-indigo-100 text-sm max-w-md mx-auto">Calculate GST amount, CGST, SGST instantly for any product or service.</p>
+          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate GST amount, CGST, SGST instantly for any product or service.</p>
         </div>
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-indigo-600 p-6">
+          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
 
             {/* Mode toggle */}
             <div className="flex gap-2 mb-6">
               {(['exclusive', 'inclusive'] as const).map(m => (
                 <button key={m} onClick={() => setMode(m)}
-                  className={`px-5 py-2 rounded-full text-sm font-medium border transition-all ${mode === m ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-200 text-slate-500 hover:border-indigo-300'}`}>
+                  className={`px-5 py-2 rounded-full text-sm font-medium border transition-all ${mode === m ? 'bg-brand-600 border-brand-600 text-white' : 'border-slate-200 text-slate-500 hover:border-brand-300'}`}>
                   {m === 'exclusive' ? 'Add GST' : 'Remove GST'}
                 </button>
               ))}
@@ -77,7 +77,7 @@ export default function GSTCalculatorPage() {
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
                     <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value))}
-                      className="w-full pl-8 pr-4 py-3 border border-slate-200 rounded-lg text-slate-800 font-semibold focus:outline-none focus:border-indigo-400 text-lg" />
+                      className="w-full pl-8 pr-4 py-3 border border-slate-200 rounded-lg text-slate-800 font-semibold focus:outline-none focus:border-brand-400 text-lg" />
                   </div>
                 </div>
 
@@ -87,7 +87,7 @@ export default function GSTCalculatorPage() {
                   <div className="grid grid-cols-5 gap-2">
                     {GST_RATES.map(r => (
                       <button key={r} onClick={() => setGstRate(r)}
-                        className={`py-2.5 rounded-lg text-sm font-bold border transition-all ${gstRate === r ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600'}`}>
+                        className={`py-2.5 rounded-lg text-sm font-bold border transition-all ${gstRate === r ? 'bg-brand-600 border-brand-600 text-white' : 'border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-600'}`}>
                         {r}%
                       </button>
                     ))}
@@ -96,7 +96,7 @@ export default function GSTCalculatorPage() {
               </div>
 
               {/* Result */}
-              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-lg p-5 text-white flex flex-col gap-3">
+              <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-lg p-5 text-white flex flex-col gap-3">
                 <div>
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Total Amount</div>
                   <div className="text-3xl font-bold tracking-tight">{fmtINR(totalAmount)}</div>
@@ -134,8 +134,8 @@ export default function GSTCalculatorPage() {
                     {GST_RATES.map(r => {
                       const g = baseAmount * r / 100;
                       return (
-                        <tr key={r} className={`border-t border-slate-50 hover:bg-slate-50 ${r === gstRate ? 'bg-indigo-50' : ''}`}>
-                          <td className="px-4 py-3 font-bold text-indigo-600">{r}%</td>
+                        <tr key={r} className={`border-t border-slate-50 hover:bg-slate-50 ${r === gstRate ? 'bg-brand-50' : ''}`}>
+                          <td className="px-4 py-3 font-bold text-brand-600">{r}%</td>
                           <td className="px-4 py-3 text-right text-slate-600">{fmtINR(g)}</td>
                           <td className="px-4 py-3 text-right text-slate-500">{fmtINR(g/2)}</td>
                           <td className="px-4 py-3 text-right text-slate-500">{fmtINR(g/2)}</td>

@@ -41,7 +41,7 @@ export default function BranchCard({ branch }: BranchCardProps) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-white rounded-2xl shadow-lg border border-blue-50 overflow-hidden"
+      className="bg-white rounded-2xl shadow-lg border border-brand-50 overflow-hidden"
     >
       {/* Header */}
       <div className="bg-gradient-to-r from-brand-800 to-brand-700 p-6 text-white">
@@ -53,14 +53,14 @@ export default function BranchCard({ branch }: BranchCardProps) {
               </span>
             </div>
             <h2 className="font-display text-2xl font-bold">{branch.bank_name}</h2>
-            <p className="text-blue-200 mt-1">{branch.branch_name} Branch</p>
+            <p className="text-brand-200 mt-1">{branch.branch_name} Branch</p>
           </div>
           {branch.bank_website && (
             <a
               href={branch.bank_website}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 text-xs text-blue-200 hover:text-white transition-colors whitespace-nowrap"
+              className="flex items-center gap-1 text-xs text-brand-200 hover:text-white transition-colors whitespace-nowrap"
             >
               Official Site <ExternalLink className="w-3 h-3" />
             </a>

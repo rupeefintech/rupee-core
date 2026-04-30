@@ -58,18 +58,18 @@ export default function CityPage() {
 
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1 text-sm text-gray-500 mb-6">
-          <Link to="/" className="hover:text-blue-600">Home</Link>
+          <Link to="/" className="hover:text-brand-600">Home</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to={`/bank/${bank}`} className="hover:text-blue-600">{bankInfo?.name ?? bank}</Link>
+          <Link to={`/bank/${bank}`} className="hover:text-brand-600">{bankInfo?.name ?? bank}</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to={`/state/${bank}/${state}`} className="hover:text-blue-600">{toTitleCase(state ?? '')}</Link>
+          <Link to={`/state/${bank}/${state}`} className="hover:text-brand-600">{toTitleCase(state ?? '')}</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-gray-800 font-medium">{toTitleCase(city ?? '')}</span>
         </nav>
 
         {isLoading && (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-600" />
           </div>
         )}
 
@@ -87,14 +87,14 @@ export default function CityPage() {
                 <Link
                   key={b.ifsc}
                   to={`/ifsc/${b.ifsc}`}
-                  className="block p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all"
+                  className="block p-4 bg-white border border-gray-200 rounded-xl hover:border-brand-300 hover:shadow-md transition-all"
                 >
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="font-semibold text-gray-900">{b.branchName}</p>
                       <p className="text-sm text-gray-500 mt-1">{b.address}</p>
                     </div>
-                    <span className="text-blue-600 text-sm font-mono bg-blue-50 px-2 py-1 rounded flex-shrink-0">
+                    <span className="text-brand-600 text-sm font-mono bg-brand-50 px-2 py-1 rounded flex-shrink-0">
                       {b.ifsc}
                     </span>
                   </div>
@@ -110,7 +110,7 @@ export default function CityPage() {
                     <button
                       onClick={() => { setPage(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                       disabled={!pagination.hasPrev}
-                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-brand-300 hover:text-brand-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                       title="First page"
                     >
                       <ChevronsLeft className="w-4 h-4" />
@@ -118,7 +118,7 @@ export default function CityPage() {
                     <button
                       onClick={() => { setPage(p => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                       disabled={!pagination.hasPrev}
-                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-brand-300 hover:text-brand-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <ChevronLeft className="w-4 h-4" />
                       <span className="hidden sm:inline">Previous</span>
@@ -149,11 +149,11 @@ export default function CityPage() {
                         value={goToPage}
                         onChange={(e) => setGoToPage(e.target.value)}
                         placeholder="Go to"
-                        className="w-16 px-2 py-1.5 text-sm border border-gray-200 rounded-lg text-center focus:outline-none focus:border-blue-400"
+                        className="w-16 px-2 py-1.5 text-sm border border-gray-200 rounded-lg text-center focus:outline-none focus:border-brand-400"
                       />
                       <button
                         type="submit"
-                        className="px-2.5 py-1.5 text-sm font-medium rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                        className="px-2.5 py-1.5 text-sm font-medium rounded-lg bg-brand-50 text-brand-600 hover:bg-brand-100 transition-colors"
                       >
                         Go
                       </button>
@@ -165,7 +165,7 @@ export default function CityPage() {
                     <button
                       onClick={() => { setPage(p => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                       disabled={!pagination.hasNext}
-                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-brand-300 hover:text-brand-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <span className="hidden sm:inline">Next</span>
                       <ChevronRight className="w-4 h-4" />
@@ -173,7 +173,7 @@ export default function CityPage() {
                     <button
                       onClick={() => { setPage(pagination.totalPages); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                       disabled={!pagination.hasNext}
-                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg border border-gray-200 hover:border-brand-300 hover:text-brand-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                       title="Last page"
                     >
                       <ChevronsRight className="w-4 h-4" />

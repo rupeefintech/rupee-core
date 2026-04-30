@@ -7,7 +7,7 @@ import { Calendar, Clock, ChevronRight, ArrowLeft } from 'lucide-react';
 
 const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
   Tax:            { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200' },
-  Banking:        { bg: 'bg-blue-50',   text: 'text-blue-700',   border: 'border-blue-200' },
+  Banking:        { bg: 'bg-brand-50',   text: 'text-brand-700',   border: 'border-brand-200' },
   Investment:     { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
   'Credit Cards': { bg: 'bg-amber-50',  text: 'text-amber-700',  border: 'border-amber-200' },
   Loans:          { bg: 'bg-rose-50',   text: 'text-rose-700',   border: 'border-rose-200' },
@@ -177,7 +177,7 @@ export default function BlogDetailPage() {
                           />
                         )}
                         <span className={`text-[10px] font-semibold ${rCat.text}`}>{r.category}</span>
-                        <h4 className="font-semibold text-sm text-gray-800 mt-1 line-clamp-2 group-hover:text-blue-600 transition">
+                        <h4 className="font-semibold text-sm text-gray-800 mt-1 line-clamp-2 group-hover:text-brand-600 transition">
                           {r.title}
                         </h4>
                         <span className="text-[11px] text-gray-400 mt-1 block">
@@ -202,7 +202,7 @@ export default function BlogDetailPage() {
                       <li key={h.id}>
                         <a
                           href={`#${h.id}`}
-                          className="text-xs text-gray-500 hover:text-blue-600 transition leading-snug block py-0.5"
+                          className="text-xs text-gray-500 hover:text-brand-600 transition leading-snug block py-0.5"
                         >
                           {h.text}
                         </a>
