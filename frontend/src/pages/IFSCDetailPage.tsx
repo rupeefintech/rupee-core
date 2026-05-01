@@ -209,7 +209,7 @@ function buildJsonLd(branch: BranchDetail) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
       { '@type': 'ListItem', position: 2, name: 'IFSC Finder', item: 'https://rupeepedia.in/ifsc' },
-      { '@type': 'ListItem', position: 3, name: branch.bank_name, item: `https://rupeepedia.in/ifsc/${bankSlug(branch.bank_name)}` },
+      { '@type': 'ListItem', position: 3, name: branch.bank_name, item: `https://rupeepedia.in/bank/${bankSlug(branch.bank_name)}` },
       { '@type': 'ListItem', position: 4, name: branch.state_name },
       { '@type': 'ListItem', position: 5, name: branch.ifsc, item: `https://rupeepedia.in/ifsc/${branch.ifsc}` },
     ],
@@ -338,6 +338,10 @@ export default function IFSCDetailPage() {
   
   const faqs = [
     {
+      q: 'What is an IFSC Code?',
+      a: `The Indian Financial System Code (IFSC) is a unique 11-character alphanumeric code assigned by the Reserve Bank of India (RBI) to every bank branch participating in India's electronic payment systems — NEFT, RTGS, and IMPS. The code ${branch.ifsc} identifies ${branch.bank_name}, ${branchTitle} branch located in ${toTitleCase(branch.city || '')}, ${branch.state_name}.`,
+    },
+    {
       q: `What is the IFSC code of ${branch.bank_name} ${branchTitle}?`,
       a: `The IFSC code of ${branch.bank_name} ${branchTitle} branch is ${branch.ifsc}. This 11-character code is mandatory for NEFT, RTGS, and IMPS transfers to this branch.`,
     },
@@ -395,7 +399,7 @@ export default function IFSCDetailPage() {
             <ChevronRight className="w-3 h-3" />
             <Link to="/ifsc" className="hover:text-brand-600 transition-colors">IFSC Finder</Link>
             <ChevronRight className="w-3 h-3" />
-            <Link to={`/ifsc/${bankSlug(branch.bank_name)}`} className="hover:text-brand-600 transition-colors">{branch.bank_name}</Link>
+            <Link to={`/bank/${bankSlug(branch.bank_name)}`} className="hover:text-brand-600 transition-colors">{branch.bank_name}</Link>
             <ChevronRight className="w-3 h-3" />
             <span className="text-gray-500">{branch.state_name}</span>
             <ChevronRight className="w-3 h-3" />
@@ -431,16 +435,16 @@ export default function IFSCDetailPage() {
 
             {/* Explore links */}
             <div className="flex flex-wrap items-center gap-2 mt-4">
-              <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">Explore:</span>
-              <Link to={`/bank/${bankSlug(branch.bank_name)}`} className="text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-full font-medium transition-all border border-brand-100">
-                {branch.bank_name} IFSC Codes
+              <span className="text-[10px] text-gray-400 font-medium uppercase tracking-wider mr-1">Explore:</span>
+              <Link to={`/bank/${bankSlug(branch.bank_name)}`} className="inline-flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg font-semibold border border-brand-200 hover:border-brand-300 transition-all">
+                {branch.bank_name} IFSC Codes <span className="text-brand-400">›</span>
               </Link>
-              <Link to={`/state/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}`} className="text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-full font-medium transition-all border border-brand-100">
-                {branch.state_name} branches
+              <Link to={`/state/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}`} className="inline-flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg font-semibold border border-brand-200 hover:border-brand-300 transition-all">
+                {branch.state_name} Branches <span className="text-brand-400">›</span>
               </Link>
               {branch.city && (
-                <Link to={`/city/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}/${branch.city.toLowerCase()}`} className="text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-full font-medium transition-all border border-brand-100">
-                  {toTitleCase(branch.city)} branches
+                <Link to={`/city/${bankSlug(branch.bank_name)}/${branch.state_name?.toLowerCase()}/${branch.city.toLowerCase()}`} className="inline-flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg font-semibold border border-brand-200 hover:border-brand-300 transition-all">
+                  {toTitleCase(branch.city)} Branches <span className="text-brand-400">›</span>
                 </Link>
               )}
             </div>
@@ -463,436 +467,340 @@ export default function IFSCDetailPage() {
       </section>
 
       {/* ── Content ── */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-4 pb-20 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 -mt-2 pb-20 space-y-4 pt-5">
 
-        {/* ─ 1. IFSC Hero Card ─ */}
+        {/* ─ Row 1: IFSC + MICR + Payment modes — single divided card ─ */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="card p-6 sm:p-8"
+          className="card overflow-hidden"
         >
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-
-            {/* IFSC + MICR codes */}
-            <div className="space-y-5">
-              <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">IFSC Code</p>
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="ifsc-mono text-3xl font-bold text-brand-800 tracking-widest">{branch.ifsc}</span>
-                  <CopyBtn value={branch.ifsc} label="Copy IFSC" />
-                </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+            {/* IFSC */}
+            <div className="p-5">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">IFSC Code</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="ifsc-mono text-2xl font-bold text-brand-800 tracking-widest">{branch.ifsc}</span>
+                <CopyBtn value={branch.ifsc} label="Copy" />
               </div>
-              {branch.micr && (
-                <div>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">MICR Code</p>
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <span className="ifsc-mono text-2xl font-bold text-brand-700">{branch.micr}</span>
-                    <CopyBtn value={branch.micr} label="Copy MICR" />
-                  </div>
+            </div>
+            {/* MICR */}
+            <div className="p-5">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">MICR Code</p>
+              {branch.micr ? (
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="ifsc-mono text-xl font-bold text-brand-700">{branch.micr}</span>
+                  <CopyBtn value={branch.micr} label="Copy" />
                 </div>
+              ) : (
+                <span className="text-sm text-gray-400">Not available</span>
               )}
             </div>
-
             {/* Payment modes */}
-            <div className="flex-shrink-0">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2.5">Payment Modes</p>
-              <div className="grid grid-cols-4 gap-2">
-                <PayBadge label="NEFT" active={!!branch.neft} desc="National Electronic Funds Transfer" icon={<Wifi    className="w-4 h-4" />} />
-                <PayBadge label="RTGS" active={!!branch.rtgs} desc="Real Time Gross Settlement"        icon={<Zap     className="w-4 h-4" />} />
-                <PayBadge label="IMPS" active={!!branch.imps} desc="Immediate Payment Service"        icon={<CreditCard className="w-4 h-4" />} />
-                <PayBadge label="UPI"  active={!!branch.upi}  desc="Unified Payments Interface"       icon={<Globe   className="w-4 h-4" />} />
-              </div>
-            </div>
-          </div>
-
-          {/* IFSC Breakdown visual */}
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">IFSC Code Breakdown</p>
-            <IFSCBreakdown ifsc={branch.ifsc} />
-            <p className="text-xs text-gray-400 mt-3 max-w-lg leading-relaxed">
-              <span className="ifsc-mono font-semibold text-brand-700">{branch.ifsc.slice(0,4)}</span> identifies{' '}
-              <strong className="font-semibold text-gray-600">{branch.bank_name}</strong>.{' '}
-              The <span className="ifsc-mono font-semibold text-brand-500">0</span> is reserved by RBI for future use.{' '}
-              <span className="ifsc-mono font-semibold text-brand-700">{branch.ifsc.slice(5)}</span> is the unique code for {branchTitle}.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* ─ 2. Branch Details ─ */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-          className="card p-6 sm:p-8"
-        >
-          {/* Two-column layout: Bank card + Branch info */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            {/* Left: Bank identity card */}
-            <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-5 border border-brand-100 h-full">
-                <div className="flex flex-col items-center text-center">
-                  {branch.bank_logo_url ? (
-                    <img
-                      src={branch.bank_logo_url}
-                      alt={branch.bank_name}
-                      className="w-24 h-24 object-contain mb-3"
-                    />
-                  ) : (
-                    <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-3">
-                      <Building2 className="w-12 h-12 text-brand-300" />
-                    </div>
-                  )}
-                  <h3 className="font-display text-lg font-bold text-brand-900">{branch.bank_name}</h3>
-                  {branch.bank_type && (
-                    <span className="text-xs text-brand-500 bg-brand-100 px-3 py-1 rounded-full mt-2 font-medium border border-brand-200">
-                      {branch.bank_type}
-                    </span>
-                  )}
-                  <div className="w-full mt-4 space-y-2">
-                    {branch.bank_website && (
-                      <a
-                        href={branch.bank_website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 text-xs text-brand-600 hover:text-brand-800 font-medium bg-white border border-brand-200 rounded-xl px-4 py-2.5 hover:bg-brand-50 transition-all w-full"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" /> Official Website
-                      </a>
-                    )}
-                    {branch.google_maps_url && (
-                      <a
-                        href={branch.google_maps_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 text-xs text-brand-600 hover:text-brand-800 font-medium bg-white border border-brand-200 rounded-xl px-4 py-2.5 hover:bg-brand-50 transition-all w-full"
-                      >
-                        <MapPin className="w-3.5 h-3.5" /> View on Maps
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Branch details table */}
-            <div className="lg:col-span-2">
-              <h2 className="font-display text-xl font-bold text-brand-900 mb-4 flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-brand-600" /> Branch Details
-              </h2>
-              <div className="divide-y divide-gray-100">
+            <div className="p-5">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">Payment Modes</p>
+              <div className="flex flex-wrap gap-1.5">
                 {[
-                  { label: 'Branch',       value: branchTitle,      icon: '🏢' },
-                  { label: 'Address',      value: toTitleCase(branch.address || ''), icon: '📍' },
-                  { label: 'City',         value: toTitleCase(branch.city || ''),     icon: '🌆' },
-                  { label: 'District',     value: branch.district_name,              icon: '📌' },
-                  { label: 'State',        value: branch.state_name,                 icon: '🗺️' },
-                  { label: 'Pincode',      value: branch.pincode,     mono: true,    icon: '📮' },
-                  { label: 'Phone',        value: branch.phone,                      icon: '📞' },
-                  { label: 'SWIFT Code',   value: branch.swift,       mono: true,    icon: '🔗' },
-                ].filter(r => r.value).map(row => (
-                  <div key={row.label} className="flex items-start gap-3 py-3.5 group">
-                    <span className="text-sm mt-0.5 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity">{row.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5">
-                        {row.label}
-                      </span>
-                      <span className={`text-sm font-medium text-brand-900 ${row.mono ? 'ifsc-mono' : ''}`}>
-                        {row.value}
-                      </span>
-                    </div>
-                  </div>
+                  { label: 'NEFT', active: !!branch.neft },
+                  { label: 'RTGS', active: !!branch.rtgs },
+                  { label: 'IMPS', active: !!branch.imps },
+                  { label: 'UPI',  active: !!branch.upi  },
+                ].map(({ label, active }) => (
+                  <span key={label} className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${
+                    active
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      : 'bg-gray-50 text-gray-400 border-gray-200'
+                  }`}>
+                    {active ? '✓' : '✗'} {label}
+                  </span>
                 ))}
               </div>
             </div>
           </div>
+          {/* IFSC Breakdown bar */}
+          <div className="border-t border-gray-100 px-5 py-4 bg-gray-50">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2.5">Code Breakdown</p>
+            <div className="flex items-center gap-4 flex-wrap">
+              <IFSCBreakdown ifsc={branch.ifsc} />
+              <p className="text-xs text-gray-400 leading-relaxed">
+                <span className="ifsc-mono font-semibold text-brand-700">{branch.ifsc.slice(0,4)}</span> = {branch.bank_name} ·{' '}
+                <span className="ifsc-mono font-semibold text-brand-500">0</span> = reserved by RBI ·{' '}
+                <span className="ifsc-mono font-semibold text-brand-700">{branch.ifsc.slice(5)}</span> = {branchTitle} branch
+              </p>
+            </div>
+          </div>
         </motion.div>
 
-        {/* ─ 3. Transaction Charges ─ */}
+        {/* ─ Row 2: Branch details grid + Bank card ─ */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-          className="card p-6 sm:p-8"
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-4"
         >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-5">
-            NEFT · RTGS · IMPS Transaction Charges
-          </h2>
-          <div className="overflow-x-auto rounded-xl border border-gray-100">
-            <table className="w-full text-sm">
+          {/* Branch details — compact cell grid */}
+          <div className="card lg:col-span-2 overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-brand-600" />
+              <h2 className="font-bold text-sm text-gray-900">Branch Details</h2>
+            </div>
+            <div className="grid grid-cols-2 divide-x divide-y divide-gray-100">
+              {[
+                { icon: '🏢', label: 'Branch',    value: branchTitle,                       mono: false },
+                { icon: '🌆', label: 'City',      value: toTitleCase(branch.city || ''),    mono: false },
+                { icon: '📍', label: 'Address',   value: toTitleCase(branch.address || ''), mono: false, span: true },
+                { icon: '📌', label: 'District',  value: branch.district_name,              mono: false },
+                { icon: '🗺️', label: 'State',     value: branch.state_name,                 mono: false },
+                { icon: '📮', label: 'Pincode',   value: branch.pincode,                    mono: true  },
+                { icon: '📞', label: 'Phone',     value: branch.phone,                      mono: false },
+                { icon: '🔗', label: 'SWIFT',     value: branch.swift,                      mono: true  },
+              ].filter(r => r.value).map(row => (
+                <div key={row.label} className={`px-4 py-3 ${(row as any).span ? 'col-span-2' : ''}`}>
+                  <span className="block text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                    {row.icon} {row.label}
+                  </span>
+                  <span className={`text-sm font-semibold text-brand-900 ${row.mono ? 'ifsc-mono' : ''}`}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bank identity card */}
+          <div className="card p-5 flex flex-col items-center text-center">
+            {branch.bank_logo_url ? (
+              <img src={branch.bank_logo_url} alt={branch.bank_name} className="w-16 h-16 object-contain mb-3" />
+            ) : (
+              <div className="w-16 h-16 bg-brand-50 rounded-2xl flex items-center justify-center mb-3 border border-brand-100">
+                <Building2 className="w-8 h-8 text-brand-300" />
+              </div>
+            )}
+            <h3 className="font-bold text-sm text-brand-900 leading-tight">{branch.bank_name}</h3>
+            {branch.bank_type && (
+              <span className="text-xs text-brand-500 bg-brand-50 px-2.5 py-0.5 rounded-full mt-1.5 border border-brand-200 font-medium">{branch.bank_type}</span>
+            )}
+            <div className="w-full mt-3 space-y-1.5">
+              {branch.bank_website && (
+                <a href={branch.bank_website} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 text-xs text-brand-600 font-medium bg-brand-50 border border-brand-100 rounded-lg px-3 py-2 hover:bg-brand-100 transition-all w-full">
+                  <ExternalLink className="w-3 h-3" /> Official Website
+                </a>
+              )}
+              {branch.google_maps_url && (
+                <a href={branch.google_maps_url} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 text-xs text-brand-600 font-medium bg-brand-50 border border-brand-100 rounded-lg px-3 py-2 hover:bg-brand-100 transition-all w-full">
+                  <MapPin className="w-3 h-3" /> View on Maps
+                </a>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ─ Row 3: Charges + IFSC vs MICR vs SWIFT ─ */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-4"
+        >
+          {/* Transaction Charges */}
+          <div className="card overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100">
+              <h2 className="font-bold text-sm text-gray-900">Transaction Charges</h2>
+            </div>
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-brand-50 border-b border-gray-100">
-                  {['Transfer Amount', 'NEFT', 'RTGS', 'IMPS'].map(h => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                  {['Amount', 'NEFT', 'RTGS', 'IMPS'].map(h => (
+                    <th key={h} className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {[
-                  { amt: 'Up to ₹10,000',        neft: '₹2.50',  rtgs: 'Min. ₹2 lakh', imps: '₹2.00'  },
-                  { amt: '₹10,001 – ₹1 lakh',    neft: '₹5.00',  rtgs: 'Min. ₹2 lakh', imps: '₹5.00'  },
-                  { amt: '₹1 lakh – ₹2 lakh',    neft: '₹15.00', rtgs: 'Min. ₹2 lakh', imps: '₹12.00' },
-                  { amt: '₹2 lakh – ₹5 lakh',    neft: '₹25.00', rtgs: '₹25.00',       imps: '₹15.00' },
-                  { amt: 'Above ₹5 lakh',         neft: '₹25.00', rtgs: '₹49.50',       imps: '₹20.00' },
+                  { amt: 'Up to ₹10k',    neft: '₹2.50',  rtgs: 'Min ₹2L',  imps: '₹2.00'  },
+                  { amt: '₹10k – ₹1L',   neft: '₹5.00',  rtgs: 'Min ₹2L',  imps: '₹5.00'  },
+                  { amt: '₹1L – ₹2L',    neft: '₹15.00', rtgs: 'Min ₹2L',  imps: '₹12.00' },
+                  { amt: '₹2L – ₹5L',    neft: '₹25.00', rtgs: '₹25.00',   imps: '₹15.00' },
+                  { amt: 'Above ₹5L',     neft: '₹25.00', rtgs: '₹49.50',   imps: '₹20.00' },
                 ].map(row => (
                   <tr key={row.amt} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-brand-900">{row.amt}</td>
-                    <td className="px-4 py-3 text-gray-600">{row.neft}</td>
-                    <td className="px-4 py-3 text-gray-600">{row.rtgs}</td>
-                    <td className="px-4 py-3 text-gray-600">{row.imps}</td>
+                    <td className="px-4 py-2.5 font-medium text-gray-900">{row.amt}</td>
+                    <td className="px-3 py-2.5 text-gray-600">{row.neft}</td>
+                    <td className="px-3 py-2.5 text-gray-400">{row.rtgs}</td>
+                    <td className="px-3 py-2.5 text-gray-600">{row.imps}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-          <p className="text-xs text-gray-400 mt-3">Charges are indicative and may vary by bank. GST applicable. All three modes operate 24×7, 365 days a year.</p>
-        </motion.div>
-
-        {/* ─ 5. What is IFSC? — Educational block ─ */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
-          className="card p-6 sm:p-8"
-        >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-4">
-            What is an IFSC Code?
-          </h2>
-          <div className="space-y-4 text-sm text-gray-600 leading-relaxed">
-            <p>
-              The <strong className="font-semibold text-gray-800">Indian Financial System Code (IFSC)</strong> is a unique
-              11-character alphanumeric code assigned by the Reserve Bank of India (RBI) to every bank branch
-              participating in India's electronic payment systems — NEFT, RTGS, and IMPS.
-            </p>
-            <p>
-              The code <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span> identifies the{' '}
-              <strong className="font-semibold text-gray-800">{branch.bank_name}, {branchTitle}</strong> branch
-              located in {toTitleCase(branch.city || '')}, {branch.state_name}.
-            </p>
-          </div>
-        </motion.div>
-
-        {/* ─ 5b. How to Use This IFSC (Colorful Cards) ─ */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.29 }}
-          className="card p-6 sm:p-8"
-        >
-          <h2 className="font-display text-2xl font-bold text-brand-900 mb-2">
-            How to Use {branch.ifsc} for Bank Transfers (NEFT/RTGS/IMPS/UPI)
-          </h2>
-          <p className="text-sm text-gray-500 mb-6">
-            Use this IFSC code when transferring money to any account at <strong className="text-gray-700">{branch.bank_name} {branchTitle}</strong> branch. Here's how different transfer methods work:
-          </p>
-
-          {/* Transfer method cards - colorful */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            {/* NEFT Card */}
-            <div className="rounded-2xl border-2 border-brand-100 bg-gradient-to-br from-brand-50 to-brand-100 p-5 relative overflow-hidden">
-              <div className="absolute top-3 right-3 text-3xl opacity-20">💸</div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-9 h-9 bg-brand-500 rounded-xl flex items-center justify-center shadow-md shadow-brand-200">
-                  <Wifi className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="font-bold text-brand-900 text-lg">NEFT</h3>
-              </div>
-              <p className="text-xs text-gray-500 mb-4 leading-relaxed">National Electronic Funds Transfer. Batch settlements.</p>
-              <div className="space-y-2.5">
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Timing:</strong> 24x7 Available</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Limit:</strong> No minimum or maximum limit</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Charges:</strong> &#8377;0-25 based on amount</p>
-                </div>
-              </div>
-            </div>
-
-            {/* RTGS Card */}
-            <div className="rounded-2xl border-2 border-violet-100 bg-gradient-to-br from-violet-50 to-purple-50 p-5 relative overflow-hidden">
-              <div className="absolute top-3 right-3 text-3xl opacity-20">&#9889;</div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-9 h-9 bg-violet-500 rounded-xl flex items-center justify-center shadow-md shadow-violet-200">
-                  <Zap className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="font-bold text-violet-900 text-lg">RTGS</h3>
-              </div>
-              <p className="text-xs text-gray-500 mb-4 leading-relaxed">Real Time Gross Settlement. Instant settlement. Best for high-value transfers.</p>
-              <div className="space-y-2.5">
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Timing:</strong> 24x7 Available</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Limit:</strong> Min &#8377;2 Lakhs</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Charges:</strong> &#8377;25-55 based on amount</p>
-                </div>
-              </div>
-            </div>
-
-            {/* IMPS Card */}
-            <div className="rounded-2xl border-2 border-rose-100 bg-gradient-to-br from-rose-50 to-pink-50 p-5 relative overflow-hidden">
-              <div className="absolute top-3 right-3 text-3xl opacity-20">&#128640;</div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-9 h-9 bg-rose-500 rounded-xl flex items-center justify-center shadow-md shadow-rose-200">
-                  <CreditCard className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="font-bold text-rose-900 text-lg">IMPS</h3>
-              </div>
-              <p className="text-xs text-gray-500 mb-4 leading-relaxed">Immediate Payment Service. Instant. Mobile and internet banking.</p>
-              <div className="space-y-2.5">
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Timing:</strong> Instant (24x7)</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Limit:</strong> Max &#8377;5 Lakhs per transaction</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="text-emerald-500 mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-sm text-gray-700"><strong className="text-gray-900">Charges:</strong> &#8377;0-15 based on bank</p>
-                </div>
-              </div>
-            </div>
+            <p className="text-[10px] text-gray-400 px-4 py-3 border-t border-gray-100">Indicative. GST applicable. All modes 24×7.</p>
           </div>
 
-          {/* Step-by-step guide */}
-          <div className="rounded-2xl border-2 border-gray-100 bg-gradient-to-br from-gray-50 to-slate-50 p-6">
-            <h3 className="font-display text-lg font-bold text-brand-900 mb-5 flex items-center gap-2">
-              &#128203; Step-by-Step: How to Transfer Money Using This IFSC Code
-            </h3>
-            <div className="space-y-4">
-              {[
-                { step: 1, color: 'bg-brand-500', text: 'Log in to your bank\'s net banking or mobile banking app' },
-                { step: 2, color: 'bg-violet-500', text: 'Go to "Add Beneficiary" or "Manage Payee" section' },
-                { step: 3, color: 'bg-emerald-500', text: <>Enter beneficiary's account number and <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span> as IFSC code</> },
-                { step: 4, color: 'bg-amber-500', text: 'Verify details and complete beneficiary activation (usually instant or 30 minutes)' },
-                { step: 5, color: 'bg-rose-500', text: 'Select NEFT/RTGS/IMPS, enter amount, and confirm the transfer' },
-              ].map(({ step, color, text }) => (
-                <div key={step} className="flex items-start gap-4">
-                  <div className={`w-8 h-8 ${color} rounded-full flex items-center justify-center flex-shrink-0 shadow-sm`}>
-                    <span className="text-white text-sm font-bold">{step}</span>
-                  </div>
-                  <p className="text-sm text-gray-700 leading-relaxed pt-1.5">{text}</p>
-                </div>
-              ))}
+          {/* IFSC vs MICR vs SWIFT */}
+          <div className="card overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100">
+              <h2 className="font-bold text-sm text-gray-900">IFSC vs MICR vs SWIFT</h2>
             </div>
-          </div>
-        </motion.div>
-
-        {/* ─ 6. IFSC vs MICR vs SWIFT ─ */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="card p-6 sm:p-8"
-        >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-5">
-            IFSC vs MICR vs SWIFT — Key Differences
-          </h2>
-          <div className="overflow-x-auto rounded-xl border border-gray-100">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-brand-50 border-b border-gray-100">
                   {['Feature', 'IFSC', 'MICR', 'SWIFT'].map(h => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                    <th key={h} className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50 text-gray-600">
                 {[
-                  { f: 'Length',    ifsc: '11 characters',        micr: '9 digits',              swift: '8 or 11 characters' },
-                  { f: 'Purpose',   ifsc: 'Domestic transfers',   micr: 'Cheque processing',     swift: 'International wires' },
-                  { f: 'Used in',   ifsc: 'NEFT, RTGS, IMPS',    micr: 'ECS, cheque clearing',  swift: 'FOREX, wire transfers' },
-                  { f: 'Assigned',  ifsc: 'By RBI',               micr: 'By RBI',                swift: 'By SWIFT network' },
-                  { f: 'Format',    ifsc: 'BANK0BRANCH',          micr: 'CCCBBBXXX',             swift: 'BANKCCLL(BBB)' },
+                  { f: 'Length',   ifsc: '11 chars',      micr: '9 digits',     swift: '8–11 chars'   },
+                  { f: 'Purpose',  ifsc: 'Domestic',      micr: 'Cheques',      swift: 'International' },
+                  { f: 'Used in',  ifsc: 'NEFT/RTGS',     micr: 'ECS/Clearing', swift: 'FOREX/Wires'  },
+                  { f: 'Assigned', ifsc: 'By RBI',        micr: 'By RBI',       swift: 'By SWIFT'     },
+                  { f: 'Format',   ifsc: 'BANK0BRANCH',   micr: 'CCCBBBXXX',   swift: 'BANKCCLL'     },
                 ].map(row => (
                   <tr key={row.f} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-semibold text-brand-900">{row.f}</td>
-                    <td className="px-4 py-3 text-brand-700 font-medium">{row.ifsc}</td>
-                    <td className="px-4 py-3">{row.micr}</td>
-                    <td className="px-4 py-3">{row.swift}</td>
+                    <td className="px-4 py-2.5 font-semibold text-gray-900">{row.f}</td>
+                    <td className="px-3 py-2.5 text-brand-700 font-medium">{row.ifsc}</td>
+                    <td className="px-3 py-2.5">{row.micr}</td>
+                    <td className="px-3 py-2.5">{row.swift}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-          {branch.swift && (
-            <p className="text-xs text-gray-500 mt-3">
-              The SWIFT code for {branch.bank_name} {branchTitle} is{' '}
-              <span className="ifsc-mono font-bold text-brand-700">{branch.swift}</span>.
-            </p>
-          )}
-        </motion.div>
-
-        {/* ─ 7. Nearby Branches ─ */}
-        {nearby.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }}
-            className="card p-6 sm:p-8"
-          >
-            <div className="flex items-start justify-between gap-4 mb-5">
-              <div>
-                <h2 className="font-display text-xl font-bold text-brand-900">
-                    Other {branch.bank_name} branches in {toTitleCase(branch.city || '')}
-                </h2>
-            
-                <p className="text-sm text-gray-400 mt-1">
-                  <Building2 className="w-3.5 h-3.5 inline mr-1" />
-                  Same bank &bull; {branch.district_name} district
-                </p>
-                <p className="text-sm text-gray-500 mt-4">
-                  Looking for more IFSC codes? Browse all <Link to="/ifsc" className="text-brand-600 hover:underline">IFSC codes in India</Link>.
-                </p>
-              </div>
-              <Link
-                to={`/ifsc/${bankSlug(branch.bank_name)}`}
-                className="hidden sm:flex items-center gap-1 text-sm text-brand-600 hover:text-brand-800 font-medium transition-colors whitespace-nowrap"
-              >
-                View all <ChevronRight className="w-4 h-4" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {nearby.map(nb => <NearbyCard key={nb.ifsc} branch={nb} />)}
-            </div>
-            <Link
-              to={`/ifsc/${bankSlug(branch.bank_name)}`}
-              className="sm:hidden mt-4 inline-flex items-center gap-1 text-sm text-brand-600 hover:text-brand-800 font-medium transition-colors"
-            >
-              View all {branch.bank_name} branches <ChevronRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
-        )}
-
-        {/* ─ 8. FAQ ─ */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-          className="card p-6 sm:p-8"
-        >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-1">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-sm text-gray-400 mb-5">About {branch.ifsc} — {branch.bank_name} {branchTitle}</p>
-          <div>
-            {faqs.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
-          </div>
-        </motion.div>
-
-        {/* ─ 9. Disclaimer ─ */}
-        <div className="card p-5 bg-gray-50">
-          <div className="flex items-start gap-3">
-            <Shield className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
-            <div className="text-xs text-gray-400 leading-relaxed">
-              <p>
-                IFSC and MICR data on <strong className="font-medium text-gray-500">RupeePedia</strong> is sourced
-                from the Reserve Bank of India (RBI) and updated regularly via the Razorpay open dataset. Always
-                verify codes directly with your bank before initiating any financial transaction. This information
-                is provided for reference only.
+            {branch.swift && (
+              <p className="text-[10px] text-gray-400 px-4 py-3 border-t border-gray-100">
+                SWIFT for this branch: <span className="ifsc-mono font-bold text-brand-700">{branch.swift}</span>
               </p>
+            )}
+          </div>
+        </motion.div>
+
+        {/* ─ Row 4: How to Use — compact cards + horizontal steps ─ */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22 }}
+          className="card p-5"
+        >
+          <h2 className="font-bold text-sm text-gray-900 mb-4">
+            How to Use <span className="ifsc-mono text-brand-700">{branch.ifsc}</span> for Transfers (NEFT / RTGS / IMPS / UPI)
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+            {/* NEFT */}
+            <div className="rounded-xl border-2 border-brand-100 bg-gradient-to-br from-brand-50 to-brand-100 p-4 relative overflow-hidden">
+              <div className="absolute top-2 right-2 text-2xl opacity-15">💸</div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-brand-500 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
+                  <Wifi className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="font-bold text-brand-900 text-sm">NEFT</h3>
+              </div>
+              <div className="space-y-1.5 text-xs text-gray-700">
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Timing:</strong> 24×7</span></div>
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Limit:</strong> No min/max</span></div>
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Fee:</strong> ₹0–25</span></div>
+              </div>
+            </div>
+            {/* RTGS */}
+            <div className="rounded-xl border-2 border-violet-100 bg-gradient-to-br from-violet-50 to-purple-50 p-4 relative overflow-hidden">
+              <div className="absolute top-2 right-2 text-2xl opacity-15">⚡</div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-violet-500 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="font-bold text-violet-900 text-sm">RTGS</h3>
+              </div>
+              <div className="space-y-1.5 text-xs text-gray-700">
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Timing:</strong> Instant</span></div>
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Limit:</strong> Min ₹2L</span></div>
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Fee:</strong> ₹25–55</span></div>
+              </div>
+            </div>
+            {/* IMPS */}
+            <div className="rounded-xl border-2 border-rose-100 bg-gradient-to-br from-rose-50 to-pink-50 p-4 relative overflow-hidden">
+              <div className="absolute top-2 right-2 text-2xl opacity-15">🚀</div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-7 h-7 bg-rose-500 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
+                  <CreditCard className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="font-bold text-rose-900 text-sm">IMPS</h3>
+              </div>
+              <div className="space-y-1.5 text-xs text-gray-700">
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Timing:</strong> Instant</span></div>
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Limit:</strong> Max ₹5L</span></div>
+                <div className="flex items-center gap-1.5"><span className="text-emerald-500">✓</span><span><strong>Fee:</strong> ₹0–15</span></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Steps — horizontal */}
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+            <p className="text-xs font-bold text-gray-700 mb-3">&#128203; Step-by-step transfer guide</p>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
+              {[
+                { n: 1, c: 'bg-brand-500',   t: 'Log in to banking app' },
+                { n: 2, c: 'bg-violet-500',  t: 'Add Beneficiary' },
+                { n: 3, c: 'bg-emerald-500', t: <>Enter <span className="ifsc-mono font-bold text-brand-700">{branch.ifsc}</span></> },
+                { n: 4, c: 'bg-amber-500',   t: 'Activate & verify' },
+                { n: 5, c: 'bg-rose-500',    t: 'Transfer + confirm OTP' },
+              ].map(({ n, c, t }, i, arr) => (
+                <span key={n} className="inline-flex items-center gap-1.5">
+                  <span className={`w-5 h-5 ${c} rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0`}>{n}</span>
+                  <span className="text-xs text-gray-600">{t}</span>
+                  {i < arr.length - 1 && <span className="text-gray-300 mx-0.5">›</span>}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ─ Row 5: Nearby Branches + FAQ ─ */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+          className={nearby.length > 0 ? 'grid grid-cols-1 lg:grid-cols-2 gap-4' : ''}
+        >
+          {/* Nearby Branches */}
+          {nearby.length > 0 && (
+            <div className="card p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h2 className="font-bold text-sm text-gray-900">Other {branch.bank_name} Branches</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">{toTitleCase(branch.city || '')} · {branch.district_name}</p>
+                </div>
+                <Link to={`/bank/${bankSlug(branch.bank_name)}`} className="text-xs text-brand-600 hover:text-brand-800 font-medium transition-colors whitespace-nowrap">
+                  View all <ChevronRight className="w-3 h-3 inline" />
+                </Link>
+              </div>
+              <div className="space-y-2">
+                {nearby.map(nb => (
+                  <Link key={nb.ifsc} to={`/ifsc/${nb.ifsc}`}
+                    className="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-brand-200 hover:bg-brand-50 transition-all">
+                    <div>
+                      <p className="text-xs font-semibold text-gray-900">{toTitleCase(nb.branch_name)}</p>
+                      <p className="ifsc-mono text-[11px] text-brand-600 font-bold mt-0.5">{nb.ifsc}</p>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 text-gray-300" />
+                  </Link>
+                ))}
+              </div>
+              <p className="text-xs text-gray-400 mt-3">
+                Browse all <Link to="/ifsc" className="text-brand-600 hover:underline">IFSC codes in India</Link>
+              </p>
+            </div>
+          )}
+
+          {/* FAQ */}
+          <div className="card p-5">
+            <h2 className="font-bold text-sm text-gray-900 mb-1">Frequently Asked Questions</h2>
+            <p className="text-xs text-gray-400 mb-4">About {branch.ifsc} — {branch.bank_name} {branchTitle}</p>
+            <div>
+              {faqs.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ─ Disclaimer ─ */}
+        <div className="card px-5 py-3.5 bg-gray-50">
+          <div className="flex items-start gap-2.5">
+            <Shield className="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" />
+            <div className="text-xs text-gray-400 leading-relaxed">
+              IFSC and MICR data on <strong className="font-medium text-gray-500">RupeePedia</strong> is sourced from the RBI and updated via the Razorpay open dataset. Always verify with your bank before any transaction.
               {branch.bank_website && (
                 <a href={branch.bank_website} target="_blank" rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1 text-brand-500 hover:text-brand-700 transition-colors">
-                  Verify at {branch.bank_name} official website <ExternalLink className="w-3 h-3" />
+                  className="ml-1 inline-flex items-center gap-1 text-brand-500 hover:text-brand-700 transition-colors">
+                  Verify at {branch.bank_name} <ExternalLink className="w-3 h-3" />
                 </a>
               )}
             </div>
