@@ -72,7 +72,7 @@ export default function Navbar() {
             <div className="relative" ref={prodRef}>
               <button
                 onClick={() => { setProdOpen(!prodOpen); setCalcOpen(false); }}
-                className={`flex items-center gap-1.5 ${linkCls(prodOpen)}`}
+                className={`flex items-center gap-1.5 ${linkCls(prodOpen || location.pathname.startsWith('/credit-cards'))}`}
               >
                 Products
                 <svg className={`w-3.5 h-3.5 transition-transform ${prodOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -89,16 +89,26 @@ export default function Navbar() {
                         <span className="text-xs tracking-wide font-bold text-brand-600">{group.title}</span>
                       </div>
                       <div className="flex flex-col gap-0.5">
-                        {group.items.map((item) => (
-                          <Link
-                            key={item.path}
-                            to={item.path}
-                            className="flex items-center gap-2.5 text-sm text-gray-600 hover:text-brand-600 hover:bg-brand-50 px-2 py-1.5 rounded-lg transition-colors"
-                          >
-                            <item.icon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                            {item.label}
-                          </Link>
-                        ))}
+                        {group.items.map((item) => {
+                          const [iPath, iQuery] = item.path.split('?');
+                          const active = iQuery
+                            ? location.pathname === iPath && location.search.includes(iQuery)
+                            : location.pathname === iPath && !location.search;
+                          return (
+                            <Link
+                              key={item.path}
+                              to={item.path}
+                              className={`flex items-center gap-2.5 text-sm px-2 py-1.5 rounded-lg transition-colors ${
+                                active
+                                  ? 'text-brand-600 bg-brand-50 font-semibold'
+                                  : 'text-gray-600 hover:text-brand-600 hover:bg-brand-50'
+                              }`}
+                            >
+                              <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${active ? 'text-brand-500' : 'text-gray-400'}`} />
+                              {item.label}
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
@@ -110,7 +120,7 @@ export default function Navbar() {
             <div className="relative" ref={calcRef}>
               <button
                 onClick={() => { setCalcOpen(!calcOpen); setProdOpen(false); }}
-                className={`flex items-center gap-1.5 ${linkCls(calcOpen)}`}
+                className={`flex items-center gap-1.5 ${linkCls(calcOpen || location.pathname.startsWith('/calculators'))}`}
               >
                 Calculators
                 <svg className={`w-3.5 h-3.5 transition-transform ${calcOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -129,21 +139,28 @@ export default function Navbar() {
                     const cc = catColor[group.color] || 'text-brand-600';
                     return (
                       <div key={group.title}>
-                        <div className="flex items-center gap-2 mb-3">
+                        <Link to="/calculators" onClick={() => setCalcOpen(false)} className="flex items-center gap-2 mb-3 group/cat hover:opacity-75 transition-opacity w-fit">
                           <CatIcon className={`w-4 h-4 ${cc}`} />
-                          <span className={`text-xs tracking-wide font-bold ${cc}`}>{group.title}</span>
-                        </div>
+                          <span className={`text-xs tracking-wide font-bold ${cc} group-hover/cat:underline underline-offset-2`}>{group.title}</span>
+                        </Link>
                         <div className="flex flex-col gap-0.5">
-                          {group.items.map((item) => (
-                            <Link
-                              key={item.path}
-                              to={item.path}
-                              className="flex items-center gap-2.5 text-sm text-gray-600 hover:text-brand-600 hover:bg-brand-50 px-2 py-1.5 rounded-lg transition-colors"
-                            >
-                              <item.icon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                              {item.label}
-                            </Link>
-                          ))}
+                          {group.items.map((item) => {
+                            const active = location.pathname === item.path;
+                            return (
+                              <Link
+                                key={item.path}
+                                to={item.path}
+                                className={`flex items-center gap-2.5 text-sm px-2 py-1.5 rounded-lg transition-colors ${
+                                  active
+                                    ? 'text-brand-600 bg-brand-50 font-semibold'
+                                    : 'text-gray-600 hover:text-brand-600 hover:bg-brand-50'
+                                }`}
+                              >
+                                <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${active ? 'text-brand-500' : 'text-gray-400'}`} />
+                                {item.label}
+                              </Link>
+                            );
+                          })}
                         </div>
                       </div>
                     );

@@ -142,7 +142,7 @@ export default function ToolsSidebar() {
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-2">
             <BookOpen size={14} className="text-accent-400" />
-            <h3 className="text-xs font-bold text-white tracking-wide">Financial Guides</h3>
+            <h3 className="text-xs font-bold text-white tracking-wide">Money Guides</h3>
           </div>
           <p className="text-[11px] text-white/50 leading-relaxed mb-3">
             PAN rules, tax-saving strategies, and smart money habits.

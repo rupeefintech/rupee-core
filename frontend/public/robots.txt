@@ -36,4 +36,4 @@ Allow: /*.gif$
 Allow: /*.svg$
 
 # Sitemap location (served from backend at /sitemap.xml)
-Sitemap: https://bankinfohub.com/sitemap.xml
+Sitemap: https://rupeepedia.in/sitemap.xml

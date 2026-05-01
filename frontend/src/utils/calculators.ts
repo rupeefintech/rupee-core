@@ -38,7 +38,7 @@ export const calculatorCategories: CalcCategory[] = [
   {
     title: 'Investment Calculators',
     categoryIcon: TrendingUp,
-    color: 'green',
+    color: 'purple',
     items: [
       { label: 'SIP Calculator',         path: '/calculators/sip',         desc: 'Project your SIP returns',            icon: TrendingUp },
       { label: 'Lumpsum Calculator',     path: '/calculators/lumpsum',     desc: 'Calculate lumpsum investment growth',  icon: Coins },
@@ -68,7 +68,7 @@ export const calculatorCategories: CalcCategory[] = [
   {
     title: 'Tax & Salary Calculators',
     categoryIcon: IndianRupee,
-    color: 'amber',
+    color: 'blue',
     items: [
       { label: 'Salary Calculator',    path: '/calculators/salary-calculator', desc: 'CTC to in-hand with tax breakdown',   icon: IndianRupee },
       { label: 'HRA Calculator',       path: '/calculators/hra-calculator',    desc: 'Calculate HRA tax exemption',         icon: Building },

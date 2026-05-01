@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../utils/api";
 import {
   Calculator, Search, CreditCard, Landmark, TrendingUp, Banknote,
   PiggyBank, Receipt, IndianRupee, Building2, ShieldCheck,
@@ -20,6 +22,13 @@ const popularTools = [
 ];
 
 export default function HomePage() {
+  const { data: blogsData, isLoading: blogsLoading } = useQuery({
+    queryKey: ['home-blogs'],
+    queryFn: () => api.getBlogs({ limit: 3 }),
+    staleTime: 5 * 60 * 1000,
+  });
+  const latestBlogs = blogsData?.blogs ?? [];
+
   return (
     <div className="bg-white">
 
@@ -287,24 +296,32 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-4">
-            {[
-              { to: '/money-guides/pan-rules-2026', eyebrow: 'Tax & PAN · 2026', title: 'New PAN Rules 2026', desc: 'Latest limits, mandate changes & what it means for your transactions.' },
-              { to: '/money-guides/pan-limit-2026', eyebrow: 'Compliance · 2026', title: 'PAN Limit 2026', desc: 'Updated transaction thresholds — when PAN is required and when it\'s optional.' },
-              { to: '/money-guides/pan-mandatory-transactions-2026', eyebrow: 'Banking Guide · 2026', title: 'PAN Mandatory Transactions', desc: 'A complete list of 2026 transactions that legally require PAN submission.' },
-            ].map(g => (
-              <Link
-                key={g.to}
-                to={g.to}
-                className="group bg-white border-[1.5px] border-gray-100 rounded-2xl p-5 hover:border-brand-100 hover:shadow-md transition-all"
-              >
-                <p className="text-[10px] font-bold text-brand-600 uppercase tracking-widest mb-2">{g.eyebrow}</p>
-                <div className="flex items-start gap-2 mb-1.5">
-                  <BookOpen size={15} className="text-brand-400 mt-0.5 shrink-0" />
-                  <h3 className="font-bold text-gray-900 text-sm group-hover:text-brand-600 transition leading-snug">{g.title}</h3>
-                </div>
-                <p className="text-xs text-gray-400 leading-relaxed">{g.desc}</p>
-              </Link>
-            ))}
+            {blogsLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="bg-white border-[1.5px] border-gray-100 rounded-2xl p-5 animate-pulse">
+                    <div className="h-2.5 w-24 bg-gray-100 rounded mb-3" />
+                    <div className="h-4 w-3/4 bg-gray-100 rounded mb-2" />
+                    <div className="h-3 w-full bg-gray-100 rounded mb-1" />
+                    <div className="h-3 w-2/3 bg-gray-100 rounded" />
+                  </div>
+                ))
+              : latestBlogs.map(blog => (
+                  <Link
+                    key={blog.slug}
+                    to={`/money-guides/${blog.slug}`}
+                    className="group bg-white border-[1.5px] border-gray-100 rounded-2xl p-5 hover:border-brand-100 hover:shadow-md transition-all"
+                  >
+                    <p className="text-[10px] font-bold text-brand-600 uppercase tracking-widest mb-2">
+                      {blog.category} · {new Date(blog.publishedAt).getFullYear()}
+                    </p>
+                    <div className="flex items-start gap-2 mb-1.5">
+                      <BookOpen size={15} className="text-brand-400 mt-0.5 shrink-0" />
+                      <h3 className="font-bold text-gray-900 text-sm group-hover:text-brand-600 transition leading-snug">{blog.title}</h3>
+                    </div>
+                    <p className="text-xs text-gray-400 leading-relaxed line-clamp-2">{blog.description}</p>
+                  </Link>
+                ))
+            }
           </div>
         </div>
       </section>
