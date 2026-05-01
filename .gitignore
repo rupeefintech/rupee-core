@@ -1,7 +1,14 @@
 # Environment secrets — never commit these
 .env
 .env.local
+.env.production
+.env.development
 backend/.env
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.env.development
+scripts/.env
 
 # SQLite legacy file
 backend/data/
