@@ -228,15 +228,23 @@ const profile = getLoanProfile();
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-semibold text-slate-700">Loan Amount</span>
-                    <input
-                      type="text"
-                      value={fmtINR(amount)}
-                      onChange={e => {
-                        const raw = Number(e.target.value.replace(/[^0-9]/g, ''));
-                        if (!isNaN(raw)) setAmount(Math.min(Math.max(raw, d.min), d.max));
-                      }}
-                      className="bg-brand-50 text-brand-700 text-sm font-bold px-3 py-1 rounded-lg w-32 text-center border border-transparent focus:border-brand-400 focus:outline-none"
-                    />
+                    <div className="flex items-center gap-1">
+                      <button type="button" onClick={() => setAmount(a => Math.max(d.min, a - d.step))}
+                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        disabled={amount <= d.min}>−</button>
+                      <input
+                        type="text"
+                        value={fmtINR(amount)}
+                        onChange={e => {
+                          const raw = Number(e.target.value.replace(/[^0-9]/g, ''));
+                          if (!isNaN(raw)) setAmount(Math.min(Math.max(raw, d.min), d.max));
+                        }}
+                        className="bg-brand-50 text-brand-700 text-sm font-bold px-2 py-1 rounded-lg w-28 text-center border border-transparent focus:border-brand-400 focus:outline-none"
+                      />
+                      <button type="button" onClick={() => setAmount(a => Math.min(d.max, a + d.step))}
+                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        disabled={amount >= d.max}>+</button>
+                    </div>
                   </div>
                   <input type="range" min={d.min} max={d.max} step={d.step} value={amount}
                     onChange={(e) => setAmount(Number(e.target.value))}
@@ -250,15 +258,23 @@ const profile = getLoanProfile();
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-semibold text-slate-700">Rate of Interest (p.a.)</span>
-                    <input
-                      type="text"
-                      value={`${rate.toFixed(1)}%`}
-                      onChange={e => {
-                        const raw = parseFloat(e.target.value.replace(/[^0-9.]/g, ''));
-                        if (!isNaN(raw)) setRate(Math.min(Math.max(raw, 5), 24));
-                      }}
-                      className="bg-brand-50 text-brand-700 text-sm font-bold px-3 py-1 rounded-lg w-20 text-center border border-transparent focus:border-brand-400 focus:outline-none cursor-text"
-                    />
+                    <div className="flex items-center gap-1">
+                      <button type="button" onClick={() => setRate(r => Math.max(5, parseFloat((r - 0.1).toFixed(1))))}
+                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        disabled={rate <= 5}>−</button>
+                      <input
+                        type="text"
+                        value={`${rate.toFixed(1)}%`}
+                        onChange={e => {
+                          const raw = parseFloat(e.target.value.replace(/[^0-9.]/g, ''));
+                          if (!isNaN(raw)) setRate(Math.min(Math.max(raw, 5), 24));
+                        }}
+                        className="bg-brand-50 text-brand-700 text-sm font-bold px-2 py-1 rounded-lg w-20 text-center border border-transparent focus:border-brand-400 focus:outline-none cursor-text"
+                      />
+                      <button type="button" onClick={() => setRate(r => Math.min(24, parseFloat((r + 0.1).toFixed(1))))}
+                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        disabled={rate >= 24}>+</button>
+                    </div>
                   </div>
                   <input type="range" min={5} max={24} step={0.1} value={rate}
                     onChange={(e) => setRate(Number(e.target.value))}
@@ -272,15 +288,23 @@ const profile = getLoanProfile();
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-semibold text-slate-700">Loan Tenure</span>
-                    <input
-                      type="text"
-                      value={`${tenure} Yr`}
-                      onChange={e => {
-                        const raw = parseInt(e.target.value.replace(/[^0-9]/g, ''));
-                        if (!isNaN(raw)) setTenure(Math.min(Math.max(raw, 1), d.maxT));
-                      }}
-                      className="bg-brand-50 text-brand-700 text-sm font-bold px-3 py-1 rounded-lg w-20 text-center border border-transparent focus:border-brand-400 focus:outline-none cursor-text"
-                    />
+                    <div className="flex items-center gap-1">
+                      <button type="button" onClick={() => setTenure(t => Math.max(1, t - 1))}
+                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        disabled={tenure <= 1}>−</button>
+                      <input
+                        type="text"
+                        value={`${tenure} Yr`}
+                        onChange={e => {
+                          const raw = parseInt(e.target.value.replace(/[^0-9]/g, ''));
+                          if (!isNaN(raw)) setTenure(Math.min(Math.max(raw, 1), d.maxT));
+                        }}
+                        className="bg-brand-50 text-brand-700 text-sm font-bold px-2 py-1 rounded-lg w-20 text-center border border-transparent focus:border-brand-400 focus:outline-none cursor-text"
+                      />
+                      <button type="button" onClick={() => setTenure(t => Math.min(d.maxT, t + 1))}
+                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        disabled={tenure >= d.maxT}>+</button>
+                    </div>
                   </div>
                   <input type="range" min={1} max={d.maxT} step={1} value={tenure}
                     onChange={(e) => setTenure(Number(e.target.value))}
