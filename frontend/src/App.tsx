@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ChatWidget from "./components/ChatWidget";
 import LoadingSpinner from "./components/LoadingSpinner";
 import EMICalculatorPage from "./pages/EMICalculatorPage";
 import CalculatorsIndexPage from "./pages/CalculatorsIndexPage";
@@ -103,6 +104,7 @@ function PublicLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+      <ChatWidget />
       <main className="flex-1">
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>

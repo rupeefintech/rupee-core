@@ -10,6 +10,7 @@ import dotenv from 'dotenv'
 import apiRouter from './routes/api'
 import authRoutes from './routes/authRoutes'
 import adminRoutes from './routes/adminRoutes'
+import chatRouter from './routes/chat'
 
 dotenv.config()
 
@@ -38,6 +39,7 @@ app.use('/api/', rateLimit({
 // Routes
 app.use("/api/auth", authRoutes)
 app.use("/api/admin", adminRoutes)
+app.use("/api/chat", rateLimit({ windowMs: 60 * 1000, max: 30, standardHeaders: true, legacyHeaders: false }), chatRouter)
 
 // Test route
 app.get("/ping", (req, res) => res.send("pong"))
