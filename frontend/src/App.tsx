@@ -1,5 +1,5 @@
 // File: frontend/src/App.tsx
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -113,7 +113,7 @@ function PublicLayout() {
             <Route path="/accounts" element={<BankAccounts />} />
             <Route path="/salary-calculator" element={<SalaryCalculatorPage />} />
             <Route path="/hra-calculator" element={<HRACalculatorPage />} />
-            <Route path="/ifsc" element={<IFSCFinderPage />} />
+            <Route path="/ifsc" element={<Navigate to="/ifsc-finder" replace />} />
             <Route path="/ifsc-finder" element={<IFSCFinderPage />} />
             <Route path="/ifsc/:ifsc" element={<IFSCDetailPage />} />
             <Route path="/bank/:bank" element={<BankPage />} />

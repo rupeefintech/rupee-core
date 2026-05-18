@@ -225,8 +225,9 @@ export default function IFSCFinderPage() {
   return (
     <>
       <Helmet>
-        <title>IFSC Code Finder — Search Bank Branch IFSC & MICR Codes | BankInfoHub</title>
+        <title>IFSC Code Finder — Search Bank Branch IFSC & MICR Codes | RupeePedia</title>
         <meta name="description" content="Find IFSC and MICR codes for any bank branch in India. Search by bank, state, district and branch. Required for NEFT, RTGS and IMPS transfers." />
+        <link rel="canonical" href="https://rupeepedia.in/ifsc-finder" />
       </Helmet>
 
       {/* Hero — uses existing hero-bg class */}

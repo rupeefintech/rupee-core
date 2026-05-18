@@ -57,6 +57,8 @@ app.get('/sitemap.xml', async (req, res) => {
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap><loc>https://rupeepedia.in/sitemap-static.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-calculators.xml</loc><lastmod>${today}</lastmod></sitemap>
+  <sitemap><loc>https://rupeepedia.in/sitemap-banks.xml</loc><lastmod>${today}</lastmod></sitemap>
+  <sitemap><loc>https://rupeepedia.in/sitemap-blogs.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-1.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-2.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-3.xml</loc><lastmod>${today}</lastmod></sitemap>
@@ -263,6 +265,76 @@ app.get('/sitemap-ifsc-4.xml', async (_req, res) => {
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-ifsc-4:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
+// Banks sitemap — all /bank/:slug pages
+app.get('/sitemap-banks.xml', async (_req, res) => {
+  try {
+    const { prisma } = require('./lib/prisma');
+    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+    const today = new Date().toISOString().split('T')[0];
+
+    const banks = await prisma.banksMaster.findMany({
+      select: { slug: true, updatedAt: true },
+      where: { slug: { not: null }, isActive: true },
+      orderBy: { slug: 'asc' },
+    });
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    for (const bank of banks) {
+      if (!bank.slug) continue;
+      xml += '  <url>\n';
+      xml += `    <loc>${baseUrl}/bank/${bank.slug}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += '    <changefreq>monthly</changefreq>\n';
+      xml += '    <priority>0.7</priority>\n';
+      xml += '  </url>\n';
+    }
+    xml += '</urlset>';
+    res.setHeader('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (error) {
+    console.error('Error generating sitemap-banks:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
+// Blogs sitemap — all /money-guides/:slug pages
+app.get('/sitemap-blogs.xml', async (_req, res) => {
+  try {
+    const { prisma } = require('./lib/prisma');
+    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+
+    const blogs = await prisma.blog.findMany({
+      select: { slug: true, updatedAt: true },
+      where: { isPublished: true },
+      orderBy: { publishedAt: 'desc' },
+    });
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    xml += '  <url>\n';
+    xml += `    <loc>${baseUrl}/money-guides</loc>\n`;
+    xml += `    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>\n`;
+    xml += '    <changefreq>weekly</changefreq>\n';
+    xml += '    <priority>0.8</priority>\n';
+    xml += '  </url>\n';
+    for (const blog of blogs) {
+      xml += '  <url>\n';
+      xml += `    <loc>${baseUrl}/money-guides/${blog.slug}</loc>\n`;
+      xml += `    <lastmod>${blog.updatedAt ? blog.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      xml += '    <changefreq>monthly</changefreq>\n';
+      xml += '    <priority>0.7</priority>\n';
+      xml += '  </url>\n';
+    }
+    xml += '</urlset>';
+    res.setHeader('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (error) {
+    console.error('Error generating sitemap-blogs:', error);
     res.status(500).send('Error generating sitemap');
   }
 });

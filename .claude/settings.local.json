@@ -25,7 +25,11 @@
       "Bash(rm d:/IFSCCode/rupee/docs/rules/06-seo-and-urls.md)",
       "Bash(git -C d:/IFSCCode/rupee add -A)",
       "Bash(git -C d:/IFSCCode/rupee commit -m 'docs: delete 06-seo-and-urls.md — content fully moved to docs/setup/seo.md *)",
-      "Bash(git -C d:/IFSCCode/rupee push origin main)"
+      "Bash(git -C d:/IFSCCode/rupee push origin main)",
+      "Bash(npm run *)",
+      "WebSearch",
+      "Bash(node -r dotenv/config -e ' *)",
+      "WebFetch(domain:images.unsplash.com)"
     ]
   }
 }

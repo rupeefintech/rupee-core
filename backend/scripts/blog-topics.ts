@@ -1,5 +1,5 @@
 /**
- * Blog topic queue — ~60 topics across 5 categories.
+ * Blog topic queue — remaining unpublished topics.
  * The generation script picks the next unpublished topic.
  */
 
@@ -13,14 +13,8 @@ export interface BlogTopic {
 
 export const blogTopics: BlogTopic[] = [
   // ══════════════════════════════════════════════════════════════════════════
-  // TAX (15)
+  // TAX (9 remaining)
   // ══════════════════════════════════════════════════════════════════════════
-  { slug: 'income-tax-slabs-fy-2025-26', title: 'Income Tax Slabs FY 2025-26: Old vs New Regime Compared', category: 'Tax', keywords: ['income tax', 'india finance'], internalLinks: ['/calculators/income-tax', '/calculators/salary-calculator'] },
-  { slug: 'section-80c-guide', title: 'Section 80C: Complete Guide to Save Up to ₹1.5 Lakh Tax', category: 'Tax', keywords: ['tax saving', 'india investment'], internalLinks: ['/calculators/income-tax', '/calculators/ppf', '/calculators/fd'] },
-  { slug: 'section-80d-health-insurance', title: 'Section 80D: Tax Benefits on Health Insurance Premium', category: 'Tax', keywords: ['health insurance', 'medical'], internalLinks: ['/calculators/income-tax'] },
-  { slug: 'hra-exemption-guide', title: 'HRA Exemption: How to Calculate & Claim Tax Benefit', category: 'Tax', keywords: ['house rent', 'apartment'], internalLinks: ['/calculators/hra-calculator', '/calculators/salary-calculator'] },
-  { slug: 'tds-rates-guide', title: 'TDS Rates 2025-26: Complete Chart with Thresholds', category: 'Tax', keywords: ['tax deduction', 'payroll'], internalLinks: ['/calculators/income-tax', '/calculators/salary-calculator'] },
-  { slug: 'itr-filing-guide', title: 'How to File ITR Online: Step-by-Step Guide for Salaried', category: 'Tax', keywords: ['tax filing', 'india government'], internalLinks: ['/calculators/income-tax'] },
   { slug: 'advance-tax-guide', title: 'Advance Tax: Who Should Pay, Due Dates & Calculation', category: 'Tax', keywords: ['advance tax', 'business finance'], internalLinks: ['/calculators/income-tax'] },
   { slug: 'capital-gains-tax-guide', title: 'Capital Gains Tax in India: STCG vs LTCG Explained', category: 'Tax', keywords: ['stock market', 'investment'], internalLinks: ['/calculators/income-tax', '/calculators/mutual-fund'] },
   { slug: 'nri-taxation-guide', title: 'NRI Taxation in India: Income, Property & Investments', category: 'Tax', keywords: ['nri india', 'global finance'], internalLinks: ['/calculators/income-tax', '/calculators/fd'] },
@@ -32,12 +26,10 @@ export const blogTopics: BlogTopic[] = [
   { slug: 'senior-citizen-tax-benefits', title: 'Senior Citizen Tax Benefits: Higher Exemptions & Deductions', category: 'Tax', keywords: ['senior citizen', 'retirement'], internalLinks: ['/calculators/income-tax', '/calculators/fd'] },
 
   // ══════════════════════════════════════════════════════════════════════════
-  // BANKING (10)
+  // BANKING (8 remaining)
   // ══════════════════════════════════════════════════════════════════════════
-  { slug: 'what-is-ifsc-code', title: 'What is IFSC Code? How to Find & Use It for Transfers', category: 'Banking', keywords: ['bank transfer', 'online banking'], internalLinks: ['/ifsc-finder', '/ifsc'] },
   { slug: 'savings-account-rules', title: 'Savings Account Rules in India: Limits, Interest & Tax', category: 'Banking', keywords: ['savings bank', 'piggy bank'], internalLinks: ['/ifsc-finder', '/calculators/fd'] },
   { slug: 'cash-deposit-limits', title: 'Cash Deposit Limits in India: Rules & Tax Implications', category: 'Banking', keywords: ['cash money', 'bank deposit'], internalLinks: ['/ifsc-finder'] },
-  { slug: 'neft-rtgs-imps-upi-difference', title: 'NEFT vs RTGS vs IMPS vs UPI: Which Transfer Method to Use?', category: 'Banking', keywords: ['digital payment', 'mobile banking'], internalLinks: ['/ifsc-finder', '/ifsc'] },
   { slug: 'cheque-bounce-rules', title: 'Cheque Bounce: Penalties, Legal Action & How to Avoid', category: 'Banking', keywords: ['cheque bank', 'banking'], internalLinks: ['/ifsc-finder'] },
   { slug: 'dormant-account-reactivation', title: 'Dormant Bank Account: How to Reactivate & What to Know', category: 'Banking', keywords: ['bank account', 'banking service'], internalLinks: ['/ifsc-finder'] },
   { slug: 'joint-account-rules', title: 'Joint Bank Account Rules: Types, Tax & Nomination', category: 'Banking', keywords: ['couple finance', 'joint account'], internalLinks: ['/ifsc-finder'] },
@@ -46,9 +38,8 @@ export const blogTopics: BlogTopic[] = [
   { slug: 'demand-draft-guide', title: 'Demand Draft (DD): How to Make, Cancel & Track', category: 'Banking', keywords: ['bank draft', 'financial document'], internalLinks: ['/ifsc-finder'] },
 
   // ══════════════════════════════════════════════════════════════════════════
-  // CREDIT CARDS (10)
+  // CREDIT CARDS (9 remaining)
   // ══════════════════════════════════════════════════════════════════════════
-  { slug: 'best-cashback-credit-cards', title: 'Best Cashback Credit Cards in India 2025', category: 'Credit Cards', keywords: ['credit card', 'cashback shopping'], internalLinks: ['/credit-cards', '/credit-cards?category=Cashback'] },
   { slug: 'best-travel-credit-cards', title: 'Best Travel Credit Cards in India: Lounge Access & Miles', category: 'Credit Cards', keywords: ['travel card', 'airport lounge'], internalLinks: ['/credit-cards', '/credit-cards?category=Travel'] },
   { slug: 'credit-score-guide', title: 'Credit Score Guide: How to Check, Improve & Maintain 750+', category: 'Credit Cards', keywords: ['credit score', 'financial health'], internalLinks: ['/credit-cards'] },
   { slug: 'credit-card-bill-payment-tips', title: 'Credit Card Bill Payment: Due Date, Minimum Due & Interest', category: 'Credit Cards', keywords: ['bill payment', 'credit card'], internalLinks: ['/credit-cards', '/calculators/emi'] },
@@ -60,9 +51,8 @@ export const blogTopics: BlogTopic[] = [
   { slug: 'emi-on-credit-card', title: 'EMI on Credit Card: How It Works, Interest & Should You Use It?', category: 'Credit Cards', keywords: ['emi payment', 'credit card'], internalLinks: ['/credit-cards', '/calculators/emi'] },
 
   // ══════════════════════════════════════════════════════════════════════════
-  // INVESTMENTS (15)
+  // INVESTMENTS (14 remaining)
   // ══════════════════════════════════════════════════════════════════════════
-  { slug: 'sip-vs-lumpsum', title: 'SIP vs Lumpsum: Which Investment Strategy is Better?', category: 'Investment', keywords: ['investment growth', 'mutual fund'], internalLinks: ['/calculators/sip', '/calculators/lumpsum', '/calculators/mutual-fund'] },
   { slug: 'fd-vs-rd-comparison', title: 'FD vs RD: Which Fixed Income Option Suits You?', category: 'Investment', keywords: ['fixed deposit', 'savings'], internalLinks: ['/calculators/fd', '/calculators/rd'] },
   { slug: 'ppf-complete-guide', title: 'PPF Account: Interest Rate, Rules, Tax Benefits & Withdrawal', category: 'Investment', keywords: ['ppf savings', 'government scheme'], internalLinks: ['/calculators/ppf', '/calculators/income-tax'] },
   { slug: 'nps-guide', title: 'National Pension System (NPS): Benefits, Tax Saving & Returns', category: 'Investment', keywords: ['pension retirement', 'nps india'], internalLinks: ['/calculators/nps', '/calculators/income-tax'] },
@@ -79,7 +69,7 @@ export const blogTopics: BlogTopic[] = [
   { slug: 'dividend-vs-growth', title: 'Dividend vs Growth Mutual Fund: Which Option to Choose?', category: 'Investment', keywords: ['dividend', 'mutual fund'], internalLinks: ['/calculators/mutual-fund', '/calculators/sip'] },
 
   // ══════════════════════════════════════════════════════════════════════════
-  // LOANS (10)
+  // LOANS (9 remaining)
   // ══════════════════════════════════════════════════════════════════════════
   { slug: 'home-loan-guide', title: 'Home Loan Guide: Eligibility, Interest Rates & EMI Tips', category: 'Loans', keywords: ['home loan', 'house keys'], internalLinks: ['/calculators/emi', '/calculators/home-loan-emi', '/calculators/home-loan-eligibility'] },
   { slug: 'personal-loan-tips', title: 'Personal Loan: Interest Rates, Eligibility & Smart Tips', category: 'Loans', keywords: ['personal loan', 'finance'], internalLinks: ['/calculators/personal-loan-emi', '/calculators/personal-loan-eligibility'] },
@@ -90,5 +80,4 @@ export const blogTopics: BlogTopic[] = [
   { slug: 'education-loan-guide', title: 'Education Loan in India: Eligibility, Interest & Repayment', category: 'Loans', keywords: ['education', 'student loan'], internalLinks: ['/calculators/education-loan-emi', '/calculators/emi'] },
   { slug: 'gold-loan-guide', title: 'Gold Loan: How It Works, Interest Rates & Best Banks', category: 'Loans', keywords: ['gold loan', 'gold jewelry'], internalLinks: ['/calculators/emi', '/ifsc-finder'] },
   { slug: 'balance-transfer-home-loan', title: 'Home Loan Balance Transfer: Save Lakhs on Interest', category: 'Loans', keywords: ['home loan', 'savings'], internalLinks: ['/calculators/home-loan-emi', '/calculators/home-prepayment'] },
-  { slug: 'emi-formula-explained', title: 'EMI Formula Explained: How Banks Calculate Your EMI', category: 'Loans', keywords: ['emi calculator', 'mathematics'], internalLinks: ['/calculators/emi', '/calculators/home-loan-emi', '/calculators/personal-loan-emi'] },
 ];

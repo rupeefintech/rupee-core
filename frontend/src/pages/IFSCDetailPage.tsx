@@ -291,6 +291,9 @@ export default function IFSCDetailPage() {
   if (isError || !branch) {
     return (
       <div className="hero-bg min-h-screen py-10">
+        <Helmet>
+          <meta name="robots" content="noindex, follow" />
+        </Helmet>
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <Link to="/ifsc" className="inline-flex items-center gap-2 text-brand-600 hover:text-brand-800 font-medium text-sm mb-6 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Search
