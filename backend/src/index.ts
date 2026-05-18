@@ -269,6 +269,8 @@ app.get('/sitemap-ifsc-4.xml', async (_req, res) => {
   }
 });
 
+const xmlEscape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 // Banks sitemap — all /bank/:slug pages
 app.get('/sitemap-banks.xml', async (_req, res) => {
   try {
@@ -287,7 +289,7 @@ app.get('/sitemap-banks.xml', async (_req, res) => {
     for (const bank of banks) {
       if (!bank.slug) continue;
       xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}/bank/${bank.slug}</loc>\n`;
+      xml += `    <loc>${xmlEscape(`${baseUrl}/bank/${bank.slug}`)}</loc>\n`;
       xml += `    <lastmod>${today}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.7</priority>\n';
@@ -324,7 +326,7 @@ app.get('/sitemap-blogs.xml', async (_req, res) => {
     xml += '  </url>\n';
     for (const blog of blogs) {
       xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}/money-guides/${blog.slug}</loc>\n`;
+      xml += `    <loc>${xmlEscape(`${baseUrl}/money-guides/${blog.slug}`)}</loc>\n`;
       xml += `    <lastmod>${blog.updatedAt ? blog.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.7</priority>\n';
