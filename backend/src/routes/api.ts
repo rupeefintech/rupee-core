@@ -1908,4 +1908,102 @@ router.get('/blogs/:slug', async (req: Request, res: Response) => {
   }
 })
 
+// ── Commodity Prices ──────────────────────────────────────────────────────────
+// GET /api/commodity-prices
+// Fetches live gold/silver international spot prices, converts to INR with India duties.
+// Cache: 30 min Redis + 25 min in-memory.
+router.get('/commodity-prices', async (_req: Request, res: Response) => {
+  const KEY = 'commodity:prices'
+
+  const mem = memGet(KEY)
+  if (mem) return res.json(mem)
+
+  const cached = await cacheGet(KEY)
+  if (cached) {
+    memSet(KEY, cached, 25 * 60)
+    return res.json(cached)
+  }
+
+  try {
+    const TROY_OZ_TO_GRAMS = 31.1035
+    // India effective duty on gold/silver import ≈ 15.5% (6% BCD + 5% AIDC + cess + 3% GST)
+    const INDIA_FACTOR = 1.155
+    const YF_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    const YF_OPTS = { headers: { 'User-Agent': YF_UA }, signal: AbortSignal.timeout(10000) }
+
+    // Fetch gold, silver, USD/INR from Yahoo Finance (COMEX futures + forex)
+    const [goldRes, silverRes, fxRes] = await Promise.all([
+      fetch('https://query2.finance.yahoo.com/v8/finance/chart/GC=F?interval=1d&range=1d', YF_OPTS),
+      fetch('https://query2.finance.yahoo.com/v8/finance/chart/SI=F?interval=1d&range=1d', YF_OPTS),
+      fetch('https://query2.finance.yahoo.com/v8/finance/chart/USDINR=X?interval=1d&range=1d', YF_OPTS),
+    ])
+    if (!goldRes.ok || !silverRes.ok || !fxRes.ok) throw new Error('Yahoo Finance fetch failed')
+
+    const [goldJson, silverJson, fxJson]: any[] = await Promise.all([
+      goldRes.json(), silverRes.json(), fxRes.json(),
+    ])
+
+    const goldOzUSD: number = goldJson.chart.result[0].meta.regularMarketPrice
+    const silverOzUSD: number = silverJson.chart.result[0].meta.regularMarketPrice
+    const usdInr: number = fxJson.chart.result[0].meta.regularMarketPrice ?? 83.5
+
+    // Gold per 10g in INR (24K pure)
+    const gold24kPer10g = Math.round((goldOzUSD / TROY_OZ_TO_GRAMS) * 10 * usdInr * INDIA_FACTOR)
+    const gold22kPer10g = Math.round(gold24kPer10g * (22 / 24))
+    const gold18kPer10g = Math.round(gold24kPer10g * (18 / 24))
+    const gold14kPer10g = Math.round(gold24kPer10g * (14 / 24))
+
+    // Silver per kg in INR
+    const silverPerKg = Math.round((silverOzUSD / TROY_OZ_TO_GRAMS) * 1000 * usdInr * INDIA_FACTOR)
+
+    // City differentials per 10g (Mumbai = base, others vary due to local taxes/logistics)
+    const cityDiffs: Record<string, number> = {
+      Mumbai: 0, Delhi: 120, Chennai: 180, Kolkata: 60,
+      Hyderabad: 90, Bangalore: 140, Ahmedabad: 70, Pune: 50,
+      Jaipur: 100, Lucknow: 110, Surat: 65, Patna: 130,
+    }
+
+    const cities = Object.fromEntries(
+      Object.entries(cityDiffs).map(([city, diff]) => [
+        city,
+        {
+          gold_24k_per_10g: gold24kPer10g + diff,
+          gold_22k_per_10g: gold22kPer10g + Math.round(diff * 22 / 24),
+        },
+      ])
+    )
+
+    const data = {
+      gold: {
+        spot_usd_per_oz: Math.round(goldOzUSD * 100) / 100,
+        price_24k_per_10g: gold24kPer10g,
+        price_22k_per_10g: gold22kPer10g,
+        price_18k_per_10g: gold18kPer10g,
+        price_14k_per_10g: gold14kPer10g,
+        price_24k_per_gram: Math.round(gold24kPer10g / 10),
+        price_22k_per_gram: Math.round(gold22kPer10g / 10),
+        price_24k_per_tola: Math.round(gold24kPer10g * 1.16638), // 1 tola = 11.6638g
+      },
+      silver: {
+        spot_usd_per_oz: Math.round(silverOzUSD * 100) / 100,
+        price_per_kg: silverPerKg,
+        price_per_100g: Math.round(silverPerKg / 10),
+        price_per_10g: Math.round(silverPerKg / 100),
+        price_per_gram: Math.round(silverPerKg / 1000),
+      },
+      usd_inr: Math.round(usdInr * 100) / 100,
+      cities,
+      updated_at: new Date().toISOString(),
+      disclaimer: 'Prices are estimates based on international spot + import duties. Actual prices may vary by ₹100–500/10g.',
+    }
+
+    memSet(KEY, data, 25 * 60)
+    await cacheSet(KEY, data, 30 * 60)
+    res.json(data)
+  } catch (err) {
+    console.error('GET /api/commodity-prices error:', err)
+    res.status(500).json({ error: 'Failed to fetch commodity prices. Try again.' })
+  }
+})
+
 export default router

@@ -29,7 +29,8 @@
       "Bash(npm run *)",
       "WebSearch",
       "Bash(node -r dotenv/config -e ' *)",
-      "WebFetch(domain:images.unsplash.com)"
+      "WebFetch(domain:images.unsplash.com)",
+      "Bash(gh auth *)"
     ]
   }
 }

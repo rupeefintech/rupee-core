@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" data-p="1">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width" />
+<title>Rupeepedia — Design Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:#f1f5f9}
+
+/* ══ PALETTES ══ */
+:root,[data-p="1"]{
+  --p:#7C3AED;--pd:#5B21B6;--pf:#F5F3FF;--pb:#DDD6FE;
+  --a:#F59E0B;--af:#FFFBEB;--ab:#FDE68A;
+  --bg:#FFFFFF;--bg2:#F8F7FF;--surf:#FFFFFF;--bdr:#EDE9FE;
+  --t1:#0F172A;--t2:#4B5563;--t3:#9CA3AF;
+  --dark:#1E0938;
+  --g1:124,58,237;--g2:99,102,241;--g3:245,158,11;
+  --gtext:linear-gradient(135deg,#7C3AED 0%,#EC4899 60%,#F59E0B 100%);
+  --gbtn:linear-gradient(135deg,#7C3AED,#6D28D9);
+  --sdark:linear-gradient(135deg,#2E1065 0%,#4C1D95 100%);
+  --n1:#7C3AED;--n2:#EC4899;--n3:#F59E0B;--n4:#0F172A;
+}
+[data-p="2"]{
+  --p:#0E7490;--pd:#0C6478;--pf:#ECFEFF;--pb:#A5F3FC;
+  --a:#F97316;--af:#FFF7ED;--ab:#FED7AA;
+  --bg:#FFFFFF;--bg2:#F0FDFA;--surf:#FFFFFF;--bdr:#CFFAFE;
+  --t1:#042F2E;--t2:#374151;--t3:#6B7280;
+  --dark:#042F2E;
+  --g1:14,116,144;--g2:2,132,199;--g3:249,115,22;
+  --gtext:linear-gradient(135deg,#0E7490 0%,#0284C7 100%);
+  --gbtn:linear-gradient(135deg,#0E7490,#0284C7);
+  --sdark:linear-gradient(135deg,#042F2E 0%,#0E7490 100%);
+  --n1:#0E7490;--n2:#0284C7;--n3:#F97316;--n4:#042F2E;
+}
+[data-p="3"]{
+  --p:#D97706;--pd:#B45309;--pf:#FFFBEB;--pb:#FDE68A;
+  --a:#7C3AED;--af:#F5F3FF;--ab:#DDD6FE;
+  --bg:#FFFDF7;--bg2:#FFFBEB;--surf:#FFFFFF;--bdr:#FEF3C7;
+  --t1:#1C0A00;--t2:#57534E;--t3:#A8A29E;
+  --dark:#1C0A00;
+  --g1:217,119,6;--g2:220,38,38;--g3:124,58,237;
+  --gtext:linear-gradient(135deg,#D97706 0%,#DC2626 60%,#7C3AED 100%);
+  --gbtn:linear-gradient(135deg,#D97706,#DC2626);
+  --sdark:linear-gradient(135deg,#78350F 0%,#D97706 100%);
+  --n1:#D97706;--n2:#DC2626;--n3:#7C3AED;--n4:#1C0A00;
+}
+[data-p="4"]{
+  --p:#4338CA;--pd:#3730A3;--pf:#EEF2FF;--pb:#C7D2FE;
+  --a:#10B981;--af:#ECFDF5;--ab:#A7F3D0;
+  --bg:#F8F7FF;--bg2:#EEF2FF;--surf:#FFFFFF;--bdr:#E0E7FF;
+  --t1:#1E1B4B;--t2:#374151;--t3:#6B7280;
+  --dark:#1E1B4B;
+  --g1:67,56,202;--g2:124,58,237;--g3:16,185,129;
+  --gtext:linear-gradient(135deg,#4338CA 0%,#7C3AED 100%);
+  --gbtn:linear-gradient(135deg,#4338CA,#7C3AED);
+  --sdark:linear-gradient(135deg,#1E1B4B 0%,#4338CA 100%);
+  --n1:#4338CA;--n2:#7C3AED;--n3:#10B981;--n4:#1E1B4B;
+}
+
+/* ══ PALETTE PICKER ══ */
+.picker-bar{
+  position:sticky;top:0;z-index:9999;
+  background:rgba(15,23,42,0.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  padding:10px 24px;
+  display:flex;align-items:center;gap:16px;
+}
+.picker-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;}
+.picker-options{display:flex;gap:8px;}
+.p-btn{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 16px;border-radius:10px;
+  border:1.5px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.06);
+  cursor:pointer;transition:all .15s;
+  color:rgba(255,255,255,0.6);font-size:12px;font-weight:500;font-family:inherit;
+}
+.p-btn:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:white;}
+.p-btn.active{border-color:rgba(255,255,255,0.6);background:rgba(255,255,255,0.15);color:white;}
+.p-dots{display:flex;gap:4px;}
+.p-dot{width:10px;height:10px;border-radius:50%;}
+.p-section{display:flex;align-items:center;gap:12px;margin-left:auto;color:rgba(255,255,255,0.3);font-size:11px;}
+.p-section a{color:rgba(255,255,255,0.5);text-decoration:none;font-weight:500;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);}
+.p-section a:hover{color:white;border-color:rgba(255,255,255,0.4);}
+
+/* ══ LOGO SHOWCASE ══ */
+.logo-bar{background:#0a0a12;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+.lb-label{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap;}
+.lb-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.lb-opt{display:flex;align-items:center;gap:10px;padding:9px 16px;border-radius:12px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);cursor:pointer;transition:all .15s;position:relative;}
+.lb-opt:hover{border-color:rgba(var(--g1),.7);background:rgba(var(--g1),.08);}
+.lb-opt-num{position:absolute;top:-7px;left:10px;font-size:9px;font-weight:700;color:rgba(255,255,255,.35);background:#0a0a12;padding:0 4px;letter-spacing:.05em;}
+.lb-mark-sq{width:30px;height:30px;border-radius:9px;background:var(--gbtn);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;font-family:'Inter',sans-serif;box-shadow:0 3px 10px rgba(var(--g1),.4);}
+.lb-mark-circle{width:30px;height:30px;border-radius:50%;background:var(--gbtn);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;font-family:'Inter',sans-serif;box-shadow:0 0 0 2px rgba(255,255,255,.2),0 3px 10px rgba(var(--g1),.4);}
+.lb-mark-hex{width:30px;height:30px;border-radius:8px;background:var(--gbtn);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:white;font-family:'Inter',sans-serif;box-shadow:0 0 0 2.5px var(--p),0 4px 12px rgba(var(--g1),.5);transform:rotate(0deg);}
+.lb-wordname{font-size:15px;font-weight:800;color:white;letter-spacing:-.01em;font-family:'Inter',sans-serif;}
+.lb-wordname em{font-style:normal;background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.lb-wordmark-only{font-size:19px;font-weight:900;letter-spacing:-.02em;background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Inter',sans-serif;}
+.lb-opt-desc{font-size:10px;color:rgba(255,255,255,.28);font-weight:500;white-space:nowrap;}
+
+/* ══ PAGE WRAPPER ══ */
+.page{overflow:hidden;background:var(--bg);}
+
+/* ══ NAVBAR ══ */
+.nav{
+  height:64px;display:flex;align-items:center;
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--bdr);
+  position:sticky;top:52px;z-index:100;
+}
+.nav-in{max-width:1160px;margin:0 auto;padding:0 28px;width:100%;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.logo-box{width:34px;height:34px;border-radius:10px;background:var(--gbtn);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(var(--g1),.35);}
+.logo-name{font-size:17px;font-weight:800;color:var(--t1);letter-spacing:-.01em;}
+.logo-name em{font-style:normal;background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;align-items:center;gap:1px;}
+.nav-link{padding:6px 13px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--t2);text-decoration:none;transition:all .12s;}
+.nav-link:hover,.nav-link.on{color:var(--p);background:var(--pf);}
+.nav-cta{margin-left:10px;padding:8px 18px;background:var(--gbtn);color:white;border-radius:22px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;box-shadow:0 4px 14px rgba(var(--g1),.35);letter-spacing:-.01em;}
+
+/* ══ HERO ══ */
+.hero{position:relative;overflow:hidden;padding:80px 0 72px;background:var(--bg);}
+.blobs{position:absolute;inset:0;pointer-events:none;}
+.blob{position:absolute;border-radius:50%;filter:blur(72px);}
+.blob1{top:-120px;left:-120px;width:600px;height:600px;background:rgba(var(--g1),.14);animation:fl 9s ease-in-out infinite;}
+.blob2{bottom:-100px;right:-80px;width:500px;height:500px;background:rgba(var(--g2),.11);animation:fl 13s ease-in-out infinite reverse;}
+.blob3{top:30%;left:55%;width:350px;height:350px;background:rgba(var(--g3),.09);animation:fl 11s ease-in-out infinite 2s;}
+@keyframes fl{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-24px) scale(1.04)}}
+
+.hero-in{max-width:1160px;margin:0 auto;padding:0 28px;display:grid;grid-template-columns:1fr 460px;gap:64px;align-items:center;position:relative;z-index:1;}
+
+/* Hero left */
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--af);border:1px solid var(--ab);font-size:11.5px;font-weight:700;color:var(--a);margin-bottom:28px;letter-spacing:.01em;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--a);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+.hero-h1{font-size:clamp(42px,5vw,68px);font-weight:900;line-height:1.04;letter-spacing:-.03em;color:var(--t1);margin-bottom:20px;}
+.grad{background:var(--gtext);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+.hero-sub{font-size:17px;color:var(--t2);line-height:1.7;max-width:440px;margin-bottom:36px;}
+
+.search-wrap{background:var(--surf);border:2px solid var(--bdr);border-radius:16px;padding:6px 6px 6px 18px;display:flex;align-items:center;gap:8px;max-width:460px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:border-color .2s,box-shadow .2s;}
+.search-wrap:focus-within{border-color:var(--p);box-shadow:0 0 0 4px rgba(var(--g1),.08);}
+.s-icon{color:var(--t3);flex-shrink:0;}
+.s-input{flex:1;border:none;outline:none;font-size:14.5px;font-family:inherit;color:var(--t1);background:transparent;}
+.s-input::placeholder{color:var(--t3);}
+.s-btn{padding:10px 22px;background:var(--gbtn);color:white;border:none;border-radius:11px;font-size:13.5px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(var(--g1),.3);}
+
+.search-hint{font-size:12px;color:var(--t3);margin-bottom:28px;}
+.search-hint a{color:var(--p);font-weight:500;cursor:pointer;}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:36px;}
+.chip-lbl{font-size:11px;color:var(--t3);}
+.chip{font-size:12px;font-weight:500;padding:5px 13px;border-radius:999px;border:1px solid var(--bdr);color:var(--t2);cursor:pointer;transition:all .12s;background:var(--surf);}
+.chip:hover{border-color:var(--p);color:var(--p);background:var(--pf);}
+
+.hero-stats{display:flex;align-items:center;gap:0;padding:16px 20px;background:var(--pf);border-radius:14px;border:1px solid var(--pb);}
+.hstat{flex:1;text-align:center;}
+.hstat+.hstat{border-left:1px solid var(--pb);}
+.hstat-n{font-size:22px;font-weight:800;color:var(--p);letter-spacing:-.02em;line-height:1;}
+.hstat-l{font-size:10.5px;color:var(--t3);margin-top:3px;font-weight:500;}
+
+/* Hero right — glassmorphic IFSC card */
+.hero-right{position:relative;}
+.card-glow{position:absolute;inset:-40px;background:radial-gradient(ellipse,rgba(var(--g1),.18) 0%,transparent 65%);border-radius:50%;pointer-events:none;}
+.ifsc-glass{
+  background:rgba(255,255,255,.82);
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  border:1px solid rgba(255,255,255,.85);
+  border-radius:24px;
+  box-shadow:0 32px 80px rgba(0,0,0,.13),0 8px 24px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.95);
+  overflow:hidden;position:relative;z-index:1;
+}
+.glass-head{padding:22px 24px 18px;background:var(--gbtn);position:relative;overflow:hidden;}
+.glass-head::before{content:'';position:absolute;top:-40px;right:-40px;width:130px;height:130px;background:rgba(255,255,255,.1);border-radius:50%;}
+.glass-head::after{content:'';position:absolute;bottom:-20px;left:20px;width:80px;height:80px;background:rgba(255,255,255,.06);border-radius:50%;}
+.bank-row{display:flex;align-items:center;gap:11px;position:relative;z-index:1;}
+.bank-av{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;letter-spacing:-.02em;}
+.bank-name{font-size:16px;font-weight:700;color:white;margin-bottom:2px;}
+.bank-br{font-size:12px;color:rgba(255,255,255,.65);}
+.verified{display:flex;align-items:center;gap:5px;margin-top:12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:4px 10px;width:fit-content;font-size:10.5px;color:rgba(255,255,255,.85);font-weight:600;}
+
+.glass-body{padding:20px 24px;}
+.ifsc-box{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:16px 18px;margin-bottom:16px;}
+.ifsc-code{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:500;letter-spacing:.1em;color:var(--t1);margin-bottom:12px;}
+.ifsc-sep{color:var(--t3);}
+.parts{display:flex;}
+.part{flex:1;text-align:center;position:relative;}
+.part+.part::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--bdr);}
+.part-code{display:inline-block;padding:3px 8px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;margin-bottom:3px;}
+.bank-c{background:var(--pf);color:var(--p);}
+.zero-c{background:#f1f5f9;color:#64748b;}
+.br-c{background:var(--af);color:var(--a);}
+.part-l{font-size:9.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;}
+.modes-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.mode{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--af);color:var(--a);border:1px solid var(--ab);}
+.addr{font-size:12.5px;color:var(--t2);line-height:1.6;padding-top:14px;border-top:1px solid var(--bdr);}
+.addr strong{display:block;font-size:13px;color:var(--t1);margin-bottom:2px;}
+
+/* Float chips */
+.fc{position:absolute;background:white;border:1px solid var(--bdr);border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--t1);display:flex;align-items:center;gap:6px;box-shadow:0 6px 20px rgba(0,0,0,.1);white-space:nowrap;z-index:2;}
+
+/* ══ BENTO FEATURES ══ */
+.bento-sec{padding:72px 0;background:var(--bg);}
+.sec-in{max-width:1160px;margin:0 auto;padding:0 28px;}
+.sec-tag{font-size:11px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.sec-h{font-size:32px;font-weight:800;color:var(--t1);letter-spacing:-.02em;line-height:1.2;margin-bottom:36px;}
+
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.bento-main{background:var(--sdark);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;}
+.bento-main:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.18);}
+.bento-main::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:rgba(255,255,255,.06);border-radius:50%;}
+.bento-main::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:rgba(255,255,255,.04);border-radius:50%;}
+.bm-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bm-h{font-size:20px;font-weight:800;color:white;line-height:1.2;margin-bottom:6px;letter-spacing:-.01em;}
+.bm-d{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;margin-bottom:12px;}
+.bm-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px;}
+.bm-tag{font-size:10px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.15);}
+.bm-cta{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:11px;font-size:13px;font-weight:700;color:white;cursor:pointer;transition:all .15s;}
+.bm-cta:hover{background:rgba(255,255,255,.22);transform:translateY(-1px);}
+.bm-stat{font-size:32px;font-weight:900;color:rgba(255,255,255,.9);letter-spacing:-.03em;line-height:1;}
+.bm-stat-l{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;}
+
+.bento-card{background:var(--surf);border:1.5px solid var(--bdr);border-radius:20px;padding:26px 26px 24px;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;}
+.bento-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.1);}
+.bc-stripe{height:3px;border-radius:3px;margin-bottom:20px;}
+.bc-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--pf);margin-bottom:14px;}
+.bc-h{font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px;}
+.bc-d{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:16px;flex:1;}
+.bc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;}
+.bc-tag{font-size:10.5px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--pf);color:var(--p);}
+.bc-link{font-size:13px;font-weight:700;color:var(--p);display:flex;align-items:center;gap:5px;}
+
+/* ══ CALCULATORS ══ */
+.calc-sec{padding:72px 0;background:var(--bg2);border-top:1px solid var(--bdr);}
+.calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;}
+.cc{background:var(--surf);border:1.5px solid var(--bdr);border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .14s;}
+.cc:hover{border-color:var(--p);box-shadow:0 6px 20px rgba(var(--g1),.1);transform:translateY(-1px);}
+.cc-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cc-name{font-size:13.5px;font-weight:600;color:var(--t1);margin-bottom:2px;}
+.cc-sub{font-size:11.5px;color:var(--t3);}
+.cc-arr{margin-left:auto;color:var(--bdr);flex-shrink:0;transition:all .14s;}
+.cc:hover .cc-arr{color:var(--p);transform:translateX(2px);}
+
+/* ══ TRUST ══ */
+.trust-sec{padding:72px 0;background:var(--bg);border-top:1px solid var(--bdr);}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px;}
+.tc{background:var(--bg2);border:1px solid var(--bdr);border-radius:20px;padding:28px 24px;text-align:center;}
+.tc-icon{width:52px;height:52px;border-radius:50%;background:var(--pf);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.tc-h{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:7px;}
+.tc-d{font-size:13px;color:var(--t2);line-height:1.65;}
+
+/* ══ FOOTER ══ */
+.foot{background:var(--dark);padding:48px 0 24px;}
+.foot-in{max-width:1160px;margin:0 auto;padding:0 28px;}
+.foot-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.08);}
+.foot-logo .logo-name{color:white;}
+.foot-brand{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7;margin-top:12px;max-width:220px;}
+.fh{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.9);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;}
+.fl{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.fl a{font-size:13px;color:rgba(255,255,255,.45);text-decoration:none;transition:color .12s;}
+.fl a:hover{color:rgba(255,255,255,.85);}
+.foot-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:20px;}
+.foot-copy{font-size:12px;color:rgba(255,255,255,.3);}
+
+/* ══ PAGE DIVIDER ══ */
+.page-div{background:#0f172a;padding:32px 0;display:flex;align-items:center;justify-content:center;gap:20px;}
+.pd-line{flex:1;max-width:280px;height:1px;background:rgba(255,255,255,.1);}
+.pd-label{font-size:12px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.15em;}
+
+/* ══ CALCULATOR PAGE ══ */
+.calc-page{background:var(--bg);}
+.calc-page-inner{max-width:1160px;margin:0 auto;padding:0 28px;}
+
+.cp-header{padding:32px 0 0;}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--t3);margin-bottom:24px;}
+.breadcrumb span{color:var(--p);}
+.cp-title-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px;}
+.cp-title{font-size:28px;font-weight:800;color:var(--t1);letter-spacing:-.02em;}
+.cp-sub{font-size:14px;color:var(--t2);margin-top:6px;}
+.cp-tabs{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--bdr);border-radius:11px;padding:3px;}
+.cp-tab{padding:7px 16px;border-radius:9px;font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .15s;}
+.cp-tab.on{background:var(--surf);color:var(--p);box-shadow:0 1px 4px rgba(0,0,0,.08);}
+
+.cp-layout{display:grid;grid-template-columns:1fr 400px;gap:24px;padding-bottom:60px;}
+
+/* Input card */
+.cp-inputs{background:var(--surf);border:1.5px solid var(--bdr);border-radius:20px;padding:28px;}
+.inp-group{margin-bottom:28px;}
+.inp-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.inp-label{font-size:13px;font-weight:600;color:var(--t2);}
+.inp-val{font-size:18px;font-weight:800;color:var(--p);letter-spacing:-.01em;}
+.slider{width:100%;-webkit-appearance:none;appearance:none;height:5px;border-radius:5px;outline:none;cursor:pointer;background:linear-gradient(to right, var(--p) 0%, var(--p) var(--pct,50%), var(--bdr) var(--pct,50%), var(--bdr) 100%);}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--p);box-shadow:0 2px 8px rgba(var(--g1),.4),0 0 0 3px var(--pf);}
+.slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--p);border:none;box-shadow:0 2px 8px rgba(var(--g1),.4);}
+.inp-range-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t3);margin-top:6px;}
+
+.calc-divider{height:1px;background:var(--bdr);margin:4px 0 28px;}
+
+/* Result card */
+.cp-result{display:flex;flex-direction:column;gap:14px;}
+.emi-card{background:var(--gbtn);border-radius:20px;padding:28px;text-align:center;position:relative;overflow:hidden;}
+.emi-card::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;background:rgba(255,255,255,.1);border-radius:50%;}
+.emi-label{font-size:12px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.emi-val{font-size:46px;font-weight:900;color:white;letter-spacing:-.03em;line-height:1;}
+.emi-sub{font-size:13px;color:rgba(255,255,255,.55);margin-top:6px;}
+.emi-pills{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+.emi-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:5px 14px;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.85);}
+
+.chart-card{background:var(--surf);border:1.5px solid var(--bdr);border-radius:20px;padding:24px;}
+.chart-head{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:20px;}
+.chart-layout{display:flex;align-items:center;gap:20px;}
+.donut-wrap{position:relative;flex-shrink:0;}
+.donut{width:110px;height:110px;border-radius:50%;}
+.donut-hole{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:var(--surf);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+.donut-pct{font-size:16px;font-weight:800;color:var(--p);}
+.donut-pct-l{font-size:9px;color:var(--t3);font-weight:600;}
+.chart-legend{flex:1;}
+.leg-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bdr);}
+.leg-item:last-child{border:none;}
+.leg-left{display:flex;align-items:center;gap:8px;}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.leg-name{font-size:12.5px;color:var(--t2);}
+.leg-amt{font-size:13px;font-weight:700;color:var(--t1);}
+.leg-pct{font-size:11px;color:var(--t3);}
+
+.summary-card{background:var(--bg2);border:1.5px solid var(--bdr);border-radius:20px;padding:20px;}
+.sum-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);}
+.sum-row:last-child{border:none;padding-bottom:0;}
+.sum-l{font-size:13px;color:var(--t2);}
+.sum-v{font-size:14px;font-weight:700;color:var(--t1);}
+.sum-v.hi{color:var(--p);}
+
+.amort-preview{background:var(--surf);border:1.5px solid var(--bdr);border-radius:20px;overflow:hidden;}
+.amort-head{padding:16px 20px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;}
+.amort-title{font-size:14px;font-weight:700;color:var(--t1);}
+.amort-all{font-size:12px;font-weight:600;color:var(--p);}
+.amort-table{width:100%;border-collapse:collapse;}
+.amort-table th{padding:10px 16px;font-size:10.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;text-align:left;background:var(--bg2);}
+.amort-table td{padding:10px 16px;font-size:12.5px;color:var(--t2);border-top:1px solid var(--bdr);}
+.amort-table td:first-child{font-weight:600;color:var(--t1);}
+.amort-table td.green{color:var(--p);}
+
+/* ══ SIDEBAR TOOLS ══ */
+.cp-sidebar{margin-top:24px;}
+.sidebar-card{background:var(--surf);border:1.5px solid var(--bdr);border-radius:16px;padding:20px;margin-bottom:12px;}
+.sb-head{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px;}
+.sb-tool{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bdr);cursor:pointer;transition:all .12s;}
+.sb-tool:last-child{border:none;padding-bottom:0;}
+.sb-tool:hover .sb-tool-name{color:var(--p);}
+.sb-icon{width:32px;height:32px;border-radius:8px;background:var(--pf);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-tool-name{font-size:12.5px;font-weight:600;color:var(--t1);}
+.sb-tool-sub{font-size:11px;color:var(--t3);}
+.sb-arr{margin-left:auto;color:var(--bdr);}
+</style>
+</head>
+<body>
+
+<!-- ══ PALETTE PICKER ══ -->
+<div class="picker-bar">
+  <span class="picker-label">Palette:</span>
+  <div class="picker-options">
+    <button class="p-btn active" data-p="1" onclick="setP(1)">
+      <div class="p-dots"><span class="p-dot" style="background:#7C3AED"></span><span class="p-dot" style="background:#EC4899"></span><span class="p-dot" style="background:#F59E0B"></span></div>
+      1 · Violet Wave
+    </button>
+    <button class="p-btn" data-p="2" onclick="setP(2)">
+      <div class="p-dots"><span class="p-dot" style="background:#0E7490"></span><span class="p-dot" style="background:#0284C7"></span><span class="p-dot" style="background:#F97316"></span></div>
+      2 · Deep Sea
+    </button>
+    <button class="p-btn" data-p="3" onclick="setP(3)">
+      <div class="p-dots"><span class="p-dot" style="background:#D97706"></span><span class="p-dot" style="background:#DC2626"></span><span class="p-dot" style="background:#7C3AED"></span></div>
+      3 · Golden Hour
+    </button>
+    <button class="p-btn" data-p="4" onclick="setP(4)">
+      <div class="p-dots"><span class="p-dot" style="background:#4338CA"></span><span class="p-dot" style="background:#7C3AED"></span><span class="p-dot" style="background:#10B981"></span></div>
+      4 · Indigo Bold
+    </button>
+  </div>
+  <div class="p-section">Jump to: <a href="#landing">Landing Page</a> <a href="#calcpage">Calculator</a></div>
+</div>
+
+<!-- ══ LOGO SHOWCASE ══ -->
+<div class="logo-bar">
+  <span class="lb-label">Logo options:</span>
+  <div class="lb-opts">
+
+    <div class="lb-opt">
+      <span class="lb-opt-num">A · Square</span>
+      <div class="lb-mark-sq">₹</div>
+      <span class="lb-wordname">Rupee<em>pedia</em></span>
+      <span class="lb-opt-desc">Clean &amp; professional</span>
+    </div>
+
+    <div class="lb-opt">
+      <span class="lb-opt-num">B · Coin</span>
+      <div class="lb-mark-circle">₹</div>
+      <span class="lb-wordname">Rupee<em>pedia</em></span>
+      <span class="lb-opt-desc">Friendly &amp; memorable</span>
+    </div>
+
+    <div class="lb-opt">
+      <span class="lb-opt-num">C · Ring Mark</span>
+      <div class="lb-mark-hex">₹</div>
+      <span class="lb-wordname">Rupee<em>pedia</em></span>
+      <span class="lb-opt-desc">Bold &amp; distinctive</span>
+    </div>
+
+    <div class="lb-opt">
+      <span class="lb-opt-num">D · Wordmark</span>
+      <span class="lb-wordmark-only">₹upeepedia</span>
+      <span class="lb-opt-desc">No icon, typographic</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ LANDING PAGE ══════════ -->
+<div class="page" id="landing">
+
+<!-- Navbar -->
+<nav class="nav">
+  <div class="nav-in">
+    <div class="logo">
+      <div class="logo-box" style="font-size:19px;font-weight:900;color:white;font-family:'Inter',sans-serif;">₹</div>
+      <span class="logo-name">Rupee<em>pedia</em></span>
+    </div>
+    <div class="nav-links">
+      <a class="nav-link on">Home</a>
+      <a class="nav-link">Credit Cards</a>
+      <a class="nav-link">Calculators ↓</a>
+      <a class="nav-link">Money Guides</a>
+      <button class="nav-cta">Find IFSC →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="blobs">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+  </div>
+  <div class="hero-in">
+
+    <!-- Left -->
+    <div>
+      <div class="eyebrow"><span class="live-dot"></span>178,000+ branches · Updated daily</div>
+      <h1 class="hero-h1">India's smartest<br><span class="grad">banking toolkit</span></h1>
+      <p class="hero-sub">Find IFSC codes, compare credit cards, and use 15+ financial calculators. Free, fast, and always accurate.</p>
+
+      <div class="search-wrap">
+        <svg class="s-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="s-input" type="text" value="HDFC0000001" placeholder="Enter IFSC, bank name or city…" />
+        <button class="s-btn">Search →</button>
+      </div>
+      <p class="search-hint">Popular: <a>SBIN0001234</a> &nbsp;·&nbsp; <a>ICIC0001324</a> &nbsp;·&nbsp; <a>KKBK0000812</a></p>
+
+      <div class="chips">
+        <span class="chip-lbl">Also try:</span>
+        <span class="chip">EMI Calculator</span>
+        <span class="chip">Income Tax</span>
+        <span class="chip">SIP Returns</span>
+        <span class="chip">Credit Cards</span>
+        <span class="chip">FD Rates</span>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-n">1,78,000+</div><div class="hstat-l">Bank Branches</div></div>
+        <div class="hstat"><div class="hstat-n">1,350+</div><div class="hstat-l">Banks</div></div>
+        <div class="hstat"><div class="hstat-n">50+</div><div class="hstat-l">Credit Cards</div></div>
+        <div class="hstat"><div class="hstat-n">100%</div><div class="hstat-l">Free Forever</div></div>
+      </div>
+    </div>
+
+    <!-- Right: Glassmorphic IFSC card -->
+    <div class="hero-right">
+      <div class="card-glow"></div>
+      <div class="ifsc-glass">
+        <div class="glass-head">
+          <div class="bank-row">
+            <div class="bank-av">HDFC</div>
+            <div>
+              <div class="bank-name">HDFC Bank</div>
+              <div class="bank-br">Connaught Place · New Delhi</div>
+            </div>
+          </div>
+          <div class="verified">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+            RBI Verified Data
+          </div>
+        </div>
+        <div class="glass-body">
+          <div class="ifsc-box">
+            <div class="ifsc-code">HDFC<span class="ifsc-sep">0</span>000001</div>
+            <div class="parts">
+              <div class="part"><span class="part-code bank-c">HDFC</span><div class="part-l">Bank Code</div></div>
+              <div class="part"><span class="part-code zero-c">0</span><div class="part-l">Reserved</div></div>
+              <div class="part"><span class="part-code br-c">000001</span><div class="part-l">Branch</div></div>
+            </div>
+          </div>
+          <div class="modes-row">
+            <span class="mode">✓ NEFT</span>
+            <span class="mode">✓ RTGS</span>
+            <span class="mode">✓ IMPS</span>
+            <span class="mode">✓ UPI</span>
+          </div>
+          <div class="addr">
+            <strong>HDFC Bank House, Connaught Place</strong>
+            New Delhi, Delhi — 110 001
+          </div>
+        </div>
+      </div>
+      <div class="fc" style="top:-16px;right:8px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg> Real-time data</div>
+      <div class="fc" style="bottom:18px;left:-28px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/></svg> 1,350+ Banks</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Bento Features -->
+<section class="bento-sec">
+  <div class="sec-in">
+    <div class="sec-tag">What we offer</div>
+    <div class="sec-h">Everything banking, in one place</div>
+    <div class="bento">
+
+      <!-- IFSC card — same size as others -->
+      <div class="bento-main">
+        <div class="bc-stripe" style="background:linear-gradient(90deg,var(--p),var(--pd))"></div>
+        <div class="bc-body" style="padding:22px 22px 20px;display:flex;flex-direction:column;flex:1;">
+          <div class="bc-icon" style="background:rgba(255,255,255,.15);margin-bottom:14px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"><line x1="3" x2="21" y1="22" y2="22"/><line x1="6" x2="6" y1="18" y2="11"/><line x1="10" x2="10" y1="18" y2="11"/><line x1="14" x2="14" y1="18" y2="11"/><line x1="18" x2="18" y1="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+          </div>
+          <div class="bc-h" style="color:white;">IFSC &amp; Bank Search</div>
+          <div class="bc-d" style="color:rgba(255,255,255,.65);flex:1;">Find any IFSC code across 1,350+ banks. Verify NEFT, RTGS, IMPS &amp; UPI status instantly.</div>
+          <div class="bc-tags">
+            <span class="bc-tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);">178k Branches</span>
+            <span class="bc-tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);">MICR Codes</span>
+            <span class="bc-tag" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);">RBI Verified</span>
+          </div>
+          <div class="bc-link" style="color:rgba(255,255,255,.85);">Search Branches <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Credit Cards -->
+      <div class="bento-card">
+        <div class="bc-stripe" style="background:linear-gradient(90deg,var(--a),var(--p))"></div>
+        <div class="bc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
+        <div class="bc-h">Credit Cards</div>
+        <div class="bc-d">Compare cashback, rewards &amp; annual fees side by side. Find your perfect card from 50+ options.</div>
+        <div class="bc-tags"><span class="bc-tag">Cashback</span><span class="bc-tag">Travel</span><span class="bc-tag">Rewards</span><span class="bc-tag">Lifetime Free</span></div>
+        <div class="bc-link">Compare Cards <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+      <!-- Savings Accounts -->
+      <div class="bento-card">
+        <div class="bc-stripe" style="background:linear-gradient(90deg,#10B981,#0D9488)"></div>
+        <div class="bc-icon" style="background:#ECFDF5;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8.5 3.1 1.5 4 1 1 1.5 1 1.5 3H11v-1h2v1h1.5l.5-3.9c1.1-.4 2-.7 3.5-.7V5Z"/></svg></div>
+        <div class="bc-h">Savings Accounts</div>
+        <div class="bc-d">Zero-balance, high-interest and digital-first accounts compared transparently — no commissions.</div>
+        <div class="bc-tags"><span class="bc-tag" style="background:#ECFDF5;color:#059669;">Zero Balance</span><span class="bc-tag" style="background:#ECFDF5;color:#059669;">High Interest</span></div>
+        <div class="bc-link" style="color:#10B981;">Explore Accounts <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Calculators -->
+<section class="calc-sec">
+  <div class="sec-in">
+    <div class="sec-tag">Financial Tools</div>
+    <div class="sec-h" style="margin-bottom:6px;">Calculators for every money decision</div>
+    <div style="font-size:14px;color:var(--t3);margin-bottom:0;">All calculations run locally — your data never leaves your device</div>
+    <div class="calc-grid">
+      <div class="cc"><div class="cc-icon" style="background:var(--pf);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="8" x2="10" y1="14" y2="14"/><line x1="14" x2="16" y1="14" y2="14"/></svg></div><div><div class="cc-name">EMI Calculator</div><div class="cc-sub">Home, car &amp; personal loans</div></div><svg class="cc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div class="cc"><div class="cc-icon" style="background:#ECFDF5;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><div><div class="cc-name">SIP Calculator</div><div class="cc-sub">Mutual fund growth planner</div></div><svg class="cc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div class="cc"><div class="cc-icon" style="background:#FEE2E2;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="cc-name">Income Tax</div><div class="cc-sub">Old vs New regime 2026</div></div><svg class="cc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div class="cc"><div class="cc-icon" style="background:#E0F2FE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0284C7" stroke-width="2"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M14 8H8"/><path d="M16 12H8"/></svg></div><div><div class="cc-name">FD Calculator</div><div class="cc-sub">Fixed deposit returns</div></div><svg class="cc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div class="cc"><div class="cc-icon" style="background:#F5F3FF;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div><div class="cc-name">HRA Calculator</div><div class="cc-sub">House rent exemption</div></div><svg class="cc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div class="cc"><div class="cc-icon" style="background:#FEF3C7;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="cc-name">Salary Calculator</div><div class="cc-sub">CTC to in-hand breakdown</div></div><svg class="cc-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust -->
+<section class="trust-sec">
+  <div class="sec-in">
+    <div style="text-align:center;max-width:540px;margin:0 auto 0;">
+      <div class="sec-tag" style="text-align:center;">Why Rupeepedia</div>
+      <div class="sec-h" style="text-align:center;font-size:28px;margin-bottom:0;">Trusted by thousands of Indians every month</div>
+    </div>
+    <div class="trust-grid">
+      <div class="tc"><div class="tc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg></div><div class="tc-h">RBI Verified Data</div><div class="tc-d">All IFSC codes sourced directly from RBI's official database. Updated fortnightly to reflect branch changes.</div></div>
+      <div class="tc"><div class="tc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div><div class="tc-h">Always Current</div><div class="tc-d">Interest rates, card offers and branch data refreshed regularly. No stale information, ever.</div></div>
+      <div class="tc"><div class="tc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="tc-h">100% Free, No Ads</div><div class="tc-d">Every tool, comparison and guide is completely free. No trackers, no ads, no paywalls — ever.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-top">
+      <div>
+        <div class="logo foot-logo">
+          <div class="logo-box" style="font-size:18px;font-weight:900;color:white;font-family:'Inter',sans-serif;">₹</div>
+          <span class="logo-name">Rupee<em>pedia</em></span>
+        </div>
+        <p class="foot-brand">India's most complete banking data platform. IFSC codes, credit cards &amp; financial tools — all free.</p>
+      </div>
+      <div><p class="fh">Credit Cards</p><ul class="fl"><li><a href="#">Best Credit Cards</a></li><li><a href="#">Cashback Cards</a></li><li><a href="#">Travel Cards</a></li><li><a href="#">Lifetime Free</a></li></ul></div>
+      <div><p class="fh">Calculators</p><ul class="fl"><li><a href="#">EMI Calculator</a></li><li><a href="#">SIP Calculator</a></li><li><a href="#">HRA Calculator</a></li><li><a href="#">Income Tax</a></li></ul></div>
+      <div><p class="fh">Company</p><ul class="fl"><li><a href="#">About Us</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span class="foot-copy">© 2026 Rupeepedia.in — All rights reserved</span>
+      <a href="#" style="font-size:11px;color:rgba(255,255,255,.2);text-decoration:none;">Admin</a>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /landing -->
+
+
+<!-- ══ DIVIDER ══ -->
+<div class="page-div" id="calcpage">
+  <div class="pd-line"></div>
+  <div class="pd-label">↓ Calculator Page Preview ↓</div>
+  <div class="pd-line"></div>
+</div>
+
+
+<!-- ══════════ CALCULATOR PAGE ══════════ -->
+<div class="page calc-page">
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="logo"><div class="logo-box" style="font-size:19px;font-weight:900;color:white;font-family:'Inter',sans-serif;">₹</div><span class="logo-name">Rupee<em>pedia</em></span></div>
+    <div class="nav-links"><a class="nav-link">Home</a><a class="nav-link">Credit Cards</a><a class="nav-link on">Calculators ↓</a><a class="nav-link">Money Guides</a><button class="nav-cta">Find IFSC →</button></div>
+  </div>
+</nav>
+
+<div class="calc-page-inner">
+  <div class="cp-header">
+    <div class="breadcrumb">Home &nbsp;/&nbsp; Calculators &nbsp;/&nbsp; <span>EMI Calculator</span></div>
+    <div class="cp-title-row">
+      <div>
+        <div class="cp-title">EMI Calculator</div>
+        <div class="cp-sub">Calculate monthly EMI for home, car, or personal loans instantly</div>
+      </div>
+      <div class="cp-tabs">
+        <div class="cp-tab on">Home Loan</div>
+        <div class="cp-tab">Car Loan</div>
+        <div class="cp-tab">Personal Loan</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 400px;gap:24px;padding-bottom:60px;">
+
+    <!-- Inputs + Amortization -->
+    <div>
+      <div class="cp-inputs">
+        <div class="inp-group">
+          <div class="inp-row"><span class="inp-label">Loan Amount</span><span class="inp-val" id="amt-disp">₹50,00,000</span></div>
+          <input type="range" class="slider" id="amt" min="100000" max="10000000" value="5000000" step="50000" style="--pct:49.5%" oninput="calc()" />
+          <div class="inp-range-labels"><span>₹1L</span><span>₹1Cr</span></div>
+        </div>
+        <div class="inp-group">
+          <div class="inp-row"><span class="inp-label">Interest Rate</span><span class="inp-val" id="rate-disp">8.5% p.a.</span></div>
+          <input type="range" class="slider" id="rate" min="5" max="20" value="8.5" step="0.1" style="--pct:23.3%" oninput="calc()" />
+          <div class="inp-range-labels"><span>5%</span><span>20%</span></div>
+        </div>
+        <div class="inp-group">
+          <div class="inp-row"><span class="inp-label">Loan Tenure</span><span class="inp-val" id="years-disp">20 years</span></div>
+          <input type="range" class="slider" id="years" min="1" max="30" value="20" step="1" style="--pct:63.3%" oninput="calc()" />
+          <div class="inp-range-labels"><span>1 yr</span><span>30 yrs</span></div>
+        </div>
+        <div class="calc-divider"></div>
+        <div style="display:flex;gap:10px;">
+          <button style="flex:1;padding:12px;background:var(--gbtn);color:white;border:none;border-radius:12px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 4px 14px rgba(var(--g1),.3);">Calculate EMI</button>
+          <button style="padding:12px 20px;background:var(--bg2);color:var(--t2);border:1.5px solid var(--bdr);border-radius:12px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;">Reset</button>
+        </div>
+      </div>
+
+      <!-- Amortization preview -->
+      <div class="amort-preview" style="margin-top:16px;">
+        <div class="amort-head">
+          <div class="amort-title">Amortization Schedule</div>
+          <div class="amort-all">View All Years →</div>
+        </div>
+        <table class="amort-table">
+          <thead><tr><th>Year</th><th>EMI Paid</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead>
+          <tbody>
+            <tr><td>Year 1</td><td>₹4,90,056</td><td class="green">₹87,321</td><td>₹4,02,735</td><td>₹49,12,679</td></tr>
+            <tr><td>Year 2</td><td>₹4,90,056</td><td class="green">₹94,970</td><td>₹3,95,086</td><td>₹48,17,709</td></tr>
+            <tr><td>Year 3</td><td>₹4,90,056</td><td class="green">₹1,03,266</td><td>₹3,86,790</td><td>₹47,14,443</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="cp-result">
+      <div class="emi-card">
+        <div class="emi-label">Monthly EMI</div>
+        <div class="emi-val" id="emi-disp">₹43,391</div>
+        <div class="emi-sub">for 240 months (20 years)</div>
+        <div class="emi-pills">
+          <span class="emi-pill">Home Loan</span>
+          <span class="emi-pill">8.5% p.a.</span>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-head">Payment Breakdown</div>
+        <div class="chart-layout">
+          <div class="donut-wrap">
+            <div class="donut" id="donut" style="background:conic-gradient(var(--p) 0% 48%, var(--a) 48% 100%);"></div>
+            <div class="donut-hole"><div class="donut-pct" id="donut-pct">48%</div><div class="donut-pct-l">Principal</div></div>
+          </div>
+          <div class="chart-legend">
+            <div class="leg-item"><div class="leg-left"><div class="leg-dot" style="background:var(--p)"></div><div><div class="leg-name">Principal</div><div class="leg-pct" id="prin-pct">48.1%</div></div></div><div class="leg-amt" id="prin-amt">₹50,00,000</div></div>
+            <div class="leg-item"><div class="leg-left"><div class="leg-dot" style="background:var(--a)"></div><div><div class="leg-name">Total Interest</div><div class="leg-pct" id="int-pct">51.9%</div></div></div><div class="leg-amt" id="int-amt">₹54,13,844</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="sum-row"><span class="sum-l">Loan Amount</span><span class="sum-v" id="s-loan">₹50,00,000</span></div>
+        <div class="sum-row"><span class="sum-l">Monthly EMI</span><span class="sum-v hi" id="s-emi">₹43,391</span></div>
+        <div class="sum-row"><span class="sum-l">Total Interest</span><span class="sum-v" id="s-int">₹54,13,844</span></div>
+        <div class="sum-row"><span class="sum-l">Total Payment</span><span class="sum-v" id="s-total">₹1,04,13,844</span></div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sb-head">Related Calculators</div>
+        <div class="sb-tool"><div class="sb-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5"/></svg></div><div><div class="sb-tool-name">Home Loan Eligibility</div><div class="sb-tool-sub">Know how much you can borrow</div></div><svg class="sb-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+        <div class="sb-tool"><div class="sb-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg></div><div><div class="sb-tool-name">Prepayment Calculator</div><div class="sb-tool-sub">Save on interest with part payment</div></div><svg class="sb-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+        <div class="sb-tool"><div class="sb-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--p)"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2"/></svg></div><div><div class="sb-tool-name">FD Calculator</div><div class="sb-tool-sub">Compare fixed deposit returns</div></div><svg class="sb-arr" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /calc-page -->
+
+<script>
+function setP(n){
+  document.documentElement.setAttribute('data-p',n);
+  document.querySelectorAll('.p-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.p-btn[data-p="'+n+'"]').classList.add('active');
+}
+
+function fmt(n){return '₹'+Math.round(n).toLocaleString('en-IN');}
+
+function calc(){
+  var amt=+document.getElementById('amt').value;
+  var r=+document.getElementById('rate').value;
+  var y=+document.getElementById('years').value;
+  var m=r/12/100, n=y*12;
+  var emi=m===0?amt/n:amt*m*Math.pow(1+m,n)/(Math.pow(1+m,n)-1);
+  var total=emi*n, interest=total-amt;
+  var pp=Math.round(amt/total*100);
+  var ip=100-pp;
+
+  document.getElementById('emi-disp').textContent=fmt(emi);
+  document.getElementById('amt-disp').textContent=fmt(amt);
+  document.getElementById('rate-disp').textContent=r+'% p.a.';
+  document.getElementById('years-disp').textContent=y+' year'+(y>1?'s':'');
+  document.getElementById('donut').style.background='conic-gradient(var(--p) 0% '+pp+'%, var(--a) '+pp+'% 100%)';
+  document.getElementById('donut-pct').textContent=pp+'%';
+  document.getElementById('prin-amt').textContent=fmt(amt);
+  document.getElementById('int-amt').textContent=fmt(interest);
+  document.getElementById('prin-pct').textContent=pp+'%';
+  document.getElementById('int-pct').textContent=ip+'%';
+  document.getElementById('s-loan').textContent=fmt(amt);
+  document.getElementById('s-emi').textContent=fmt(emi);
+  document.getElementById('s-int').textContent=fmt(interest);
+  document.getElementById('s-total').textContent=fmt(total);
+
+  // Update slider fill
+  document.querySelectorAll('.slider').forEach(function(sl){
+    var pct=(sl.value-sl.min)/(sl.max-sl.min)*100;
+    sl.style.setProperty('--pct',pct+'%');
+  });
+}
+
+calc();
+</script>
+</body>
+</html>

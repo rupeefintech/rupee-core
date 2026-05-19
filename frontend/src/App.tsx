@@ -30,6 +30,7 @@ import AddEditCardPage from "./admin/pages/AddEditCardPage";
 import IncomeTaxCalculator from "./pages/IncomeTaxCalculator";
 import CalculatorLayout from "./components/CalculatorLayout";
 import RNORCalculatorPage from "./pages/RNORCalculatorPage";
+import GoldSilverRatePage from "./pages/GoldSilverRatePage";
 import NRIFDCalculatorPage from "./pages/NRIFDCalculatorPage";
 import NRICapitalGainsPage from "./pages/NRICapitalGainsPage";
 import NRIRentalIncomePage from "./pages/NRIRentalIncomePage";
@@ -115,6 +116,7 @@ function PublicLayout() {
             <Route path="/" element={<HomePage />} />
             {/* <Route path="/loans" element={<Loans />} /> */}
             <Route path="/accounts" element={<BankAccounts />} />
+            <Route path="/gold-rate-today" element={<GoldSilverRatePage />} />
             <Route path="/salary-calculator" element={<SalaryCalculatorPage />} />
             <Route path="/hra-calculator" element={<HRACalculatorPage />} />
             <Route path="/ifsc" element={<Navigate to="/ifsc-finder" replace />} />
