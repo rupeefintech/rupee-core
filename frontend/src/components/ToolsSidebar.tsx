@@ -117,11 +117,13 @@ export default function ToolsSidebar() {
                           to={item.path}
                           className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all ${
                             active
-                              ? `${colors.activeBg} text-white font-semibold shadow-sm`
-                              : 'text-gray-600 hover:bg-brand-50 hover:text-brand-700'
+                              ? 'bg-gray-900 text-white font-semibold shadow-sm'
+                              : 'text-gray-600 hover:bg-gray-50'
                           }`}
                         >
-                          <Icon size={13} className={active ? 'text-white/80' : 'text-gray-400'} />
+                          <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${active ? 'bg-white/20' : item.color}`}>
+                            <Icon size={11} className="text-white" />
+                          </div>
                           <span className="flex-1">{item.label}</span>
                           {active && <span className="w-1.5 h-1.5 rounded-full bg-white/60" />}
                         </Link>

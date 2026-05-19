@@ -29,6 +29,10 @@ import CardDetailPage from "./admin/pages/CardDetailPage";
 import AddEditCardPage from "./admin/pages/AddEditCardPage";
 import IncomeTaxCalculator from "./pages/IncomeTaxCalculator";
 import CalculatorLayout from "./components/CalculatorLayout";
+import RNORCalculatorPage from "./pages/RNORCalculatorPage";
+import NRIFDCalculatorPage from "./pages/NRIFDCalculatorPage";
+import NRICapitalGainsPage from "./pages/NRICapitalGainsPage";
+import NRIRentalIncomePage from "./pages/NRIRentalIncomePage";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const IFSCFinderPage = lazy(() => import("./pages/IFSCFinderPage"));
@@ -176,6 +180,12 @@ function PublicLayout() {
               <Route path="/calculators/salary-calculator" element={<SalaryCalculatorPage />} />
               <Route path="/calculators/hra-calculator" element={<HRACalculatorPage />} />
               <Route path="/calculators/income-tax" element={<IncomeTaxCalculator />} />
+
+              {/* NRI */}
+              <Route path="/calculators/rnor-status" element={<RNORCalculatorPage />} />
+              <Route path="/calculators/nri-fd" element={<NRIFDCalculatorPage />} />
+              <Route path="/calculators/nri-capital-gains" element={<NRICapitalGainsPage />} />
+              <Route path="/calculators/nri-rental-income" element={<NRIRentalIncomePage />} />
             </Route>
 
             {/* Standalone salary/hra shortcuts (also with sidebar) */}

@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { calculatorCategories } from '../utils/calculators';
 
-const colorMap: Record<string, { card: string; iconBg: string; iconColor: string }> = {
-  blue:   { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
-  green:  { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
-  purple: { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
-  amber:  { card: 'bg-brand-50 text-brand-700 border-brand-100 hover:border-brand-300',   iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
+const catHeaderColors: Record<string, { iconBg: string; iconColor: string }> = {
+  blue:   { iconBg: 'bg-brand-100',   iconColor: 'text-brand-600' },
+  green:  { iconBg: 'bg-emerald-100', iconColor: 'text-emerald-600' },
+  purple: { iconBg: 'bg-purple-100',  iconColor: 'text-purple-600' },
+  amber:  { iconBg: 'bg-amber-100',   iconColor: 'text-amber-600' },
 };
 
 export default function CalculatorsIndexPage() {
@@ -29,15 +29,18 @@ export default function CalculatorsIndexPage() {
         <div className="max-w-6xl mx-auto px-4 py-10 flex flex-col gap-10">
           {calculatorCategories.map((cat) => {
             const CatIcon = cat.categoryIcon;
-            const colors = colorMap[cat.color];
+            const hdr = catHeaderColors[cat.color];
             return (
               <div key={cat.title}>
+                {/* Category header */}
                 <div className="flex items-center gap-2.5 mb-5">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colors.iconBg}`}>
-                    <CatIcon className={`w-4.5 h-4.5 ${colors.iconColor}`} />
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${hdr.iconBg}`}>
+                    <CatIcon className={`w-4.5 h-4.5 ${hdr.iconColor}`} />
                   </div>
                   <h2 className="text-lg font-bold text-gray-900">{cat.title}</h2>
                 </div>
+
+                {/* Calculator cards */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {cat.items.map((item) => {
                     const Icon = item.icon;
@@ -45,15 +48,15 @@ export default function CalculatorsIndexPage() {
                       <Link
                         key={item.path}
                         to={item.path}
-                        className={`group rounded-xl border p-4 hover:shadow-md transition-all hover:-translate-y-0.5 ${colors.card}`}
+                        className="group rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md hover:border-gray-300 transition-all hover:-translate-y-0.5"
                       >
                         <div className="flex items-start gap-3">
-                          <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${colors.iconBg} group-hover:scale-110 transition-transform`}>
-                            <Icon className={`w-4.5 h-4.5 ${colors.iconColor}`} />
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${item.color} group-hover:scale-110 transition-transform shadow-sm`}>
+                            <Icon className="w-5 h-5 text-white" />
                           </div>
-                          <div>
-                            <div className="font-semibold text-sm mb-1">{item.label}</div>
-                            <div className="text-xs opacity-75">{item.desc}</div>
+                          <div className="min-w-0">
+                            <div className="font-semibold text-sm text-gray-900 mb-0.5">{item.label}</div>
+                            <div className="text-xs text-gray-500 leading-snug">{item.desc}</div>
                           </div>
                         </div>
                       </Link>

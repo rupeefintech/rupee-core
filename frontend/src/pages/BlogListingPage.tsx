@@ -5,14 +5,15 @@ import { api, BlogSummary } from '../utils/api';
 import { Helmet } from 'react-helmet-async';
 import { Search, Calendar, Clock, ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
 
-const categories = ['All', 'Tax', 'Banking', 'Investment', 'Credit Cards', 'Loans'];
+const categories = ['All', 'Tax', 'NRI Tax', 'Banking', 'Investment', 'Credit Cards', 'Loans'];
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
-  Tax:            { bg: 'bg-purple-50', text: 'text-purple-700' },
+  Tax:            { bg: 'bg-purple-50',  text: 'text-purple-700' },
+  'NRI Tax':      { bg: 'bg-sky-50',     text: 'text-sky-700' },
   Banking:        { bg: 'bg-brand-50',   text: 'text-brand-700' },
   Investment:     { bg: 'bg-emerald-50', text: 'text-emerald-700' },
-  'Credit Cards': { bg: 'bg-amber-50',  text: 'text-amber-700' },
-  Loans:          { bg: 'bg-rose-50',   text: 'text-rose-700' },
+  'Credit Cards': { bg: 'bg-amber-50',   text: 'text-amber-700' },
+  Loans:          { bg: 'bg-rose-50',    text: 'text-rose-700' },
 };
 
 export default function BlogListingPage() {

@@ -13,6 +13,13 @@ export interface BlogTopic {
 
 export const blogTopics: BlogTopic[] = [
   // ══════════════════════════════════════════════════════════════════════════
+  // NRI (manually seeded — do not re-generate)
+  // ══════════════════════════════════════════════════════════════════════════
+  { slug: 'nri-pfic-trap-mutual-funds', title: 'The PFIC Trap: Why Indian Mutual Funds Are a Tax Nightmare for US-Based NRIs', category: 'Tax', keywords: ['nri usa tax', 'investment'], internalLinks: ['/calculators/rnor-status', '/calculators/nri-fd'] },
+  { slug: 'nri-investment-guide-india', title: 'NRI Investment Guide: Best Options for Indians Living Abroad (2026)', category: 'Investment', keywords: ['nri investing india', 'finance'], internalLinks: ['/calculators/rnor-status', '/calculators/nri-fd', '/calculators/nri-capital-gains'] },
+  { slug: 'rnor-tax-planning-returning-nri', title: 'RNOR Tax Planning: The 2-3 Year Window Every Returning NRI Must Use', category: 'Tax', keywords: ['returning nri india', 'tax planning'], internalLinks: ['/calculators/rnor-status', '/calculators/nri-fd'] },
+
+  // ══════════════════════════════════════════════════════════════════════════
   // TAX (9 remaining)
   // ══════════════════════════════════════════════════════════════════════════
   { slug: 'advance-tax-guide', title: 'Advance Tax: Who Should Pay, Due Dates & Calculation', category: 'Tax', keywords: ['advance tax', 'business finance'], internalLinks: ['/calculators/income-tax'] },
