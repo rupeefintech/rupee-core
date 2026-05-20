@@ -121,6 +121,30 @@ export interface DbStats {
   last_updated: string;
 }
 
+export interface CommodityPrices {
+  gold: {
+    spot_usd_per_oz: number;
+    price_24k_per_10g: number;
+    price_22k_per_10g: number;
+    price_18k_per_10g: number;
+    price_14k_per_10g: number;
+    price_24k_per_gram: number;
+    price_22k_per_gram: number;
+    price_24k_per_tola: number;
+  };
+  silver: {
+    spot_usd_per_oz: number;
+    price_per_kg: number;
+    price_per_100g: number;
+    price_per_10g: number;
+    price_per_gram: number;
+  };
+  usd_inr: number;
+  cities: Record<string, { gold_24k_per_10g: number; gold_22k_per_10g: number }>;
+  updated_at: string;
+  disclaimer: string;
+}
+
 /**
  * Unwrap API response data
  * Handles both wrapped and unwrapped response formats
@@ -409,6 +433,11 @@ getCityPage: async (slug: string): Promise<{
 
   getFeaturedBlogs: async (): Promise<BlogSummary[]> => {
     const response = await apiClient.get('/blogs/featured');
+    return unwrapResponse(response);
+  },
+
+  getCommodityPrices: async (): Promise<CommodityPrices> => {
+    const response = await apiClient.get('/commodity-prices');
     return unwrapResponse(response);
   },
 

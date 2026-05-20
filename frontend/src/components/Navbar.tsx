@@ -174,6 +174,9 @@ export default function Navbar() {
             </div>
 
             <Link to="/money-guides" className={linkCls(location.pathname.startsWith('/money-guides'))}>Money Guides</Link>
+            <Link to="/gold-rate-today" className={linkCls(location.pathname === '/gold-rate-today')}>
+              <span className="flex items-center gap-1">🥇 Gold Rate</span>
+            </Link>
             <Link to="/about" className={linkCls(location.pathname === '/about')}>About</Link>
 
             {/* CTA */}
@@ -265,6 +268,7 @@ export default function Navbar() {
           )}
 
           <Link to="/money-guides" className="px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-600">Money Guides</Link>
+          <Link to="/gold-rate-today" className="px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700">🥇 Gold & Silver Rate</Link>
           <Link to="/about" className="px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-600">About</Link>
           <Link to="/ifsc-finder" className="mt-1 mx-1 py-2.5 bg-gradient-to-r from-brand-600 to-brand-700 text-white text-sm font-semibold rounded-xl text-center">
             Find IFSC →

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IFSC Detail — Option C: Dense Grid Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',300:'#c4b5fd',400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9',800:'#5b21b6',900:'#4c1d95' }
+          },
+          fontFamily: { sans:['Inter','sans-serif'], mono:['JetBrains Mono','monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family:'Inter',sans-serif; background:#f8f7ff; }
+    .ifsc-mono { font-family:'JetBrains Mono',monospace; letter-spacing:0.08em; }
+    .hero-bg {
+      background: radial-gradient(ellipse 80% 60% at 12% 20%, rgba(139,92,246,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 40% at 90% 80%, rgba(99,102,241,0.10) 0%, transparent 60%),
+                  white;
+    }
+    .card { background:white; border-radius:12px; border:1px solid #ede9fe; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
+    /* Tighter card feel */
+    .mini-card { background:white; border-radius:10px; border:1px solid #e5e7eb; }
+    .stat-cell { padding:10px 14px; }
+    .stat-label { font-size:9px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:3px; }
+    .stat-value { font-size:13px; font-weight:600; color:#1e1b4b; }
+    .rail-chip { display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:999px; font-size:11px; font-weight:700; }
+    .rail-on { background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; }
+    .rail-off { background:#f9fafb; color:#9ca3af; border:1px solid #e5e7eb; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <div class="text-xs bg-amber-50 border-b border-amber-200 text-amber-800 font-medium px-4 py-2 text-center">
+    ⚠️ Design Preview — Option C: Dense Info Cards Grid
+  </div>
+
+  <!-- ── Hero (compact) ── -->
+  <section class="hero-bg py-7 md:py-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+      <!-- Breadcrumb -->
+      <nav class="flex flex-wrap items-center gap-1 text-xs text-gray-400 mb-4">
+        <a href="#" class="hover:text-brand-600">Home</a><span>›</span>
+        <a href="#" class="hover:text-brand-600">IFSC Finder</a><span>›</span>
+        <a href="#" class="hover:text-brand-600">HDFC Bank</a><span>›</span>
+        <span class="text-gray-500">Maharashtra</span><span>›</span>
+        <span class="text-brand-600 font-medium ifsc-mono">HDFC0000181</span>
+      </nav>
+
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center border border-brand-100 flex-shrink-0">
+          <svg class="w-6 h-6 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h1v11M19 10h1v11M9 10h1v11M14 10h1v11"/></svg>
+        </div>
+        <div>
+          <span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full uppercase tracking-wider">✓ RBI Verified</span>
+          <h1 class="text-xl sm:text-2xl font-bold text-brand-900 leading-tight mt-1">HDFC Bank — Govandi East Branch</h1>
+          <p class="text-gray-500 text-xs mt-0.5">Mumbai, Maharashtra &nbsp;·&nbsp; <span class="ifsc-mono font-semibold text-brand-600">HDFC0000181</span></p>
+        </div>
+      </div>
+
+      <!-- Explore links — nav style -->
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span class="text-[10px] text-gray-400 font-medium uppercase tracking-wider self-center mr-1">Explore:</span>
+        <a href="#" class="inline-flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg font-semibold border border-brand-200 hover:border-brand-300 transition-all">HDFC Bank IFSC Codes <span class="text-brand-400">›</span></a>
+        <a href="#" class="inline-flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg font-semibold border border-brand-200 hover:border-brand-300 transition-all">Maharashtra Branches <span class="text-brand-400">›</span></a>
+        <a href="#" class="inline-flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg font-semibold border border-brand-200 hover:border-brand-300 transition-all">Mumbai Branches <span class="text-brand-400">›</span></a>
+      </div>
+
+      <!-- Intro card — compact -->
+      <div class="card px-5 py-4">
+        <p class="text-sm text-gray-600 leading-relaxed">
+          <span class="ifsc-mono font-bold text-brand-700">HDFC0000181</span> belongs to <strong>HDFC Bank</strong> Govandi East branch, Mumbai, Maharashtra. Used for NEFT, RTGS, IMPS and UPI transfers.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Dense Grid Content ── -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 -mt-2 pb-20 space-y-4 pt-5">
+
+    <!-- Row 1: IFSC + MICR + Payment modes — all in one card -->
+    <div class="card p-0 overflow-hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+        <!-- IFSC -->
+        <div class="p-5">
+          <span class="stat-label">IFSC Code</span>
+          <div class="flex items-center gap-2 flex-wrap mt-1">
+            <span class="ifsc-mono text-2xl font-bold text-brand-800">HDFC0000181</span>
+            <button class="inline-flex items-center gap-1 px-2 py-1 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 text-xs font-medium">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </div>
+        <!-- MICR -->
+        <div class="p-5">
+          <span class="stat-label">MICR Code</span>
+          <div class="flex items-center gap-2 flex-wrap mt-1">
+            <span class="ifsc-mono text-xl font-bold text-brand-700">400240002</span>
+            <button class="inline-flex items-center gap-1 px-2 py-1 rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 text-xs font-medium">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+        </div>
+        <!-- Payment modes -->
+        <div class="p-5">
+          <span class="stat-label">Payment Modes</span>
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            <span class="rail-chip rail-on">✓ NEFT</span>
+            <span class="rail-chip rail-on">✓ RTGS</span>
+            <span class="rail-chip rail-on">✓ IMPS</span>
+            <span class="rail-chip rail-on">✓ UPI</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- IFSC breakdown bar -->
+      <div class="border-t border-gray-100 px-5 py-4 bg-gray-50">
+        <span class="stat-label mb-2">Code Breakdown</span>
+        <div class="flex items-stretch rounded-lg overflow-hidden border border-brand-200 w-fit text-center">
+          <div class="bg-brand-700 text-white px-4 py-2"><p class="ifsc-mono text-sm font-bold tracking-widest">HDFC</p><p class="text-[9px] text-brand-200 mt-0.5">Bank</p></div>
+          <div class="bg-brand-100 text-brand-500 px-2.5 py-2 border-x border-brand-200"><p class="ifsc-mono text-sm font-bold">0</p><p class="text-[9px] text-brand-400 mt-0.5">RBI</p></div>
+          <div class="bg-brand-50 text-brand-800 px-4 py-2"><p class="ifsc-mono text-sm font-bold tracking-widest">00181</p><p class="text-[9px] text-brand-500 mt-0.5">Branch</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Branch details grid (compact table) + Bank card -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+      <!-- Branch details — compact grid of cells -->
+      <div class="card lg:col-span-2">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h1v11M19 10h1v11M9 10h1v11M14 10h1v11"/></svg>
+          <h2 class="font-bold text-sm text-gray-900">Branch Details</h2>
+        </div>
+        <div class="grid grid-cols-2 divide-x divide-y divide-gray-100">
+          <div class="stat-cell"><span class="stat-label">🏢 Branch</span><span class="stat-value">Govandi East</span></div>
+          <div class="stat-cell"><span class="stat-label">🌆 City</span><span class="stat-value">Mumbai</span></div>
+          <div class="stat-cell col-span-2"><span class="stat-label">📍 Address</span><span class="stat-value block">Shop No 4 5 6 HDFC Bank Building Milind Nagar Govandi</span></div>
+          <div class="stat-cell"><span class="stat-label">📌 District</span><span class="stat-value">Mumbai Suburban</span></div>
+          <div class="stat-cell"><span class="stat-label">🗺️ State</span><span class="stat-value">Maharashtra</span></div>
+          <div class="stat-cell"><span class="stat-label">📮 Pincode</span><span class="stat-value ifsc-mono">400088</span></div>
+          <div class="stat-cell"><span class="stat-label">🏦 Bank Type</span><span class="stat-value">Private Sector</span></div>
+          <div class="stat-cell"><span class="stat-label">📞 Phone</span><span class="stat-value">+91 9840673333</span></div>
+          <div class="stat-cell"><span class="stat-label">🔗 SWIFT Code</span><span class="stat-value ifsc-mono">HDFCINBB</span></div>
+        </div>
+      </div>
+
+      <!-- Bank identity card -->
+      <div class="card p-5 flex flex-col items-center text-center">
+        <div class="w-16 h-16 bg-brand-50 rounded-2xl flex items-center justify-center mb-3 border border-brand-100">
+          <svg class="w-8 h-8 text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h1v11M19 10h1v11M9 10h1v11M14 10h1v11"/></svg>
+        </div>
+        <h3 class="font-bold text-sm text-brand-900">HDFC Bank</h3>
+        <span class="text-xs text-brand-500 bg-brand-50 px-2.5 py-0.5 rounded-full mt-1 border border-brand-200 font-medium">Private Sector Bank</span>
+        <div class="w-full mt-3 space-y-1.5">
+          <a href="#" class="flex items-center justify-center gap-1.5 text-xs text-brand-600 font-medium bg-brand-50 border border-brand-100 rounded-lg px-3 py-2 hover:bg-brand-100 transition-all w-full">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Official Website
+          </a>
+          <a href="#" class="flex items-center justify-center gap-1.5 text-xs text-brand-600 font-medium bg-brand-50 border border-brand-100 rounded-lg px-3 py-2 hover:bg-brand-100 transition-all w-full">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            View on Maps
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Charges table (compact) + IFSC vs MICR vs SWIFT (compact) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+      <!-- Charges -->
+      <div class="card overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h2 class="font-bold text-sm text-gray-900">Transaction Charges</h2></div>
+        <table class="w-full text-xs">
+          <thead><tr class="bg-brand-50 border-b border-gray-100">
+            <th class="text-left px-4 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">Amount</th>
+            <th class="text-left px-3 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">NEFT</th>
+            <th class="text-left px-3 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">RTGS</th>
+            <th class="text-left px-3 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">IMPS</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-medium text-gray-900">Up to ₹10k</td><td class="px-3 py-2.5 text-gray-600">₹2.50</td><td class="px-3 py-2.5 text-gray-400 text-[10px]">Min ₹2L</td><td class="px-3 py-2.5 text-gray-600">₹2.00</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-medium text-gray-900">₹10k–₹1L</td><td class="px-3 py-2.5 text-gray-600">₹5.00</td><td class="px-3 py-2.5 text-gray-400 text-[10px]">Min ₹2L</td><td class="px-3 py-2.5 text-gray-600">₹5.00</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-medium text-gray-900">₹1L–₹2L</td><td class="px-3 py-2.5 text-gray-600">₹15.00</td><td class="px-3 py-2.5 text-gray-400 text-[10px]">Min ₹2L</td><td class="px-3 py-2.5 text-gray-600">₹12.00</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-medium text-gray-900">₹2L–₹5L</td><td class="px-3 py-2.5 text-gray-600">₹25.00</td><td class="px-3 py-2.5 text-gray-600">₹25.00</td><td class="px-3 py-2.5 text-gray-600">₹15.00</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-medium text-gray-900">Above ₹5L</td><td class="px-3 py-2.5 text-gray-600">₹25.00</td><td class="px-3 py-2.5 text-gray-600">₹49.50</td><td class="px-3 py-2.5 text-gray-600">₹20.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- IFSC vs MICR vs SWIFT -->
+      <div class="card overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100"><h2 class="font-bold text-sm text-gray-900">IFSC vs MICR vs SWIFT</h2></div>
+        <table class="w-full text-xs">
+          <thead><tr class="bg-brand-50 border-b border-gray-100">
+            <th class="text-left px-4 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">Feature</th>
+            <th class="text-left px-3 py-2.5 text-[10px] font-bold text-brand-500 uppercase tracking-wide">IFSC</th>
+            <th class="text-left px-3 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">MICR</th>
+            <th class="text-left px-3 py-2.5 text-[10px] font-bold text-gray-500 uppercase tracking-wide">SWIFT</th>
+          </tr></thead>
+          <tbody class="divide-y divide-gray-50 text-gray-600">
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-semibold text-gray-900">Length</td><td class="px-3 py-2.5 text-brand-700 font-medium">11 chars</td><td class="px-3 py-2.5">9 digits</td><td class="px-3 py-2.5">8–11 chars</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-semibold text-gray-900">Purpose</td><td class="px-3 py-2.5 text-brand-700 font-medium">Domestic</td><td class="px-3 py-2.5">Cheques</td><td class="px-3 py-2.5">Intl wires</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-semibold text-gray-900">Used in</td><td class="px-3 py-2.5 text-brand-700 font-medium">NEFT/RTGS</td><td class="px-3 py-2.5">ECS</td><td class="px-3 py-2.5">FOREX</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-semibold text-gray-900">Assigned</td><td class="px-3 py-2.5 text-brand-700 font-medium">By RBI</td><td class="px-3 py-2.5">By RBI</td><td class="px-3 py-2.5">By SWIFT</td></tr>
+            <tr class="hover:bg-gray-50"><td class="px-4 py-2.5 font-semibold text-gray-900">Format</td><td class="px-3 py-2.5 text-brand-700 font-medium ifsc-mono">BANK0BR</td><td class="px-3 py-2.5 ifsc-mono">CCCBBB</td><td class="px-3 py-2.5 ifsc-mono">BNKCCL</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Row 4: How to Use — 3 method cards (compact) -->
+    <div class="card p-5">
+      <h2 class="font-bold text-sm text-gray-900 mb-4">How to Use HDFC0000181 for Transfers</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+        <!-- NEFT -->
+        <div class="rounded-xl border-2 border-brand-100 bg-gradient-to-br from-brand-50 to-brand-100 p-4 relative overflow-hidden">
+          <div class="absolute top-2 right-2 text-2xl opacity-15">💸</div>
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-7 h-7 bg-brand-500 rounded-lg flex items-center justify-center shadow-sm"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/></svg></div>
+            <h3 class="font-bold text-brand-900 text-sm">NEFT</h3>
+          </div>
+          <div class="space-y-1.5 text-xs text-gray-700">
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Timing:</strong> 24×7</span></div>
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Limit:</strong> No min/max</span></div>
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Fee:</strong> ₹0–25</span></div>
+          </div>
+        </div>
+        <!-- RTGS -->
+        <div class="rounded-xl border-2 border-violet-100 bg-gradient-to-br from-violet-50 to-purple-50 p-4 relative overflow-hidden">
+          <div class="absolute top-2 right-2 text-2xl opacity-15">⚡</div>
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-7 h-7 bg-violet-500 rounded-lg flex items-center justify-center shadow-sm"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+            <h3 class="font-bold text-violet-900 text-sm">RTGS</h3>
+          </div>
+          <div class="space-y-1.5 text-xs text-gray-700">
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Timing:</strong> Instant</span></div>
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Limit:</strong> Min ₹2L</span></div>
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Fee:</strong> ₹25–55</span></div>
+          </div>
+        </div>
+        <!-- IMPS -->
+        <div class="rounded-xl border-2 border-rose-100 bg-gradient-to-br from-rose-50 to-pink-50 p-4 relative overflow-hidden">
+          <div class="absolute top-2 right-2 text-2xl opacity-15">🚀</div>
+          <div class="flex items-center gap-2 mb-2">
+            <div class="w-7 h-7 bg-rose-500 rounded-lg flex items-center justify-center shadow-sm"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <h3 class="font-bold text-rose-900 text-sm">IMPS</h3>
+          </div>
+          <div class="space-y-1.5 text-xs text-gray-700">
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Timing:</strong> Instant</span></div>
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Limit:</strong> Max ₹5L</span></div>
+            <div class="flex items-center gap-1.5"><span class="text-emerald-500">✓</span><span><strong>Fee:</strong> ₹0–15</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Steps — horizontal compact -->
+      <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+        <p class="text-xs font-bold text-gray-700 mb-3">📋 Step-by-step transfer guide</p>
+        <div class="flex flex-wrap gap-2">
+          <div class="flex items-center gap-2"><div class="w-5 h-5 bg-brand-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">1</div><span class="text-xs text-gray-600">Log in to banking app</span></div>
+          <span class="text-gray-300">›</span>
+          <div class="flex items-center gap-2"><div class="w-5 h-5 bg-violet-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">2</div><span class="text-xs text-gray-600">Add Beneficiary</span></div>
+          <span class="text-gray-300">›</span>
+          <div class="flex items-center gap-2"><div class="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">3</div><span class="text-xs text-gray-600">Enter <span class="ifsc-mono font-bold text-brand-700">HDFC0000181</span></span></div>
+          <span class="text-gray-300">›</span>
+          <div class="flex items-center gap-2"><div class="w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">4</div><span class="text-xs text-gray-600">Activate beneficiary</span></div>
+          <span class="text-gray-300">›</span>
+          <div class="flex items-center gap-2"><div class="w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">5</div><span class="text-xs text-gray-600">Transfer & confirm OTP</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 5: Nearby Branches (compact grid) + FAQ (compact) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+      <!-- Nearby Branches -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-bold text-sm text-gray-900">Other HDFC Branches in Mumbai</h2>
+          <a href="#" class="text-xs text-brand-600 font-medium">View all ›</a>
+        </div>
+        <div class="space-y-2">
+          <a href="#" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-brand-200 hover:bg-brand-50 transition-all">
+            <div><p class="text-xs font-semibold text-gray-900">Chembur Branch</p><p class="ifsc-mono text-[11px] text-brand-600 font-bold mt-0.5">HDFC0000065</p></div>
+            <span class="text-gray-300 text-sm">›</span>
+          </a>
+          <a href="#" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-brand-200 hover:bg-brand-50 transition-all">
+            <div><p class="text-xs font-semibold text-gray-900">Kurla Branch</p><p class="ifsc-mono text-[11px] text-brand-600 font-bold mt-0.5">HDFC0000182</p></div>
+            <span class="text-gray-300 text-sm">›</span>
+          </a>
+          <a href="#" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-brand-200 hover:bg-brand-50 transition-all">
+            <div><p class="text-xs font-semibold text-gray-900">Mankhurd Branch</p><p class="ifsc-mono text-[11px] text-brand-600 font-bold mt-0.5">HDFC0000299</p></div>
+            <span class="text-gray-300 text-sm">›</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- FAQ (compact) -->
+      <div class="card p-5">
+        <h2 class="font-bold text-sm text-gray-900 mb-3">Frequently Asked Questions</h2>
+        <div class="divide-y divide-gray-100">
+          <div class="py-2.5 flex items-center justify-between gap-2 cursor-pointer group"><span class="text-xs font-medium text-gray-700 group-hover:text-brand-700 transition-colors">What is the IFSC of HDFC Bank Govandi East?</span><span class="text-gray-400 flex-shrink-0">›</span></div>
+          <div class="py-2.5 flex items-center justify-between gap-2 cursor-pointer group"><span class="text-xs font-medium text-gray-700 group-hover:text-brand-700 transition-colors">What is the MICR code of HDFC Bank Govandi East?</span><span class="text-gray-400 flex-shrink-0">›</span></div>
+          <div class="py-2.5 flex items-center justify-between gap-2 cursor-pointer group"><span class="text-xs font-medium text-gray-700 group-hover:text-brand-700 transition-colors">Does HDFC0000181 support RTGS transfers?</span><span class="text-gray-400 flex-shrink-0">›</span></div>
+          <div class="py-2.5 flex items-center justify-between gap-2 cursor-pointer group"><span class="text-xs font-medium text-gray-700 group-hover:text-brand-700 transition-colors">What is the full address of Govandi East branch?</span><span class="text-gray-400 flex-shrink-0">›</span></div>
+          <div class="py-2.5 flex items-center justify-between gap-2 cursor-pointer group"><span class="text-xs font-medium text-gray-700 group-hover:text-brand-700 transition-colors">What does HDFC0000181 stand for?</span><span class="text-gray-400 flex-shrink-0">›</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disclaimer (compact) -->
+    <div class="card px-5 py-3.5 bg-gray-50">
+      <div class="flex items-start gap-2.5">
+        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <p class="text-xs text-gray-400">Data sourced from RBI via Razorpay. Always verify codes with your bank before any transaction. <a href="#" class="text-brand-500 hover:underline">Verify at HDFC official website ↗</a></p>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
