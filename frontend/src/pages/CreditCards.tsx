@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal, X, Star, CreditCard, TrendingUp, Building2, Award, GitCompareArrows, CheckCircle } from "lucide-react";
+import { Search, SlidersHorizontal, X, CreditCard, TrendingUp, Building2, Award, GitCompareArrows, CheckCircle } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { apiClient  } from "../utils/api";
 
-/* ─── Types ─── */
+/* â”€â”€â”€ Types â”€â”€â”€ */
 interface CardItem {
   id: number;
   name: string;
@@ -21,6 +21,7 @@ interface CardItem {
   annualFee: number;
   joiningFee: number;
   rewardType: string | null;
+  updatedAt: string | null;
   offer: { title: string; rewardRate: number | null; rewardCap: number | null; category: string | null } | null;
   features: string[];
 }
@@ -39,7 +40,7 @@ interface FilterOption {
   cardCount: number;
 }
 
-/* ─── Constants ─── */
+/* â”€â”€â”€ Constants â”€â”€â”€ */
 const NETWORK_COLORS: Record<string, string> = {
   Visa: "bg-brand-100 text-brand-700 border-brand-200",
   Mastercard: "bg-orange-100 text-orange-700 border-orange-200",
@@ -65,7 +66,7 @@ const CARD_GRADIENTS: Record<string, string> = {
 
 function formatINR(amount: number): string {
   if (amount === 0) return "FREE";
-  return "\u20B9" + amount.toLocaleString("en-IN");
+  return "₹" + amount.toLocaleString("en-IN");
 }
 
 function formatNumber(n: number): string {
@@ -73,7 +74,7 @@ function formatNumber(n: number): string {
   return String(n);
 }
 
-/* ─── Main Page ─── */
+/* â”€â”€â”€ Main Page â”€â”€â”€ */
 const CreditCards: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<CardItem[]>([]);
@@ -85,12 +86,12 @@ const CreditCards: React.FC = () => {
   // Compare selection
   const [compareIds, setCompareIds] = useState<number[]>([]);
 
-  // Filters — seed category from URL ?category=
+  // Filters â€” seed category from URL ?category=
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [bank, setBank] = useState("");
   const [feeMax, setFeeMax] = useState("");
-  const [sortBy, setSortBy] = useState("rating");
+  const [sortBy, setSortBy] = useState("newest");
   const [showFilters, setShowFilters] = useState(!!searchParams.get("category"));
 
   // Sync category from URL when navigating between submenu links
@@ -148,7 +149,7 @@ const CreditCards: React.FC = () => {
     );
   };
 
-  // Client-side category filter (offer.category) — case-insensitive
+  // Client-side category filter (offer.category) â€” case-insensitive
   const filteredCards = category
     ? cards.filter((c) => c.offer?.category?.toLowerCase() === category.toLowerCase())
     : cards;
@@ -156,7 +157,7 @@ const CreditCards: React.FC = () => {
   const activeFilters = [
     category && { label: category, clear: () => setCategory("") },
     bank && { label: bank, clear: () => setBank("") },
-    feeMax && { label: `Fee \u2264 \u20B9${feeMax}`, clear: () => setFeeMax("") },
+    feeMax && { label: `Fee \u2264 ₹${feeMax}`, clear: () => setFeeMax("") },
   ].filter(Boolean) as { label: string; clear: () => void }[];
 
   return (
@@ -166,7 +167,7 @@ const CreditCards: React.FC = () => {
         <meta name="description" content="Compare the best credit cards in India. Find cashback, travel, rewards, and premium cards from HDFC, SBI, ICICI, Axis, and more." />
       </Helmet>
 
-      {/* ─── Hero ─── */}
+      {/* â”€â”€â”€ Hero â”€â”€â”€ */}
       <div className="bg-brand-700 relative overflow-hidden">
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='1'%3E%3Cpath d='M0 0h1v40H0zm39 0h1v40h-1zM0 0h40v1H0zm0 39h40v1H0z'/%3E%3C/g%3E%3C/svg%3E\")" }} />
@@ -195,7 +196,6 @@ const CreditCards: React.FC = () => {
             <div className="flex flex-wrap gap-6 mt-8">
               <StatPill icon={<CreditCard size={14} />} label="Cards" value={String(stats.totalCards)} />
               <StatPill icon={<Building2 size={14} />} label="Banks" value={String(stats.totalBanks)} />
-              <StatPill icon={<Star size={14} className="fill-gold-400 text-gold-400" />} label="Avg Rating" value={String(stats.avgRating)} />
               <StatPill icon={<Award size={14} />} label="Free Cards" value={String(stats.freeCards)} />
             </div>
           )}
@@ -203,7 +203,7 @@ const CreditCards: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* ─── Filter Bar ─── */}
+        {/* â”€â”€â”€ Filter Bar â”€â”€â”€ */}
         <div className="flex flex-wrap items-center gap-3 mb-6">
           <button
             className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg transition ${
@@ -225,7 +225,6 @@ const CreditCards: React.FC = () => {
             onChange={(e) => setSortBy(e.target.value)}
             className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:border-brand-400 text-gray-700"
           >
-            <option value="rating">Sort: Top Rated</option>
             <option value="annualFee">Sort: Lowest Fee</option>
             <option value="newest">Sort: Newest</option>
           </select>
@@ -242,7 +241,7 @@ const CreditCards: React.FC = () => {
           ))}
         </div>
 
-        {/* ─── Filter Panel ─── */}
+        {/* â”€â”€â”€ Filter Panel â”€â”€â”€ */}
         {showFilters && (
           <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-5 shadow-sm">
             <div>
@@ -279,17 +278,17 @@ const CreditCards: React.FC = () => {
                 className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:border-brand-400"
               >
                 <option value="">Any Fee</option>
-                <option value="0">Free (\u20B90)</option>
-                <option value="500">Up to \u20B9500</option>
-                <option value="1500">Up to \u20B91,500</option>
-                <option value="5000">Up to \u20B95,000</option>
-                <option value="10000">Up to \u20B910,000</option>
+                <option value="0">Free (₹0)</option>
+                <option value="500">Up to ₹500</option>
+                <option value="1500">Up to ₹1,500</option>
+                <option value="5000">Up to ₹5,000</option>
+                <option value="10000">Up to ₹10,000</option>
               </select>
             </div>
           </div>
         )}
 
-        {/* ─── Loading Skeleton ─── */}
+        {/* â”€â”€â”€ Loading Skeleton â”€â”€â”€ */}
         {loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -303,7 +302,7 @@ const CreditCards: React.FC = () => {
           </div>
         )}
 
-        {/* ─── Empty State ─── */}
+        {/* â”€â”€â”€ Empty State â”€â”€â”€ */}
         {!loading && filteredCards.length === 0 && (
           <div className="text-center py-16">
             <Search className="w-12 h-12 mx-auto mb-4 text-gray-200" />
@@ -312,7 +311,7 @@ const CreditCards: React.FC = () => {
           </div>
         )}
 
-        {/* ─── Card Grid ─── */}
+        {/* â”€â”€â”€ Card Grid â”€â”€â”€ */}
         {!loading && filteredCards.length > 0 && (
           <>
             <p className="text-sm text-gray-500 mb-4">{filteredCards.length} cards found</p>
@@ -362,21 +361,15 @@ const CreditCards: React.FC = () => {
                         )}
                       </div>
 
-                      {/* Star rating */}
-                      {card.rating != null && card.rating > 0 && (
-                        <div className="flex items-center gap-2 mt-2">
-                          <StarRating rating={card.rating} size={11} />
-                          <span className="text-xs text-gray-500">
-                            {card.rating} ({formatNumber(card.totalRatings)})
-                          </span>
-                        </div>
-                      )}
-
                       {/* Fee + Reward row */}
-                      <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-gray-100">
+                      <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-gray-100">
                         <div>
                           <span className="text-[10px] text-gray-400 block uppercase tracking-wider">Annual Fee</span>
                           <span className="text-xs font-semibold text-brand-900">{formatINR(card.annualFee)}</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-gray-400 block uppercase tracking-wider">Joining Fee</span>
+                          <span className="text-xs font-semibold text-brand-900">{formatINR(card.joiningFee)}</span>
                         </div>
                         <div>
                           <span className="text-[10px] text-gray-400 block uppercase tracking-wider">Rewards</span>
@@ -393,13 +386,20 @@ const CreditCards: React.FC = () => {
                         </div>
                       )}
 
-                      {/* Badges */}
-                      <div className="mt-3 flex items-center gap-1">
-                        {card.isPopular && (
-                          <span className="text-[10px] bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 font-medium">Popular</span>
-                        )}
-                        {card.isFeatured && (
-                          <span className="text-[10px] bg-gold-400/20 text-gold-600 rounded-full px-2 py-0.5 font-medium">Featured</span>
+                      {/* Badges + Last verified */}
+                      <div className="mt-3 flex items-center justify-between gap-1">
+                        <div className="flex items-center gap-1">
+                          {card.isPopular && (
+                            <span className="text-[10px] bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 font-medium">Popular</span>
+                          )}
+                          {card.isFeatured && (
+                            <span className="text-[10px] bg-gold-400/20 text-gold-600 rounded-full px-2 py-0.5 font-medium">Featured</span>
+                          )}
+                        </div>
+                        {card.updatedAt && (
+                          <span className="text-[10px] text-gray-400 shrink-0">
+                            Verified {new Date(card.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                          </span>
                         )}
                       </div>
                     </Link>
@@ -443,7 +443,7 @@ const CreditCards: React.FC = () => {
           </>
         )}
 
-        {/* ─── Guide Section ─── */}
+        {/* â”€â”€â”€ Guide Section â”€â”€â”€ */}
         <div className="mt-16 bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-8 border border-brand-100">
           <h2 className="text-2xl font-bold text-brand-900 mb-5 font-display">
             How to Choose the Right Credit Card?
@@ -465,7 +465,7 @@ const CreditCards: React.FC = () => {
         </div>
       </div>
 
-      {/* ─── Floating Compare Bar ─── */}
+      {/* â”€â”€â”€ Floating Compare Bar â”€â”€â”€ */}
       {compareIds.length > 0 && (
         <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-200 shadow-2xl shadow-black/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
@@ -480,7 +480,7 @@ const CreditCards: React.FC = () => {
                   const c = cards.find((x) => x.id === id);
                   return c ? (
                     <span key={id} className="flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2 py-1 rounded-full border border-brand-200">
-                      {c.name.length > 20 ? c.name.slice(0, 20) + "…" : c.name}
+                      {c.name.length > 20 ? c.name.slice(0, 20) + "â€¦" : c.name}
                       <button onClick={() => toggleCompare(id)} className="hover:text-red-500 ml-0.5">
                         <X size={11} />
                       </button>
@@ -516,7 +516,7 @@ const CreditCards: React.FC = () => {
   );
 };
 
-/* ─── Stat Pill (hero) ─── */
+/* â”€â”€â”€ Stat Pill (hero) â”€â”€â”€ */
 function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-2 bg-white/10 backdrop-blur rounded-lg px-3.5 py-2 border border-white/10">
@@ -529,7 +529,7 @@ function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string
   );
 }
 
-/* ─── Card Placeholder Visual ─── */
+/* â”€â”€â”€ Card Placeholder Visual â”€â”€â”€ */
 function CardPlaceholder({
   bank,
   name,
@@ -571,25 +571,6 @@ function CardPlaceholder({
   );
 }
 
-/* ─── Star Rating ─── */
-function StarRating({ rating, size = 11 }: { rating: number; size?: number }) {
-  const fullStars = Math.floor(rating);
-  const hasHalf = rating % 1 >= 0.3;
-  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
-
-  return (
-    <div className="flex items-center gap-px">
-      {Array.from({ length: fullStars }).map((_, i) => (
-        <Star key={`f${i}`} size={size} className="text-gold-500 fill-gold-500" />
-      ))}
-      {hasHalf && (
-        <Star size={size} className="text-gold-500 fill-gold-500 opacity-50" />
-      )}
-      {Array.from({ length: emptyStars }).map((_, i) => (
-        <Star key={`e${i}`} size={size} className="text-gray-200 fill-gray-200" />
-      ))}
-    </div>
-  );
-}
 
 export default CreditCards;
+

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { ArrowLeft, Plus, X, Upload } from "lucide-react";
+import { ArrowLeft, Bold, Italic, List, ListOrdered, Heading2, Plus, X, Upload } from "lucide-react";
 import AdminLayout from "../layout/AdminLayout";
 import { adminApi } from "../utils/adminApi";
 
@@ -61,7 +61,21 @@ export default function AddEditCardPage() {
   const [joiningFee, setJoiningFee] = useState("");
   const [minIncome, setMinIncome] = useState("");
   const [loungeAccess, setLoungeAccess] = useState("");
+  const [loungeAccessNote, setLoungeAccessNote] = useState("");
   const [rewardType, setRewardType] = useState("");
+  const [annualFeeWaiver, setAnnualFeeWaiver] = useState("");
+  const [joiningFeeWaiver, setJoiningFeeWaiver] = useState("");
+  const [forexMarkup, setForexMarkup] = useState("");
+  const [apr, setApr] = useState("");
+  const [atmCashFee, setAtmCashFee] = useState("");
+  const [latePaymentFee, setLatePaymentFee] = useState("");
+  const [railwaySurcharge, setRailwaySurcharge] = useState("");
+  const [rentPaymentFee, setRentPaymentFee] = useState("");
+  const [rewardRedemptionFee, setRewardRedemptionFee] = useState("");
+
+  // Card info
+  const [aboutCard, setAboutCard] = useState("");
+  const [bestFor, setBestFor] = useState<string[]>([]);
 
   // New Product fields
   const [cardImageUrl, setCardImageUrl] = useState("");
@@ -126,8 +140,20 @@ export default function AddEditCardPage() {
           setJoiningFee(c.details.joiningFee != null ? String(c.details.joiningFee) : "");
           setMinIncome(c.details.minIncome != null ? String(c.details.minIncome) : "");
           setLoungeAccess(c.details.loungeAccess != null ? String(c.details.loungeAccess) : "");
+          setLoungeAccessNote(c.details.loungeAccessNote || "");
           setRewardType(c.details.rewardType || "");
+          setAnnualFeeWaiver(c.details.annualFeeWaiver || "");
+          setJoiningFeeWaiver(c.details.joiningFeeWaiver || "");
+          setForexMarkup(c.details.forexMarkup != null ? String(c.details.forexMarkup) : "");
+          setApr(c.details.apr || "");
+          setAtmCashFee(c.details.atmCashFee || "");
+          setLatePaymentFee(c.details.latePaymentFee || "");
+          setRailwaySurcharge(c.details.railwaySurcharge || "");
+          setRentPaymentFee(c.details.rentPaymentFee || "");
+          setRewardRedemptionFee(c.details.rewardRedemptionFee || "");
         }
+        setAboutCard(c.aboutCard || "");
+        setBestFor(c.bestFor ? c.bestFor.split(",").map((s: string) => s.trim()).filter(Boolean) : []);
         if (c.features) {
           setSelectedFeatures(c.features.map((f: any) => f.id));
         }
@@ -189,12 +215,24 @@ export default function AddEditCardPage() {
         isPopular,
         rating: rating ? Number(rating) : null,
         totalRatings: totalRatings ? Number(totalRatings) : 0,
+        aboutCard: aboutCard || null,
+        bestFor: bestFor.length ? bestFor.join(",") : null,
         details: {
           annualFee: annualFee ? Number(annualFee) : null,
           joiningFee: joiningFee ? Number(joiningFee) : null,
           minIncome: minIncome ? Number(minIncome) : null,
           loungeAccess: loungeAccess ? Number(loungeAccess) : null,
+          loungeAccessNote: loungeAccessNote || null,
           rewardType: rewardType || null,
+          annualFeeWaiver: annualFeeWaiver || null,
+          joiningFeeWaiver: joiningFeeWaiver || null,
+          forexMarkup: forexMarkup ? Number(forexMarkup) : null,
+          apr: apr || null,
+          atmCashFee: atmCashFee || null,
+          latePaymentFee: latePaymentFee || null,
+          railwaySurcharge: railwaySurcharge || null,
+          rentPaymentFee: rentPaymentFee || null,
+          rewardRedemptionFee: rewardRedemptionFee || null,
         },
         featureIds: selectedFeatures,
         offers: isEditMode
@@ -375,24 +413,28 @@ export default function AddEditCardPage() {
           )}
           {activeTab === "details" && !loadingCard && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <FormField label="Annual Fee (₹)">
+              <div>
+                <FormField label="Annual Fee (₹) + GST">
+                  <input type="number" value={annualFee} onChange={(e) => setAnnualFee(e.target.value)} placeholder="2500" className="form-input" />
+                </FormField>
                 <input
-                  type="number"
-                  value={annualFee}
-                  onChange={(e) => setAnnualFee(e.target.value)}
-                  placeholder="999"
-                  className="form-input"
+                  value={annualFeeWaiver}
+                  onChange={(e) => setAnnualFeeWaiver(e.target.value)}
+                  placeholder="Waiver condition e.g. Waived on ₹4 lakh annual spend"
+                  className="form-input mt-1.5 text-xs"
                 />
-              </FormField>
-              <FormField label="Joining Fee (₹)">
+              </div>
+              <div>
+                <FormField label="Joining Fee (₹) + GST">
+                  <input type="number" value={joiningFee} onChange={(e) => setJoiningFee(e.target.value)} placeholder="2500" className="form-input" />
+                </FormField>
                 <input
-                  type="number"
-                  value={joiningFee}
-                  onChange={(e) => setJoiningFee(e.target.value)}
-                  placeholder="499"
-                  className="form-input"
+                  value={joiningFeeWaiver}
+                  onChange={(e) => setJoiningFeeWaiver(e.target.value)}
+                  placeholder="Waiver condition e.g. Waived on completing first transaction"
+                  className="form-input mt-1.5 text-xs"
                 />
-              </FormField>
+              </div>
               <FormField label="Minimum Income (₹)">
                 <input
                   type="number"
@@ -402,12 +444,20 @@ export default function AddEditCardPage() {
                   className="form-input"
                 />
               </FormField>
-              <FormField label="Lounge Access (visits/year)">
+              <FormField label="Lounge Access (visits/year — leave blank if unlimited)">
                 <input
                   type="number"
                   value={loungeAccess}
                   onChange={(e) => setLoungeAccess(e.target.value)}
-                  placeholder="8"
+                  placeholder="e.g. 8 — or blank for unlimited"
+                  className="form-input"
+                />
+              </FormField>
+              <FormField label="Lounge Access Details">
+                <input
+                  value={loungeAccessNote}
+                  onChange={(e) => setLoungeAccessNote(e.target.value)}
+                  placeholder="e.g. Unlimited access to 1300+ lounges in India &amp; abroad"
                   className="form-input"
                 />
               </FormField>
@@ -429,6 +479,58 @@ export default function AddEditCardPage() {
                   <option value="miles">Air Miles</option>
                 </select>
               </FormField>
+
+              {/* ── Fee Structure ── */}
+              <div className="md:col-span-2 border-t border-gray-200 pt-4 mt-1">
+                <p className="text-sm font-semibold text-gray-700 mb-3">Fee Structure</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <FormField label="Forex Markup (%)">
+                    <input type="number" step="0.01" value={forexMarkup} onChange={(e) => setForexMarkup(e.target.value)} placeholder="e.g. 2.0" className="form-input" />
+                  </FormField>
+                  <FormField label="APR / Finance Charge">
+                    <input value={apr} onChange={(e) => setApr(e.target.value)} placeholder="e.g. 1.99% per month" className="form-input" />
+                  </FormField>
+                  <FormField label="ATM Cash Withdrawal Fee">
+                    <input value={atmCashFee} onChange={(e) => setAtmCashFee(e.target.value)} placeholder="e.g. 2.5% or ₹500 whichever higher" className="form-input" />
+                  </FormField>
+                  <div className="md:col-span-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-sm font-medium text-gray-700">Late Payment Fee</label>
+                      <button
+                        type="button"
+                        onClick={() => setLatePaymentFee(JSON.stringify([
+                          {"from":0,"to":100,"label":"₹0 – ₹100","fee":0},
+                          {"from":101,"to":500,"label":"₹101 – ₹500","fee":100},
+                          {"from":501,"to":1000,"label":"₹501 – ₹1,000","fee":500},
+                          {"from":1001,"to":5000,"label":"₹1,001 – ₹5,000","fee":600},
+                          {"from":5001,"to":10000,"label":"₹5,001 – ₹10,000","fee":750},
+                          {"from":10001,"to":25000,"label":"₹10,001 – ₹25,000","fee":900},
+                          {"from":25001,"to":50000,"label":"₹25,001 – ₹50,000","fee":1100},
+                          {"from":50001,"to":null,"label":"₹50,000 and above","fee":1300}
+                        ]))}
+                        className="text-xs text-blue-600 hover:underline font-medium"
+                      >Load standard slabs template</button>
+                    </div>
+                    <textarea
+                      value={latePaymentFee}
+                      onChange={(e) => setLatePaymentFee(e.target.value)}
+                      rows={4}
+                      placeholder={'Plain text OR JSON array: [{"label":"₹0-₹100","fee":0},{"label":"₹101-₹500","fee":100},...]'}
+                      className="form-input w-full font-mono text-xs"
+                    />
+                  </div>
+                  <FormField label="Railway Surcharge">
+                    <input value={railwaySurcharge} onChange={(e) => setRailwaySurcharge(e.target.value)} placeholder="e.g. 1% + GST" className="form-input" />
+                  </FormField>
+                  <FormField label="Rent Payment Fee">
+                    <input value={rentPaymentFee} onChange={(e) => setRentPaymentFee(e.target.value)} placeholder="e.g. 1% + GST" className="form-input" />
+                  </FormField>
+                  <FormField label="Reward Redemption Fee">
+                    <input value={rewardRedemptionFee} onChange={(e) => setRewardRedemptionFee(e.target.value)} placeholder="e.g. N/A or ₹99 per redemption" className="form-input" />
+                  </FormField>
+                </div>
+              </div>
+
               <FormField label="Card Image URL">
                 <input
                   value={cardImageUrl}
@@ -468,23 +570,40 @@ export default function AddEditCardPage() {
               </FormField>
               <div className="md:col-span-2 flex gap-6">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isFeatured}
-                    onChange={(e) => setIsFeatured(e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
+                  <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} className="rounded border-gray-300 text-blue-600" />
                   <span className="text-sm font-medium text-gray-700">Featured</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isPopular}
-                    onChange={(e) => setIsPopular(e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
+                  <input type="checkbox" checked={isPopular} onChange={(e) => setIsPopular(e.target.checked)} className="rounded border-gray-300 text-blue-600" />
                   <span className="text-sm font-medium text-gray-700">Popular</span>
                 </label>
+              </div>
+
+              {/* Best For */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Best For <span className="text-gray-400 font-normal text-xs">(select all that apply)</span></label>
+                <div className="flex flex-wrap gap-2">
+                  {['Shopping','Online Food Ordering','Dining','Travel','Fuel','Entertainment','Lounge Access','International Spending','Cashback','Rewards/Points','Lifestyle','Premium','Golf'].map(tag => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => setBestFor(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])}
+                      className={`px-3 py-1 text-xs rounded-full border font-medium transition ${bestFor.includes(tag) ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400'}`}
+                    >{tag}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* About Card */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">About This Card</label>
+                <textarea
+                  value={aboutCard}
+                  onChange={(e) => setAboutCard(e.target.value)}
+                  rows={4}
+                  placeholder="Describe the card's value proposition, who it's best for, key benefits summary..."
+                  className="form-input w-full"
+                />
               </div>
             </div>
           )}
@@ -518,6 +637,14 @@ export default function AddEditCardPage() {
           {/* ─── Offers tab ─── */}
           {activeTab === "offers" && (
             <div className="flex flex-col gap-4">
+              {/* Guidance */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-xs text-blue-800 space-y-1">
+                <p className="font-semibold">How to structure benefits (one offer per benefit sub-section):</p>
+                <p>• <strong>Category</strong> = main section: <code>Welcome</code>, <code>Travel</code>, <code>Lounge</code>, <code>Dining</code>, <code>Shopping</code>, <code>Fuel</code>, <code>Entertainment</code>, <code>Insurance</code>, <code>Milestone</code>, <code>Rewards</code></p>
+                <p>• <strong>Title</strong> = sub-benefit name: "Flight Benefits", "Airport Lounge Access", "Railway Lounge", "Dining Cashback"</p>
+                <p>• <strong>Description</strong> = full details with bullets. Use the toolbar for formatting.</p>
+                <p>• <strong>Reward Rate / Cap</strong> = fill if it's a cashback/points offer (e.g. 5% / ₹1000)</p>
+              </div>
               {isEditMode ? (
                 <div className="text-center py-8">
                   <p className="text-gray-500 mb-3">Offers are managed from the card detail page.</p>
@@ -557,12 +684,25 @@ export default function AddEditCardPage() {
                           onChange={(e) => updateOffer(idx, "title", e.target.value)}
                           className="form-input"
                         />
-                        <input
-                          placeholder="Category"
+                        <select
                           value={offer.category}
                           onChange={(e) => updateOffer(idx, "category", e.target.value)}
                           className="form-input"
-                        />
+                        >
+                          <option value="">Select Category</option>
+                          <option value="Welcome">Welcome</option>
+                          <option value="Travel">Travel</option>
+                          <option value="Lounge">Lounge</option>
+                          <option value="Dining">Dining</option>
+                          <option value="Shopping">Shopping</option>
+                          <option value="Fuel">Fuel</option>
+                          <option value="Entertainment">Entertainment</option>
+                          <option value="Insurance">Insurance</option>
+                          <option value="Milestone">Milestone</option>
+                          <option value="Rewards">Rewards</option>
+                          <option value="Golf">Golf</option>
+                          <option value="Bank Offers">Bank Offers</option>
+                        </select>
                         <input
                           type="number"
                           placeholder="Reward Rate (%)"
@@ -589,12 +729,9 @@ export default function AddEditCardPage() {
                           onChange={(e) => updateOffer(idx, "validTo", e.target.value)}
                           className="form-input"
                         />
-                        <textarea
-                          placeholder="Description"
+                        <OfferDescriptionEditor
                           value={offer.description}
-                          onChange={(e) => updateOffer(idx, "description", e.target.value)}
-                          className="form-input md:col-span-2"
-                          rows={2}
+                          onChange={(v) => updateOffer(idx, "description", v)}
                         />
                       </div>
                     </div>
@@ -656,6 +793,105 @@ function FormField({ label, children }: { label: string; children: React.ReactNo
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
       {children}
+    </div>
+  );
+}
+
+function OfferDescriptionEditor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  const applyAction = (fn: (val: string, start: number, end: number) => { text: string; cursor: number }) => {
+    const el = ref.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const { text, cursor } = fn(value, start, end);
+    onChange(text);
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(cursor, cursor);
+    });
+  };
+
+  const wrapSelection = (before: string, after: string) => applyAction((val, s, e) => {
+    const selected = val.slice(s, e) || 'text';
+    const text = val.slice(0, s) + before + selected + after + val.slice(e);
+    return { text, cursor: s + before.length + selected.length + after.length };
+  });
+
+  const prefixLine = (prefix: string) => applyAction((val, s) => {
+    const lineStart = val.lastIndexOf('\n', s - 1) + 1;
+    const text = val.slice(0, lineStart) + prefix + val.slice(lineStart);
+    return { text, cursor: s + prefix.length };
+  });
+
+  const toHeader = () => applyAction((val, s) => {
+    const lineStart = val.lastIndexOf('\n', s - 1) + 1;
+    const lineEnd = val.indexOf('\n', s);
+    const end = lineEnd === -1 ? val.length : lineEnd;
+    const line = val.slice(lineStart, end).toUpperCase();
+    const text = val.slice(0, lineStart) + line + val.slice(end);
+    return { text, cursor: s };
+  });
+
+  const countedBullet = () => applyAction((val, s) => {
+    const before = val.slice(0, s);
+    const count = (before.match(/^\d+\.\s/gm) || []).length + 1;
+    const lineStart = val.lastIndexOf('\n', s - 1) + 1;
+    const prefix = `${count}. `;
+    const text = val.slice(0, lineStart) + prefix + val.slice(lineStart);
+    return { text, cursor: s + prefix.length };
+  });
+
+  const ToolBtn = ({ onClick, title, children }: { onClick: () => void; title: string; children: ReactNode }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className="flex items-center gap-1 px-2 py-1 text-xs rounded text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition"
+    >
+      {children}
+    </button>
+  );
+
+  const Sep = () => <div className="w-px h-4 bg-gray-300 mx-0.5 self-center" />;
+
+  return (
+    <div className="md:col-span-2 rounded-lg border border-gray-300 overflow-hidden focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 bg-gray-50 border-b border-gray-200">
+        <ToolBtn onClick={() => wrapSelection('**', '**')} title="Bold (wraps in **)">
+          <Bold size={13} /><span>Bold</span>
+        </ToolBtn>
+        <ToolBtn onClick={() => wrapSelection('_', '_')} title="Italic (wraps in _)">
+          <Italic size={13} /><span>Italic</span>
+        </ToolBtn>
+        <Sep />
+        <ToolBtn onClick={() => prefixLine('- ')} title="Bullet point">
+          <List size={13} /><span>Bullet</span>
+        </ToolBtn>
+        <ToolBtn onClick={countedBullet} title="Numbered list item">
+          <ListOrdered size={13} /><span>Number</span>
+        </ToolBtn>
+        <Sep />
+        <ToolBtn onClick={toHeader} title="Section header (converts line to UPPERCASE)">
+          <Heading2 size={13} /><span>Section</span>
+        </ToolBtn>
+        <Sep />
+        <span className="text-[10px] text-gray-400 ml-1">
+          Tip: **bold**, _italic_, - bullet, 1. number, ALLCAPS = section header
+        </span>
+      </div>
+      {/* Editor */}
+      <textarea
+        ref={ref}
+        placeholder={"Description — use toolbar or type directly.\n\nExample:\nSECTION HEADER\n- benefit one\n- benefit two\n\n**Important:** some bold note"}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-3 py-2.5 text-sm font-mono text-gray-800 bg-white resize-y focus:outline-none min-h-[220px]"
+        rows={12}
+        spellCheck={false}
+      />
     </div>
   );
 }

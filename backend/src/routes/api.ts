@@ -1171,23 +1171,20 @@ router.get('/credit-cards/featured', async (_req: Request, res: Response) => {
 //Fetch Products
 router.get('/products', async (req: Request, res: Response) => {
   try {
-    // STEP 1: Read query params
-    const { category, page = '1', limit = '10' } = req.query
+    // STEP 1: Read ALL query params up front
+    const { category, page = '1', limit = '10', search, bank, annualFeeMax, sortBy } = req.query
 
     const pageNum = Number(page)
     const limitNum = Number(limit)
     const skip = (pageNum - 1) * limitNum
 
-    // STEP 2: Cache key
-    const CACHE_KEY = `products_${category}_${page}_${limit}`
+    // STEP 2: Cache key includes all filter params
+    const CACHE_KEY = `products_${category}_${page}_${limit}_${search}_${bank}_${annualFeeMax}_${sortBy}`
 
     const cached = await cacheGet(CACHE_KEY)
     if (cached) {
       return res.json(cached)
     }
-
-    // STEP 3: Read additional query params
-    const { search, bank, annualFeeMax, sortBy } = req.query
 
     const where: any = {
       isActive: true,
@@ -1263,6 +1260,7 @@ router.get('/products', async (req: Request, res: Response) => {
       annualFee: p.details?.annualFee ?? 0,
       joiningFee: p.details?.joiningFee ?? 0,
       rewardType: p.details?.rewardType ?? null,
+      updatedAt: p.updatedAt ?? null,
 
       offer: p.offers[0]
         ? {
@@ -1350,6 +1348,14 @@ router.get('/products/:slug', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Product not found' })
     }
 
+    // Fetch new columns not yet in Prisma client
+    const [rawP] = await prisma.$queryRawUnsafe<any[]>(
+      `SELECT about_card, best_for FROM "Product" WHERE id = $1`, product.id
+    )
+    const [rawD] = product.details ? await prisma.$queryRawUnsafe<any[]>(
+      `SELECT forex_markup, apr, atm_cash_fee, late_payment_fee, railway_surcharge, rent_payment_fee, reward_redemption_fee, annual_fee_waiver, joining_fee_waiver FROM "ProductDetails" WHERE product_id = $1`, product.id
+    ) : [{}]
+
     // STEP 4: Format response
     const formatted = {
       id: product.id,
@@ -1363,6 +1369,8 @@ router.get('/products/:slug', async (req: Request, res: Response) => {
       totalRatings: product.totalRatings,
       cardImageUrl: product.cardImageUrl,
       applyUrl: product.applyUrl,
+      aboutCard: rawP?.about_card ?? null,
+      bestFor: rawP?.best_for ?? null,
 
       bank: {
         name: product.bank.name,
@@ -1375,7 +1383,17 @@ router.get('/products/:slug', async (req: Request, res: Response) => {
         joiningFee: product.details?.joiningFee ?? null,
         minIncome: product.details?.minIncome ?? null,
         loungeAccess: product.details?.loungeAccess ?? null,
-        rewardType: product.details?.rewardType ?? null
+        loungeAccessNote: product.details?.loungeAccessNote ?? null,
+        rewardType: product.details?.rewardType ?? null,
+        forexMarkup: rawD?.forex_markup ?? null,
+        apr: rawD?.apr ?? null,
+        atmCashFee: rawD?.atm_cash_fee ?? null,
+        latePaymentFee: rawD?.late_payment_fee ?? null,
+        railwaySurcharge: rawD?.railway_surcharge ?? null,
+        rentPaymentFee: rawD?.rent_payment_fee ?? null,
+        rewardRedemptionFee: rawD?.reward_redemption_fee ?? null,
+        annualFeeWaiver: rawD?.annual_fee_waiver ?? null,
+        joiningFeeWaiver: rawD?.joining_fee_waiver ?? null
       },
 
       // Offer history
@@ -1390,6 +1408,8 @@ router.get('/products/:slug', async (req: Request, res: Response) => {
         validTo: o.validTo,
         version: o.version
       })),
+
+      updatedAt: product.updatedAt ?? null,
 
       // Features (tags)
       features: product.features.map((f) => f.feature.name)
@@ -1926,12 +1946,12 @@ router.get('/commodity-prices', async (_req: Request, res: Response) => {
 
   try {
     const TROY_OZ_TO_GRAMS = 31.1035
-    // India effective duty on gold/silver import ≈ 15.5% (6% BCD + 5% AIDC + cess + 3% GST)
-    const INDIA_FACTOR = 1.155
+    // COMEX GC=F price × USD/INR directly matches India IBJA/MCX benchmark rate.
+    // Import duty is priced in via commodity arbitrage — no extra factor needed.
+    const INDIA_FACTOR = 1.0
     const YF_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     const YF_OPTS = { headers: { 'User-Agent': YF_UA }, signal: AbortSignal.timeout(10000) }
 
-    // Fetch gold, silver, USD/INR from Yahoo Finance (COMEX futures + forex)
     const [goldRes, silverRes, fxRes] = await Promise.all([
       fetch('https://query2.finance.yahoo.com/v8/finance/chart/GC=F?interval=1d&range=1d', YF_OPTS),
       fetch('https://query2.finance.yahoo.com/v8/finance/chart/SI=F?interval=1d&range=1d', YF_OPTS),
@@ -1943,9 +1963,11 @@ router.get('/commodity-prices', async (_req: Request, res: Response) => {
       goldRes.json(), silverRes.json(), fxRes.json(),
     ])
 
-    const goldOzUSD: number = goldJson.chart.result[0].meta.regularMarketPrice
-    const silverOzUSD: number = silverJson.chart.result[0].meta.regularMarketPrice
-    const usdInr: number = fxJson.chart.result[0].meta.regularMarketPrice ?? 83.5
+    const getPrice = (j: any): number | null => j?.chart?.result?.[0]?.meta?.regularMarketPrice ?? null
+    const goldOzUSD: number | null = getPrice(goldJson)
+    const silverOzUSD: number | null = getPrice(silverJson)
+    const usdInr: number = getPrice(fxJson) ?? 86
+    if (!goldOzUSD || !silverOzUSD) throw new Error('Yahoo Finance returned null price')
 
     // Gold per 10g in INR (24K pure)
     const gold24kPer10g = Math.round((goldOzUSD / TROY_OZ_TO_GRAMS) * 10 * usdInr * INDIA_FACTOR)
@@ -1994,7 +2016,7 @@ router.get('/commodity-prices', async (_req: Request, res: Response) => {
       usd_inr: Math.round(usdInr * 100) / 100,
       cities,
       updated_at: new Date().toISOString(),
-      disclaimer: 'Prices are estimates based on international spot + import duties. Actual prices may vary by ₹100–500/10g.',
+      disclaimer: 'Prices based on COMEX spot rate converted to INR, matching IBJA/MCX benchmark. Actual jeweller price will be higher due to GST (3%) and making charges.',
     }
 
     memSet(KEY, data, 25 * 60)

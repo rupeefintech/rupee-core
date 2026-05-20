@@ -150,13 +150,16 @@ export default function Navbar() {
                               <Link
                                 key={item.path}
                                 to={item.path}
+                                onClick={() => setCalcOpen(false)}
                                 className={`flex items-center gap-2.5 text-sm px-2 py-1.5 rounded-lg transition-colors ${
                                   active
                                     ? 'text-brand-600 bg-brand-50 font-semibold'
-                                    : 'text-gray-600 hover:text-brand-600 hover:bg-brand-50'
+                                    : 'text-gray-600 hover:text-brand-600 hover:bg-gray-50'
                                 }`}
                               >
-                                <item.icon className={`w-3.5 h-3.5 flex-shrink-0 ${active ? 'text-brand-500' : 'text-gray-400'}`} />
+                                <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${item.color}`}>
+                                  <item.icon className="w-3.5 h-3.5 text-white" />
+                                </div>
                                 {item.label}
                               </Link>
                             );
@@ -256,8 +259,10 @@ export default function Navbar() {
                       <CatIcon className="w-3.5 h-3.5" /> {group.title}
                     </p>
                     {group.items.map((item) => (
-                      <Link key={item.path} to={item.path} className="flex items-center gap-2 px-2 py-1.5 text-sm text-gray-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">
-                        <item.icon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
+                      <Link key={item.path} to={item.path} className="flex items-center gap-2.5 px-2 py-1.5 text-sm text-gray-600 hover:text-brand-600 rounded-lg hover:bg-gray-50">
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 ${item.color}`}>
+                          <item.icon className="w-3.5 h-3.5 text-white" />
+                        </div>
                         {item.label}
                       </Link>
                     ))}

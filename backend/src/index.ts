@@ -17,6 +17,7 @@ dotenv.config()
 const app      = express()
 const PORT     = Number(process.env.PORT) || 3001
 const NODE_ENV = process.env.NODE_ENV || 'development'
+// v2 — bank filter cache key fix
 
 app.use(helmet({ contentSecurityPolicy: false }))
 app.use(cors({
@@ -379,7 +380,7 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: 'Internal server error' })
 })
 
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
   console.log(`\n🏦  BankInfoHub API  →  http://localhost:${PORT}  [${NODE_ENV}]\n`)
 
   // Wait for Neon serverless DB to wake up before doing anything
@@ -408,5 +409,9 @@ app.listen(PORT, async () => {
     console.warn('  ⚠ Cache warm-up failed (non-critical)')
   }
 })
+
+const shutdown = () => server.close(() => process.exit(0))
+process.on('SIGTERM', shutdown)
+process.on('SIGINT', shutdown)
 
 export default app

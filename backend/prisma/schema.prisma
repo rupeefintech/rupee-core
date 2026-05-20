@@ -222,6 +222,9 @@ model Product {
   rating       Float? @default(0)
   totalRatings Int    @default(0) @map("total_ratings")
 
+  aboutCard String? @map("about_card") @db.Text
+  bestFor   String? @map("best_for") @db.Text // comma-separated: "Shopping,Dining,Travel"
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -239,15 +242,27 @@ model ProductDetails {
   productId Int     @unique @map("product_id")
   product   Product @relation(fields: [productId], references: [id])
 
-  annualFee  Float? @map("annual_fee")
-  joiningFee Float? @map("joining_fee")
+  annualFee        Float?  @map("annual_fee")
+  annualFeeWaiver  String? @map("annual_fee_waiver") @db.Text
+  joiningFee       Float?  @map("joining_fee")
+  joiningFeeWaiver String? @map("joining_fee_waiver") @db.Text
 
   minIncome   Float?  @map("min_income")
   eligibility String? @db.Text
 
-  loungeAccess Int? @map("lounge_access")
+  loungeAccess     Int?    @map("lounge_access")
+  loungeAccessNote String? @map("lounge_access_note") @db.Text
 
   rewardType String? @map("reward_type") // cashback, points, miles
+
+  // Fee structure
+  forexMarkup        Float?  @map("forex_markup")          // e.g. 2.0 (%)
+  apr                String? @map("apr") @db.VarChar(100)  // e.g. "1.99% per month"
+  atmCashFee         String? @map("atm_cash_fee") @db.VarChar(200)
+  latePaymentFee     String? @map("late_payment_fee") @db.Text
+  railwaySurcharge   String? @map("railway_surcharge") @db.VarChar(100)
+  rentPaymentFee     String? @map("rent_payment_fee") @db.VarChar(100)
+  rewardRedemptionFee String? @map("reward_redemption_fee") @db.VarChar(100)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

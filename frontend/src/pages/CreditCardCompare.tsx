@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { ArrowLeft, Check, X, Star, ExternalLink, CreditCard } from "lucide-react";
+import { ArrowLeft, Check, X, ExternalLink, CreditCard } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { apiClient } from "../utils/api";
 

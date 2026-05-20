@@ -292,7 +292,7 @@ export default function GoldSilverRatePage() {
             <div className="space-y-3 text-sm text-gray-600">
               <div>
                 <div className="font-semibold text-gray-800 mb-1">How is India gold price determined?</div>
-                <p>India gold price = International spot price (COMEX, London) × USD/INR rate + Basic Customs Duty (6%) + Agriculture Infrastructure Cess (5%) + Social Welfare Surcharge + GST (3%). Total effective duty: ~14–16%. Prices also vary by city due to local taxes and logistics.</p>
+                <p>India gold price is set by the IBJA (Indian Bullion and Jewellers Association) twice daily, based on the COMEX/LBMA international spot price converted to INR. This IBJA benchmark rate is the base price used by importers and banks. Jewellers charge this rate + GST (3%) + making charges. Prices also vary slightly by city due to local taxes and logistics.</p>
               </div>
               <div>
                 <div className="font-semibold text-gray-800 mb-1">24K vs 22K vs 18K gold</div>

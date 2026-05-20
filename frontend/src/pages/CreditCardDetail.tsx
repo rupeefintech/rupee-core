@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Star, ExternalLink, CreditCard, Check, ChevronRight } from "lucide-react";
+import { ArrowLeft, ExternalLink, CreditCard, Check, ChevronRight } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { apiClient } from "../utils/api";
 
@@ -12,6 +12,8 @@ interface Offer {
   rewardCap: number | null;
   category: string | null;
   isActive: boolean;
+  validFrom?: string | null;
+  validTo?: string | null;
 }
 
 interface CardDetail {
@@ -32,10 +34,23 @@ interface CardDetail {
     joiningFee: number | null;
     minIncome: number | null;
     loungeAccess: number | null;
+    loungeAccessNote: string | null;
     rewardType: string | null;
+    forexMarkup: number | null;
+    apr: string | null;
+    atmCashFee: string | null;
+    latePaymentFee: string | null;
+    railwaySurcharge: string | null;
+    rentPaymentFee: string | null;
+    rewardRedemptionFee: string | null;
+    annualFeeWaiver: string | null;
+    joiningFeeWaiver: string | null;
   };
+  aboutCard: string | null;
+  bestFor: string | null;
   offers: Offer[];
   features: string[];
+  updatedAt: string | null;
 }
 
 const CARD_GRADIENTS: Record<string, string> = {
@@ -56,6 +71,10 @@ const CARD_GRADIENTS: Record<string, string> = {
 function formatINR(amount: number | null): string {
   if (!amount || amount === 0) return "FREE";
   return "\u20B9" + amount.toLocaleString("en-IN");
+}
+function formatFee(amount: number | null): string {
+  if (!amount || amount === 0) return "FREE";
+  return "\u20B9" + amount.toLocaleString("en-IN") + " + GST";
 }
 
 /* ─── Main Component ─── */
@@ -166,32 +185,26 @@ export default function CreditCardDetail() {
               <h1 className="text-2xl md:text-3xl font-bold mt-3 font-display">{card.name}</h1>
               <p className="text-white/60 text-sm mt-1">{card.bank.name}</p>
 
-              {/* Rating */}
-              {card.rating != null && card.rating > 0 && (
-                <div className="flex items-center gap-2 mt-4">
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        size={14}
-                        className={i < Math.floor(card.rating!) ? "text-gold-400 fill-gold-400" : "text-white/20 fill-white/20"}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm font-medium">{card.rating}</span>
-                  <span className="text-xs text-white/50">({card.totalRatings.toLocaleString("en-IN")} ratings)</span>
+              {/* Best For chips */}
+              {card.bestFor && (
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  <span className="text-[10px] text-white/40 self-center">Best for:</span>
+                  {card.bestFor.split(',').map(t => t.trim()).filter(Boolean).map(tag => (
+                    <span key={tag} className="text-[10px] font-medium px-2.5 py-1 rounded-full bg-white/15 text-white border border-white/20">{tag}</span>
+                  ))}
                 </div>
               )}
+
 
               {/* Stat pills */}
               <div className="flex flex-wrap gap-3 mt-6">
                 <div className="bg-white/10 backdrop-blur rounded-lg px-4 py-2.5 border border-white/10">
                   <span className="text-[10px] text-white/50 block uppercase tracking-wider">Annual Fee</span>
-                  <span className="text-sm font-bold">{formatINR(card.details.annualFee)}</span>
+                  <span className="text-sm font-bold">{formatFee(card.details.annualFee)}</span>
                 </div>
                 <div className="bg-white/10 backdrop-blur rounded-lg px-4 py-2.5 border border-white/10">
                   <span className="text-[10px] text-white/50 block uppercase tracking-wider">Joining Fee</span>
-                  <span className="text-sm font-bold">{formatINR(card.details.joiningFee)}</span>
+                  <span className="text-sm font-bold">{formatFee(card.details.joiningFee)}</span>
                 </div>
                 <div className="bg-white/10 backdrop-blur rounded-lg px-4 py-2.5 border border-white/10">
                   <span className="text-[10px] text-white/50 block uppercase tracking-wider">Network</span>
@@ -243,30 +256,16 @@ export default function CreditCardDetail() {
         <div className="grid md:grid-cols-3 gap-6">
           {/* Left: Offers + Features */}
           <div className="md:col-span-2 space-y-6">
-            {/* Offers */}
+            {/* Offers & Benefits */}
             {activeOffers.length > 0 && (
+              <BenefitsSection offers={activeOffers} />
+            )}
+
+            {/* About Card */}
+            {card.aboutCard && (
               <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h2 className="text-lg font-bold text-brand-900 mb-4 font-display">Offers & Benefits</h2>
-                <div className="space-y-3">
-                  {activeOffers.map((offer, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-brand-50/50 rounded-lg border border-brand-100/50">
-                      <div className="w-6 h-6 bg-brand-100 rounded-full flex items-center justify-center shrink-0 mt-0.5">
-                        <Check size={12} className="text-brand-700" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-brand-900">{offer.title}</p>
-                        {offer.description && (
-                          <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{offer.description}</p>
-                        )}
-                        {offer.category && (
-                          <span className="inline-block mt-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                            {offer.category}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <h2 className="text-lg font-bold text-brand-900 mb-3 font-display">About This Card</h2>
+                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{card.aboutCard}</p>
               </div>
             )}
 
@@ -290,14 +289,61 @@ export default function CreditCardDetail() {
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h3 className="text-sm font-bold text-brand-900 mb-4 uppercase tracking-wider">Card Details</h3>
               <div className="space-y-0">
-                <DetailRow label="Annual Fee" value={formatINR(card.details.annualFee)} />
-                <DetailRow label="Joining Fee" value={formatINR(card.details.joiningFee)} />
+                <DetailRow label="Annual Fee" value={formatFee(card.details.annualFee)} />
+                {card.details.annualFeeWaiver && (
+                  <div className="pb-2.5 border-b border-gray-100 -mt-1.5">
+                    <p className="text-[10px] text-emerald-600 flex items-center gap-1">
+                      <span>✓</span>{card.details.annualFeeWaiver}
+                    </p>
+                  </div>
+                )}
+                <DetailRow label="Joining Fee" value={formatFee(card.details.joiningFee)} />
+                {card.details.joiningFeeWaiver && (
+                  <div className="pb-2.5 border-b border-gray-100 -mt-1.5">
+                    <p className="text-[10px] text-emerald-600 flex items-center gap-1">
+                      <span>✓</span>{card.details.joiningFeeWaiver}
+                    </p>
+                  </div>
+                )}
                 <DetailRow label="Min. Income" value={card.details.minIncome ? `\u20B9${card.details.minIncome.toLocaleString("en-IN")}` : "N/A"} />
-                <DetailRow label="Lounge Access" value={card.details.loungeAccess ? `${card.details.loungeAccess} visits/yr` : "No"} />
+                <DetailRow
+                  label="Lounge Access"
+                  value={
+                    card.details.loungeAccessNote
+                      ? card.details.loungeAccessNote
+                      : card.details.loungeAccess
+                      ? `${card.details.loungeAccess} visits/yr`
+                      : "No"
+                  }
+                />
                 <DetailRow label="Reward Type" value={card.details.rewardType || "N/A"} />
                 <DetailRow label="Card Network" value={card.network || "N/A"} />
+                {card.updatedAt && (
+                  <DetailRow
+                    label="Last Verified"
+                    value={new Date(card.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                  />
+                )}
               </div>
             </div>
+
+            {/* Fee Structure */}
+            {(card.details.forexMarkup || card.details.apr || card.details.atmCashFee || card.details.latePaymentFee) && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-sm font-bold text-brand-900 mb-4 uppercase tracking-wider">Fee Structure</h3>
+                <div className="space-y-0">
+                  {card.details.forexMarkup != null && <DetailRow label="Forex Markup" value={`${card.details.forexMarkup}%`} />}
+                  {card.details.apr && <DetailRow label="APR / Finance Charge" value={card.details.apr} />}
+                  {card.details.atmCashFee && <DetailRow label="ATM Cash Fee" value={card.details.atmCashFee} />}
+                  {card.details.railwaySurcharge && <DetailRow label="Railway Surcharge" value={card.details.railwaySurcharge} />}
+                  {card.details.rentPaymentFee && <DetailRow label="Rent Payment Fee" value={card.details.rentPaymentFee} />}
+                  {card.details.rewardRedemptionFee && <DetailRow label="Reward Redemption" value={card.details.rewardRedemptionFee} />}
+                  {card.details.latePaymentFee && (
+                    <LatePaymentFeeBlock value={card.details.latePaymentFee} />
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Eligibility CTA */}
             <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-xl border border-brand-100 p-6">
@@ -353,11 +399,232 @@ export default function CreditCardDetail() {
   );
 }
 
+function LatePaymentFeeBlock({ value }: { value: string }) {
+  let slabs: { label: string; fee: number }[] | null = null;
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed) && parsed[0]?.label !== undefined) slabs = parsed;
+  } catch { /* plain text fallback */ }
+
+  if (!slabs) {
+    return (
+      <div className="py-2.5 border-b border-gray-100 last:border-0">
+        <span className="text-xs text-gray-500 block mb-0.5">Late Payment Fee</span>
+        <span className="text-xs font-semibold text-brand-900">{value}</span>
+      </div>
+    );
+  }
+  return (
+    <div className="py-2.5 border-b border-gray-100 last:border-0">
+      <span className="text-xs text-gray-500 block mb-2">Late Payment Fee</span>
+      <div className="rounded-lg overflow-hidden border border-gray-100">
+        <table className="w-full text-[11px]">
+          <thead>
+            <tr className="bg-gray-50">
+              <th className="text-left px-2.5 py-1.5 font-semibold text-gray-500">Amount Due</th>
+              <th className="text-right px-2.5 py-1.5 font-semibold text-gray-500">Fee</th>
+            </tr>
+          </thead>
+          <tbody>
+            {slabs.map((s, i) => (
+              <tr key={i} className="border-t border-gray-100">
+                <td className="px-2.5 py-1.5 text-gray-700">{s.label}</td>
+                <td className="px-2.5 py-1.5 text-right font-semibold text-gray-900">
+                  {s.fee === 0 ? 'NIL' : '₹' + s.fee.toLocaleString('en-IN')}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
       <span className="text-xs text-gray-500">{label}</span>
       <span className="text-xs font-semibold text-brand-900 capitalize">{value}</span>
+    </div>
+  );
+}
+
+// ── Category config ─────────────────────────────────────────────────────────
+const CATEGORY_CONFIG: Record<string, { emoji: string; color: string; bg: string; border: string }> = {
+  shopping:      { emoji: '🛒', color: 'text-violet-700', bg: 'bg-violet-50',  border: 'border-violet-200' },
+  cashback:      { emoji: '💰', color: 'text-green-700',  bg: 'bg-green-50',   border: 'border-green-200'  },
+  travel:        { emoji: '✈️', color: 'text-sky-700',    bg: 'bg-sky-50',     border: 'border-sky-200'    },
+  dining:        { emoji: '🍽️', color: 'text-orange-700', bg: 'bg-orange-50',  border: 'border-orange-200' },
+  lounge:        { emoji: '🛋️', color: 'text-indigo-700', bg: 'bg-indigo-50',  border: 'border-indigo-200' },
+  fuel:          { emoji: '⛽', color: 'text-yellow-700', bg: 'bg-yellow-50',  border: 'border-yellow-200' },
+  entertainment: { emoji: '🎬', color: 'text-pink-700',   bg: 'bg-pink-50',    border: 'border-pink-200'   },
+  welcome:       { emoji: '🎁', color: 'text-rose-700',   bg: 'bg-rose-50',    border: 'border-rose-200'   },
+  rewards:       { emoji: '⭐', color: 'text-amber-700',  bg: 'bg-amber-50',   border: 'border-amber-200'  },
+  insurance:     { emoji: '🛡️', color: 'text-teal-700',   bg: 'bg-teal-50',    border: 'border-teal-200'   },
+  golf:          { emoji: '⛳', color: 'text-lime-700',   bg: 'bg-lime-50',    border: 'border-lime-200'   },
+  milestone:     { emoji: '🏆', color: 'text-yellow-800', bg: 'bg-yellow-50',  border: 'border-yellow-300' },
+};
+
+const DEFAULT_CAT = { emoji: '✨', color: 'text-brand-700', bg: 'bg-brand-50', border: 'border-brand-200' };
+
+function getCatConfig(category: string | null) {
+  if (!category) return DEFAULT_CAT;
+  const key = category.toLowerCase().trim();
+  return CATEGORY_CONFIG[key] ?? DEFAULT_CAT;
+}
+
+// ── BenefitsSection ──────────────────────────────────────────────────────────
+function BenefitsSection({ offers }: { offers: Offer[] }) {
+  const [expanded, setExpanded] = React.useState<number | null>(null);
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-6">
+      <h2 className="text-lg font-bold text-brand-900 mb-5 font-display">Benefits & Offers</h2>
+
+      {/* Category highlight cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+        {offers.map((offer, i) => {
+          const cfg = getCatConfig(offer.category);
+          const isOpen = expanded === i;
+          return (
+            <button
+              key={i}
+              onClick={() => setExpanded(isOpen ? null : i)}
+              className={`text-left rounded-xl border p-3.5 transition-all ${cfg.bg} ${cfg.border} ${isOpen ? 'ring-2 ring-offset-1 ring-current/30' : 'hover:shadow-sm'}`}
+            >
+              <div className="text-2xl mb-2 leading-none">{cfg.emoji}</div>
+              <div className={`text-xs font-bold uppercase tracking-wide mb-1 ${cfg.color}`}>
+                {offer.category || 'Benefit'}
+              </div>
+              <div className="text-sm font-semibold text-gray-800 leading-snug line-clamp-2">
+                {offer.title.length > 60 ? offer.title.slice(0, 58) + '…' : offer.title}
+              </div>
+              <div className={`mt-2 text-[10px] font-medium ${cfg.color} flex items-center gap-0.5`}>
+                {isOpen ? '▲ Less' : '▼ Details'}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Expanded detail panel */}
+      {expanded !== null && offers[expanded] && (() => {
+        const o = offers[expanded];
+        const cfg = getCatConfig(o.category);
+        return (
+          <div className={`rounded-xl border-2 overflow-hidden ${cfg.border}`}>
+            {/* Panel header */}
+            <div className={`flex items-center gap-3 px-5 py-4 ${cfg.bg}`}>
+              <span className="text-3xl leading-none">{cfg.emoji}</span>
+              <div>
+                <div className={`text-[11px] font-bold uppercase tracking-widest mb-0.5 ${cfg.color}`}>{o.category || 'Benefit'}</div>
+                <h3 className="text-base font-bold text-gray-900 leading-snug">{o.title}</h3>
+              </div>
+            </div>
+            {/* Panel body */}
+            <div className="bg-white px-5 py-4">
+              {o.description && (
+                o.description.includes('\n')
+                  ? <OfferDescription text={o.description} />
+                  : <p className="text-sm text-gray-700">{o.description}</p>
+              )}
+              {(o.rewardRate || o.rewardCap) && (
+                <div className={`flex gap-6 mt-4 pt-3 border-t ${cfg.border}`}>
+                  {o.rewardRate && (
+                    <div>
+                      <span className="text-[10px] text-gray-500 block uppercase tracking-wide">Reward Rate</span>
+                      <span className={`text-lg font-black ${cfg.color}`}>{o.rewardRate}%</span>
+                    </div>
+                  )}
+                  {o.rewardCap && (
+                    <div>
+                      <span className="text-[10px] text-gray-500 block uppercase tracking-wide">Monthly Cap</span>
+                      <span className={`text-lg font-black ${cfg.color}`}>₹{o.rewardCap?.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
+function renderInline(text: string): React.ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*|_[^_]+_)/).map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**'))
+      return <strong key={i} className="font-bold text-gray-900">{part.slice(2, -2)}</strong>;
+    if (part.startsWith('_') && part.endsWith('_'))
+      return <em key={i}>{part.slice(1, -1)}</em>;
+    return part;
+  });
+}
+
+function looksLikeHeader(trimmed: string): boolean {
+  if (!trimmed || trimmed.length > 70) return false;
+  if (trimmed.endsWith('.') || trimmed.endsWith(',')) return false;
+  // Strip leading emoji chars
+  const noEmoji = trimmed.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FE0F}\s]+/u, '').trim();
+  if (!noEmoji) return false;
+  // ALLCAPS check (original)
+  const upper = (noEmoji.match(/[A-Z]/g) || []).length;
+  const lower = (noEmoji.match(/[a-z]/g) || []).length;
+  if (upper >= 4 && lower <= 1) return true;
+  // Title Case short phrase: ≤ 6 words, ≥ 70% words start uppercase
+  const words = noEmoji.replace(/[^\w\s]/g, ' ').trim().split(/\s+/).filter(w => w.length > 0);
+  if (words.length < 1 || words.length > 7) return false;
+  const titleWords = words.filter(w => /^[A-Z0-9]/.test(w)).length;
+  return titleWords / words.length >= 0.65;
+}
+
+function OfferDescription({ text }: { text: string }) {
+  const lines = text.split('\n');
+  return (
+    <div className="mt-2 space-y-0.5">
+      {lines.map((line, i) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={i} className="h-2" />;
+
+        const isHeader = looksLikeHeader(trimmed);
+
+        const bulletMatch = trimmed.match(/^[-•*]\s+(.+)/);
+        const numberMatch = trimmed.match(/^(\d+)\.\s+(.+)/);
+
+        if (isHeader) {
+          return (
+            <div key={i} className="mt-5 mb-2 first:mt-0 pb-1.5 border-b-2 border-brand-100">
+              <p className="text-[15px] font-extrabold text-gray-900 leading-snug">
+                {trimmed.replace(/\*|_/g, '')}
+              </p>
+            </div>
+          );
+        }
+        if (numberMatch) {
+          return (
+            <div key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed mb-1">
+              <span className="text-brand-600 shrink-0 font-bold min-w-[20px] mt-px">{numberMatch[1]}.</span>
+              <span>{renderInline(numberMatch[2])}</span>
+            </div>
+          );
+        }
+        if (bulletMatch) {
+          return (
+            <div key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed mb-1">
+              <span className="text-brand-500 shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-400 block" />
+              <span>{renderInline(bulletMatch[1])}</span>
+            </div>
+          );
+        }
+        return (
+          <div key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed mb-1">
+            <span className="text-brand-300 shrink-0 mt-0.5 font-bold text-xs">›</span>
+            <span>{renderInline(trimmed)}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }

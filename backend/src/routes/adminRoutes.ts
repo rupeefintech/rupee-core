@@ -88,6 +88,14 @@ router.get("/credit-cards/:slug", verifyToken, async (req, res) => {
 
     if (!product) return res.status(404).json({ error: "Product not found" });
 
+    // Fetch new columns not yet in Prisma client via raw SQL
+    const [rawProduct] = await prisma.$queryRawUnsafe<any[]>(
+      `SELECT about_card, best_for FROM "Product" WHERE id = $1`, product.id
+    );
+    const [rawDetails] = product.details ? await prisma.$queryRawUnsafe<any[]>(
+      `SELECT forex_markup, apr, atm_cash_fee, late_payment_fee, railway_surcharge, rent_payment_fee, reward_redemption_fee, annual_fee_waiver, joining_fee_waiver FROM "ProductDetails" WHERE product_id = $1`, product.id
+    ) : [{}];
+
     const formatted = {
       id: product.id,
       name: product.name,
@@ -101,6 +109,8 @@ router.get("/credit-cards/:slug", verifyToken, async (req, res) => {
       totalRatings: product.totalRatings,
       cardImageUrl: product.cardImageUrl,
       applyUrl: product.applyUrl,
+      aboutCard: rawProduct?.about_card ?? null,
+      bestFor: rawProduct?.best_for ?? null,
       bank: {
         id: product.bank.id,
         name: product.bank.name,
@@ -112,7 +122,17 @@ router.get("/credit-cards/:slug", verifyToken, async (req, res) => {
         joiningFee: product.details?.joiningFee ?? null,
         minIncome: product.details?.minIncome ?? null,
         loungeAccess: product.details?.loungeAccess ?? null,
+        loungeAccessNote: product.details?.loungeAccessNote ?? null,
         rewardType: product.details?.rewardType ?? null,
+        forexMarkup: rawDetails?.forex_markup ?? null,
+        apr: rawDetails?.apr ?? null,
+        atmCashFee: rawDetails?.atm_cash_fee ?? null,
+        latePaymentFee: rawDetails?.late_payment_fee ?? null,
+        railwaySurcharge: rawDetails?.railway_surcharge ?? null,
+        rentPaymentFee: rawDetails?.rent_payment_fee ?? null,
+        rewardRedemptionFee: rawDetails?.reward_redemption_fee ?? null,
+        annualFeeWaiver: rawDetails?.annual_fee_waiver ?? null,
+        joiningFeeWaiver: rawDetails?.joining_fee_waiver ?? null,
       },
       offers: product.offers.map((o) => ({
         id: o.id,
@@ -143,14 +163,14 @@ router.get("/credit-cards/:slug", verifyToken, async (req, res) => {
 router.post("/products", verifyToken, async (req, res) => {
   try {
     const { name, slug, category, bankId, network, isActive, details, offers, featureIds,
-      cardImageUrl, applyUrl, isFeatured, isPopular, rating, totalRatings } = req.body;
+      cardImageUrl, applyUrl, isFeatured, isPopular, rating, totalRatings, aboutCard, bestFor } = req.body;
 
     const product = await prisma.product.create({
       data: {
         name,
         slug,
         category: category || "credit_card",
-        bankId: Number(bankId),
+        bank: { connect: { id: Number(bankId) } },
         network,
         isActive: isActive ?? true,
         cardImageUrl: cardImageUrl || null,
@@ -162,6 +182,14 @@ router.post("/products", verifyToken, async (req, res) => {
       },
     });
 
+    // Set new fields via raw SQL — Prisma client not yet regenerated
+    if (aboutCard || bestFor) {
+      await prisma.$executeRawUnsafe(
+        `UPDATE "Product" SET about_card = $1, best_for = $2 WHERE id = $3`,
+        aboutCard || null, bestFor || null, product.id
+      );
+    }
+
     // Create details if provided
     if (details) {
       await prisma.productDetails.create({
@@ -171,9 +199,25 @@ router.post("/products", verifyToken, async (req, res) => {
           joiningFee: details.joiningFee ? Number(details.joiningFee) : null,
           minIncome: details.minIncome ? Number(details.minIncome) : null,
           loungeAccess: details.loungeAccess ? Number(details.loungeAccess) : null,
+          loungeAccessNote: details.loungeAccessNote || null,
           rewardType: details.rewardType || null,
         },
       });
+      // Set fee + waiver fields via raw SQL
+      await prisma.$executeRawUnsafe(
+        `UPDATE "ProductDetails" SET
+          forex_markup = $1, apr = $2, atm_cash_fee = $3,
+          late_payment_fee = $4, railway_surcharge = $5,
+          rent_payment_fee = $6, reward_redemption_fee = $7,
+          annual_fee_waiver = $8, joining_fee_waiver = $9
+        WHERE product_id = $10`,
+        details.forexMarkup ? Number(details.forexMarkup) : null,
+        details.apr || null, details.atmCashFee || null,
+        details.latePaymentFee || null, details.railwaySurcharge || null,
+        details.rentPaymentFee || null, details.rewardRedemptionFee || null,
+        details.annualFeeWaiver || null, details.joiningFeeWaiver || null,
+        product.id
+      );
     }
 
     // Create offers if provided
@@ -216,7 +260,7 @@ router.put("/products/:id", verifyToken, async (req, res) => {
   try {
     const productId = Number(req.params.id);
     const { name, slug, isActive, network, category, bankId, details, featureIds,
-      cardImageUrl, applyUrl, isFeatured, isPopular, rating, totalRatings } = req.body;
+      cardImageUrl, applyUrl, isFeatured, isPopular, rating, totalRatings, aboutCard, bestFor } = req.body;
 
     const updated = await prisma.product.update({
       where: { id: productId },
@@ -225,7 +269,7 @@ router.put("/products/:id", verifyToken, async (req, res) => {
         ...(slug && { slug }),
         ...(network !== undefined && { network }),
         ...(category && { category }),
-        ...(bankId && { bankId: Number(bankId) }),
+        ...(bankId && { bank: { connect: { id: Number(bankId) } } }),
         ...(isActive !== undefined && { isActive }),
         ...(cardImageUrl !== undefined && { cardImageUrl: cardImageUrl || null }),
         ...(applyUrl !== undefined && { applyUrl: applyUrl || null }),
@@ -235,6 +279,14 @@ router.put("/products/:id", verifyToken, async (req, res) => {
         ...(totalRatings !== undefined && { totalRatings: totalRatings ? Number(totalRatings) : 0 }),
       },
     });
+
+    // Set new fields (aboutCard, bestFor) via raw SQL — Prisma client not yet regenerated
+    if (aboutCard !== undefined || bestFor !== undefined) {
+      await prisma.$executeRawUnsafe(
+        `UPDATE "Product" SET about_card = $1, best_for = $2 WHERE id = $3`,
+        aboutCard ?? null, bestFor ?? null, productId
+      );
+    }
 
     // Update details if provided
     if (details) {
@@ -246,6 +298,7 @@ router.put("/products/:id", verifyToken, async (req, res) => {
           joiningFee: details.joiningFee != null ? Number(details.joiningFee) : null,
           minIncome: details.minIncome != null ? Number(details.minIncome) : null,
           loungeAccess: details.loungeAccess != null ? Number(details.loungeAccess) : null,
+          loungeAccessNote: details.loungeAccessNote || null,
           rewardType: details.rewardType || null,
         },
         update: {
@@ -253,9 +306,25 @@ router.put("/products/:id", verifyToken, async (req, res) => {
           joiningFee: details.joiningFee != null ? Number(details.joiningFee) : null,
           minIncome: details.minIncome != null ? Number(details.minIncome) : null,
           loungeAccess: details.loungeAccess != null ? Number(details.loungeAccess) : null,
+          loungeAccessNote: details.loungeAccessNote || null,
           rewardType: details.rewardType || null,
         },
       });
+      // Set fee + waiver fields via raw SQL — Prisma client not yet regenerated
+      await prisma.$executeRawUnsafe(
+        `UPDATE "ProductDetails" SET
+          forex_markup = $1, apr = $2, atm_cash_fee = $3,
+          late_payment_fee = $4, railway_surcharge = $5,
+          rent_payment_fee = $6, reward_redemption_fee = $7,
+          annual_fee_waiver = $8, joining_fee_waiver = $9
+        WHERE product_id = $10`,
+        details.forexMarkup != null ? Number(details.forexMarkup) : null,
+        details.apr || null, details.atmCashFee || null,
+        details.latePaymentFee || null, details.railwaySurcharge || null,
+        details.rentPaymentFee || null, details.rewardRedemptionFee || null,
+        details.annualFeeWaiver || null, details.joiningFeeWaiver || null,
+        productId
+      );
     }
 
     // Update feature mappings if provided
