@@ -11,6 +11,7 @@
     { "src": "^/sitemap-ifsc-4.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-4.xml" },
     { "src": "^/sitemap-banks.xml$", "dest": "https://api.rupeepedia.in/sitemap-banks.xml" },
     { "src": "^/sitemap-blogs.xml$", "dest": "https://api.rupeepedia.in/sitemap-blogs.xml" },
+    { "src": "^/sitemap-pin.xml$", "dest": "https://api.rupeepedia.in/sitemap-pin.xml" },
     { "src": "^/robots.txt$", "dest": "https://api.rupeepedia.in/robots.txt" },
 
     { "src": ".*", "dest": "/index.html" }
