@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   MapPin, Search, Hash, Building2, ExternalLink,
-  LocateFixed, Shield, CheckCircle, ArrowRight,
+  LocateFixed, ArrowRight,
   Zap, Database, Smartphone, Filter, ChevronDown,
 } from 'lucide-react';
 import { api, OfficeSearchResult } from '../utils/api';
@@ -399,91 +399,17 @@ export default function PinCodesPage() {
         </div>
       </section>
 
-      {/* Features Bento */}
-      <section className="py-20 px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">Why Rupeepedia?</h2>
-            <p className="text-gray-500 max-w-xl mx-auto">
-              Official data sources combined with powerful search — the most reliable PIN code directory in India.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* Verified Data — spans 2 cols */}
-            <div className="md:col-span-2 bg-[#f9f9ff] rounded-2xl p-8 border border-indigo-100/30 flex flex-col md:flex-row gap-8 items-center group">
-              <div className="flex-1">
-                <div className="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-700 mb-5">
-                  <Shield className="w-5 h-5" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Verified PIN Data</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  Database synced directly with postal authorities — 99.9% accuracy for over 1.5 lakh post offices nationwide.
-                </p>
-                <ul className="mt-5 space-y-2">
-                  {['Updated Weekly', 'Direct Official API Feed'].map(t => (
-                    <li key={t} className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                      <CheckCircle className="w-4 h-4 text-indigo-600 shrink-0" /> {t}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
-                <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 w-52">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-lg font-bold text-indigo-700 font-mono">110001</span>
-                    <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">New Delhi</span>
-                  </div>
-                  <div className="space-y-2.5 text-xs">
-                    {[['Post Office', 'Connaught Place'], ['District', 'Central Delhi'], ['State', 'Delhi']].map(([l, v], i, arr) => (
-                      <div key={l} className={`flex justify-between ${i < arr.length - 1 ? 'border-b border-gray-100 pb-2' : ''}`}>
-                        <span className="text-gray-400">{l}</span>
-                        <span className="font-semibold text-gray-700">{v}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* IFSC Finder */}
-            <a
-              href="/ifsc-finder"
-              className="bg-indigo-700 text-white rounded-2xl p-8 flex flex-col justify-between group hover:bg-indigo-800 transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-500/20"
-            >
-              <div>
-                <div className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center mb-5">
-                  <Building2 className="w-5 h-5" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">Bank IFSC Finder</h3>
-                <p className="text-white/70 text-sm leading-relaxed">
-                  Look up IFSC codes and branch details for any bank in India with just a PIN code or location name.
-                </p>
-              </div>
-              <div className="mt-8 flex items-center gap-2 text-sm font-semibold group-hover:translate-x-1 transition-transform">
-                Explore Banks <ArrowRight className="w-4 h-4" />
-              </div>
-            </a>
-
-            {/* Browse by Location */}
-            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-              <div className="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-700 mb-5">
-                <LocateFixed className="w-5 h-5" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Browse by Location</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
-                Filter PIN codes by state and district using our location-based cascade dropdown.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Why Use Our Pincode Finder */}
       <section className="py-16 px-4 bg-[#f9f9ff]">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-12 tracking-tight">
-            Why Use Our Pincode Finder?
-          </h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
+              Why Choose Rupeepedia PIN Finder?
+            </h2>
+            <p className="text-gray-500 max-w-xl mx-auto text-sm">
+              Official data sources combined with powerful search — the most reliable PIN code directory in India.
+            </p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {([
               {
