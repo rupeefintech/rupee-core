@@ -322,7 +322,7 @@ router.post('/', async (req: Request, res: Response) => {
     const nlTerms = msg
       .split(/[\s,]+/)
       .map(t => t.replace(/[^a-zA-Z0-9]/g, ''))
-      .filter(t => t.length > 1 && !nlStopWords.has(t.toLowerCase()))
+      .filter(t => t.length > 1 && !nlStopWords.has(t.toLowerCase()) && !/^\d+$/.test(t))
 
     if (nlTerms.length >= 2) {
       try {
