@@ -88,12 +88,15 @@ function renderMarkdown(text: string): React.ReactNode[] {
 }
 
 function renderInline(text: string): React.ReactNode {
-  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/)
+  const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/)
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**'))
       return <strong key={i} className="font-semibold">{part.slice(2, -2)}</strong>
     if (part.startsWith('`') && part.endsWith('`'))
       return <code key={i} className="font-mono text-xs bg-brand-50 text-brand-700 px-1 py-0.5 rounded">{part.slice(1, -1)}</code>
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (linkMatch)
+      return <Link key={i} to={linkMatch[2]} className="text-brand-600 font-semibold underline underline-offset-2 hover:text-brand-800 transition-colors">{linkMatch[1]}</Link>
     return part
   })
 }
