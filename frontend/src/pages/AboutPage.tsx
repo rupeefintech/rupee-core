@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
   Shield, Search, Calculator,
   Building2, Zap, ChevronRight,
-  BookOpen, Users, Lock,
+  BookOpen, Users, Lock, MapPin, TrendingUp,
 } from 'lucide-react';
 
 const fadeUp = (delay = 0) => ({
@@ -17,10 +17,10 @@ export default function AboutPage() {
   return (
     <>
       <Helmet>
-        <title>About RupeePedia — India's IFSC Code & Financial Knowledge Platform</title>
+        <title>About RupeePedia — India's IFSC, PIN Code & Financial Knowledge Platform</title>
         <meta
           name="description"
-          content="RupeePedia is India's most complete IFSC code finder and financial knowledge platform. 177,000+ bank branches, EMI calculators, NEFT/RTGS guides, and more — all free."
+          content="RupeePedia is India's most complete IFSC code finder, PIN code directory, live gold & silver rates platform, and financial knowledge hub. 177,000+ bank branches, 150,000+ post offices — all free."
         />
         <link rel="canonical" href="https://rupeepedia.in/about" />
       </Helmet>
@@ -34,28 +34,22 @@ export default function AboutPage() {
               About RupeePedia
             </h1>
             <p className="text-gray-600 text-lg max-w-3xl mx-auto leading-relaxed mb-4">
-              RupeePedia is a fintech platform committed to making banking information in India accurate,
-              accessible, and free. We provide the most up-to-date IFSC and SWIFT codes for every bank
-              branch across the country — because we understand how critical these codes are in today's
-              digital-first financial world. Our goal is to make finding and using them as seamless as
-              possible for everyone.
+              RupeePedia is a fintech platform committed to making banking and postal information in India
+              accurate, accessible, and free. We provide the most up-to-date IFSC codes for every bank
+              branch, a complete PIN code directory for every post office, and live gold &amp; silver rates
+              updated daily — because we understand how critical this information is in everyday financial life.
             </p>
             <p className="text-gray-500 text-base max-w-3xl mx-auto leading-relaxed mb-4">
-              Our team is dedicated to maintaining a comprehensive, always-current database of bank codes
-              so you can find the information you need — quickly and confidently. We take great care to
-              ensure our platform is secure and protected, because we know how important trust is when it
-              comes to online financial transactions.
-            </p>
-            <p className="text-gray-500 text-base max-w-3xl mx-auto leading-relaxed mb-4">
-              Beyond IFSC and SWIFT codes, RupeePedia offers a growing suite of financial tools — including
-              EMI calculators, SIP and investment planners, FD/RD return estimators, and in-depth guides on
-              NEFT, RTGS, IMPS, and UPI. Whether you're planning a home loan, calculating investment returns,
-              or simply need to find the nearest branch, we've got you covered.
+              Our team maintains a comprehensive, always-current database so you can find the information
+              you need — quickly and confidently. We take great care to ensure our platform is secure and
+              trustworthy, because we know how important accuracy is when it comes to financial transactions
+              and postal deliveries.
             </p>
             <p className="text-gray-500 text-base max-w-3xl mx-auto leading-relaxed">
-              Our goal is simple: to be your go-to source for everything banking and finance in India. We
-              take pride in our commitment to accuracy and user satisfaction, and strive to deliver the
-              best possible experience every time you visit.
+              Beyond IFSC and PIN codes, RupeePedia offers a growing suite of financial tools — EMI
+              calculators, SIP planners, FD/RD estimators, NRI tax calculators, gold &amp; silver live rates,
+              and in-depth guides on NEFT, RTGS, IMPS, UPI, and India Post. Whether you're planning a home
+              loan, tracking gold prices, or finding the nearest post office — we've got you covered.
             </p>
           </motion.div>
         </div>
@@ -73,42 +67,50 @@ export default function AboutPage() {
               {
                 icon: <Search className="w-5 h-5 text-brand-600" />,
                 title: 'IFSC Code Finder',
-                desc: '177,000+ bank branches across India. Search by bank, state, district, and branch — or enter an IFSC directly. Every result shows NEFT, RTGS, IMPS, and UPI status.',
-                href: '/ifsc',
+                desc: '178,000+ bank branches across India. Search by bank, state, district, and branch — or enter an IFSC directly. Every result shows NEFT, RTGS, IMPS, and UPI status.',
+                href: '/ifsc-finder',
                 cta: 'Search IFSC',
+                live: true,
+              },
+              {
+                icon: <MapPin className="w-5 h-5 text-brand-600" />,
+                title: 'PIN Code Directory',
+                desc: '150,000+ post offices across all 28 states and 8 union territories. Search by PIN code, post office name, or browse by state → district. Includes H.O, S.O, and B.O details.',
+                href: '/pin-codes',
+                cta: 'Search PIN Codes',
+                live: true,
+              },
+              {
+                icon: <TrendingUp className="w-5 h-5 text-brand-600" />,
+                title: 'Live Gold & Silver Rates',
+                desc: 'Today\'s 24K and 22K gold rates and silver prices updated daily across major Indian cities. Historical trend charts, purity comparison, and jewellery cost estimator.',
+                href: '/gold-silver-rate',
+                cta: 'Check Rates',
+                live: true,
+              },
+              {
+                icon: <Calculator className="w-5 h-5 text-brand-600" />,
+                title: '15+ Financial Calculators',
+                desc: 'EMI, SIP, FD/RD, PPF, NPS, HRA, GST, income tax, NRI capital gains, step-up SIP, prepayment, and more. All calculations run in your browser — no data sent to servers.',
+                href: '/calculators',
+                cta: 'Try Calculators',
                 live: true,
               },
               {
                 icon: <Building2 className="w-5 h-5 text-brand-600" />,
                 title: 'Branch Detail Pages',
-                desc: 'Every branch has its own SEO page with IFSC breakdown, MICR code, full address, payment modes, nearby branches, and step-by-step transfer guides.',
-                href: '/ifsc',
+                desc: 'Every branch has its own page with IFSC breakdown, MICR code, full address, payment modes, nearby branches, and step-by-step transfer guides.',
+                href: '/ifsc-finder',
                 cta: 'Browse Branches',
                 live: true,
               },
               {
-                icon: <Calculator className="w-5 h-5 text-brand-600" />,
-                title: 'EMI Calculator',
-                desc: 'Calculate loan EMIs instantly for home, car, and personal loans. Adjust principal, interest rate, and tenure. All calculations run in your browser.',
-                href: '/calculators/emi',
-                cta: 'Try Calculator',
-                live: true,
-              },
-              {
-                icon: <Zap className="w-5 h-5 text-brand-600" />,
-                title: 'SIP & Investment Calculators',
-                desc: 'Plan SIP investments, calculate FD/RD returns, PPF, NPS, CAGR, XIRR and more. 15+ tools — all client-side, your data never leaves your device.',
-                href: '/calculators/sip',
-                cta: 'Try Calculator',
-                live: true,
-              },
-              {
                 icon: <BookOpen className="w-5 h-5 text-brand-600" />,
-                title: 'Banking Guides',
-                desc: 'Deep-dive explainers on NEFT, RTGS, IMPS, UPI, MICR, and SWIFT. Transaction charges, operating hours, and step-by-step transfer instructions.',
+                title: 'Guides & Resources',
+                desc: 'In-depth guides on NEFT, RTGS, IMPS, UPI, MICR, SWIFT, India Post, PIN codes, gold investment, and NRI banking. All written and reviewed by our finance team.',
                 href: '/money-guides',
-                cta: 'Coming Soon',
-                live: false,
+                cta: 'Read Guides',
+                live: true,
               },
             ].map((item, i) => (
               <motion.div
@@ -149,10 +151,10 @@ export default function AboutPage() {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
-              { value: '1,77,000+', label: 'Bank Branches' },
-              { value: '200+',      label: 'Banks Covered' },
-              { value: '36',        label: 'States & UTs' },
-              { value: '100%',      label: 'Free to Use' },
+              { value: '1,78,000+', label: 'Bank Branches' },
+              { value: '1,50,000+', label: 'Post Offices'  },
+              { value: '36',        label: 'States & UTs'  },
+              { value: '100%',      label: 'Free to Use'   },
             ].map(stat => (
               <div key={stat.label}>
                 <p className="font-display text-2xl font-bold text-white">{stat.value}</p>
@@ -176,8 +178,8 @@ export default function AboutPage() {
               },
               {
                 icon: <Shield className="w-5 h-5 text-brand-600" />,
-                title: 'No ads, no tracking',
-                desc: 'RupeePedia products are ad-free. No third-party trackers, no analytics cookies, no retargeting. What you search stays between you and the RBI dataset.',
+                title: 'No personal tracking',
+                desc: 'No analytics cookies tied to your identity, no retargeting. The site is supported by contextual ads (Google AdSense) — these do not profile you based on your searches here.',
               },
               {
                 icon: <Users className="w-5 h-5 text-brand-600" />,

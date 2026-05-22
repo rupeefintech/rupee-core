@@ -2,6 +2,16 @@ User-agent: *
 Allow: /
 Allow: /sitemap.xml
 Allow: /ifsc/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /?*
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
 
 # Specific crawl rules
 User-agent: Googlebot
@@ -18,22 +28,6 @@ Disallow: /
 
 User-agent: AhrefsBot
 Crawl-delay: 10
-
-# Disallow sensitive paths
-Disallow: /api/
-Disallow: /admin/
-Disallow: /private/
-Disallow: /*.json$
-Disallow: /?*
-
-# Allow search engines to crawl static files
-Allow: /*.css$
-Allow: /*.js$
-Allow: /*.png$
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.gif$
-Allow: /*.svg$
 
 # Sitemap location (served from backend at /sitemap.xml)
 Sitemap: https://rupeepedia.in/sitemap.xml

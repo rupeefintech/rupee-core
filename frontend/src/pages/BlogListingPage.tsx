@@ -5,15 +5,17 @@ import { api, BlogSummary } from '../utils/api';
 import { Helmet } from 'react-helmet-async';
 import { Search, Calendar, Clock, ChevronLeft, ChevronRight, BookOpen } from 'lucide-react';
 
-const categories = ['All', 'Tax', 'NRI Tax', 'Banking', 'Investment', 'Credit Cards', 'Loans'];
+const categories = ['All', 'Banking', 'PIN & Postal', 'Gold & Silver', 'Tax', 'NRI Tax', 'Investment', 'Credit Cards', 'Loans'];
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
-  Tax:            { bg: 'bg-purple-50',  text: 'text-purple-700' },
-  'NRI Tax':      { bg: 'bg-sky-50',     text: 'text-sky-700' },
-  Banking:        { bg: 'bg-brand-50',   text: 'text-brand-700' },
-  Investment:     { bg: 'bg-emerald-50', text: 'text-emerald-700' },
-  'Credit Cards': { bg: 'bg-amber-50',   text: 'text-amber-700' },
-  Loans:          { bg: 'bg-rose-50',    text: 'text-rose-700' },
+  Tax:             { bg: 'bg-purple-50',  text: 'text-purple-700' },
+  'NRI Tax':       { bg: 'bg-sky-50',     text: 'text-sky-700' },
+  Banking:         { bg: 'bg-brand-50',   text: 'text-brand-700' },
+  'PIN & Postal':  { bg: 'bg-indigo-50',  text: 'text-indigo-700' },
+  'Gold & Silver': { bg: 'bg-yellow-50',  text: 'text-yellow-700' },
+  Investment:      { bg: 'bg-emerald-50', text: 'text-emerald-700' },
+  'Credit Cards':  { bg: 'bg-amber-50',   text: 'text-amber-700' },
+  Loans:           { bg: 'bg-rose-50',    text: 'text-rose-700' },
 };
 
 export default function BlogListingPage() {
@@ -48,8 +50,9 @@ export default function BlogListingPage() {
   return (
     <>
       <Helmet>
-        <title>Money Guides - Banking, Tax & Financial Tips | Rupeepedia</title>
-        <meta name="description" content="Expert financial guides on income tax, banking, credit cards, investments, and loans. Simple, actionable advice for every Indian." />
+        <title>Guides - Banking, PIN Codes, Gold, Tax & Financial Tips | Rupeepedia</title>
+        <meta name="description" content="Expert guides on IFSC & banking, PIN codes & India Post, live gold & silver rates, income tax, NRI banking, credit cards, and investments. Simple, actionable advice for every Indian." />
+        <link rel="canonical" href="https://rupeepedia.in/money-guides" />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">
@@ -60,11 +63,11 @@ export default function BlogListingPage() {
               <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                 <BookOpen size={20} className="text-gold-400" />
               </div>
-              <h1 className="text-3xl sm:text-4xl font-bold">Money Guides</h1>
+              <h1 className="text-3xl sm:text-4xl font-bold">Guides</h1>
             </div>
             <p className="text-white/60 max-w-xl text-sm sm:text-base">
-              Expert financial guides on income tax, banking, credit cards, investments, and loans.
-              Simple, actionable advice for every Indian.
+              Expert guides on banking, PIN codes &amp; India Post, live gold &amp; silver rates, income tax,
+              NRI banking, and investments. Simple, actionable advice for every Indian.
             </p>
 
             {/* Search Bar */}
@@ -73,7 +76,7 @@ export default function BlogListingPage() {
                 <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" />
                 <input
                   type="text"
-                  placeholder="Search guides..."
+                  placeholder="Search all guides..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 bg-white/10 border border-white/10 rounded-xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30 transition"
@@ -125,7 +128,7 @@ export default function BlogListingPage() {
               <p className="text-sm text-gray-400">
                 {searchQuery
                   ? `No results for "${searchQuery}". Try a different search.`
-                  : 'Check back soon for new financial guides.'}
+                  : 'Check back soon for new guides.'}
               </p>
             </div>
           ) : (

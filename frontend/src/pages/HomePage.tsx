@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../utils/api";
@@ -31,6 +32,11 @@ export default function HomePage() {
 
   return (
     <div className="bg-white">
+      <Helmet>
+        <title>Rupeepedia — IFSC Codes, Calculators & Financial Guides for India</title>
+        <meta name="description" content="Find IFSC codes for 178,000+ bank branches, use free financial calculators (EMI, SIP, FD, tax), and read money guides. India's most comprehensive financial toolkit." />
+        <link rel="canonical" href="https://rupeepedia.in/" />
+      </Helmet>
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 py-16 md:py-20">
@@ -287,7 +293,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1">Money Guides</p>
+              <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1">Guides</p>
               <h2 className="text-2xl font-black text-gray-900 tracking-tight">Stay financially informed</h2>
             </div>
             <Link to="/money-guides" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700 transition">
