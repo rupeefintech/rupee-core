@@ -89,6 +89,7 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
       <Helmet>
         <title>{cfg.title} 2026 — {type === 'ppf' ? 'PPF Maturity' : type === 'nps' ? 'NPS Pension' : 'Maturity & Interest'} Calculator | RupeePedia</title>
         <meta name="description" content={cfg.desc} />
+        <link rel="canonical" href={`https://rupeepedia.in/calculators/${type}`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",

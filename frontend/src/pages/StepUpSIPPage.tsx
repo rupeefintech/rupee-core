@@ -49,6 +49,7 @@ export default function StepUpSIPPage() {
       <Helmet>
         <title>Step-Up SIP Calculator 2026 — Calculate Returns with Annual Increase | RupeePedia</title>
         <meta name="description" content="Free Step-Up SIP Calculator — see how increasing your SIP by 10% annually can double your corpus vs flat SIP. Calculate year-wise growth." />
+        <link rel="canonical" href="https://rupeepedia.in/calculators/step-up-sip" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",

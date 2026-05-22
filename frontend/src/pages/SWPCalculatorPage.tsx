@@ -48,6 +48,7 @@ export default function SWPCalculatorPage() {
       <Helmet>
         <title>SWP Calculator 2026 — Systematic Withdrawal Plan Calculator | RupeePedia</title>
         <meta name="description" content="Free SWP Calculator — calculate how long your corpus will last with monthly withdrawals. See month-by-month withdrawal schedule and final value." />
+        <link rel="canonical" href="https://rupeepedia.in/calculators/swp" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",

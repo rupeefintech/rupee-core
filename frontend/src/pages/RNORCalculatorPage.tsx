@@ -285,6 +285,7 @@ export default function RNORCalculatorPage() {
       <Helmet>
         <title>RNOR Status Calculator — Multi-Year Eligibility | RupeePedia</title>
         <meta name="description" content="Check your NRI / RNOR / ROR residential status under Section 6 of the Income Tax Act. Enter India stay dates to see RNOR eligibility across multiple financial years." />
+        <link rel="canonical" href="https://rupeepedia.in/calculators/rnor-status" />
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-4 py-8">

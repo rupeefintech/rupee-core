@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Helmet } from "react-helmet-async";
 import { NavLink, useNavigate } from "react-router-dom";
 import { HomeIcon, CreditCardIcon, BanknoteIcon, Users, Search, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
@@ -24,6 +25,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   };
 
   return (
+    <>
+    <Helmet><meta name="robots" content="noindex, nofollow" /></Helmet>
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar — blue to match mockup */}
       <aside className="w-56 bg-[#1e3a5f] text-white flex flex-col shrink-0">
@@ -95,5 +98,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </motion.main>
       </div>
     </div>
+    </>
   );
 }

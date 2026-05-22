@@ -1,12 +1,2 @@
-// backend/src/database.ts  — REPLACE entire file with this
-import { PrismaClient } from '@prisma/client'
-
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
-
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['error'] : ['error'],
-  })
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Redirect to the singleton with adapter — do not create a second PrismaClient
+export { prisma } from './lib/prisma'

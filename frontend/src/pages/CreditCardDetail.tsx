@@ -122,6 +122,7 @@ export default function CreditCardDetail() {
       <Helmet>
         <title>{card.name} - Review, Benefits & Apply | Rupeepedia</title>
         <meta name="description" content={`${card.name} from ${card.bank.name}. Annual fee: ${formatINR(card.details.annualFee)}. ${activeOffers[0]?.title || ""}`} />
+        <link rel="canonical" href={`https://rupeepedia.in/credit-cards/${slug}`} />
       </Helmet>
 
       {/* Breadcrumb */}

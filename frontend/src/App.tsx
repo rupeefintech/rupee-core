@@ -52,6 +52,9 @@ const XIRRCalculatorPage = lazy(() => import("./pages/XIRRCalculatorPage"));
 const Loans = lazy(() => import("./pages/Loans"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const TermsPage = lazy(() => import("./pages/TermsPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const PinCodesPage = lazy(() => import("./pages/PinCodesPage"));
+const PinCodePage  = lazy(() => import("./pages/PinCodePage"));
 
 function App() {
   return (
@@ -132,6 +135,9 @@ function PublicLayout() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/contact"    element={<ContactPage />} />
+            <Route path="/pin-codes"  element={<PinCodesPage />} />
+            <Route path="/pin/:pincode" element={<PinCodePage />} />
             <Route path="/credit-cards" element={<CreditCards />} />
             <Route path="/credit-cards/compare" element={<CreditCardCompare />} />
             <Route path="/credit-cards/:slug" element={<CreditCardDetail />} />

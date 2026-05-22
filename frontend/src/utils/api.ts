@@ -164,6 +164,63 @@ function unwrapResponse(response: any): any {
   return response;
 }
 
+export interface PostOfficeEntry {
+  office_name: string;
+  office_type: string | null;
+  delivery:    boolean;
+  division:    string | null;
+  district:    string | null;
+  state_name:  string;
+  latitude:    number | null;
+  longitude:   number | null;
+}
+
+export interface PinBranch {
+  ifsc:        string;
+  bank_name:   string;
+  bank_logo:   string | null;
+  bank_slug:   string | null;
+  branch_name: string;
+  address:     string | null;
+  city:        string | null;
+  state_name:  string;
+  neft: number; rtgs: number; imps: number; upi: number;
+}
+
+export interface PinDetail {
+  pin_code:      string;
+  state_name:    string | null;
+  district:      string | null;
+  post_offices:  PostOfficeEntry[];
+  bank_branches: PinBranch[];
+  stats: {
+    post_office_count: number;
+    delivery_offices:  number;
+    bank_count:        number;
+    branch_count:      number;
+  };
+}
+
+export interface PinSearchResult {
+  pin_code:   string;
+  state_name: string;
+  district:   string | null;
+}
+
+export interface OfficeSearchResult {
+  office_name: string;
+  pin_code:    string;
+  office_type: string | null;
+  delivery:    boolean;
+  district:    string | null;
+  state_name:  string;
+  division:    string | null;
+  region:      string | null;
+  circle:      string | null;
+  latitude:    number | null;
+  longitude:   number | null;
+}
+
 export const api = {
   getStates: async (): Promise<State[]> => {
     try {
@@ -441,4 +498,47 @@ getCityPage: async (slug: string): Promise<{
     return unwrapResponse(response);
   },
 
+  // ── PIN Code Directory ──────────────────────────────────────────────────────
+  getPinDetail: async (pincode: string): Promise<PinDetail> => {
+    const response = await apiClient.get(`/pin/${pincode}`);
+    return unwrapResponse(response);
+  },
+
+  searchPin: async (q: string): Promise<PinSearchResult[]> => {
+    const response = await apiClient.get(`/pin/search?q=${encodeURIComponent(q)}&mode=pin`);
+    const data = unwrapResponse(response);
+    return Array.isArray(data) ? data : data || [];
+  },
+
+  searchPinOffice: async (q: string): Promise<OfficeSearchResult[]> => {
+    const response = await apiClient.get(`/pin/search?q=${encodeURIComponent(q)}&mode=office`);
+    const data = unwrapResponse(response);
+    return Array.isArray(data) ? data : data || [];
+  },
+
+  getPinStates: async (): Promise<string[]> => {
+    const response = await apiClient.get('/pin/states');
+    const data = unwrapResponse(response);
+    return Array.isArray(data) ? data : data || [];
+  },
+
+  getPinDistricts: async (state: string): Promise<string[]> => {
+    const response = await apiClient.get(`/pin/state/${encodeURIComponent(state)}/districts`);
+    const data = unwrapResponse(response);
+    return Array.isArray(data) ? data : data || [];
+  },
+
+  getDistrictOffices: async (state: string, district: string, exclude?: string): Promise<{ pin_code: string; office_name: string; office_type: string | null }[]> => {
+    const params = new URLSearchParams({ state, district, limit: '24' });
+    if (exclude) params.set('exclude', exclude);
+    const response = await apiClient.get(`/pin/district-offices?${params}`);
+    const data = unwrapResponse(response);
+    return Array.isArray(data) ? data : data || [];
+  },
+
+  getPinsByDistrict: async (state: string, district: string): Promise<string[]> => {
+    const response = await apiClient.get(`/pin/state/${encodeURIComponent(state)}/district/${encodeURIComponent(district)}/pins`);
+    const data = unwrapResponse(response);
+    return Array.isArray(data) ? data : data || [];
+  },
 };

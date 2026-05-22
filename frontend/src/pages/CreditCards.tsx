@@ -165,6 +165,7 @@ const CreditCards: React.FC = () => {
       <Helmet>
         <title>Best Credit Cards in India 2026 - Compare & Apply | Rupeepedia</title>
         <meta name="description" content="Compare the best credit cards in India. Find cashback, travel, rewards, and premium cards from HDFC, SBI, ICICI, Axis, and more." />
+        <link rel="canonical" href="https://rupeepedia.in/credit-cards" />
       </Helmet>
 
       {/* â”€â”€â”€ Hero â”€â”€â”€ */}

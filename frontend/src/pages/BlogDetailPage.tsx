@@ -70,6 +70,7 @@ export default function BlogDetailPage() {
         <meta property="og:description" content={blog.description} />
         {blog.coverImage && <meta property="og:image" content={blog.coverImage} />}
         <meta property="og:type" content="article" />
+        <link rel="canonical" href={`https://rupeepedia.in/money-guides/${slug}`} />
         <script type="application/ld+json">
           {JSON.stringify({
             '@context': 'https://schema.org',

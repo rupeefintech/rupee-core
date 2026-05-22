@@ -15,6 +15,7 @@ export default function CalculatorsIndexPage() {
       <Helmet>
         <title>Financial Calculators - EMI, SIP, FD, Loan Eligibility | RupeePedia</title>
         <meta name="description" content="Free financial calculators for EMI, SIP, FD, loan eligibility and more. Plan your finances smarter with RupeePedia's calculator suite." />
+        <link rel="canonical" href="https://rupeepedia.in/calculators" />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

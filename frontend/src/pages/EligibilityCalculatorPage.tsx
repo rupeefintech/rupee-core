@@ -39,6 +39,7 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
       <Helmet>
         <title>{isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator 2026 | RupeePedia</title>
         <meta name="description" content={`Check your ${isHome ? 'home' : 'personal'} loan eligibility instantly. Know the maximum loan amount you can get based on your income and existing obligations.`} />
+        <link rel="canonical" href={`https://rupeepedia.in/calculators/${isHome ? 'home-loan-eligibility' : 'personal-loan-eligibility'}`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",

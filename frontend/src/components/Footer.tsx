@@ -51,6 +51,7 @@ const Footer: React.FC = () => {
         <div>
           <h3 className="text-white/90 font-semibold text-xs uppercase tracking-widest mb-3">Company</h3>
           <ul className="space-y-2 text-sm">
+            <li><Link to="/pin-codes" className="text-white/45 hover:text-white transition-colors">PIN Code Directory</Link></li>
             <li><Link to="/about" className="text-white/45 hover:text-white transition-colors">About Us</Link></li>
             <li><Link to="/contact" className="text-white/45 hover:text-white transition-colors">Contact</Link></li>
             <li><Link to="/privacy" className="text-white/45 hover:text-white transition-colors">Privacy Policy</Link></li>

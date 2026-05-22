@@ -251,7 +251,7 @@ export default function SalaryCalculatorPage() {
         <title>Salary Calculator 2026 - CTC to In-Hand Salary | RupeePedia</title>
 
         <meta name="description" content="Calculate your in-hand salary from CTC. See complete salary breakdown with Basic, HRA, EPF, tax deductions under Old & New regime for FY 2025-26." />
-
+        <link rel="canonical" href="https://rupeepedia.in/calculators/salary-calculator" />
       </Helmet>
 
 

@@ -37,6 +37,7 @@ export default function GSTCalculatorPage() {
       <Helmet>
         <title>GST Calculator 2026 — Calculate GST Online | RupeePedia</title>
         <meta name="description" content="Free GST Calculator — instantly calculate GST amount, CGST, SGST for any amount. Supports all GST slabs: 3%, 5%, 12%, 18%, 28%." />
+        <link rel="canonical" href="https://rupeepedia.in/calculators/gst" />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",

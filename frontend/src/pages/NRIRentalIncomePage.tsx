@@ -107,6 +107,7 @@ export default function NRIRentalIncomePage() {
       <Helmet>
         <title>NRI Rental Income Tax Calculator | RupeePedia</title>
         <meta name="description" content="Calculate tax on rental income from Indian property for NRIs. Understand TDS, deductions, and net income after tax." />
+        <link rel="canonical" href="https://rupeepedia.in/calculators/nri-rental-income" />
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-4 py-8">

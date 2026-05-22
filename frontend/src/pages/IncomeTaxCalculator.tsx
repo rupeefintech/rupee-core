@@ -77,6 +77,7 @@ export default function TaxCalculatorPage() {
     <>
       <Helmet>
         <title>Income Tax Calculator FY 2025-26 | Rupeepedia</title>
+        <link rel="canonical" href="https://rupeepedia.in/calculators/income-tax" />
       </Helmet>
 
       <div className="min-h-screen bg-[#F8FAFC]">

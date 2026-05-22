@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 export default function HRACalculatorPage() {
@@ -14,6 +15,12 @@ export default function HRACalculatorPage() {
   const exemption = Math.min(condition1, condition2, condition3);
 
   return (
+    <>
+    <Helmet>
+      <title>HRA Calculator 2026 — Calculate HRA Tax Exemption | RupeePedia</title>
+      <meta name="description" content="Free HRA Calculator — calculate your House Rent Allowance tax exemption. Supports metro and non-metro cities for FY 2025-26." />
+      <link rel="canonical" href="https://rupeepedia.in/calculators/hra-calculator" />
+    </Helmet>
     <div className="max-w-5xl mx-auto p-6">
 
       <h1 className="text-3xl font-bold mb-6">
@@ -76,5 +83,6 @@ export default function HRACalculatorPage() {
       </div>
 
     </div>
+    </>
   );
 }

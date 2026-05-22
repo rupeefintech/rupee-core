@@ -1,8 +1,15 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 const BankAccounts: React.FC = () => {
   return (
+    <>
+    <Helmet>
+      <title>Best Bank Accounts in India 2026 — Compare Savings & Zero-Balance | RupeePedia</title>
+      <meta name="description" content="Compare zero balance savings accounts, salary accounts, and digital bank accounts in India. Find the best bank account for your needs." />
+      <link rel="canonical" href="https://rupeepedia.in/accounts" />
+    </Helmet>
     <div className="max-w-6xl mx-auto p-6">
 
       <h1 className="text-3xl font-bold mb-4">
@@ -72,6 +79,7 @@ const BankAccounts: React.FC = () => {
 
       </div>
     </div>
+    </>
   );
 };
 

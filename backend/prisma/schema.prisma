@@ -3,9 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 // ─── State ───────────────────────────────────────────────────────────────────
@@ -334,6 +332,27 @@ model Admin {
   password  String
   createdAt DateTime @default(now()) @map("created_at")
   @@map("admins")  // map the model to the correct table
+}
+
+// ─── PostOffice (India Post PIN code directory) ───────────────────────────────
+model PostOffice {
+  id         Int     @id @default(autoincrement())
+  pinCode    String  @map("pin_code")    @db.VarChar(6)
+  officeName String  @map("office_name") @db.VarChar(200)
+  officeType String? @map("office_type") @db.VarChar(5)   // H.O / S.O / B.O
+  delivery   Boolean @default(true)
+  district   String? @db.VarChar(100)
+  division   String? @db.VarChar(100)
+  region     String? @db.VarChar(100)
+  circle     String? @db.VarChar(100)
+  stateName  String  @map("state_name")  @db.VarChar(100)
+  latitude   Float?
+  longitude  Float?
+
+  @@index([pinCode])
+  @@index([stateName])
+  @@index([district])
+  @@map("post_offices")
 }
 
 // ─── Blog ───────────────────────────────────────────────────────────────────

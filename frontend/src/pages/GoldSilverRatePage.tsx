@@ -79,6 +79,7 @@ export default function GoldSilverRatePage() {
         <title>Gold Rate Today in India — 24K 22K Gold & Silver Price | RupeePedia</title>
         <meta name="description" content={`Today's gold rate in India — 24K and 22K gold price per gram and 10 grams in ${city}. Live silver price per kg. Updated every 30 minutes.`} />
         <meta name="keywords" content="gold rate today, gold price today india, 24k gold price, 22k gold price, silver rate today, gold price per gram" />
+        <link rel="canonical" href="https://rupeepedia.in/gold-rate-today" />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

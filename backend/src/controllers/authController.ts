@@ -1,9 +1,7 @@
 // controllers/authController.ts
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "../lib/prisma"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-
-const prisma = new PrismaClient()
 
 async function test() {
   const admins = await prisma.admin.findMany()

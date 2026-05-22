@@ -117,6 +117,7 @@ export default function NRIFDCalculatorPage() {
       <Helmet>
         <title>NRI FD Calculator — NRE vs NRO vs FCNR Comparison | RupeePedia</title>
         <meta name="description" content="Compare NRE, NRO, and FCNR fixed deposit returns for NRIs. Understand tax implications, TDS, and repatriation rules." />
+        <link rel="canonical" href="https://rupeepedia.in/calculators/nri-fd" />
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-4 py-8">

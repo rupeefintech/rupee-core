@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { api, BranchDetail, NearbyBranch } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
+import AdUnit, { AD_SLOTS } from '../components/AdUnit';
 import BranchCard from '../components/BranchCard';
 import { generateSEO } from '../utils/seo';
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -450,6 +451,11 @@ export default function IFSCDetailPage() {
                   {toTitleCase(branch.city)} Branches <span className="text-brand-400">›</span>
                 </Link>
               )}
+              {branch.pincode && (
+                <Link to={`/pin/${branch.pincode}`} className="inline-flex items-center gap-1.5 text-xs text-amber-700 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg font-semibold border border-amber-200 hover:border-amber-300 transition-all">
+                  PIN {branch.pincode} <span className="text-amber-400">›</span>
+                </Link>
+              )}
             </div>
           </motion.div>
 
@@ -468,6 +474,8 @@ export default function IFSCDetailPage() {
 
         </div>
       </section>
+
+      <AdUnit slot={AD_SLOTS.IFSC_TOP} className="max-w-5xl mx-auto px-4 pt-4" />
 
       {/* ── Content ── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 -mt-2 pb-20 space-y-4 pt-5">
@@ -748,6 +756,8 @@ export default function IFSCDetailPage() {
             </div>
           </div>
         </motion.div>
+
+        <AdUnit slot={AD_SLOTS.IFSC_MID} />
 
         {/* ─ Row 5: Nearby Branches + FAQ ─ */}
         <motion.div

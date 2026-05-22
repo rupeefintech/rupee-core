@@ -2028,4 +2028,305 @@ router.get('/commodity-prices', async (_req: Request, res: Response) => {
   }
 })
 
+// ── PIN CODE DIRECTORY ────────────────────────────────────────────────────────
+// NOTE: all fixed-path routes must come BEFORE /pin/:pincode
+
+// GET /api/pin/states — all distinct states that have post office records
+router.get('/pin/states', async (_req: Request, res: Response) => {
+  const KEY = 'pin_states'
+  const mem = memGet(KEY)
+  if (mem) { res.json(mem); return }
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const rows = await (prisma as any).postOffice.findMany({
+    select:   { stateName: true },
+    distinct: ['stateName'],
+    orderBy:  { stateName: 'asc' },
+  })
+  const out = { data: rows.map((r: any) => r.stateName) }
+  memSet(KEY, out, 12 * 60 * 60)
+  await cacheSet(KEY, out, 24 * 60 * 60)
+  res.json(out)
+})
+
+// GET /api/pin/state/:state/districts — districts for a state
+router.get('/pin/state/:state/districts', async (req: Request, res: Response) => {
+  const state = decodeURIComponent(req.params.state).trim()
+  const KEY   = `pin_districts_${state.toLowerCase()}`
+  const mem   = memGet(KEY)
+  if (mem) { res.json(mem); return }
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const rows = await (prisma as any).postOffice.findMany({
+    where:    { stateName: { equals: state, mode: 'insensitive' }, district: { not: null } },
+    select:   { district: true },
+    distinct: ['district'],
+    orderBy:  { district: 'asc' },
+  })
+  const out = { data: rows.map((r: any) => r.district).filter(Boolean) }
+  memSet(KEY, out, 12 * 60 * 60)
+  await cacheSet(KEY, out, 24 * 60 * 60)
+  res.json(out)
+})
+
+// GET /api/pin/state/:state/district/:district/pins — PIN codes for a state+district
+router.get('/pin/state/:state/district/:district/pins', async (req: Request, res: Response) => {
+  const state    = decodeURIComponent(req.params.state).trim()
+  const district = decodeURIComponent(req.params.district).trim()
+  const KEY      = `pin_pins_${state}_${district}`.toLowerCase().replace(/\s+/g, '_')
+  const mem      = memGet(KEY)
+  if (mem) { res.json(mem); return }
+  const cached   = await cacheGet(KEY)
+  if (cached)    { res.json(cached); return }
+
+  const rows = await (prisma as any).postOffice.findMany({
+    where: {
+      stateName: { equals: state,    mode: 'insensitive' },
+      district:  { equals: district, mode: 'insensitive' },
+    },
+    select:   { pinCode: true },
+    distinct: ['pinCode'],
+    orderBy:  { pinCode: 'asc' },
+  })
+  const out = { data: rows.map((r: any) => r.pinCode) }
+  memSet(KEY, out, 12 * 60 * 60)
+  await cacheSet(KEY, out, 24 * 60 * 60)
+  res.json(out)
+})
+
+// GET /api/pin/district-offices — sample of offices from same district (for related PINs)
+router.get('/pin/district-offices', async (req: Request, res: Response) => {
+  const state    = String(req.query.state    ?? '').trim()
+  const district = String(req.query.district ?? '').trim()
+  const exclude  = String(req.query.exclude  ?? '').trim()
+  const limit    = Math.min(24, parseInt(String(req.query.limit ?? 20)))
+
+  if (!state || !district) {
+    res.status(400).json({ error: 'state and district required' })
+    return
+  }
+
+  const KEY = `pin_dist_offices_${state}_${district}`.toLowerCase().replace(/\s+/g, '_')
+  const mem = memGet(KEY)
+  if (mem) { res.json(mem); return }
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  // Get one representative office per distinct PIN (prefer H.O > S.O > B.O)
+  const rows = await (prisma as any).postOffice.findMany({
+    where: {
+      stateName:  { equals: state,    mode: 'insensitive' },
+      district:   { equals: district, mode: 'insensitive' },
+      ...(exclude ? { pinCode: { not: exclude } } : {}),
+    },
+    select:   { pinCode: true, officeName: true, officeType: true },
+    orderBy:  [{ officeType: 'asc' }, { pinCode: 'asc' }],
+    take:     limit * 6,
+  })
+
+  // Deduplicate — keep first (best type) per PIN
+  const seen = new Set<string>()
+  const deduped: any[] = []
+  for (const r of rows) {
+    if (!seen.has(r.pinCode)) {
+      seen.add(r.pinCode)
+      deduped.push({ pin_code: r.pinCode, office_name: r.officeName, office_type: r.officeType })
+      if (deduped.length >= limit) break
+    }
+  }
+
+  const out = { data: deduped }
+  memSet(KEY, out, 12 * 60 * 60)
+  await cacheSet(KEY, out, 24 * 60 * 60)
+  res.json(out)
+})
+
+// GET /api/pin/all — all distinct PIN codes for sitemap
+router.get('/pin/all', async (req: Request, res: Response) => {
+  const page  = Math.max(1, parseInt(String(req.query.page  ?? 1)))
+  const limit = Math.min(10000, parseInt(String(req.query.limit ?? 5000)))
+  const skip  = (page - 1) * limit
+  const KEY   = `pin_all_${page}_${limit}`
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const rows = await (prisma as any).postOffice.findMany({
+    select:   { pinCode: true },
+    distinct: ['pinCode'],
+    orderBy:  { pinCode: 'asc' },
+    skip,
+    take: limit,
+  })
+  const out = { data: rows.map((r: any) => r.pinCode), count: rows.length }
+  await cacheSet(KEY, out, 24 * 60 * 60)
+  res.json(out)
+})
+
+// GET /api/pin/search?q=&mode=pin|office  — search by PIN prefix OR office name
+router.get('/pin/search', async (req: Request, res: Response) => {
+  const q    = String(req.query.q    ?? '').trim()
+  const mode = String(req.query.mode ?? 'pin')   // 'pin' | 'office'
+
+  if (q.length < 2) {
+    res.status(400).json({ error: 'Query must be at least 2 characters' })
+    return
+  }
+
+  const KEY    = `pin_search_${mode}_${q.toLowerCase()}`
+  const mem    = memGet(KEY)
+  if (mem) { res.json(mem); return }
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  let out: any
+
+  if (mode === 'office') {
+    // Search by office name — return individual records (not grouped by PIN)
+    const rows = await (prisma as any).postOffice.findMany({
+      where:   { officeName: { contains: q, mode: 'insensitive' } },
+      select:  {
+        officeName: true, pinCode: true, officeType: true, delivery: true,
+        district: true, stateName: true, division: true, region: true, circle: true, latitude: true, longitude: true,
+      },
+      orderBy: [{ officeName: 'asc' }, { pinCode: 'asc' }],
+      take:    50,
+    })
+    out = {
+      data: rows.map((r: any) => ({
+        office_name: r.officeName,
+        pin_code:    r.pinCode,
+        office_type: r.officeType,
+        delivery:    r.delivery,
+        district:    r.district,
+        state_name:  r.stateName,
+        latitude:    r.latitude  ?? null,
+        longitude:   r.longitude ?? null,
+        division:    r.division,
+        region:      r.region,
+        circle:      r.circle,
+      })),
+      count: rows.length,
+    }
+  } else {
+    // PIN prefix search — return distinct PINs with meta
+    const isPinQuery = /^\d+$/.test(q)
+    const rows = await (prisma as any).postOffice.findMany({
+      where: isPinQuery
+        ? { pinCode: { startsWith: q } }
+        : {
+            OR: [
+              { district:  { contains: q, mode: 'insensitive' } },
+              { stateName: { contains: q, mode: 'insensitive' } },
+            ],
+          },
+      select:   { pinCode: true, stateName: true, district: true },
+      distinct: ['pinCode'],
+      orderBy:  { pinCode: 'asc' },
+      take:     30,
+    })
+    out = {
+      data: rows.map((r: any) => ({
+        pin_code:   r.pinCode,
+        state_name: r.stateName,
+        district:   r.district,
+      })),
+      count: rows.length,
+    }
+  }
+
+  memSet(KEY, out, 10 * 60)
+  await cacheSet(KEY, out, 10 * 60)
+  res.json(out)
+})
+
+// GET /api/pin/:pincode  — full detail: post offices + bank branches
+router.get('/pin/:pincode', async (req: Request, res: Response) => {
+  const { pincode } = req.params
+  if (!/^\d{6}$/.test(pincode)) {
+    res.status(400).json({ error: 'PIN code must be 6 digits' })
+    return
+  }
+
+  const KEY = `pin_detail_${pincode}`
+  const mem = memGet(KEY)
+  if (mem) { res.json(mem); return }
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const [postOffices, bankBranches] = await Promise.all([
+    (prisma as any).postOffice.findMany({
+      where: { pinCode: pincode },
+      orderBy: [{ officeType: 'asc' }, { officeName: 'asc' }],
+    }),
+    prisma.branch.findMany({
+      where: { pincode },
+      select: {
+        ifsc: true, branchName: true, address: true, city: true,
+        neft: true, rtgs: true, imps: true, upi: true,
+        bank:  { select: { name: true, logoUrl: true, slug: true } },
+        state: { select: { name: true } },
+      },
+      orderBy: { bank: { name: 'asc' } },
+      take: 100,
+    }),
+  ])
+
+  if (!postOffices.length && !bankBranches.length) {
+    res.status(404).json({ error: 'No data found for this PIN code' })
+    return
+  }
+
+  // Derive district/state from post office data preferably, fall back to branch
+  const meta = postOffices.length > 0 ? {
+    state_name: postOffices[0].stateName,
+    district:   postOffices[0].district ?? null,
+  } : {
+    state_name: bankBranches[0]?.state.name ?? null,
+    district:   null,
+  }
+
+  const out = {
+    data: {
+      pin_code:   pincode,
+      ...meta,
+      post_offices: postOffices.map((p: any) => ({
+        office_name: p.officeName,
+        office_type: p.officeType,
+        delivery:    p.delivery,
+        division:    p.division,
+        district:    p.district,
+        state_name:  p.stateName,
+        latitude:    p.latitude  ?? null,
+        longitude:   p.longitude ?? null,
+      })),
+      bank_branches: bankBranches.map(b => ({
+        ifsc:       b.ifsc,
+        bank_name:  b.bank.name,
+        bank_logo:  b.bank.logoUrl,
+        bank_slug:  b.bank.slug,
+        branch_name: b.branchName,
+        address:    b.address,
+        city:       b.city,
+        state_name: b.state.name,
+        neft: b.neft ? 1 : 0,
+        rtgs: b.rtgs ? 1 : 0,
+        imps: b.imps ? 1 : 0,
+        upi:  b.upi  ? 1 : 0,
+      })),
+      stats: {
+        post_office_count: postOffices.length,
+        delivery_offices:  postOffices.filter((p: any) => p.delivery).length,
+        bank_count:   new Set(bankBranches.map(b => b.bank.name)).size,
+        branch_count: bankBranches.length,
+      },
+    },
+  }
+
+  memSet(KEY, out, 60 * 60)
+  await cacheSet(KEY, out, 6 * 60 * 60)
+  res.json(out)
+})
+
 export default router

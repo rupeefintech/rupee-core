@@ -75,6 +75,7 @@ export default function CreditCardCompare() {
       <Helmet>
         <title>Compare Credit Cards - {cards.map((c) => c.name).join(" vs ")} | Rupeepedia</title>
         <meta name="description" content={`Side-by-side comparison of ${cards.map((c) => c.name).join(", ")}. Compare fees, rewards, and features.`} />
+        <link rel="canonical" href="https://rupeepedia.in/credit-cards/compare" />
       </Helmet>
 
       {/* Header */}

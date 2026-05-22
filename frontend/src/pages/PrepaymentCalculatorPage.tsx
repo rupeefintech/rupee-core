@@ -65,6 +65,7 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
       <Helmet>
         <title>{isHome ? 'Home' : 'Personal'} Loan Prepayment Calculator 2026 | RupeePedia</title>
         <meta name="description" content={`Calculate how much interest you save by prepaying your ${isHome ? 'home' : 'personal'} loan. See months saved and total interest saved.`} />
+        <link rel="canonical" href={`https://rupeepedia.in/calculators/${isHome ? 'home-prepayment' : 'personal-prepayment'}`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",

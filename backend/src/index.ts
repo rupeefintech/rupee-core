@@ -64,6 +64,7 @@ app.get('/sitemap.xml', async (req, res) => {
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-2.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-3.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-4.xml</loc><lastmod>${today}</lastmod></sitemap>
+  <sitemap><loc>https://rupeepedia.in/sitemap-pin.xml</loc><lastmod>${today}</lastmod></sitemap>
 </sitemapindex>`);
 });
 
@@ -86,6 +87,12 @@ app.get('/sitemap-static.xml', (_req, res) => {
   </url>
   <url>
     <loc>${baseUrl}/about</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/pin-codes</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -338,6 +345,33 @@ app.get('/sitemap-blogs.xml', async (_req, res) => {
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-blogs:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
+// PIN code sitemap — all unique PINs from post_offices table
+app.get('/sitemap-pin.xml', async (_req, res) => {
+  try {
+    const { prisma } = require('./lib/prisma');
+    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+    const today   = new Date().toISOString().split('T')[0];
+
+    const rows = await (prisma as any).postOffice.findMany({
+      select:   { pinCode: true },
+      distinct: ['pinCode'],
+      orderBy:  { pinCode: 'asc' },
+    });
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    for (const row of rows) {
+      xml += `  <url>\n    <loc>${baseUrl}/pin/${row.pinCode}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+    }
+    xml += '</urlset>';
+    res.setHeader('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (error) {
+    console.error('Error generating sitemap-pin:', error);
     res.status(500).send('Error generating sitemap');
   }
 });
