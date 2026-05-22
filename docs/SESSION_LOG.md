@@ -4,6 +4,85 @@
 
 ---
 
+## 22 May 2026
+
+### What was done
+
+1. **Google AdSense added:**
+   - Script tag inserted in `frontend/index.html` (`ca-pub-9161911570606195`)
+   - Confirmed: SPA = one script covers all pages, no per-page addition needed
+   - `AdUnit.tsx` component created for inline ad slots
+
+2. **Favicon fixed:**
+   - Old favicon: `logo.png` (gold coins chart logo — completely different from site)
+   - New: `frontend/public/favicon.svg` — purple gradient rounded square with `₹`, matches navbar icon exactly
+   - `index.html` updated: SVG first (modern browsers), PNG fallback
+
+3. **PIN Code module — full implementation:**
+   - `PinCodesPage.tsx` (new) — Stitch indigo design
+     - Light `#f9f9ff` hero, compact on mobile
+     - Desktop: bottom-border tabs; Mobile: pill tabs inside `bg-[#e9edff]`
+     - `ByPinCode`: navigates directly to `/pin/:pin` (no inline results)
+     - `ByPostOffice`: shows `ResultsList` with "View Details →" links
+     - `ByLocation`: cascade dropdowns → "View PIN Code Details" button
+     - Mobile: full-width "Search Now →" button, 2-col quick links bento
+     - Features bento ("Why Rupeepedia?"), Why Use 4-card section, FAQ, CTA
+   - `PinCodePage.tsx` (new) — detail page
+     - 8+4 bento grid (left content + right sidebar)
+     - Post Office Primary Details card, HO/SO/BO explainer, About, Banks, FAQ
+     - Sidebar: Location Profile (purple), Quick Reference, Nearby PINs, IFSC CTA
+     - Mobile: accordion banks, border-bottom FAQ, icon-only share button, flex-wrap stats
+     - `MobileBankRow` accordion component
+     - Full SEO: BreadcrumbList + FAQPage JSON-LD, dynamic title/description
+
+4. **Guides (formerly Money Guides):**
+   - URL `/money-guides` kept (SEO preserved)
+   - Display label changed to "Guides" across: Navbar (desktop + mobile), HomePage, BlogListingPage
+   - Categories updated: added `PIN & Postal` (indigo) + `Gold & Silver` (yellow)
+   - Hero description updated to include postal/gold content
+
+5. **About page updated:**
+   - Meta title + description updated for PIN codes + gold rates
+   - Intro paragraphs rewritten (3 pillars: IFSC, PIN, gold)
+   - Features grid: 5→6 cards (added PIN Code Directory, Live Gold & Silver Rates)
+   - "Banking Guides" → "Guides & Resources" marked Live
+   - Stats bar: added "1,50,000+ Post Offices" replacing "200+ Banks"
+   - Privacy: removed false "No ads" claim (AdSense now live)
+
+6. **Blog: Post Office Savings Schemes 2026:**
+   - ID 31, slug: `top-5-post-office-savings-schemes-india-2026`
+   - Category: `PIN & Postal`
+   - 7 min read, 5 schemes (PPF, SCSS, SSY, NSC, POTD)
+   - Internal SEO links mapped to real routes:
+     - PPF → `/calculators/ppf`, `/calculators/fd`, `/calculators/income-tax`
+     - SCSS → `/calculators/fd`, `/calculators/swp`, `/calculators/nps`
+     - SSY → `/calculators/ppf`, `/calculators/sip`, `/pin-codes`
+     - NSC/POTD → `/calculators/fd`, `/calculators`
+     - Post office finder CTA → `/pin-codes`
+   - Cover image path: `/images/blogs/post-office-schemes-2026.jpg` (file needs manual drop)
+   - Insert/update script: `backend/scripts/insert_blog.mjs`
+
+7. **Docs updated:**
+   - `docs/setup/database.md` — added `post_offices` table, indexes, blog categories updated
+   - `docs/setup/frontend.md` — added PIN + gold routes, PIN API methods
+   - `docs/modules/08-pin-codes.md` — new full module doc
+
+### Current state (as of 2026-05-22)
+- PIN code module fully live (both pages, all 3 search modes, mobile optimized)
+- Blog #31 live in DB — missing cover image file (user to drop manually)
+- AdSense deployed, pending Google verification
+- "Guides" rename live everywhere
+- Commits: `6f7dddc` (main session), `7b2c9de` (blog SEO links)
+
+### Pending / next steps
+- Drop infographic to `frontend/public/images/blogs/post-office-schemes-2026.jpg` → commit
+- Google AdSense verification (check "I've placed the code" → Verify in AdSense console)
+- Blog admin API — currently blogs inserted via script only, no admin UI
+- More `PIN & Postal` category blogs
+- 718 banks still missing logo images
+
+---
+
 ## 15 April 2026
 
 ### What was done

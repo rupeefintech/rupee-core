@@ -21,7 +21,8 @@
 | `ProductOffer` | — | Versioned offers/benefits per product |
 | `Feature` | — | Feature tags (e.g. "Lounge Access") |
 | `ProductFeatureMapping` | — | Many-to-many: Product ↔ Feature |
-| `blogs` | — | Blog posts |
+| `post_offices` | ~150,000 | India Post PIN code directory (H.O/S.O/B.O) |
+| `blogs` | 31+ | Blog posts |
 | `admins` | — | Admin user accounts |
 | `data_overrides` | — | Manual field corrections audit log |
 | `search_logs` | — | IFSC search query log |
@@ -146,6 +147,44 @@
 | `valid_from` / `valid_to` | timestamp | |
 | `source` | varchar(50) | `manual` or `scraper` |
 
+## PIN Code Table
+
+### `post_offices` (Prisma: `PostOffice`)
+| Column | Type | Notes |
+|---|---|---|
+| `id` | int PK | |
+| `pin_code` | varchar(6) | 6-digit India Post PIN — not unique (multiple offices share one PIN) |
+| `office_name` | varchar(200) | Post office name |
+| `office_type` | varchar(5) | `H.O` (Head), `S.O` (Sub), `B.O` (Branch) |
+| `delivery` | bool | `true` = delivery office, `false` = non-delivery |
+| `district` | varchar(100) | District name (raw string, not FK) |
+| `division` | varchar(100) | India Post division |
+| `region` | varchar(100) | India Post region |
+| `circle` | varchar(100) | India Post circle (e.g. "Telangana Circle") |
+| `state_name` | varchar(100) | State name (raw string, not FK) |
+| `latitude` | float | Optional |
+| `longitude` | float | Optional |
+
+**Indexes:** `pin_code`, `state_name`, `district`
+
+**Key rules:**
+- Multiple post offices can share one PIN code — always return array, not single row
+- `office_type` hierarchy: H.O > S.O > B.O — use H.O as "headline" office when one is needed
+- `state_name` does NOT join to `State` table — stored as plain string
+- District names are raw India Post strings — may differ from `District` table names
+
+**API endpoints (see `api.ts`):**
+- `GET /api/pin/:pin` → `{ post_offices[], bank_branches[], stats, state_name, district }`
+- `GET /api/pin/states` → distinct state names
+- `GET /api/pin/states/:state/districts` → districts for state
+- `GET /api/pin/districts/:state/:district/pins` → all PINs for district
+- `GET /api/pin/search/office?q=` → fuzzy office name search
+- `GET /api/pin/district-offices` → nearby PINs in same district
+
+**Frontend pages:**
+- `/pin-codes` → `PinCodesPage.tsx` — search landing (by PIN, office name, location cascade)
+- `/pin/:pincode` → `PinCodePage.tsx` — detail page with post offices, banks, FAQ, sidebar
+
 ## Blog Table
 
 ### `blogs`
@@ -155,9 +194,9 @@
 | `slug` | varchar(200) unique | |
 | `title` | varchar(300) | |
 | `description` | text | SEO meta description |
-| `category` | varchar(50) | `Tax`, `Banking`, `Investment`, `Credit Cards`, `Loans` |
+| `category` | varchar(50) | `Banking`, `PIN & Postal`, `Gold & Silver`, `Tax`, `NRI Tax`, `Investment`, `Credit Cards`, `Loans` |
 | `tags` | text[] | PostgreSQL array |
-| `cover_image` | text | Unsplash URL |
+| `cover_image` | text | URL — `/images/blogs/` for local, Unsplash for external |
 | `content` | text | Full Markdown |
 | `read_time` | varchar(20) | e.g. `5 min read` |
 | `is_published` | bool | `false` = draft |
@@ -174,6 +213,11 @@
 - `Branch.bank_id`, `Branch.state_id`, `Branch.district_id`, `Branch.pincode`, `Branch.micr`, `Branch.city_id` — individual indexes
 - `District(name, stateId)` — composite unique
 - `City(name, stateId)` — composite unique
+
+### PIN Code
+- `post_offices.pin_code` — index
+- `post_offices.state_name` — index
+- `post_offices.district` — index
 
 ### Blog
 - `blogs.category` — index

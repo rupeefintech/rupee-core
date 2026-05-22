@@ -64,7 +64,10 @@ frontend/
 /credit-cards/:slug              → CreditCardDetail (card detail, offers, features)
 /bank-accounts                   → BankAccounts (stub)
 /loans                           → Loans (stub)
-/money-guides                    → BlogListingPage (paginated, category tabs, search)
+/pin-codes                       → PinCodesPage (search by PIN/office/location, FAQ, features bento)
+/pin/:pincode                    → PinCodePage (detail: post offices, banks, HO/SO/BO explainer, FAQ, sidebar)
+/gold-silver-rate                → GoldSilverRatePage (live 24K/22K gold + silver, city rates, tabs)
+/money-guides                    → BlogListingPage (paginated, category filter chips, search — display name "Guides")
 /money-guides/:slug              → BlogDetailPage (Markdown, TOC sidebar, related posts)
 /calculators                     → CalculatorsIndexPage (directory)
 /calculators/emi                 → EMICalculatorPage
@@ -151,6 +154,17 @@ TanStack Query stale times: 5min for lists, 1h for IFSC detail pages.
 - `api.getCityPage(slug)` → SEO city page data
 - `api.getStats()` → DB stats (total branches, banks, states)
 - `api.search(q)` → IFSC / branch name search
+
+**PIN Code**
+- `api.getPinDetail(pin)` → `{ post_offices[], bank_branches[], stats, state_name, district }`
+- `api.getPinStates()` → distinct state names for dropdown
+- `api.getPinDistricts(state)` → districts for state
+- `api.getPinsByDistrict(state, district)` → PIN codes for district
+- `api.searchPinOffice(q)` → office name fuzzy search (min 3 chars)
+- `api.getDistrictOffices(state, district, excludePin)` → nearby PINs in same district
+
+**Gold & Silver**
+- `api.getGoldRates()` → live 24K/22K gold + silver rates by city
 
 **Blog**
 - `api.getBlogs(params)` → paginated list (page, limit, category, search)
