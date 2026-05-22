@@ -20,19 +20,19 @@ const Footer: React.FC = () => {
             </span>
           </div>
           <p className="text-sm text-white/40 leading-relaxed">
-            India's most complete banking data platform. IFSC codes, credit cards & financial tools — all free.
+            India's most complete banking &amp; postal data platform — IFSC codes, PIN codes, gold rates &amp; financial tools. All free.
           </p>
         </div>
 
-        {/* CREDIT CARDS */}
+        {/* TOOLS & DATA */}
         <div>
-          <h3 className="text-white/90 font-semibold text-xs uppercase tracking-widest mb-3">Credit Cards</h3>
+          <h3 className="text-white/90 font-semibold text-xs uppercase tracking-widest mb-3">Tools &amp; Data</h3>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/credit-cards" className="text-white/45 hover:text-white transition-colors">Best Credit Cards</Link></li>
-            <li><Link to="/credit-cards?category=Cashback" className="text-white/45 hover:text-white transition-colors">Cashback Cards</Link></li>
-            <li><Link to="/credit-cards?category=Rewards" className="text-white/45 hover:text-white transition-colors">Rewards Cards</Link></li>
-            <li><Link to="/credit-cards?category=Travel" className="text-white/45 hover:text-white transition-colors">Travel Cards</Link></li>
-            <li><Link to="/credit-cards?category=Lifetime Free" className="text-white/45 hover:text-white transition-colors">Lifetime Free</Link></li>
+            <li><Link to="/ifsc-finder" className="text-white/45 hover:text-white transition-colors">IFSC Code Finder</Link></li>
+            <li><Link to="/pin-codes" className="text-white/45 hover:text-white transition-colors">PIN Code Directory</Link></li>
+            <li><Link to="/gold-rate-today" className="text-white/45 hover:text-white transition-colors">Gold &amp; Silver Rates</Link></li>
+            <li><Link to="/money-guides" className="text-white/45 hover:text-white transition-colors">Guides</Link></li>
+            <li><Link to="/credit-cards" className="text-white/45 hover:text-white transition-colors">Credit Cards</Link></li>
           </ul>
         </div>
 
@@ -42,8 +42,9 @@ const Footer: React.FC = () => {
           <ul className="space-y-2 text-sm">
             <li><Link to="/calculators/emi" className="text-white/45 hover:text-white transition-colors">EMI Calculator</Link></li>
             <li><Link to="/calculators/sip" className="text-white/45 hover:text-white transition-colors">SIP Calculator</Link></li>
-            <li><Link to="/calculators/home-loan-eligibility" className="text-white/45 hover:text-white transition-colors">Home Loan Eligibility</Link></li>
-            <li><Link to="/calculators/hra-calculator" className="text-white/45 hover:text-white transition-colors">HRA Calculator</Link></li>
+            <li><Link to="/calculators/fd" className="text-white/45 hover:text-white transition-colors">FD Calculator</Link></li>
+            <li><Link to="/calculators/ppf" className="text-white/45 hover:text-white transition-colors">PPF Calculator</Link></li>
+            <li><Link to="/calculators/income-tax" className="text-white/45 hover:text-white transition-colors">Income Tax</Link></li>
           </ul>
         </div>
 
@@ -51,11 +52,10 @@ const Footer: React.FC = () => {
         <div>
           <h3 className="text-white/90 font-semibold text-xs uppercase tracking-widest mb-3">Company</h3>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/pin-codes" className="text-white/45 hover:text-white transition-colors">PIN Code Directory</Link></li>
             <li><Link to="/about" className="text-white/45 hover:text-white transition-colors">About Us</Link></li>
             <li><Link to="/contact" className="text-white/45 hover:text-white transition-colors">Contact</Link></li>
             <li><Link to="/privacy" className="text-white/45 hover:text-white transition-colors">Privacy Policy</Link></li>
-            <li><Link to="/terms" className="text-white/45 hover:text-white transition-colors">Terms & Conditions</Link></li>
+            <li><Link to="/terms" className="text-white/45 hover:text-white transition-colors">Terms &amp; Conditions</Link></li>
           </ul>
         </div>
 

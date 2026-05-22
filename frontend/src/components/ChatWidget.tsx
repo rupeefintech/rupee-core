@@ -191,9 +191,9 @@ function TypingDots() {
 
 const SUGGESTIONS = [
   'HDFC0000001',
+  'PIN code 500090',
   'Best credit cards',
   'SIP ₹5000 5yr 12%',
-  'IFSC of SBI Delhi',
 ]
 
 export default function ChatWidget() {
@@ -332,7 +332,7 @@ export default function ChatWidget() {
                     </svg>
                   </div>
                   <p className="text-sm font-semibold text-gray-700">Ask me anything</p>
-                  <p className="text-xs text-gray-400 mt-1">IFSC codes, credit cards, SIP</p>
+                  <p className="text-xs text-gray-400 mt-1">IFSC codes, PIN codes, credit cards, SIP</p>
                 </div>
               )}
 
@@ -398,7 +398,7 @@ export default function ChatWidget() {
                 ref={inputRef}
                 value={input}
                 onChange={e => setInput(e.target.value)}
-                placeholder="Ask about IFSC, cards, SIP…"
+                placeholder="Ask about IFSC, PIN code, cards, SIP…"
                 disabled={loading}
                 className="flex-1 text-sm bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 placeholder-gray-400 transition-all disabled:opacity-50"
               />

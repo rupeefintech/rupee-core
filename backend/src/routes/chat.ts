@@ -6,6 +6,7 @@ const router = Router()
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 const IFSC_RE = /\b([A-Z]{4}0[A-Z0-9]{6})\b/i
+const PIN_RE  = /\b(\d{6})\b/
 
 function fmt(n: number): string {
   if (n >= 1e7) return `₹${(n / 1e7).toFixed(2)} Cr`
@@ -55,6 +56,8 @@ async function branchSearch(terms: string[], take = 5): Promise<BranchResult[]> 
 }
 
 // ── Intent detection ─────────────────────────────────────────────────────────
+
+const PIN_KEYWORDS = ['pin code', 'pincode', 'pin-code', 'post office', 'postal code', 'zip code']
 
 const CC_KEYWORDS = [
   'credit card', 'credit-card', 'best card', 'cashback card',
@@ -124,7 +127,59 @@ router.post('/', async (req: Request, res: Response) => {
     return
   }
 
-  // ── 2. Credit card recommendations ───────────────────────────────────────
+  // ── 2. PIN code lookup ───────────────────────────────────────────────────
+  const pinMatch = msg.match(PIN_RE)
+  if (pinMatch || PIN_KEYWORDS.some(w => lower.includes(w))) {
+    const pinCode = pinMatch?.[1]
+
+    if (!pinCode) {
+      res.json({
+        reply: 'Please provide a **6-digit PIN code** to look up.\n\nExample: *"500090"* or *"What is PIN code of Nizampet?"*',
+        type: 'ask',
+      })
+      return
+    }
+
+    try {
+      const offices = await (prisma as any).postOffice.findMany({
+        where:   { pinCode },
+        orderBy: { officeType: 'asc' },
+        take:    5,
+      })
+
+      if (!offices.length) {
+        res.json({ reply: `No post offices found for PIN code **${pinCode}**. Please check the code.` })
+        return
+      }
+
+      const primary = offices.find((o: any) => o.officeType === 'H.O') ?? offices.find((o: any) => o.officeType === 'S.O') ?? offices[0]
+      const typeMap: Record<string, string> = { 'H.O': 'Head Office', 'S.O': 'Sub Office', 'B.O': 'Branch Office' }
+
+      res.json({
+        reply: [
+          `📮 **PIN Code: ${pinCode}**`,
+          ``,
+          `| | |`,
+          `|---|---|`,
+          `| Post Office | ${primary.officeName} |`,
+          `| Type | ${typeMap[primary.officeType] ?? primary.officeType ?? '—'} |`,
+          `| District | ${primary.district ?? '—'} |`,
+          `| State | ${primary.stateName} |`,
+          `| Delivery | ${primary.delivery ? '✅ Yes' : '❌ Non-delivery'} |`,
+          offices.length > 1 ? `| Total Offices | ${offices.length} offices share this PIN |` : '',
+          ``,
+          `[View full details →](/pin/${pinCode})`,
+        ].filter(Boolean).join('\n'),
+        type: 'pin',
+        data: { pinCode, url: `/pin/${pinCode}` },
+      })
+    } catch {
+      res.json({ reply: 'Sorry, PIN code lookup failed. Try again in a moment.' })
+    }
+    return
+  }
+
+  // ── 3. Credit card recommendations ───────────────────────────────────────
   if (CC_KEYWORDS.some(w => lower.includes(w))) {
     try {
       const products = await prisma.product.findMany({
@@ -304,6 +359,7 @@ router.post('/', async (req: Request, res: Response) => {
         '',
         '🔍 **IFSC Lookup** — type any IFSC code like `HDFC0001234`',
         '🏦 **Find Branch** — ask *"IFSC of HDFC Bank Hyderabad"*',
+        '📮 **PIN Code** — type any 6-digit PIN like `500090`',
         '💳 **Credit Cards** — ask *"best credit cards"*',
         '📈 **SIP Calculator** — try *"SIP ₹5000 for 5 years at 12%"*',
       ].join('\n'),
@@ -319,6 +375,7 @@ router.post('/', async (req: Request, res: Response) => {
       '',
       '🔍 **IFSC codes** — type a code like `SBIN0001234`',
       '🏦 **Branch search** — *"HDFC Bank Nizampet Hyderabad"*',
+      '📮 **PIN codes** — type any 6-digit PIN like `110001`',
       '💳 **Credit cards** — *"show me best credit cards"*',
       '📈 **SIP calculator** — *"SIP ₹3000 for 3 years at 10%"*',
     ].join('\n'),
