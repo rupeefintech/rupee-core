@@ -271,8 +271,8 @@ export default function HomePage() {
                 bg: 'bg-amber-50', border: 'border-amber-100', ic: 'text-amber-600',
               },
               {
-                icon: Users, title: '100% Free, No Ads',
-                desc: 'Every tool, comparison and guide is completely free. No trackers, no ads, no paywalls — ever.',
+                icon: Users, title: '100% Free to Use',
+                desc: 'Every tool, comparison and guide is completely free. No login, no paywalls — always free.',
                 bg: 'bg-emerald-50', border: 'border-emerald-100', ic: 'text-emerald-600',
               },
             ].map((item) => (
