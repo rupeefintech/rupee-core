@@ -7,7 +7,7 @@ IFSC code lookup platform. Bank → State → City → Branch cascade filtering 
 - **Frontend:** React 18 + Vite + TailwindCSS + TanStack Query + React Router 6 + Framer Motion + Helmet
 - **Backend:** Express.js + TypeScript + Prisma 5 + Redis (Upstash) + in-memory cache
 - **Database:** PostgreSQL (Neon)
-- **Deploy:** Railway
+- **Deploy:** Backend → Render (`https://rupeepedia-backend.onrender.com`), Frontend → Vercel (`rupeepedia.in`)
 
 ## Project Structure
 
