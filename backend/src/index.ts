@@ -65,6 +65,7 @@ app.get('/sitemap.xml', async (req, res) => {
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-3.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-4.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-pin.xml</loc><lastmod>${today}</lastmod></sitemap>
+  <sitemap><loc>https://rupeepedia.in/sitemap-credit-cards.xml</loc><lastmod>${today}</lastmod></sitemap>
 </sitemapindex>`);
 });
 
@@ -396,6 +397,35 @@ app.get('/sitemap-pin.xml', async (_req, res) => {
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-pin:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
+// Credit cards sitemap
+app.get('/sitemap-credit-cards.xml', async (_req, res) => {
+  try {
+    const { prisma } = require('./lib/prisma');
+    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+    const today   = new Date().toISOString().split('T')[0];
+
+    const cards = await (prisma as any).product.findMany({
+      where:   { category: 'credit_card', isActive: true },
+      select:  { slug: true },
+      orderBy: { slug: 'asc' },
+    });
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    xml += `  <url>\n    <loc>${baseUrl}/credit-cards</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
+    xml += `  <url>\n    <loc>${baseUrl}/credit-cards/compare</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+    for (const card of cards) {
+      xml += `  <url>\n    <loc>${baseUrl}/credit-cards/${card.slug}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+    }
+    xml += '</urlset>';
+    res.setHeader('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (error) {
+    console.error('Error generating sitemap-credit-cards:', error);
     res.status(500).send('Error generating sitemap');
   }
 });
