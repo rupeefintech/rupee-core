@@ -89,17 +89,22 @@ const CreditCards: React.FC = () => {
   // Filters â€” seed category from URL ?category=
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(searchParams.get("category") || "");
-  const [bank, setBank] = useState("");
+  const [bank, setBank] = useState(searchParams.get("bank") || "");
   const [feeMax, setFeeMax] = useState("");
   const [sortBy, setSortBy] = useState("newest");
-  const [showFilters, setShowFilters] = useState(!!searchParams.get("category"));
+  const [showFilters, setShowFilters] = useState(!!(searchParams.get("category") || searchParams.get("bank")));
 
-  // Sync category from URL when navigating between submenu links
+  // Sync category + bank from URL when navigating via links
   useEffect(() => {
     const urlCat = searchParams.get("category") || "";
+    const urlBank = searchParams.get("bank") || "";
     if (urlCat !== category) {
       setCategory(urlCat);
       if (urlCat) setShowFilters(true);
+    }
+    if (urlBank !== bank) {
+      setBank(urlBank);
+      if (urlBank) setShowFilters(true);
     }
   }, [searchParams]);
 

@@ -25,6 +25,14 @@ function bankSlug(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 }
 
+const CARD_ISSUING_BANKS = new Set([
+  'HDFC Bank', 'State Bank of India', 'ICICI Bank', 'Axis Bank',
+  'Kotak Mahindra Bank', 'IndusInd Bank', 'Yes Bank', 'RBL Bank',
+  'IDFC First Bank', 'Standard Chartered Bank', 'Citibank', 'Citi Bank',
+  'American Express', 'Punjab National Bank', 'Bank of Baroda',
+  'Union Bank of India', 'Federal Bank', 'HSBC Bank',
+]);
+
 interface IFSCDetailData {
   ifsc: string;
   micr: string;
@@ -761,6 +769,36 @@ export default function IFSCDetailPage() {
         </motion.div>
 
         <AdUnit slot={AD_SLOTS.IFSC_MID} />
+
+        {/* ─ Credit Card cross-sell (only for card-issuing banks) ─ */}
+        {CARD_ISSUING_BANKS.has(branch.bank_name) && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.23 }}
+            className="card p-5"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-brand-600 to-brand-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <CreditCard className="w-5 h-5 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-sm text-gray-900 truncate">
+                    Looking for {branch.bank_name} Credit Cards?
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Compare cashback, rewards &amp; joining offers — apply online in minutes.
+                  </p>
+                </div>
+              </div>
+              <Link
+                to={`/credit-cards?bank=${encodeURIComponent(branch.bank_name)}`}
+                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors"
+              >
+                View Cards <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </motion.div>
+        )}
 
         {/* ─ Row 5: Nearby Branches + FAQ ─ */}
         <motion.div

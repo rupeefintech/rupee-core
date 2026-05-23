@@ -152,7 +152,7 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
 const profile = getLoanProfile();
 
   const loanLabels: Record<LoanType, string> = {
-    home: 'Home Loan', personal: 'Personal Loan', car: 'Car Loan', education: 'Education Loan', business: 'Business Loan',   };
+    home: 'Home Loan', personal: 'Personal Loan', car: 'Car Loan', education: 'Education Loan', business: 'Business Loan', lap: 'Loan Against Property',   };
 
   const faqs = [
     { q: 'What is the EMI formula used here?',
