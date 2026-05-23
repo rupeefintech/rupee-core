@@ -44,6 +44,29 @@ export default function CityPage() {
             { '@type': 'ListItem', position: 5, name: toTitleCase(city ?? ''),             item: `https://rupeepedia.in/city/${bank}/${state}/${city}` },
           ],
         })}</script>
+        {bankInfo && branches.length > 0 && (
+          <script type="application/ld+json">{JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: `How many ${bankInfo.name} branches are there in ${toTitleCase(city ?? '')}?`,
+                acceptedAnswer: { '@type': 'Answer', text: `There are ${pagination?.totalCount ?? branches.length} ${bankInfo.name} branches in ${toTitleCase(city ?? '')}, ${toTitleCase(state ?? '')}.` },
+              },
+              {
+                '@type': 'Question',
+                name: `How do I find the IFSC code for a ${bankInfo.name} branch in ${toTitleCase(city ?? '')}?`,
+                acceptedAnswer: { '@type': 'Answer', text: `Click on any branch in the list below to see its full IFSC code, MICR code, address, and supported payment modes (NEFT, RTGS, IMPS, UPI).` },
+              },
+              {
+                '@type': 'Question',
+                name: `What is the IFSC code for ${bankInfo.name} ${toTitleCase(city ?? '')}?`,
+                acceptedAnswer: { '@type': 'Answer', text: `${bankInfo.name} has ${pagination?.totalCount ?? branches.length} branches in ${toTitleCase(city ?? '')}. Each branch has a unique IFSC code — click a branch below to view its specific code.` },
+              },
+            ],
+          })}</script>
+        )}
       </Helmet>
 
       <div className="max-w-5xl mx-auto px-4 py-10">

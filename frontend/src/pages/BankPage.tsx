@@ -33,6 +33,34 @@ export default function BankPage() {
             { '@type': 'ListItem', position: 3, name: bankInfo?.name ?? bank, item: `https://rupeepedia.in/bank/${bank}` },
           ],
         })}</script>
+        {bankInfo && states.length > 0 && (
+          <script type="application/ld+json">{JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: `How many branches does ${bankInfo.name} have in India?`,
+                acceptedAnswer: { '@type': 'Answer', text: `${bankInfo.name} has ${states.reduce((sum, s) => sum + s.branchCount, 0).toLocaleString('en-IN')} branches across ${states.length} states in India.` },
+              },
+              {
+                '@type': 'Question',
+                name: `In which states does ${bankInfo.name} have branches?`,
+                acceptedAnswer: { '@type': 'Answer', text: `${bankInfo.name} has branches in: ${states.map(s => s.name).join(', ')}.` },
+              },
+              {
+                '@type': 'Question',
+                name: `How do I find the IFSC code for a ${bankInfo.name} branch?`,
+                acceptedAnswer: { '@type': 'Answer', text: `Select your state on this page, then your city, then the branch. The 11-character IFSC code is shown with MICR code and NEFT/RTGS/IMPS/UPI support status.` },
+              },
+              {
+                '@type': 'Question',
+                name: `Are all ${bankInfo.name} IFSC codes the same?`,
+                acceptedAnswer: { '@type': 'Answer', text: `No. Each ${bankInfo.name} branch has a unique IFSC code. The first 4 characters identify the bank, the 5th is always 0 (reserved by RBI), and the last 6 characters are unique to the branch.` },
+              },
+            ],
+          })}</script>
+        )}
       </Helmet>
 
       <div className="max-w-5xl mx-auto px-4 py-10">

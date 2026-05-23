@@ -40,6 +40,29 @@ export default function StatePage() {
             { '@type': 'ListItem', position: 4, name: stateInfo?.name ?? toTitleCase(state ?? ''), item: `https://rupeepedia.in/state/${bank}/${state}` },
           ],
         })}</script>
+        {bankInfo && stateInfo && cities.length > 0 && (
+          <script type="application/ld+json">{JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: `How many cities does ${bankInfo.name} have branches in ${stateInfo.name}?`,
+                acceptedAnswer: { '@type': 'Answer', text: `${bankInfo.name} has branches in ${cities.length} cities in ${stateInfo.name}.` },
+              },
+              {
+                '@type': 'Question',
+                name: `How do I find ${bankInfo.name} IFSC codes in ${stateInfo.name}?`,
+                acceptedAnswer: { '@type': 'Answer', text: `Select a city from this page to see all ${bankInfo.name} branches in that city. Each branch listing shows the full IFSC code, MICR code, and address.` },
+              },
+              {
+                '@type': 'Question',
+                name: `Which cities in ${stateInfo.name} have ${bankInfo.name} branches?`,
+                acceptedAnswer: { '@type': 'Answer', text: `${bankInfo.name} has branches in these cities in ${stateInfo.name}: ${cities.slice(0, 20).map(c => toTitleCase(c.city)).join(', ')}${cities.length > 20 ? `, and ${cities.length - 20} more` : ''}.` },
+              },
+            ],
+          })}</script>
+        )}
       </Helmet>
 
       <div className="max-w-5xl mx-auto px-4 py-10">
