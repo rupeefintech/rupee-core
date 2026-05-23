@@ -156,7 +156,7 @@ function PublicLayout() {
               <Route path="/calculators/car-loan-emi" element={<EMICalculatorPage key="car" defaultLoan="car" />} />
               <Route path="/calculators/education-loan-emi" element={<EMICalculatorPage key="education" defaultLoan="education" />} />
               <Route path="/calculators/business-loan-emi" element={<EMICalculatorPage key="business" defaultLoan="business" />} />
-              <Route path="/calculators/lap-emi" element={<EMICalculatorPage key="lap" defaultLoan="home" />} />
+              <Route path="/calculators/lap-emi" element={<EMICalculatorPage key="lap" defaultLoan="lap" />} />
               <Route path="/emi-calculator" element={<EMICalculatorPage />} />
 
               {/* SIP family */}

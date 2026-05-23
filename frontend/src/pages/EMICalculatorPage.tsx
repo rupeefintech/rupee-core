@@ -1,11 +1,11 @@
 // File: frontend/src/pages/EMICalculatorPage.tsx
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 
-type LoanType = 'home' | 'personal' | 'car' | 'education' | 'business';
+type LoanType = 'home' | 'personal' | 'car' | 'education' | 'business' | 'lap';
 
 interface Props {
   defaultLoan?: LoanType;
@@ -22,6 +22,7 @@ const LOAN_DEFAULTS: Record<LoanType, {
   car:       { min: 100000,  max: 3000000,  step: 25000,  rate: 9.0,  tenure: 7,  maxT: 8,  minL: '₹1L',  maxL: '₹30L', title: 'Car Loan EMI Calculator',         defaultAmt: 800000   },
   education: { min: 100000,  max: 2500000,  step: 25000,  rate: 10.5, tenure: 10, maxT: 15, minL: '₹1L',  maxL: '₹25L', title: 'Education Loan EMI Calculator',   defaultAmt: 1000000  },
   business:  { min: 100000,  max: 5000000,  step: 50000,  rate: 13.0, tenure: 5,  maxT: 10, minL: '₹1L',  maxL: '₹50L', title: 'Business Loan EMI Calculator',   defaultAmt: 1000000  },
+  lap:       { min: 500000,  max: 50000000, step: 100000, rate: 9.5,  tenure: 15, maxT: 20, minL: '₹5L',  maxL: '₹5Cr', title: 'Loan Against Property EMI Calculator', defaultAmt: 3000000 },
 };
 
 function fmtINR(n: number) {
@@ -74,6 +75,7 @@ function DonutChart({ principal, interest }: { principal: number; interest: numb
 }
 
 export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
+  const { pathname } = useLocation();
   const [loanType,   setLoanType]   = useState<LoanType>(defaultLoan);
   const [amount,     setAmount]     = useState(LOAN_DEFAULTS[defaultLoan].defaultAmt);
   const [rate,       setRate]       = useState(LOAN_DEFAULTS[defaultLoan].rate);
@@ -176,7 +178,7 @@ const profile = getLoanProfile();
       <Helmet>
         <title>{d.title} 2026 — Calculate Monthly EMI | RupeePedia</title>
         <meta name="description" content={`Free ${d.title} — instantly calculate monthly EMI, total interest payable, and view full amortization schedule.`} />
-        <link rel="canonical" href={`https://rupeepedia.in/calculators/emi`} />
+        <link rel="canonical" href={`https://rupeepedia.in${pathname}`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
