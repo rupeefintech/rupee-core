@@ -122,6 +122,12 @@ app.get('/sitemap-static.xml', (_req, res) => {
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>${baseUrl}/bank-holidays</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>`;
   
   res.setHeader('Content-Type', 'application/xml');

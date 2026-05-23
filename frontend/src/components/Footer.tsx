@@ -33,6 +33,7 @@ const Footer: React.FC = () => {
             <li><Link to="/gold-rate-today" className="text-white/45 hover:text-white transition-colors">Gold &amp; Silver Rates</Link></li>
             <li><Link to="/money-guides" className="text-white/45 hover:text-white transition-colors">Guides</Link></li>
             <li><Link to="/credit-cards" className="text-white/45 hover:text-white transition-colors">Credit Cards</Link></li>
+            <li><Link to="/bank-holidays" className="text-white/45 hover:text-white transition-colors">Bank Holidays</Link></li>
           </ul>
         </div>
 

@@ -43,8 +43,9 @@ export default function AdUnit({ slot, format = 'auto', className = '' }: AdUnit
 
 // Ad slot IDs — replace with real slot IDs from AdSense dashboard
 export const AD_SLOTS = {
-  IFSC_TOP:    '0000000001',  // After IFSC hero
-  IFSC_MID:    '0000000002',  // Between info and branches
-  PIN_TOP:     '0000000003',  // After PIN hero
-  PIN_MID:     '0000000004',  // Between post offices and banks
+  IFSC_TOP:     '0000000001',  // After IFSC hero
+  IFSC_MID:     '0000000002',  // Between info and branches
+  PIN_TOP:      '0000000003',  // After PIN hero
+  PIN_MID:      '0000000004',  // Between post offices and banks
+  HOLIDAY_MID:  '0000000005',  // Bank holiday page sidebar
 } as const;

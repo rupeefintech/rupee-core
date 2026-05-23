@@ -2,6 +2,10 @@
   "routes": [
     { "handle": "filesystem" },
 
+    { "src": "^/ifsc/([A-Za-z0-9]+)$",       "dest": "/api/render?path=/ifsc/$1" },
+    { "src": "^/bank/([^/]+)$",               "dest": "/api/render?path=/bank/$1" },
+    { "src": "^/money-guides/([^/]+)$",       "dest": "/api/render?path=/money-guides/$1" },
+
     { "src": "^/sitemap.xml$", "dest": "https://api.rupeepedia.in/sitemap.xml" },
     { "src": "^/sitemap-static.xml$", "dest": "https://api.rupeepedia.in/sitemap-static.xml" },
     { "src": "^/sitemap-calculators.xml$", "dest": "https://api.rupeepedia.in/sitemap-calculators.xml" },

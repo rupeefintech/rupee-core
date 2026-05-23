@@ -456,6 +456,9 @@ export default function IFSCDetailPage() {
                   PIN {branch.pincode} <span className="text-amber-400">›</span>
                 </Link>
               )}
+              <Link to="/bank-holidays" className="inline-flex items-center gap-1.5 text-xs text-teal-700 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg font-semibold border border-teal-200 hover:border-teal-300 transition-all">
+                🗓 Bank Holidays <span className="text-teal-400">›</span>
+              </Link>
             </div>
           </motion.div>
 

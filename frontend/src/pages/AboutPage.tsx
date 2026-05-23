@@ -84,7 +84,7 @@ export default function AboutPage() {
                 icon: <TrendingUp className="w-5 h-5 text-brand-600" />,
                 title: 'Live Gold & Silver Rates',
                 desc: 'Today\'s 24K and 22K gold rates and silver prices updated daily across major Indian cities. Historical trend charts, purity comparison, and jewellery cost estimator.',
-                href: '/gold-silver-rate',
+                href: '/gold-rate-today',
                 cta: 'Check Rates',
                 live: true,
               },

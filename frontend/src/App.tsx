@@ -53,8 +53,9 @@ const Loans = lazy(() => import("./pages/Loans"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 const TermsPage = lazy(() => import("./pages/TermsPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
-const PinCodesPage = lazy(() => import("./pages/PinCodesPage"));
-const PinCodePage  = lazy(() => import("./pages/PinCodePage"));
+const PinCodesPage    = lazy(() => import("./pages/PinCodesPage"));
+const PinCodePage     = lazy(() => import("./pages/PinCodePage"));
+const BankHolidayPage = lazy(() => import("./pages/BankHolidayPage"));
 
 function App() {
   return (
@@ -136,8 +137,9 @@ function PublicLayout() {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/contact"    element={<ContactPage />} />
-            <Route path="/pin-codes"  element={<PinCodesPage />} />
+            <Route path="/pin-codes"    element={<PinCodesPage />} />
             <Route path="/pin/:pincode" element={<PinCodePage />} />
+            <Route path="/bank-holidays" element={<BankHolidayPage />} />
             <Route path="/credit-cards" element={<CreditCards />} />
             <Route path="/credit-cards/compare" element={<CreditCardCompare />} />
             <Route path="/credit-cards/:slug" element={<CreditCardDetail />} />

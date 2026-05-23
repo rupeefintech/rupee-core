@@ -1,4 +1,3 @@
-// File: frontend/src/pages/EligibilityCalculatorPage.tsx
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import SliderInput from '../components/SliderInput';
@@ -13,6 +12,25 @@ function fmtShort(n: number) {
   return '₹' + Math.round(n).toLocaleString('en-IN');
 }
 
+const HOME_LENDERS = [
+  { name: 'HDFC Bank',          rate: 'From 8.50% p.a.', note: 'Up to 90% of property value',    tag: 'Most Popular', url: 'https://www.hdfc.com/home-loans?utm_source=rupeepedia&utm_medium=calc&utm_campaign=home_elig' },
+  { name: 'SBI Home Loans',     rate: 'From 8.50% p.a.', note: 'Government bank, lowest rates',  tag: '',             url: 'https://homeloans.sbi/?utm_source=rupeepedia&utm_medium=calc&utm_campaign=home_elig' },
+  { name: 'LIC Housing Finance',rate: 'From 8.65% p.a.', note: 'Tenure up to 30 years',          tag: '',             url: 'https://www.lichousing.com/?utm_source=rupeepedia&utm_medium=calc&utm_campaign=home_elig' },
+];
+
+const PERSONAL_LENDERS = [
+  { name: 'MoneyView', rate: 'From 1.33% p.m.', note: 'Instant approval, 100% online',   tag: 'Recommended', url: 'https://moneyview.in/loan?utm_source=rupeepedia&utm_medium=calc&utm_campaign=personal_elig' },
+  { name: 'KreditBee', rate: 'From 1.02% p.m.', note: 'Disbursal in under 10 minutes',   tag: '',             url: 'https://kreditbee.in/?utm_source=rupeepedia&utm_medium=calc&utm_campaign=personal_elig' },
+  { name: 'PaySense',  rate: 'From 1.40% p.m.', note: 'No prepayment charges',           tag: '',             url: 'https://www.paysense.in/?utm_source=rupeepedia&utm_medium=calc&utm_campaign=personal_elig' },
+];
+
+const IMPROVE_TIPS = [
+  { icon: '📉', title: 'Clear existing loans',   desc: 'Prepay or close small loans to lower your FOIR.' },
+  { icon: '👥', title: 'Add a co-applicant',     desc: 'Joint application with spouse or parent raises combined eligibility.' },
+  { icon: '⏳', title: 'Increase loan tenure',   desc: 'Longer tenure reduces EMI burden and improves eligibility.' },
+  { icon: '📈', title: 'Improve CIBIL score',    desc: 'A score of 750+ unlocks higher limits and better interest rates.' },
+];
+
 export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
   const isHome = type === 'home';
   const [income,      setIncome]      = useState(75000);
@@ -26,6 +44,8 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
   const n       = tenure * 12;
   const maxLoan = maxEMI * (Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n));
   const foir    = Math.round((obligations / income) * 100);
+  const eligible = maxLoan > 0;
+  const lenders  = isHome ? HOME_LENDERS : PERSONAL_LENDERS;
 
   const faqs = [
     { q: 'How do banks calculate loan eligibility?', a: 'Banks primarily use FOIR (Fixed Obligation to Income Ratio). Total EMIs (including proposed loan) should not exceed 40–50% of gross monthly income. Your credit score, employer profile, and age also matter.' },
@@ -58,6 +78,7 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+          {/* Calculator card */}
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -70,7 +91,7 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
               <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-lg p-5 text-white flex flex-col gap-4">
                 <div>
                   <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Maximum Loan Eligibility</div>
-                  <div className="text-3xl font-bold tracking-tight">{maxLoan > 0 ? fmtShort(maxLoan) : 'Not Eligible'}</div>
+                  <div className="text-3xl font-bold tracking-tight">{eligible ? fmtShort(maxLoan) : 'Not Eligible'}</div>
                 </div>
                 <hr className="border-white/20" />
                 <div className="flex flex-col gap-2 text-sm">
@@ -97,6 +118,84 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
               </div>
             </div>
           </div>
+
+          {/* Affiliate CTA — eligible */}
+          {eligible && (
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-between mb-1">
+                <h2 className="text-lg font-bold text-slate-900">
+                  Apply for your {isHome ? 'Home' : 'Personal'} Loan
+                </h2>
+                <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Sponsored</span>
+              </div>
+              <p className="text-sm text-slate-500 mb-5">
+                You are eligible for up to <span className="font-bold text-brand-700">{fmtShort(maxLoan)}</span>. Compare top lenders and apply online in minutes.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {lenders.map(l => (
+                  <a
+                    key={l.name}
+                    href={l.url}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="relative flex flex-col gap-3 border border-slate-200 rounded-xl p-4 hover:border-brand-400 hover:shadow-md transition-all group"
+                  >
+                    {l.tag && (
+                      <span className="absolute -top-2.5 left-3 bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        {l.tag}
+                      </span>
+                    )}
+                    <div>
+                      <p className="font-bold text-slate-800 text-sm">{l.name}</p>
+                      <p className="text-brand-700 font-semibold text-sm mt-0.5">{l.rate}</p>
+                      <p className="text-xs text-slate-400 mt-1">{l.note}</p>
+                    </div>
+                    <span className="mt-auto inline-flex items-center justify-center gap-1 bg-brand-700 group-hover:bg-brand-800 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors">
+                      Check Eligibility →
+                    </span>
+                  </a>
+                ))}
+              </div>
+              <p className="text-[11px] text-slate-400 mt-4">
+                * Interest rates are indicative. Final rates depend on your credit score, income, and lender policy. Rupeepedia may earn a referral fee when you apply.
+              </p>
+            </div>
+          )}
+
+          {/* Improve eligibility tips — not eligible */}
+          {!eligible && (
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-lg font-bold text-slate-900 mb-1">How to Improve Your Eligibility</h2>
+              <p className="text-sm text-slate-500 mb-5">Your current obligations are too high. Try these steps to qualify.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+                {IMPROVE_TIPS.map(t => (
+                  <div key={t.title} className="flex gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-2xl leading-none mt-0.5">{t.icon}</span>
+                    <div>
+                      <p className="font-semibold text-sm text-slate-800">{t.title}</p>
+                      <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{t.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t border-slate-100 pt-4">
+                <p className="text-sm text-slate-500 mb-3">Once you improve your profile, check eligibility with these lenders:</p>
+                <div className="flex flex-wrap gap-3">
+                  {lenders.map(l => (
+                    <a
+                      key={l.name}
+                      href={l.url}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      className="text-xs font-semibold text-brand-700 border border-brand-200 rounded-lg px-3 py-2 hover:bg-brand-50 transition-colors"
+                    >
+                      {l.name} →
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* FAQ */}
           <div className="bg-white rounded-lg shadow-lg p-6">
