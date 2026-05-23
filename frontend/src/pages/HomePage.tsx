@@ -33,9 +33,34 @@ export default function HomePage() {
   return (
     <div className="bg-white">
       <Helmet>
-        <title>Rupeepedia — IFSC Codes, Calculators & Financial Guides for India</title>
-        <meta name="description" content="Find IFSC codes for 178,000+ bank branches, use free financial calculators (EMI, SIP, FD, tax), and read money guides. India's most comprehensive financial toolkit." />
+        <title>RupeePedia — IFSC Codes, Credit Cards, EMI &amp; SIP Calculators India</title>
+        <meta name="description" content="Find IFSC codes for 178,000+ bank branches, compare credit cards, use free EMI/SIP/FD/tax calculators, and read money guides. India's most comprehensive financial toolkit." />
         <link rel="canonical" href="https://rupeepedia.in/" />
+        <meta property="og:title"       content="RupeePedia — IFSC Codes, Credit Cards &amp; Financial Calculators India" />
+        <meta property="og:description" content="Find IFSC codes for 178,000+ bank branches, compare credit cards, use free EMI/SIP/FD/tax calculators, and read money guides." />
+        <meta property="og:url"         content="https://rupeepedia.in/" />
+        <meta property="og:type"        content="website" />
+        <meta name="twitter:card"       content="summary" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'RupeePedia',
+          url: 'https://rupeepedia.in',
+          logo: 'https://rupeepedia.in/images/logo.png',
+          sameAs: [],
+          contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', url: 'https://rupeepedia.in/contact' },
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'RupeePedia',
+          url: 'https://rupeepedia.in',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: { '@type': 'EntryPoint', urlTemplate: 'https://rupeepedia.in/ifsc-finder?q={search_term_string}' },
+            'query-input': 'required name=search_term_string',
+          },
+        })}</script>
       </Helmet>
 
       {/* ── HERO ── */}

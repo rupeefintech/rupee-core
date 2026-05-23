@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ChevronDown } from 'lucide-react';
 import ToolsSidebar from './ToolsSidebar';
 
@@ -8,6 +9,19 @@ export default function CalculatorLayout() {
 
   return (
     <>
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: 'RupeePedia Financial Calculators',
+          url: 'https://rupeepedia.in/calculators',
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'All',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+          publisher: { '@type': 'Organization', name: 'RupeePedia', url: 'https://rupeepedia.in' },
+        })}</script>
+      </Helmet>
+
       {/* Desktop: floating sidebar pinned to the right */}
       <div className="hidden lg:block fixed top-20 right-0 w-[280px] xl:w-[300px] h-[calc(100vh-5rem)] overflow-y-auto z-30 px-3 py-4 scrollbar-thin">
         <ToolsSidebar />

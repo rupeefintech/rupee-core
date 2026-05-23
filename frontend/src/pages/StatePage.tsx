@@ -31,6 +31,15 @@ export default function StatePage() {
         <title>{seo.title}</title>
         <meta name="description" content={seo.description} />
         <link rel="canonical" href={`https://rupeepedia.in/state/${bank}/${state}`} />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home',        item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'IFSC Finder', item: 'https://rupeepedia.in/ifsc-finder' },
+            { '@type': 'ListItem', position: 3, name: bankInfo?.name ?? bank,              item: `https://rupeepedia.in/bank/${bank}` },
+            { '@type': 'ListItem', position: 4, name: stateInfo?.name ?? toTitleCase(state ?? ''), item: `https://rupeepedia.in/state/${bank}/${state}` },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="max-w-5xl mx-auto px-4 py-10">

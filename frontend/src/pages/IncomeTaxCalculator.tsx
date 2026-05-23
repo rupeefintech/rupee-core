@@ -76,7 +76,8 @@ export default function TaxCalculatorPage() {
   return (
     <>
       <Helmet>
-        <title>Income Tax Calculator FY 2025-26 | Rupeepedia</title>
+        <title>Income Tax Calculator FY 2025-26 — Old vs New Regime | RupeePedia</title>
+        <meta name="description" content="Free Income Tax Calculator FY 2025-26 — compare Old vs New tax regime instantly. Enter income, deductions (80C, HRA, NPS) and see exact tax payable and savings." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/income-tax" />
       </Helmet>
 
