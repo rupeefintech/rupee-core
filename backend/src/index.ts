@@ -117,12 +117,6 @@ app.get('/sitemap-static.xml', (_req, res) => {
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>${baseUrl}/calculators</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>${baseUrl}/bank-holidays</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
@@ -196,7 +190,7 @@ app.get('/sitemap-ifsc-1.xml', async (_req, res) => {
       xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
       xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.8</priority>\n';
+      xml += '    <priority>0.6</priority>\n';
       xml += '  </url>\n';
     }
 
@@ -230,7 +224,7 @@ app.get('/sitemap-ifsc-2.xml', async (_req, res) => {
       xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
       xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.8</priority>\n';
+      xml += '    <priority>0.6</priority>\n';
       xml += '  </url>\n';
     }
 
@@ -264,7 +258,7 @@ app.get('/sitemap-ifsc-3.xml', async (_req, res) => {
       xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
       xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.8</priority>\n';
+      xml += '    <priority>0.6</priority>\n';
       xml += '  </url>\n';
     }
 
@@ -331,7 +325,7 @@ app.get('/sitemap-banks.xml', async (_req, res) => {
       xml += `    <loc>${xmlEscape(`${baseUrl}/bank/${bank.slug}`)}</loc>\n`;
       xml += `    <lastmod>${today}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.7</priority>\n';
+      xml += '    <priority>0.8</priority>\n';
       xml += '  </url>\n';
     }
     xml += '</urlset>';
@@ -501,6 +495,15 @@ const server = app.listen(PORT, async () => {
     ])
   } catch {
     console.warn('  ⚠ Cache warm-up failed (non-critical)')
+  }
+
+  // Keep Render free tier alive — ping self every 14 minutes
+  if (NODE_ENV === 'production') {
+    const http = await import('http')
+    setInterval(() => {
+      http.get(`http://localhost:${PORT}/health`, (res) => res.resume()).on('error', () => {})
+    }, 14 * 60 * 1000)
+    console.log('  ✓ Self-ping active (14 min interval)')
   }
 })
 
