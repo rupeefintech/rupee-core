@@ -363,16 +363,108 @@ export default function GoldSilverRatePage() {
             </>
           ) : null}
 
-          {/* City deep-link pages */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5">
-            <h2 className="font-bold text-gray-900 mb-3">Gold Rate Today by City</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-              {['mumbai','delhi','chennai','kolkata','hyderabad','bangalore','ahmedabad','pune','jaipur','lucknow','surat','patna'].map(c => (
-                <a key={c} href={`/gold-rate-today/${c}`}
-                  className="p-3 rounded-xl border border-gray-100 hover:border-yellow-300 hover:bg-yellow-50 transition-all text-center text-sm font-medium text-gray-700 capitalize">
-                  Gold Rate {c.charAt(0).toUpperCase() + c.slice(1)}
-                </a>
-              ))}
+          {/* City deep-link pages — premium grid */}
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #1c0a00 0%, #2d1500 40%, #1a0c00 100%)' }}>
+            {/* Header */}
+            <div className="px-6 pt-6 pb-4 flex items-start justify-between flex-wrap gap-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-amber-400 text-lg">🏙️</span>
+                  <h2 className="text-white font-black text-xl tracking-tight">Gold Rate Today by City</h2>
+                </div>
+                <p className="text-amber-200/50 text-xs">Live 24K prices · Updated every 30 minutes</p>
+              </div>
+              <span className="flex items-center gap-1.5 bg-amber-400/10 border border-amber-400/20 text-amber-300 text-xs px-3 py-1.5 rounded-full font-semibold">
+                <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" />
+                Live
+              </span>
+            </div>
+
+            {/* City grid */}
+            <div className="px-4 pb-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {([
+                { slug: 'mumbai',    name: 'Mumbai',    gradient: 'from-amber-500 via-yellow-500 to-amber-600',    emoji: '🌆', base: true },
+                { slug: 'delhi',     name: 'Delhi',     gradient: 'from-red-500 via-rose-500 to-red-600',          emoji: '🏛️' },
+                { slug: 'chennai',   name: 'Chennai',   gradient: 'from-teal-500 via-emerald-500 to-teal-600',     emoji: '🌊' },
+                { slug: 'kolkata',   name: 'Kolkata',   gradient: 'from-violet-500 via-purple-500 to-violet-600',  emoji: '🎭' },
+                { slug: 'hyderabad', name: 'Hyderabad', gradient: 'from-blue-500 via-indigo-500 to-blue-600',      emoji: '💎' },
+                { slug: 'bangalore', name: 'Bangalore', gradient: 'from-green-500 via-emerald-500 to-green-600',   emoji: '🌿' },
+                { slug: 'ahmedabad', name: 'Ahmedabad', gradient: 'from-orange-400 via-amber-500 to-orange-500',   emoji: '🏺' },
+                { slug: 'pune',      name: 'Pune',      gradient: 'from-pink-500 via-rose-500 to-pink-600',        emoji: '🌸' },
+                { slug: 'jaipur',    name: 'Jaipur',    gradient: 'from-fuchsia-500 via-pink-500 to-fuchsia-600',  emoji: '🏰' },
+                { slug: 'lucknow',   name: 'Lucknow',   gradient: 'from-sky-500 via-blue-500 to-sky-600',          emoji: '🕌' },
+                { slug: 'surat',     name: 'Surat',     gradient: 'from-lime-500 via-green-400 to-lime-600',       emoji: '💍' },
+                { slug: 'patna',     name: 'Patna',     gradient: 'from-cyan-500 via-sky-500 to-cyan-600',         emoji: '🏞️' },
+              ] as { slug: string; name: string; gradient: string; emoji: string; base?: boolean }[]).map(({ slug, name, gradient, emoji, base }) => {
+                const cityKey = name;
+                const cityData = data?.cities[cityKey];
+                const price24k = cityData?.gold_24k_per_10g ?? data?.gold.price_24k_per_10g;
+                const price22k = cityData?.gold_22k_per_10g ?? data?.gold.price_22k_per_10g;
+                const diffFromMumbai = data && cityData
+                  ? cityData.gold_24k_per_10g - data.gold.price_24k_per_10g
+                  : null;
+
+                return (
+                  <a
+                    key={slug}
+                    href={`/gold-rate-today/${slug}`}
+                    className="group relative rounded-2xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/40"
+                  >
+                    {/* Gradient background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-90 group-hover:opacity-100 transition-opacity`} />
+                    {/* Subtle pattern overlay */}
+                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23fff'/%3E%3C/svg%3E\")" }} />
+
+                    <div className="relative p-3.5">
+                      {/* City emoji + name row */}
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-base">{emoji}</span>
+                        {base && (
+                          <span className="text-[9px] bg-white/20 text-white/80 px-1.5 py-0.5 rounded-full font-semibold uppercase tracking-wider">Base</span>
+                        )}
+                        {diffFromMumbai !== null && !base && (
+                          <span className="text-[9px] bg-black/20 text-white/70 px-1.5 py-0.5 rounded-full font-semibold">
+                            +{fmt(diffFromMumbai)}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* City name */}
+                      <p className="text-white/90 font-bold text-sm leading-none mb-2">{name}</p>
+
+                      {/* 24K price — hero number */}
+                      {price24k ? (
+                        <>
+                          <p className="text-white font-black text-lg leading-none tracking-tight">
+                            ₹{fmt(price24k)}
+                          </p>
+                          <p className="text-white/60 text-[10px] mt-0.5">per 10g · 24K</p>
+                          {price22k && (
+                            <p className="text-white/70 text-xs mt-1 font-semibold">
+                              22K ₹{fmt(price22k)}
+                            </p>
+                          )}
+                        </>
+                      ) : (
+                        <p className="text-white/40 text-sm italic">Loading…</p>
+                      )}
+
+                      {/* View link hint */}
+                      <div className="mt-2.5 flex items-center gap-1 text-white/60 text-[10px] group-hover:text-white/90 transition-colors">
+                        <span>View all rates</span>
+                        <svg className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Footer note */}
+            <div className="px-6 pb-5 text-center text-amber-200/30 text-[10px]">
+              Prices based on IBJA benchmark + city differentials. Click any city for detailed rates.
             </div>
           </div>
 
