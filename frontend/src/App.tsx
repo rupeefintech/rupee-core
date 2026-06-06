@@ -33,8 +33,11 @@ import RNORCalculatorPage from "./pages/RNORCalculatorPage";
 import GoldSilverRatePage from "./pages/GoldSilverRatePage";
 import GoldCityPage from "./pages/GoldCityPage";
 import WhatIsIFSCPage from "./pages/WhatIsIFSCPage";
+import IFSCvsMICRPage from "./pages/IFSCvsMICRPage";
+import HowToFindIFSCPage from "./pages/HowToFindIFSCPage";
 import PinCodeIndiaPage from "./pages/PinCodeIndiaPage";
 import GoldHallmarkGuidePage from "./pages/GoldHallmarkGuidePage";
+import WhyGoldPricesChangePage from "./pages/WhyGoldPricesChangePage";
 import NRIFDCalculatorPage from "./pages/NRIFDCalculatorPage";
 import NRICapitalGainsPage from "./pages/NRICapitalGainsPage";
 import NRIRentalIncomePage from "./pages/NRIRentalIncomePage";
@@ -150,6 +153,10 @@ function PublicLayout() {
             <Route path="/gold-hallmark-guide" element={<GoldHallmarkGuidePage />} />
             {/* IFSC info pages */}
             <Route path="/what-is-ifsc-code" element={<WhatIsIFSCPage />} />
+            <Route path="/ifsc-vs-micr" element={<IFSCvsMICRPage />} />
+            <Route path="/how-to-find-ifsc-code" element={<HowToFindIFSCPage />} />
+            {/* Gold info pages */}
+            <Route path="/why-gold-prices-change" element={<WhyGoldPricesChangePage />} />
             <Route path="/credit-cards" element={<CreditCards />} />
             <Route path="/credit-cards/compare" element={<CreditCardCompare />} />
             <Route path="/credit-cards/:slug" element={<CreditCardDetail />} />
