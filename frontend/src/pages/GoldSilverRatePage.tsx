@@ -337,6 +337,19 @@ export default function GoldSilverRatePage() {
             </>
           ) : null}
 
+          {/* City deep-link pages */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-5">
+            <h2 className="font-bold text-gray-900 mb-3">Gold Rate Today by City</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+              {['mumbai','delhi','chennai','kolkata','hyderabad','bangalore','ahmedabad','pune','jaipur','lucknow','surat','patna'].map(c => (
+                <a key={c} href={`/gold-rate-today/${c}`}
+                  className="p-3 rounded-xl border border-gray-100 hover:border-yellow-300 hover:bg-yellow-50 transition-all text-center text-sm font-medium text-gray-700 capitalize">
+                  Gold Rate {c.charAt(0).toUpperCase() + c.slice(1)}
+                </a>
+              ))}
+            </div>
+          </div>
+
           {/* FAQ / Info */}
           <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
             <h2 className="font-bold text-gray-900">About Gold & Silver Prices in India</h2>

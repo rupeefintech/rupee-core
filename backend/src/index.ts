@@ -122,6 +122,30 @@ app.get('/sitemap-static.xml', (_req, res) => {
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>${baseUrl}/what-is-ifsc-code</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/pin-code-india</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/gold-hallmark-guide</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  ${['mumbai','delhi','chennai','kolkata','hyderabad','bangalore','ahmedabad','pune','jaipur','lucknow','surat','patna'].map(city => `<url>
+    <loc>${baseUrl}/gold-rate-today/${city}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>`).join('\n  ')}
 </urlset>`;
   
   res.setHeader('Content-Type', 'application/xml');

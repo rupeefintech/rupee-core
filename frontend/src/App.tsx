@@ -31,6 +31,10 @@ import IncomeTaxCalculator from "./pages/IncomeTaxCalculator";
 import CalculatorLayout from "./components/CalculatorLayout";
 import RNORCalculatorPage from "./pages/RNORCalculatorPage";
 import GoldSilverRatePage from "./pages/GoldSilverRatePage";
+import GoldCityPage from "./pages/GoldCityPage";
+import WhatIsIFSCPage from "./pages/WhatIsIFSCPage";
+import PinCodeIndiaPage from "./pages/PinCodeIndiaPage";
+import GoldHallmarkGuidePage from "./pages/GoldHallmarkGuidePage";
 import NRIFDCalculatorPage from "./pages/NRIFDCalculatorPage";
 import NRICapitalGainsPage from "./pages/NRICapitalGainsPage";
 import NRIRentalIncomePage from "./pages/NRIRentalIncomePage";
@@ -139,7 +143,13 @@ function PublicLayout() {
             <Route path="/contact"    element={<ContactPage />} />
             <Route path="/pin-codes"    element={<PinCodesPage />} />
             <Route path="/pin/:pincode" element={<PinCodePage />} />
+            <Route path="/pin-code-india" element={<PinCodeIndiaPage />} />
             <Route path="/bank-holidays" element={<BankHolidayPage />} />
+            {/* Gold city pages */}
+            <Route path="/gold-rate-today/:city" element={<GoldCityPage />} />
+            <Route path="/gold-hallmark-guide" element={<GoldHallmarkGuidePage />} />
+            {/* IFSC info pages */}
+            <Route path="/what-is-ifsc-code" element={<WhatIsIFSCPage />} />
             <Route path="/credit-cards" element={<CreditCards />} />
             <Route path="/credit-cards/compare" element={<CreditCardCompare />} />
             <Route path="/credit-cards/:slug" element={<CreditCardDetail />} />
