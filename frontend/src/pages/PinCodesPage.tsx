@@ -314,9 +314,61 @@ export default function PinCodesPage() {
   return (
     <>
       <Helmet>
-        <title>PIN Code Directory India — Post Office Search | Rupeepedia</title>
-        <meta name="description" content="Search India Post PIN codes by PIN number, post office name, or location (state → district → PIN). Find post offices, delivery status, and nearby IFSC codes." />
+        <title>PIN Code Finder India — Search Postal Code & Post Office | RupeePedia</title>
+        <meta name="description" content="Find PIN codes and post offices across India. Search by 6-digit postal code, post office name, or location (state → district). 1,50,000+ verified post offices with delivery status." />
         <link rel="canonical" href="https://rupeepedia.in/pin-codes" />
+        <meta property="og:title" content="PIN Code Finder India — Search Postal Code & Post Office" />
+        <meta property="og:description" content="Find PIN codes and post offices across India. Search by postal code, post office name, or location. 1,50,000+ verified post offices." />
+        <meta property="og:url" content="https://rupeepedia.in/pin-codes" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="PIN Code Finder India — Search Postal Code & Post Office" />
+        <meta name="twitter:description" content="Find PIN codes and post offices across India. Search by postal code, post office name, or location." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebApplication",
+              "name": "India PIN Code Finder",
+              "url": "https://rupeepedia.in/pin-codes",
+              "description": "Search India Post PIN codes and post offices by postal code, post office name, or location across India.",
+              "applicationCategory": "UtilitiesApplication",
+              "operatingSystem": "All",
+              "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+              "provider": { "@type": "Organization", "name": "RupeePedia", "url": "https://rupeepedia.in" }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What is a PIN code in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "A PIN code (Postal Index Number) is a 6-digit code used by India Post to identify specific post offices and delivery areas. Each digit represents a zone, sub-zone, sorting district, or delivery post office." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How do I find the PIN code of my area?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Use the PIN Code Finder at rupeepedia.in/pin-codes — search by 6-digit PIN code, post office name, or browse by state and district. All results show delivery status and full post office details." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the difference between H.O, S.O, and B.O post offices?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "H.O (Head Office) is the main administrative hub for a district. S.O (Sub Office) serves towns and urban areas under a Head Office. B.O (Branch Office) is the smallest unit, serving villages and remote areas." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How many post offices are in the RupeePedia PIN code database?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "RupeePedia's PIN code directory covers 1,50,000+ post offices across all 28 states and 8 union territories of India, cross-referenced with official India Post records." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Can I search PIN codes by state and district?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Yes — use the Search By Location tab on the PIN Code Finder page. Select your state, then district, and all PIN codes for that district are listed. Clicking a PIN takes you to its full detail page with post offices and nearby bank branches." }
+                }
+              ]
+            }
+          ]
+        })}</script>
       </Helmet>
 
       {/* Hero with integrated search */}

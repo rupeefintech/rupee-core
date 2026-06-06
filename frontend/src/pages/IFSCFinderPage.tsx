@@ -225,9 +225,61 @@ export default function IFSCFinderPage() {
   return (
     <>
       <Helmet>
-        <title>IFSC Code Finder — Search Bank Branch IFSC & MICR Codes | RupeePedia</title>
-        <meta name="description" content="Find IFSC and MICR codes for any bank branch in India. Search by bank, state, district and branch. Required for NEFT, RTGS and IMPS transfers." />
+        <title>IFSC Code Finder — Find Any Bank Branch IFSC Code in India | RupeePedia</title>
+        <meta name="description" content="Find IFSC code of any bank branch in India. Search 1,78,000+ branches across 1,350+ banks by bank name, state, district and branch. Free IFSC & MICR code lookup." />
         <link rel="canonical" href="https://rupeepedia.in/ifsc-finder" />
+        <meta property="og:title" content="IFSC Code Finder — Find Any Bank Branch IFSC Code in India" />
+        <meta property="og:description" content="Find IFSC code of any bank branch in India. Search 1,78,000+ branches across 1,350+ banks. Free IFSC & MICR code lookup." />
+        <meta property="og:url" content="https://rupeepedia.in/ifsc-finder" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="IFSC Code Finder — Find Any Bank Branch IFSC Code in India" />
+        <meta name="twitter:description" content="Find IFSC code of any bank branch in India. Search 1,78,000+ branches across 1,350+ banks." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebApplication",
+              "name": "IFSC Code Finder",
+              "url": "https://rupeepedia.in/ifsc-finder",
+              "description": "Find IFSC and MICR codes for any bank branch in India. Search 1,78,000+ branches across 1,350+ banks.",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "All",
+              "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+              "provider": { "@type": "Organization", "name": "RupeePedia", "url": "https://rupeepedia.in" }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "What is an IFSC code?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "IFSC (Indian Financial System Code) is an 11-character alphanumeric code assigned by the RBI to uniquely identify every bank branch in India. It is required for NEFT, RTGS, and IMPS electronic fund transfers." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How to find the IFSC code of a bank branch?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Use the IFSC Code Finder at rupeepedia.in/ifsc-finder — select your bank, state, district and branch from the dropdowns. You can also find it on your cheque book, bank passbook, or net banking app." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the format of an IFSC code?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "An IFSC code is 11 characters long. The first 4 characters are the bank code (e.g., HDFC for HDFC Bank), the 5th character is always 0, and the last 6 characters are the unique branch code." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Is IFSC code the same as MICR code?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "No. IFSC (Indian Financial System Code) is used for electronic fund transfers (NEFT, RTGS, IMPS). MICR (Magnetic Ink Character Recognition) is a 9-digit code printed on cheques and used for cheque clearing." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How many bank branches are available on RupeePedia?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "RupeePedia has IFSC codes for 1,78,000+ bank branches across 1,350+ banks in India. Data is sourced from RBI and updated fortnightly." }
+                }
+              ]
+            }
+          ]
+        })}</script>
       </Helmet>
 
       {/* Hero — uses existing hero-bg class */}

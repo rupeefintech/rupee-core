@@ -76,10 +76,59 @@ export default function GoldSilverRatePage() {
   return (
     <>
       <Helmet>
-        <title>Gold Rate Today in India — 24K 22K Gold & Silver Price | RupeePedia</title>
-        <meta name="description" content={`Today's gold rate in India — 24K and 22K gold price per gram and 10 grams in ${city}. Live silver price per kg. Updated every 30 minutes.`} />
-        <meta name="keywords" content="gold rate today, gold price today india, 24k gold price, 22k gold price, silver rate today, gold price per gram" />
+        <title>Gold Rate Today in India — 24K & 22K Gold Price Per Gram | RupeePedia</title>
+        <meta name="description" content={`Today's gold rate in ${city} — 24K gold ₹${data ? Math.round(data.gold.price_24k_per_10g / 10).toLocaleString('en-IN') : '...'}/g, 22K gold price per gram & 10g. Live silver rate. Updated every 30 minutes.`} />
+        <meta name="keywords" content="gold rate today, gold price today india, 24k gold price today, 22k gold price today, silver rate today, gold price per gram india" />
         <link rel="canonical" href="https://rupeepedia.in/gold-rate-today" />
+        <meta property="og:title" content="Gold Rate Today in India — 24K & 22K Gold Price Per Gram" />
+        <meta property="og:description" content="Today's gold rate in India — 24K and 22K gold price per gram and 10 grams. Live silver price per kg. Updated every 30 minutes." />
+        <meta property="og:url" content="https://rupeepedia.in/gold-rate-today" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Gold Rate Today in India — 24K & 22K Gold Price" />
+        <meta name="twitter:description" content="Today's gold rate in India — 24K and 22K gold price per gram. Live silver price. Updated every 30 minutes." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebPage",
+              "name": "Gold Rate Today in India",
+              "url": "https://rupeepedia.in/gold-rate-today",
+              "description": "Today's gold and silver rates in India. 24K and 22K gold price per gram and 10 grams. Live silver price per kg. Updated every 30 minutes.",
+              "provider": { "@type": "Organization", "name": "RupeePedia", "url": "https://rupeepedia.in" }
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "How is the gold price determined in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "India's gold price is set by the IBJA (Indian Bullion and Jewellers Association) twice daily, based on the international COMEX/LBMA spot price converted to INR. Jewellers charge this rate plus GST (3%) and making charges. Prices vary slightly by city due to local taxes and logistics." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the difference between 24K, 22K, and 18K gold?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "24K gold is 99.9% pure — used for investment bars and coins. 22K gold is 91.6% pure (hallmarked BIS 916) — standard for jewellery in India. 18K gold is 75% pure — used for diamond-studded jewellery. 14K is used for low-cost jewellery." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is a Tola of gold?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "1 Tola equals 11.6638 grams. It is a traditional Indian unit used in jewellery trading. 1 Sovereign equals 8 grams, commonly used in South India (Kerala and Tamil Nadu)." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Why do gold prices differ by city in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Each state levies different local taxes on gold. Cities farther from ports (like Mumbai or Chennai) pay more for transportation. Delhi, Hyderabad, and Kolkata typically have ₹50–200/10g higher prices than Mumbai." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How often is the gold rate updated on RupeePedia?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Gold and silver prices on RupeePedia refresh every 30 minutes from international spot markets. Gold trades 24×5 globally (closed on weekends). MCX gold futures in India trade 9 AM to 11:30 PM IST on weekdays." }
+                }
+              ]
+            }
+          ]
+        })}</script>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">
