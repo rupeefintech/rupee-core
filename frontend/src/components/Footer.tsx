@@ -38,14 +38,22 @@ const Footer: React.FC = () => {
 
         {/* CALCULATORS */}
         <div>
-          <h3 className="text-white/90 font-semibold text-xs uppercase tracking-widest mb-3">Calculators</h3>
-          <ul className="space-y-2 text-sm">
-            <li><Link to="/calculators/emi" className="text-white/45 hover:text-white transition-colors">EMI Calculator</Link></li>
-            <li><Link to="/calculators/sip" className="text-white/45 hover:text-white transition-colors">SIP Calculator</Link></li>
-            <li><Link to="/calculators/fd" className="text-white/45 hover:text-white transition-colors">FD Calculator</Link></li>
-            <li><Link to="/calculators/ppf" className="text-white/45 hover:text-white transition-colors">PPF Calculator</Link></li>
-            <li><Link to="/calculators/income-tax" className="text-white/45 hover:text-white transition-colors">Income Tax</Link></li>
-          </ul>
+          <h3 className="text-white/90 font-semibold text-xs uppercase tracking-widest mb-3">
+            Calculators
+            <Link to="/calculators" className="ml-2 text-white/30 hover:text-white/60 font-normal normal-case tracking-normal transition-colors text-[10px]">View all →</Link>
+          </h3>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <Link to="/calculators/emi" className="text-white/45 hover:text-white transition-colors">EMI Calculator</Link>
+            <Link to="/calculators/sip" className="text-white/45 hover:text-white transition-colors">SIP Calculator</Link>
+            <Link to="/calculators/income-tax" className="text-white/45 hover:text-white transition-colors">Income Tax</Link>
+            <Link to="/calculators/fd" className="text-white/45 hover:text-white transition-colors">FD Calculator</Link>
+            <Link to="/calculators/salary-calculator" className="text-white/45 hover:text-white transition-colors">Salary Calculator</Link>
+            <Link to="/calculators/gst" className="text-white/45 hover:text-white transition-colors">GST Calculator</Link>
+            <Link to="/calculators/hra-calculator" className="text-white/45 hover:text-white transition-colors">HRA Calculator</Link>
+            <Link to="/calculators/swp" className="text-white/45 hover:text-white transition-colors">SWP Calculator</Link>
+            <Link to="/calculators/ppf" className="text-white/45 hover:text-white transition-colors">PPF Calculator</Link>
+            <Link to="/calculators/cagr" className="text-white/45 hover:text-white transition-colors">CAGR Calculator</Link>
+          </div>
         </div>
 
         {/* LEARNING RESOURCES */}

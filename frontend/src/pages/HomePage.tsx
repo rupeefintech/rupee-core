@@ -10,16 +10,18 @@ import {
   Wallet, Users, MapPin,
 } from "lucide-react";
 
-const popularTools = [
-  { name: "EMI Calculator",    desc: "Home, car & personal loan EMI",   link: "/calculators/emi",              icon: Calculator,   color: "bg-brand-600" },
-  { name: "SIP Calculator",    desc: "Plan mutual fund investments",     link: "/calculators/sip",              icon: TrendingUp,   color: "bg-emerald-500" },
-  { name: "Income Tax",        desc: "Old vs New regime comparison",     link: "/calculators/income-tax",       icon: IndianRupee,  color: "bg-rose-500" },
-  { name: "FD Calculator",     desc: "Fixed deposit maturity returns",   link: "/calculators/fd",               icon: PiggyBank,    color: "bg-cyan-500" },
-  { name: "Salary Calculator", desc: "CTC to in-hand breakdown",        link: "/calculators/salary-calculator", icon: Banknote,    color: "bg-indigo-500" },
-  { name: "GST Calculator",    desc: "Inclusive & exclusive GST",        link: "/calculators/gst",              icon: Receipt,      color: "bg-orange-500" },
-  { name: "HRA Calculator",    desc: "Tax exemption on house rent",     link: "/calculators/hra-calculator",   icon: Home,         color: "bg-teal-500" },
-  { name: "SWP Calculator",    desc: "Systematic withdrawal planning",  link: "/calculators/swp",              icon: Wallet,       color: "bg-pink-500" },
-  { name: "PPF Calculator",    desc: "Public provident fund returns",   link: "/calculators/ppf",              icon: ShieldCheck,  color: "bg-lime-600" },
+const featuredCalcs = [
+  { name: "EMI Calculator",    desc: "Calculate home, car & personal loan EMI with full amortization schedule", link: "/calculators/emi",              icon: Calculator,   color: "bg-brand-700" },
+  { name: "SIP Calculator",    desc: "Project SIP returns, plan lumpsum investments & goal-based SIP",          link: "/calculators/sip",              icon: TrendingUp,   color: "bg-emerald-600" },
+  { name: "Income Tax",        desc: "Compare Old vs New regime tax liability for FY 2025-26",                  link: "/calculators/income-tax",       icon: IndianRupee,  color: "bg-rose-600" },
+];
+const moreCalcs = [
+  { name: "FD / RD / PPF",     desc: "Fixed deposit & recurring deposit maturity",  link: "/calculators/fd",               icon: PiggyBank,    color: "bg-cyan-600" },
+  { name: "Salary Calculator", desc: "CTC to in-hand with full tax breakdown",       link: "/calculators/salary-calculator", icon: Banknote,    color: "bg-indigo-500" },
+  { name: "GST Calculator",    desc: "GST-inclusive & exclusive for all slabs",      link: "/calculators/gst",              icon: Receipt,      color: "bg-orange-500" },
+  { name: "HRA Calculator",    desc: "HRA tax exemption — metro & non-metro",        link: "/calculators/hra-calculator",   icon: Home,         color: "bg-teal-600" },
+  { name: "SWP Calculator",    desc: "Systematic withdrawal — corpus survival",      link: "/calculators/swp",              icon: Wallet,       color: "bg-pink-500" },
+  { name: "Loan Eligibility",  desc: "Max home/personal loan you qualify for",       link: "/calculators/home-loan-eligibility", icon: ShieldCheck, color: "bg-lime-600" },
 ];
 
 export default function HomePage() {
@@ -235,41 +237,68 @@ export default function HomePage() {
       </section>
 
       {/* ── CALCULATORS ── */}
-      <section className="py-14 bg-[#F8F7FF] border-t border-brand-50">
+      <section className="py-14 bg-gray-50 border-t border-gray-100">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-end justify-between mb-8">
+          {/* Header */}
+          <div className="flex items-end justify-between mb-6">
             <div>
-              <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1.5">Financial Tools</p>
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight">Calculators for every money decision</h2>
-              <p className="text-sm text-gray-400 mt-1">All calculations run locally — your data never leaves your device</p>
+              <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1.5">Free Financial Tools</p>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tight">30+ Calculators for every money decision</h2>
+              <p className="text-sm text-gray-400 mt-1">All calculations run in your browser — data never leaves your device</p>
             </div>
-            <Link to="/calculators" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700 transition">
-              All calculators <ChevronRight size={14} />
+            <Link to="/calculators" className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 transition bg-white border border-gray-200 rounded-lg px-3 py-2 hover:border-brand-300">
+              View all 30+ <ChevronRight size={14} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {popularTools.map((tool) => (
+          {/* Featured 3 — larger cards */}
+          <div className="grid sm:grid-cols-3 gap-4 mb-4">
+            {featuredCalcs.map((tool) => (
               <Link
                 key={tool.link}
                 to={tool.link}
-                className="group flex items-center gap-4 p-4 rounded-xl bg-white border-[1.5px] border-gray-100 hover:border-brand-200 hover:shadow-md hover:-translate-y-px transition-all"
+                className="group relative rounded-2xl p-5 bg-white border-[1.5px] border-gray-100 hover:border-brand-200 hover:shadow-lg hover:-translate-y-0.5 transition-all overflow-hidden"
               >
-                <div className={`w-11 h-11 ${tool.color} rounded-xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform`}>
-                  <tool.icon size={20} className="text-white" />
+                <div className={`w-12 h-12 ${tool.color} rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-105 transition-transform`}>
+                  <tool.icon size={22} className="text-white" />
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-sm text-gray-900 group-hover:text-brand-600 transition">{tool.name}</h3>
-                  <p className="text-xs text-gray-400 mt-0.5">{tool.desc}</p>
+                <h3 className="font-bold text-gray-900 mb-1 group-hover:text-brand-600 transition">{tool.name}</h3>
+                <p className="text-sm text-gray-400 leading-snug">{tool.desc}</p>
+                <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-brand-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                  Open calculator <ArrowRight size={12} />
                 </div>
-                <ArrowRight size={16} className="text-gray-200 group-hover:text-brand-400 group-hover:translate-x-0.5 transition-all shrink-0" />
               </Link>
             ))}
           </div>
 
-          <div className="sm:hidden mt-4 text-center">
-            <Link to="/calculators" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700">
-              View all calculators <ChevronRight size={14} />
+          {/* Secondary 6 — compact list */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-5">
+            {moreCalcs.map((tool) => (
+              <Link
+                key={tool.link}
+                to={tool.link}
+                className="group flex items-center gap-3 p-3.5 rounded-xl bg-white border-[1.5px] border-gray-100 hover:border-brand-200 hover:shadow-sm hover:-translate-y-px transition-all"
+              >
+                <div className={`w-9 h-9 ${tool.color} rounded-lg flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
+                  <tool.icon size={17} className="text-white" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-sm text-gray-900 group-hover:text-brand-600 transition leading-tight">{tool.name}</h3>
+                  <p className="text-xs text-gray-400 mt-0.5 truncate">{tool.desc}</p>
+                </div>
+                <ArrowRight size={14} className="text-gray-200 group-hover:text-brand-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+              </Link>
+            ))}
+          </div>
+
+          {/* CTA row */}
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-gray-100 rounded-2xl px-5 py-4">
+            <div>
+              <p className="font-semibold text-gray-900 text-sm">Need a different calculator?</p>
+              <p className="text-xs text-gray-400 mt-0.5">XIRR, CAGR, SWP, NPS, Capital Gains, NRI FD and 20+ more</p>
+            </div>
+            <Link to="/calculators" className="inline-flex items-center gap-2 bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
+              Browse all calculators <ArrowRight size={15} />
             </Link>
           </div>
         </div>
