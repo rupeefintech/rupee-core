@@ -321,6 +321,7 @@ export default function PinCodesPage() {
         <meta property="og:description" content="Find PIN codes and post offices across India. Search by postal code, post office name, or location. 1,50,000+ verified post offices." />
         <meta property="og:url" content="https://rupeepedia.in/pin-codes" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="PIN Code Finder India — Search Postal Code & Post Office" />
         <meta name="twitter:description" content="Find PIN codes and post offices across India. Search by postal code, post office name, or location." />

@@ -232,6 +232,7 @@ export default function IFSCFinderPage() {
         <meta property="og:description" content="Find IFSC code of any bank branch in India. Search 1,78,000+ branches across 1,350+ banks. Free IFSC & MICR code lookup." />
         <meta property="og:url" content="https://rupeepedia.in/ifsc-finder" />
         <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="IFSC Code Finder — Find Any Bank Branch IFSC Code in India" />
         <meta name="twitter:description" content="Find IFSC code of any bank branch in India. Search 1,78,000+ branches across 1,350+ banks." />

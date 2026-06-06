@@ -13,9 +13,64 @@ export default function CalculatorsIndexPage() {
   return (
     <>
       <Helmet>
-        <title>Financial Calculators - EMI, SIP, FD, Loan Eligibility | RupeePedia</title>
-        <meta name="description" content="Free financial calculators for EMI, SIP, FD, loan eligibility and more. Plan your finances smarter with RupeePedia's calculator suite." />
+        <title>Free Financial Calculators India — EMI, SIP, FD, Income Tax, GST | RupeePedia</title>
+        <meta name="description" content="Free financial calculators for India — EMI, SIP, FD, PPF, income tax (old vs new regime), GST, HRA, salary, NPS, and more. Plan loans, investments, and taxes instantly." />
         <link rel="canonical" href="https://rupeepedia.in/calculators" />
+        <meta property="og:title" content="Free Financial Calculators India — EMI, SIP, FD, Income Tax, GST" />
+        <meta property="og:description" content="Free financial calculators for India — EMI, SIP, FD, PPF, income tax, GST, HRA, salary, and more. Plan your finances instantly." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Free Financial Calculators India — EMI, SIP, FD, Tax" />
+        <meta name="twitter:description" content="Free Indian financial calculators — EMI, SIP, FD, income tax, GST, HRA, salary, and more." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebPage",
+              "name": "Free Financial Calculators India",
+              "url": "https://rupeepedia.in/calculators",
+              "description": "Free financial calculators for India — EMI, SIP, FD, PPF, income tax, GST, HRA, salary, NPS, and more.",
+              "provider": { "@type": "Organization", "name": "RupeePedia", "url": "https://rupeepedia.in" }
+            },
+            {
+              "@type": "ItemList",
+              "name": "Financial Calculators",
+              "url": "https://rupeepedia.in/calculators",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "EMI Calculator", "url": "https://rupeepedia.in/calculators/emi" },
+                { "@type": "ListItem", "position": 2, "name": "SIP Calculator", "url": "https://rupeepedia.in/calculators/sip" },
+                { "@type": "ListItem", "position": 3, "name": "FD Calculator", "url": "https://rupeepedia.in/calculators/fd" },
+                { "@type": "ListItem", "position": 4, "name": "Income Tax Calculator", "url": "https://rupeepedia.in/calculators/income-tax" },
+                { "@type": "ListItem", "position": 5, "name": "GST Calculator", "url": "https://rupeepedia.in/calculators/gst" },
+                { "@type": "ListItem", "position": 6, "name": "Salary Calculator", "url": "https://rupeepedia.in/calculators/salary-calculator" },
+                { "@type": "ListItem", "position": 7, "name": "PPF Calculator", "url": "https://rupeepedia.in/calculators/ppf" },
+                { "@type": "ListItem", "position": 8, "name": "HRA Calculator", "url": "https://rupeepedia.in/calculators/hra-calculator" }
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "How do I calculate EMI for a home loan in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Use the EMI Calculator at rupeepedia.in/calculators/emi. Enter the loan amount, interest rate, and tenure. The formula is: EMI = P × r × (1+r)^n / ((1+r)^n - 1), where P is principal, r is monthly interest rate, and n is number of months." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the difference between old and new income tax regime in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "The old regime allows deductions (80C, HRA, home loan interest, etc.) while the new regime has lower tax rates but no deductions. Use the Income Tax Calculator at rupeepedia.in/calculators/income-tax to compare both regimes and see which saves more tax for your income." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "How much can I invest in SIP to get ₹1 crore?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Use the SIP Calculator at rupeepedia.in/calculators/sip. For example, investing ₹5,000/month at 12% annual returns for 15 years gives approximately ₹50 lakh. To reach ₹1 crore, you'd need about ₹10,000/month for 15 years at 12% returns." }
+                }
+              ]
+            }
+          ]
+        })}</script>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

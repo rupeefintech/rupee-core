@@ -168,9 +168,60 @@ const CreditCards: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Best Credit Cards in India 2026 - Compare & Apply | Rupeepedia</title>
-        <meta name="description" content="Compare the best credit cards in India. Find cashback, travel, rewards, and premium cards from HDFC, SBI, ICICI, Axis, and more." />
+        <title>Best Credit Cards in India 2026 — Compare Cashback, Travel & Rewards | RupeePedia</title>
+        <meta name="description" content="Compare the best credit cards in India. Find cashback, travel, rewards, and lifetime-free cards from HDFC, SBI, ICICI, Axis, and more. Filter by category, annual fee, and bank." />
         <link rel="canonical" href="https://rupeepedia.in/credit-cards" />
+        <meta property="og:title" content="Best Credit Cards in India 2026 — Compare Cashback, Travel & Rewards" />
+        <meta property="og:description" content="Compare the best credit cards in India. Cashback, travel, rewards, and lifetime-free cards from top banks." />
+        <meta property="og:url" content="https://rupeepedia.in/credit-cards" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Best Credit Cards in India 2026 — Compare & Apply" />
+        <meta name="twitter:description" content="Compare cashback, travel, rewards, and lifetime-free credit cards from top Indian banks." />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebPage",
+              "name": "Best Credit Cards in India 2026",
+              "url": "https://rupeepedia.in/credit-cards",
+              "description": "Compare the best credit cards in India — cashback, travel, rewards, and lifetime-free cards from HDFC, SBI, ICICI, Axis, and more.",
+              "provider": { "@type": "Organization", "name": "RupeePedia", "url": "https://rupeepedia.in" }
+            },
+            {
+              "@type": "ItemList",
+              "name": "Credit Card Categories",
+              "url": "https://rupeepedia.in/credit-cards",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Best Cashback Credit Cards", "url": "https://rupeepedia.in/credit-cards?category=Cashback" },
+                { "@type": "ListItem", "position": 2, "name": "Best Travel Credit Cards", "url": "https://rupeepedia.in/credit-cards?category=Travel" },
+                { "@type": "ListItem", "position": 3, "name": "Best Rewards Credit Cards", "url": "https://rupeepedia.in/credit-cards?category=Rewards" },
+                { "@type": "ListItem", "position": 4, "name": "Lifetime Free Credit Cards", "url": "https://rupeepedia.in/credit-cards?category=Lifetime+Free" }
+              ]
+            },
+            {
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Which is the best cashback credit card in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Top cashback credit cards in India include HDFC Millennia, SBI Cashback Card, and Axis Ace. Compare offers, cashback rates, and annual fees at rupeepedia.in/credit-cards to find the best fit for your spending pattern." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Are there lifetime free credit cards in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Yes, several banks offer lifetime free (zero annual fee) credit cards in India. Popular options include HDFC MoneyBack+, SBI SimplyCLICK, and IDFC FIRST Millennia. Browse all lifetime free cards at rupeepedia.in/credit-cards." }
+                },
+                {
+                  "@type": "Question",
+                  "name": "What is the best travel credit card in India?",
+                  "acceptedAnswer": { "@type": "Answer", "text": "Best travel credit cards in India include HDFC Regalia, Axis Atlas, and SBI Elite. These offer lounge access, air miles, and travel insurance. Compare all travel cards at rupeepedia.in/credit-cards." }
+                }
+              ]
+            }
+          ]
+        })}</script>
       </Helmet>
 
       {/* â”€â”€â”€ Hero â”€â”€â”€ */}
