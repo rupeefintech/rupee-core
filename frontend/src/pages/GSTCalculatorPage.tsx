@@ -38,6 +38,14 @@ export default function GSTCalculatorPage() {
         <title>GST Calculator 2026 — Calculate GST Online | RupeePedia</title>
         <meta name="description" content="Free GST Calculator — instantly calculate GST amount, CGST, SGST for any amount. Supports all GST slabs: 3%, 5%, 12%, 18%, 28%." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/gst" />
+        <meta property="og:title" content="GST Calculator 2026 — Calculate GST Online | RupeePedia" />
+        <meta property="og:description" content="Free GST Calculator — instantly calculate GST amount, CGST, SGST for any amount. Supports all GST slabs: 3%, 5%, 12%, 18%, 28%." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/gst" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="GST Calculator 2026 — Calculate GST Online | RupeePedia" />
+        <meta name="twitter:description" content="Free GST Calculator — instantly calculate GST amount, CGST, SGST for any amount. Supports all GST slabs: 3%, 5%, 12%, 18%, 28%." />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -46,6 +54,15 @@ export default function GSTCalculatorPage() {
             "name": f.q,
             "acceptedAnswer": { "@type": "Answer", "text": f.a }
           }))
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'GST Calculator', item: 'https://rupeepedia.in/calculators/gst' },
+          ],
         })}</script>
       </Helmet>
 

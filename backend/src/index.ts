@@ -218,6 +218,13 @@ app.get('/sitemap-calculators.xml', (_req, res) => {
     '/calculators/personal-loan-eligibility',
     '/calculators/home-prepayment',
     '/calculators/personal-prepayment',
+    '/calculators/income-tax',
+    '/calculators/salary-calculator',
+    '/calculators/hra-calculator',
+    '/calculators/rnor-status',
+    '/calculators/nri-fd',
+    '/calculators/nri-capital-gains',
+    '/calculators/nri-rental-income',
   ];
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';

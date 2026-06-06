@@ -118,6 +118,33 @@ export default function NRIFDCalculatorPage() {
         <title>NRI FD Calculator — NRE vs NRO vs FCNR Comparison | RupeePedia</title>
         <meta name="description" content="Compare NRE, NRO, and FCNR fixed deposit returns for NRIs. Understand tax implications, TDS, and repatriation rules." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/nri-fd" />
+        <meta property="og:title" content="NRI FD Calculator — NRE vs NRO vs FCNR Comparison | RupeePedia" />
+        <meta property="og:description" content="Compare NRE, NRO, and FCNR fixed deposit returns for NRIs. Understand tax implications, TDS, and repatriation rules." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/nri-fd" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="NRI FD Calculator — NRE vs NRO vs FCNR Comparison | RupeePedia" />
+        <meta name="twitter:description" content="Compare NRE, NRO, and FCNR fixed deposit returns for NRIs. Understand tax implications, TDS, and repatriation rules." />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            { '@type': 'Question', name: 'What is the difference between NRE, NRO, and FCNR accounts?', acceptedAnswer: { '@type': 'Answer', text: 'NRE (Non-Resident External): Rupee account funded with foreign remittances; interest is tax-free; fully repatriable. NRO (Non-Resident Ordinary): For income earned in India (rent, dividends); interest taxed at 30% TDS; limited repatriation ($1M/year). FCNR (Foreign Currency Non-Resident): Held in foreign currency (USD, GBP etc.); no exchange rate risk; interest tax-free; fully repatriable.' } },
+            { '@type': 'Question', name: 'Is NRE FD interest tax-free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, NRE FD interest is fully exempt from Indian income tax as long as you maintain NRI status. Once you become a Resident (or RNOR), NRE account interest becomes taxable.' } },
+            { '@type': 'Question', name: 'What TDS rate applies on NRO FD?', acceptedAnswer: { '@type': 'Answer', text: 'TDS on NRO FD interest is 30% + 4% health and education cess = 31.2% (or lower per DTAA if the NRI claims treaty benefit). TDS is deducted before interest is credited.' } },
+            { '@type': 'Question', name: 'Which NRI FD is best — NRE, NRO, or FCNR?', acceptedAnswer: { '@type': 'Answer', text: 'NRE FD is best if you want tax-free returns and full repatriation. FCNR is best if you want to avoid rupee depreciation risk by keeping the deposit in a foreign currency. NRO FD is suitable only for income already in India that cannot be freely repatriated.' } },
+          ],
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'NRI FD Calculator', item: 'https://rupeepedia.in/calculators/nri-fd' },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-4 py-8">

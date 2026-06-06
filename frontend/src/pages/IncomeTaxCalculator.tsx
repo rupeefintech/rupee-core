@@ -79,6 +79,33 @@ export default function TaxCalculatorPage() {
         <title>Income Tax Calculator FY 2025-26 — Old vs New Regime | RupeePedia</title>
         <meta name="description" content="Free Income Tax Calculator FY 2025-26 — compare Old vs New tax regime instantly. Enter income, deductions (80C, HRA, NPS) and see exact tax payable and savings." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/income-tax" />
+        <meta property="og:title" content="Income Tax Calculator FY 2025-26 — Old vs New Regime | RupeePedia" />
+        <meta property="og:description" content="Free Income Tax Calculator FY 2025-26 — compare Old vs New tax regime instantly. Enter income, deductions (80C, HRA, NPS) and see exact tax payable and savings." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/income-tax" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Income Tax Calculator FY 2025-26 — Old vs New Regime | RupeePedia" />
+        <meta name="twitter:description" content="Free Income Tax Calculator FY 2025-26 — compare Old vs New tax regime instantly. Enter income, deductions (80C, HRA, NPS) and see exact tax payable and savings." />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            { '@type': 'Question', name: 'How do I use this income tax calculator?', acceptedAnswer: { '@type': 'Answer', text: 'Enter your annual income, select applicable deductions (80C, HRA, NPS, standard deduction), and the calculator instantly shows your tax liability under both Old and New tax regimes for FY 2025-26.' } },
+            { '@type': 'Question', name: 'What is the difference between Old and New tax regime?', acceptedAnswer: { '@type': 'Answer', text: 'The Old regime lets you claim deductions (80C up to ₹1.5L, HRA, NPS, home loan interest etc.) but has higher slab rates. The New regime has lower slab rates but most deductions are not allowed. New regime is now the default from FY 2023-24.' } },
+            { '@type': 'Question', name: 'What are the New tax regime slabs for FY 2025-26?', acceptedAnswer: { '@type': 'Answer', text: 'New regime slabs: Up to ₹3L — nil; ₹3L–₹7L — 5%; ₹7L–₹10L — 10%; ₹10L–₹12L — 15%; ₹12L–₹15L — 20%; Above ₹15L — 30%. Income up to ₹12L is tax-free due to Section 87A rebate.' } },
+            { '@type': 'Question', name: 'Which regime should I choose?', acceptedAnswer: { '@type': 'Answer', text: 'If your total deductions exceed ₹3.75 lakh (for income above ₹15L), the Old regime generally saves more tax. For lower incomes or fewer deductions, the New regime is usually better. Use this calculator to compare both for your specific situation.' } },
+          ],
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'Income Tax Calculator', item: 'https://rupeepedia.in/calculators/income-tax' },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="min-h-screen bg-[#F8FAFC]">

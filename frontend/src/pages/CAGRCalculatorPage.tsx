@@ -44,6 +44,14 @@ export default function CAGRCalculatorPage() {
         <title>CAGR Calculator 2026 — Compound Annual Growth Rate Calculator | RupeePedia</title>
         <meta name="description" content="Free CAGR Calculator — calculate the Compound Annual Growth Rate of any investment. Enter initial value, final value, and duration to get instant CAGR." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/cagr" />
+        <meta property="og:title" content="CAGR Calculator 2026 — Compound Annual Growth Rate Calculator | RupeePedia" />
+        <meta property="og:description" content="Free CAGR Calculator — calculate the Compound Annual Growth Rate of any investment. Enter initial value, final value, and duration to get instant CAGR." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/cagr" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="CAGR Calculator 2026 — Compound Annual Growth Rate Calculator | RupeePedia" />
+        <meta name="twitter:description" content="Free CAGR Calculator — calculate the Compound Annual Growth Rate of any investment. Enter initial value, final value, and duration to get instant CAGR." />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -52,6 +60,15 @@ export default function CAGRCalculatorPage() {
             "name": f.q,
             "acceptedAnswer": { "@type": "Answer", "text": f.a }
           }))
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'CAGR Calculator', item: 'https://rupeepedia.in/calculators/cagr' },
+          ],
         })}</script>
       </Helmet>
 

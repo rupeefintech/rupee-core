@@ -49,6 +49,14 @@ export default function SWPCalculatorPage() {
         <title>SWP Calculator 2026 — Systematic Withdrawal Plan Calculator | RupeePedia</title>
         <meta name="description" content="Free SWP Calculator — calculate how long your corpus will last with monthly withdrawals. See month-by-month withdrawal schedule and final value." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/swp" />
+        <meta property="og:title" content="SWP Calculator 2026 — Systematic Withdrawal Plan Calculator | RupeePedia" />
+        <meta property="og:description" content="Free SWP Calculator — calculate how long your corpus will last with monthly withdrawals. See month-by-month withdrawal schedule and final value." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/swp" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="SWP Calculator 2026 — Systematic Withdrawal Plan Calculator | RupeePedia" />
+        <meta name="twitter:description" content="Free SWP Calculator — calculate how long your corpus will last with monthly withdrawals. See month-by-month withdrawal schedule and final value." />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -57,6 +65,15 @@ export default function SWPCalculatorPage() {
             "name": f.q,
             "acceptedAnswer": { "@type": "Answer", "text": f.a }
           }))
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'SWP Calculator', item: 'https://rupeepedia.in/calculators/swp' },
+          ],
         })}</script>
       </Helmet>
 

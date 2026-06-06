@@ -179,6 +179,14 @@ const profile = getLoanProfile();
         <title>{d.title} 2026 — Calculate Monthly EMI | RupeePedia</title>
         <meta name="description" content={`Free ${d.title} — instantly calculate monthly EMI, total interest payable, and view full amortization schedule.`} />
         <link rel="canonical" href={`https://rupeepedia.in${pathname}`} />
+        <meta property="og:title" content={`${d.title} 2026 — Calculate Monthly EMI | RupeePedia`} />
+        <meta property="og:description" content={`Free ${d.title} — instantly calculate monthly EMI, total interest payable, and view full amortization schedule.`} />
+        <meta property="og:url" content={`https://rupeepedia.in${pathname}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={`${d.title} 2026 — Calculate Monthly EMI | RupeePedia`} />
+        <meta name="twitter:description" content={`Free ${d.title} — instantly calculate monthly EMI, total interest payable, and view full amortization schedule.`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -187,6 +195,15 @@ const profile = getLoanProfile();
             "name": f.q,
             "acceptedAnswer": { "@type": "Answer", "text": f.a }
           }))
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: d.title, item: `https://rupeepedia.in${pathname}` },
+          ],
         })}</script>
       </Helmet>
 

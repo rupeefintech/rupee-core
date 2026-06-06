@@ -286,6 +286,33 @@ export default function RNORCalculatorPage() {
         <title>RNOR Status Calculator — Multi-Year Eligibility | RupeePedia</title>
         <meta name="description" content="Check your NRI / RNOR / ROR residential status under Section 6 of the Income Tax Act. Enter India stay dates to see RNOR eligibility across multiple financial years." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/rnor-status" />
+        <meta property="og:title" content="RNOR Status Calculator — Multi-Year Eligibility | RupeePedia" />
+        <meta property="og:description" content="Check your NRI / RNOR / ROR residential status under Section 6 of the Income Tax Act. Enter India stay dates to see RNOR eligibility across multiple financial years." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/rnor-status" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="RNOR Status Calculator — Multi-Year Eligibility | RupeePedia" />
+        <meta name="twitter:description" content="Check your NRI / RNOR / ROR residential status under Section 6 of the Income Tax Act. Enter India stay dates to see RNOR eligibility across multiple financial years." />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            { '@type': 'Question', name: 'What is RNOR status and who qualifies?', acceptedAnswer: { '@type': 'Answer', text: 'RNOR (Resident but Not Ordinarily Resident) is a transitional tax status for returning NRIs. You qualify as RNOR if you have been an NRI in 9 out of the last 10 years, OR have spent 729 days or less in India in the last 7 years. RNOR status means foreign income is not taxable in India.' } },
+            { '@type': 'Question', name: 'How do I use this RNOR calculator?', acceptedAnswer: { '@type': 'Answer', text: 'Enter all your India stay periods (arrival and departure dates). The calculator counts your total days in India for each financial year and the preceding years, then determines whether you are NRI, RNOR, or ROR (Resident and Ordinarily Resident) for each year.' } },
+            { '@type': 'Question', name: 'What is the difference between NRI, RNOR and ROR for tax purposes?', acceptedAnswer: { '@type': 'Answer', text: 'NRI: Only Indian-sourced income is taxable. RNOR: Indian-sourced income + income from India-based business is taxable, but foreign income is not. ROR (fully resident): Global income including foreign income is taxable in India.' } },
+            { '@type': 'Question', name: 'How long does RNOR status last?', acceptedAnswer: { '@type': 'Answer', text: 'RNOR status typically lasts 2–3 years after returning to India, depending on how many years you were an NRI. Once you meet the ordinary residency tests (resident in 2 out of last 10 years AND 730+ days in last 7 years), you become ROR.' } },
+          ],
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'RNOR Status Calculator', item: 'https://rupeepedia.in/calculators/rnor-status' },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-4 py-8">

@@ -60,6 +60,14 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
         <title>{isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator 2026 | RupeePedia</title>
         <meta name="description" content={`Check your ${isHome ? 'home' : 'personal'} loan eligibility instantly. Know the maximum loan amount you can get based on your income and existing obligations.`} />
         <link rel="canonical" href={`https://rupeepedia.in/calculators/${isHome ? 'home-loan-eligibility' : 'personal-loan-eligibility'}`} />
+        <meta property="og:title" content={`${isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator 2026 | RupeePedia`} />
+        <meta property="og:description" content={`Check your ${isHome ? 'home' : 'personal'} loan eligibility instantly. Know the maximum loan amount you can get based on your income and existing obligations.`} />
+        <meta property="og:url" content={`https://rupeepedia.in/calculators/${isHome ? 'home-loan-eligibility' : 'personal-loan-eligibility'}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={`${isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator 2026 | RupeePedia`} />
+        <meta name="twitter:description" content={`Check your ${isHome ? 'home' : 'personal'} loan eligibility instantly. Know the maximum loan amount you can get based on your income and existing obligations.`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -68,6 +76,15 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
             "name": f.q,
             "acceptedAnswer": { "@type": "Answer", "text": f.a }
           }))
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: `${isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator`, item: `https://rupeepedia.in/calculators/${isHome ? 'home-loan-eligibility' : 'personal-loan-eligibility'}` },
+          ],
         })}</script>
       </Helmet>
 

@@ -252,6 +252,33 @@ export default function SalaryCalculatorPage() {
 
         <meta name="description" content="Calculate your in-hand salary from CTC. See complete salary breakdown with Basic, HRA, EPF, tax deductions under Old & New regime for FY 2025-26." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/salary-calculator" />
+        <meta property="og:title" content="Salary Calculator 2026 - CTC to In-Hand Salary | RupeePedia" />
+        <meta property="og:description" content="Calculate your in-hand salary from CTC. See complete salary breakdown with Basic, HRA, EPF, tax deductions under Old & New regime for FY 2025-26." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/salary-calculator" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Salary Calculator 2026 - CTC to In-Hand Salary | RupeePedia" />
+        <meta name="twitter:description" content="Calculate your in-hand salary from CTC. See complete salary breakdown with Basic, HRA, EPF, tax deductions under Old & New regime for FY 2025-26." />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            { '@type': 'Question', name: 'How do I calculate in-hand salary from CTC?', acceptedAnswer: { '@type': 'Answer', text: 'Enter your annual CTC and the calculator breaks it down into Basic, HRA, allowances, employer PF, and gratuity. It then deducts employee PF (12% of Basic), professional tax, and income tax to show your monthly in-hand salary.' } },
+            { '@type': 'Question', name: 'What is the difference between CTC and in-hand salary?', acceptedAnswer: { '@type': 'Answer', text: 'CTC (Cost to Company) includes all costs the employer bears — Basic, HRA, allowances, employer PF, gratuity, and benefits. In-hand (take-home) salary is CTC minus employee PF (12%), professional tax, and income tax deducted at source (TDS).' } },
+            { '@type': 'Question', name: 'How is EPF calculated in salary?', acceptedAnswer: { '@type': 'Answer', text: 'Employee PF contribution is 12% of Basic salary (capped at ₹15,000 per month, so max ₹1,800/month). Employer also contributes 12% of Basic (3.67% to EPF, 8.33% to EPS). Both contributions are part of CTC.' } },
+            { '@type': 'Question', name: 'Which tax regime gives higher in-hand salary?', acceptedAnswer: { '@type': 'Answer', text: 'The New regime typically gives higher in-hand for incomes below ₹7L (tax-free with 87A rebate). For higher incomes, compare using this calculator — if your deductions (80C ₹1.5L, HRA, NPS) are substantial, the Old regime may save more tax.' } },
+          ],
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'Salary Calculator', item: 'https://rupeepedia.in/calculators/salary-calculator' },
+          ],
+        })}</script>
       </Helmet>
 
 

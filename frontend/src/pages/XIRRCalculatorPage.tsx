@@ -94,6 +94,14 @@ export default function XIRRCalculatorPage() {
         <title>XIRR Calculator 2026 — Calculate SIP Returns with XIRR | RupeePedia</title>
         <meta name="description" content="Free XIRR Calculator — calculate the Extended Internal Rate of Return on your SIP investments. Enter investment frequency, amount, and maturity value." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/xirr" />
+        <meta property="og:title" content="XIRR Calculator 2026 — Calculate SIP Returns with XIRR | RupeePedia" />
+        <meta property="og:description" content="Free XIRR Calculator — calculate the Extended Internal Rate of Return on your SIP investments. Enter investment frequency, amount, and maturity value." />
+        <meta property="og:url" content="https://rupeepedia.in/calculators/xirr" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="XIRR Calculator 2026 — Calculate SIP Returns with XIRR | RupeePedia" />
+        <meta name="twitter:description" content="Free XIRR Calculator — calculate the Extended Internal Rate of Return on your SIP investments. Enter investment frequency, amount, and maturity value." />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -102,6 +110,15 @@ export default function XIRRCalculatorPage() {
             "name": f.q,
             "acceptedAnswer": { "@type": "Answer", "text": f.a }
           }))
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'XIRR Calculator', item: 'https://rupeepedia.in/calculators/xirr' },
+          ],
         })}</script>
       </Helmet>
 
