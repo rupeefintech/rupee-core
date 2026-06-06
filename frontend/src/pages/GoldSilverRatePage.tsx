@@ -158,132 +158,130 @@ export default function GoldSilverRatePage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero */}
-        <div className="bg-gradient-to-br from-yellow-600 via-yellow-500 to-amber-600 text-white py-10 px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-3 py-1 text-xs font-semibold mb-3">
-              <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-              Live Prices — Updated every 30 min
+      <div className="min-h-screen" style={{ background: '#FAF7F0' }}>
+        {/* Hero — warm cream, editorial */}
+        <div className="px-4 py-10 border-b" style={{ background: '#FAF7F0', borderColor: '#E8DFD0' }}>
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold border"
+                style={{ background: '#2C1810', color: '#FAF0D0', borderColor: '#2C1810' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#C9A84C' }} />
+                Live Prices — Updated every 30 min
+              </div>
+              <button onClick={() => refetch()}
+                className="flex items-center gap-1.5 text-xs transition"
+                style={{ color: '#8B7355' }}>
+                <RefreshCw size={13} />
+                {updatedAt ? `Updated ${updatedAt}` : 'Refresh'}
+              </button>
             </div>
-            <h1 className="text-3xl font-bold mb-1">Gold & Silver Rate Today</h1>
-            <p className="text-yellow-100 text-sm">{today}</p>
+            <h1 className="text-4xl font-bold mb-1" style={{ color: '#2C1810', letterSpacing: '-0.03em' }}>
+              Gold &amp; Silver Rate Today
+            </h1>
+            <p className="text-sm mt-1" style={{ color: '#8B7355' }}>{today}</p>
           </div>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
 
-          {/* Controls row */}
-          <div className="flex flex-wrap gap-3 items-center">
-            {/* City */}
+          {/* Controls */}
+          <div className="flex flex-wrap gap-2 items-center">
             <div className="relative">
-              <MapPin size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <select
-                value={city}
-                onChange={e => setCity(e.target.value)}
-                className="pl-8 pr-8 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none"
-              >
+              <MapPin size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#8B7355' }} />
+              <select value={city} onChange={e => setCity(e.target.value)}
+                className="pl-8 pr-8 py-2 rounded-lg text-sm appearance-none focus:outline-none border"
+                style={{ background: '#FAF7F0', borderColor: '#D4C5A9', color: '#2C1810' }}>
                 {CITIES.map(c => <option key={c}>{c}</option>)}
               </select>
-              <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#8B7355' }} />
             </div>
-
-            {/* Unit */}
             <div className="relative">
-              <select
-                value={unit}
-                onChange={e => setUnit(e.target.value as Unit)}
-                className="px-3 pr-8 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 appearance-none"
-              >
+              <select value={unit} onChange={e => setUnit(e.target.value as Unit)}
+                className="px-3 pr-8 py-2 rounded-lg text-sm appearance-none focus:outline-none border"
+                style={{ background: '#FAF7F0', borderColor: '#D4C5A9', color: '#2C1810' }}>
                 {(Object.entries(UNIT_LABELS) as [Unit, string][]).map(([k, v]) => (
                   <option key={k} value={k}>{v}</option>
                 ))}
               </select>
-              <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+              <ChevronDown size={13} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: '#8B7355' }} />
             </div>
-
-            {/* Purity pills */}
             <div className="flex gap-1.5">
               {(['24K', '22K', '18K', '14K'] as Purity[]).map(p => (
-                <PurityBadge key={p}
-                  label={p}
-                  pct={p === '24K' ? '99.9%' : p === '22K' ? '91.6%' : p === '18K' ? '75%' : '58.3%'}
-                  active={purity === p}
-                  onClick={() => setPurity(p)}
-                />
+                <button key={p} onClick={() => setPurity(p)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold border transition-all"
+                  style={purity === p
+                    ? { background: '#2C1810', color: '#FAF0D0', borderColor: '#2C1810' }
+                    : { background: 'transparent', color: '#8B7355', borderColor: '#D4C5A9' }}>
+                  {p} <span className="font-normal opacity-60">{p === '24K' ? '99.9%' : p === '22K' ? '91.6%' : p === '18K' ? '75%' : '58.3%'}</span>
+                </button>
               ))}
             </div>
-
-            {/* Refresh */}
-            <button
-              onClick={() => refetch()}
-              className="ml-auto flex items-center gap-1.5 text-xs text-gray-500 hover:text-yellow-600 transition"
-            >
-              <RefreshCw size={13} />
-              {updatedAt ? `Updated ${updatedAt}` : 'Refresh'}
-            </button>
           </div>
 
           {/* Main price cards */}
           {isLoading ? (
             <div className="grid sm:grid-cols-2 gap-4">
-              {[1, 2].map(i => (
-                <div key={i} className="h-40 bg-gray-100 rounded-2xl animate-pulse" />
-              ))}
+              {[1, 2].map(i => <div key={i} className="h-40 rounded-2xl animate-pulse" style={{ background: '#E8DFD0' }} />)}
             </div>
           ) : isError ? (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center text-red-600 text-sm">
+            <div className="rounded-xl p-6 text-center text-sm border" style={{ background: '#FEF2F2', borderColor: '#FCA5A5', color: '#B91C1C' }}>
               Failed to fetch live prices. <button onClick={() => refetch()} className="underline font-semibold">Try again</button>
             </div>
           ) : data ? (
             <>
               <div className="grid sm:grid-cols-2 gap-4">
-                {/* Gold card */}
-                <div className="rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 p-5 text-white shadow-lg shadow-yellow-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-white/25 rounded-full flex items-center justify-center text-lg">🥇</div>
+                {/* Gold card — espresso */}
+                <div className="rounded-2xl p-6 shadow-lg" style={{ background: 'linear-gradient(135deg, #2C1810 0%, #3D2415 100%)' }}>
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                      style={{ background: 'rgba(201,168,76,0.2)' }}>🥇</div>
                     <div>
-                      <div className="font-bold text-sm">Gold — {purity}</div>
-                      <div className="text-[11px] text-yellow-100">{city} · {UNIT_LABELS[unit]}</div>
+                      <div className="font-bold text-sm" style={{ color: '#FAF0D0' }}>Gold — {purity}</div>
+                      <div className="text-[11px]" style={{ color: 'rgba(250,240,208,0.5)' }}>{city} · {UNIT_LABELS[unit]}</div>
                     </div>
                   </div>
-                  <div className="text-3xl font-black mb-1">{fmt(getGoldPrice(data))}</div>
-                  <div className="text-xs text-yellow-100">
-                    Per gram: {fmt(data.gold.price_24k_per_gram)} · Per tola: {fmt(data.gold.price_24k_per_tola)}
+                  <div className="text-4xl font-black mb-2 tracking-tight" style={{ color: '#C9A84C' }}>
+                    ₹{fmt(getGoldPrice(data))}
+                  </div>
+                  <div className="text-xs" style={{ color: 'rgba(201,168,76,0.55)' }}>
+                    Per gram: ₹{fmt(data.gold.price_24k_per_gram)} · Per tola: ₹{fmt(data.gold.price_24k_per_tola)}
                   </div>
                 </div>
 
-                {/* Silver card */}
-                <div className="rounded-2xl bg-gradient-to-br from-gray-400 to-gray-600 p-5 text-white shadow-lg shadow-gray-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-white/25 rounded-full flex items-center justify-center text-lg">🥈</div>
+                {/* Silver card — deep navy */}
+                <div className="rounded-2xl p-6 shadow-lg" style={{ background: 'linear-gradient(135deg, #1B2C3D 0%, #243547 100%)' }}>
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                      style={{ background: 'rgba(188,208,224,0.15)' }}>🥈</div>
                     <div>
-                      <div className="font-bold text-sm">Silver — 999 Pure</div>
-                      <div className="text-[11px] text-gray-200">{city} · {UNIT_LABELS[unit]}</div>
+                      <div className="font-bold text-sm" style={{ color: '#E8F0F6' }}>Silver — 999 Pure</div>
+                      <div className="text-[11px]" style={{ color: 'rgba(232,240,246,0.45)' }}>{city} · {UNIT_LABELS[unit]}</div>
                     </div>
                   </div>
-                  <div className="text-3xl font-black mb-1">{fmt(getSilverPrice(data))}</div>
-                  <div className="text-xs text-gray-300">
-                    Per gram: {fmt(data.silver.price_per_gram)} · Per 100g: {fmt(data.silver.price_per_100g)}
+                  <div className="text-4xl font-black mb-2 tracking-tight" style={{ color: '#C8E0F0' }}>
+                    ₹{fmt(getSilverPrice(data))}
+                  </div>
+                  <div className="text-xs" style={{ color: 'rgba(200,224,240,0.5)' }}>
+                    Per gram: ₹{fmt(data.silver.price_per_gram)} · Per 100g: ₹{fmt(data.silver.price_per_100g)}
                   </div>
                 </div>
               </div>
 
-              {/* Gold quick reference table */}
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-                  <TrendingUp size={15} className="text-yellow-500" />
-                  <span className="font-bold text-sm text-gray-800">Gold Price — {city} Today</span>
+              {/* Gold table */}
+              <div className="rounded-2xl overflow-hidden border" style={{ background: '#FFFCF7', borderColor: '#E8DFD0' }}>
+                <div className="px-5 py-3.5 flex items-center gap-2 border-b" style={{ background: '#F5EFE4', borderColor: '#E8DFD0' }}>
+                  <TrendingUp size={15} style={{ color: '#8B7355' }} />
+                  <span className="font-bold text-sm" style={{ color: '#2C1810' }}>Gold Price — {city} Today</span>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-yellow-50">
-                        <th className="text-left px-5 py-2.5 text-xs font-semibold text-gray-500">Purity</th>
-                        <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500">Per Gram</th>
-                        <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500">Per 10g</th>
-                        <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500">Per Tola</th>
-                        <th className="text-right px-5 py-2.5 text-xs font-semibold text-gray-500">Per Sovereign (8g)</th>
+                      <tr style={{ background: '#F5EFE4' }}>
+                        <th className="text-left px-5 py-2.5 text-xs font-semibold" style={{ color: '#8B7355' }}>Purity</th>
+                        <th className="text-right px-4 py-2.5 text-xs font-semibold" style={{ color: '#8B7355' }}>Per Gram</th>
+                        <th className="text-right px-4 py-2.5 text-xs font-semibold" style={{ color: '#8B7355' }}>Per 10g</th>
+                        <th className="text-right px-4 py-2.5 text-xs font-semibold" style={{ color: '#8B7355' }}>Per Tola</th>
+                        <th className="text-right px-5 py-2.5 text-xs font-semibold" style={{ color: '#8B7355' }}>Per Sovereign</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -296,12 +294,12 @@ export default function GoldSilverRatePage() {
                         const cityBase = data.cities[city]?.gold_24k_per_10g ?? data.gold.price_24k_per_10g;
                         const per10g = Math.round(cityBase * k / 24);
                         return (
-                          <tr key={k} className="border-t border-gray-50 hover:bg-gray-50">
-                            <td className="px-5 py-3 font-semibold text-gray-800">{label}</td>
-                            <td className="px-4 py-3 text-right text-gray-700">{fmt(Math.round(per10g / 10))}</td>
-                            <td className="px-4 py-3 text-right font-bold text-gray-900">{fmt(per10g)}</td>
-                            <td className="px-4 py-3 text-right text-gray-700">{fmt(Math.round(per10g * 1.16638))}</td>
-                            <td className="px-5 py-3 text-right text-gray-700">{fmt(Math.round(per10g * 0.8))}</td>
+                          <tr key={k} className="border-t" style={{ borderColor: '#EFE8DA' }}>
+                            <td className="px-5 py-3 font-semibold" style={{ color: '#2C1810' }}>{label}</td>
+                            <td className="px-4 py-3 text-right" style={{ color: '#5C3D1E' }}>{fmt(Math.round(per10g / 10))}</td>
+                            <td className="px-4 py-3 text-right font-bold" style={{ color: '#2C1810' }}>{fmt(per10g)}</td>
+                            <td className="px-4 py-3 text-right" style={{ color: '#5C3D1E' }}>{fmt(Math.round(per10g * 1.16638))}</td>
+                            <td className="px-5 py-3 text-right" style={{ color: '#5C3D1E' }}>{fmt(Math.round(per10g * 0.8))}</td>
                           </tr>
                         );
                       })}
@@ -310,13 +308,13 @@ export default function GoldSilverRatePage() {
                 </div>
               </div>
 
-              {/* Silver reference table */}
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
+              {/* Silver table */}
+              <div className="rounded-2xl overflow-hidden border" style={{ background: '#FFFCF7', borderColor: '#E8DFD0' }}>
+                <div className="px-5 py-3.5 flex items-center gap-2 border-b" style={{ background: '#F5EFE4', borderColor: '#E8DFD0' }}>
                   <span className="text-base">🥈</span>
-                  <span className="font-bold text-sm text-gray-800">Silver Price — {city} Today</span>
+                  <span className="font-bold text-sm" style={{ color: '#2C1810' }}>Silver Price — {city} Today</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-x divide-y divide-gray-100">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-x divide-y" style={{ borderColor: '#EFE8DA' }}>
                   {[
                     { label: 'Per Gram', value: fmt(data.silver.price_per_gram) },
                     { label: 'Per 10 Grams', value: fmt(data.silver.price_per_10g) },
@@ -324,31 +322,30 @@ export default function GoldSilverRatePage() {
                     { label: 'Per Kg', value: fmt(data.silver.price_per_kg) },
                   ].map(({ label, value }) => (
                     <div key={label} className="px-5 py-4">
-                      <div className="text-[11px] text-gray-400 mb-1">{label}</div>
-                      <div className="font-bold text-gray-900">{value}</div>
+                      <div className="text-[11px] mb-1" style={{ color: '#8B7355' }}>{label}</div>
+                      <div className="font-bold" style={{ color: '#1B2C3D' }}>{value}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* City comparison */}
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-                  <MapPin size={15} className="text-brand-500" />
-                  <span className="font-bold text-sm text-gray-800">24K Gold Rate by City ({UNIT_LABELS['10g']})</span>
+              {/* City selector */}
+              <div className="rounded-2xl overflow-hidden border" style={{ background: '#FFFCF7', borderColor: '#E8DFD0' }}>
+                <div className="px-5 py-3.5 flex items-center gap-2 border-b" style={{ background: '#F5EFE4', borderColor: '#E8DFD0' }}>
+                  <MapPin size={15} style={{ color: '#8B7355' }} />
+                  <span className="font-bold text-sm" style={{ color: '#2C1810' }}>24K Gold Rate by City ({UNIT_LABELS['10g']})</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-0 divide-y divide-x divide-gray-100">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-0 divide-y divide-x" style={{ borderColor: '#EFE8DA' }}>
                   {CITIES.map(c => {
                     const cityData = data.cities[c];
                     const price = cityData?.gold_24k_per_10g ?? data.gold.price_24k_per_10g;
+                    const active = city === c;
                     return (
-                      <button
-                        key={c}
-                        onClick={() => setCity(c)}
-                        className={`px-4 py-3.5 text-left transition ${city === c ? 'bg-yellow-50' : 'hover:bg-gray-50'}`}
-                      >
-                        <div className={`text-xs font-semibold mb-0.5 ${city === c ? 'text-yellow-700' : 'text-gray-500'}`}>{c}</div>
-                        <div className={`text-sm font-bold ${city === c ? 'text-yellow-800' : 'text-gray-800'}`}>{fmt(price)}</div>
+                      <button key={c} onClick={() => setCity(c)}
+                        className="px-4 py-3.5 text-left transition-colors"
+                        style={{ background: active ? '#F5EFE4' : 'transparent' }}>
+                        <div className="text-xs font-semibold mb-0.5" style={{ color: active ? '#2C1810' : '#8B7355' }}>{c}</div>
+                        <div className="text-sm font-bold" style={{ color: active ? '#C9A84C' : '#2C1810' }}>{fmt(price)}</div>
                       </button>
                     );
                   })}
