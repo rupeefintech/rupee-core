@@ -21,9 +21,27 @@ const API_BASE = buildApiBase();
 
 export const apiClient = axios.create({
   baseURL: API_BASE,
-  timeout: 30000,
+  timeout: 45000,
   headers: { 'Content-Type': 'application/json' },
 });
+
+// Retry with exponential backoff for transient failures (cold starts, network hiccups)
+// Does NOT retry on 4xx client errors
+apiClient.interceptors.response.use(
+  res => res,
+  async (err: any) => {
+    const config = err.config;
+    if (!config) return Promise.reject(err);
+    const status = err.response?.status;
+    // Don't retry client errors or if already retried twice
+    if (status && status < 500) return Promise.reject(err);
+    config._retryCount = (config._retryCount ?? 0) + 1;
+    if (config._retryCount > 2) return Promise.reject(err);
+    const delay = config._retryCount * 1500;
+    await new Promise(r => setTimeout(r, delay));
+    return apiClient(config);
+  }
+);
 
 export interface BlogSummary {
   id: number;

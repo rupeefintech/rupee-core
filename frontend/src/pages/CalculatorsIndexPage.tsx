@@ -71,6 +71,14 @@ export default function CalculatorsIndexPage() {
             }
           ]
         })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Financial Calculators', item: 'https://rupeepedia.in/calculators' },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

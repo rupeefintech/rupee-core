@@ -19,11 +19,29 @@ const PORT     = Number(process.env.PORT) || 3001
 const NODE_ENV = process.env.NODE_ENV || 'development'
 // v2 — bank filter cache key fix
 
-app.use(helmet({ contentSecurityPolicy: false }))
+const ALLOWED_ORIGINS = NODE_ENV === 'development'
+  ? true
+  : (process.env.CORS_ORIGIN
+      ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+      : ['https://rupeepedia.in', 'https://www.rupeepedia.in'])
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc:  ["'self'"],
+      scriptSrc:   ["'self'", "'unsafe-inline'", 'https://pagead2.googlesyndication.com', 'https://www.googletagmanager.com'],
+      styleSrc:    ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc:     ["'self'", 'https://fonts.gstatic.com'],
+      imgSrc:      ["'self'", 'data:', 'https:'],
+      connectSrc:  ["'self'", 'https://rupeepedia-backend.onrender.com', 'https://query2.finance.yahoo.com'],
+      frameSrc:    ["'none'"],
+      objectSrc:   ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}))
 app.use(cors({
-  origin: NODE_ENV === 'development'
-    ? true
-    : (process.env.CORS_ORIGIN || '*'),
+  origin: ALLOWED_ORIGINS,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }))

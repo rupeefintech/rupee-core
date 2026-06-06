@@ -2,9 +2,11 @@ User-agent: *
 Allow: /
 Allow: /sitemap.xml
 Allow: /ifsc/
+Allow: /credit-cards
+Allow: /credit-cards?*
 Disallow: /api/
 Disallow: /admin/
-Disallow: /?*
+Disallow: /?utm_*
 Allow: /*.css$
 Allow: /*.js$
 Allow: /*.png$

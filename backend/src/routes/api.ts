@@ -52,6 +52,7 @@ router.get('/states', async (_req: Request, res: Response) => {
   const out = { data: states, count: states.length }
   memSet(KEY, out)
   await cacheSet(KEY, out)
+  res.set('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400')
   res.json(out)
 })
 
@@ -92,6 +93,7 @@ router.get('/banks', async (_req: Request, res: Response) => {
   const out = { data, count: data.length }
   memSet(KEY, out)
   await cacheSet(KEY, out)
+  res.set('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400')
   res.json(out)
 })
 

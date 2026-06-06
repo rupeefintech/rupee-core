@@ -4,7 +4,7 @@ import { Search, SlidersHorizontal, X, CreditCard, TrendingUp, Building2, Award,
 import { Helmet } from "react-helmet-async";
 import { apiClient  } from "../utils/api";
 
-/* â”€â”€â”€ Types â”€â”€â”€ */
+/* â"€â"€â"€ Types â"€â"€â"€ */
 interface CardItem {
   id: number;
   name: string;
@@ -40,7 +40,7 @@ interface FilterOption {
   cardCount: number;
 }
 
-/* â”€â”€â”€ Constants â”€â”€â”€ */
+/* â"€â"€â"€ Constants â"€â"€â"€ */
 const NETWORK_COLORS: Record<string, string> = {
   Visa: "bg-brand-100 text-brand-700 border-brand-200",
   Mastercard: "bg-orange-100 text-orange-700 border-orange-200",
@@ -74,7 +74,7 @@ function formatNumber(n: number): string {
   return String(n);
 }
 
-/* â”€â”€â”€ Main Page â”€â”€â”€ */
+/* â"€â"€â"€ Main Page â"€â"€â"€ */
 const CreditCards: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<CardItem[]>([]);
@@ -86,7 +86,7 @@ const CreditCards: React.FC = () => {
   // Compare selection
   const [compareIds, setCompareIds] = useState<number[]>([]);
 
-  // Filters â€” seed category from URL ?category=
+  // Filters â€" seed category from URL ?category=
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [bank, setBank] = useState(searchParams.get("bank") || "");
@@ -154,7 +154,7 @@ const CreditCards: React.FC = () => {
     );
   };
 
-  // Client-side category filter (offer.category) â€” case-insensitive
+  // Client-side category filter (offer.category) â€" case-insensitive
   const filteredCards = category
     ? cards.filter((c) => c.offer?.category?.toLowerCase() === category.toLowerCase())
     : cards;
@@ -219,12 +219,17 @@ const CreditCards: React.FC = () => {
                   "acceptedAnswer": { "@type": "Answer", "text": "Best travel credit cards in India include HDFC Regalia, Axis Atlas, and SBI Elite. These offer lounge access, air miles, and travel insurance. Compare all travel cards at rupeepedia.in/credit-cards." }
                 }
               ]
+            },
+            {
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://rupeepedia.in" },
+                { "@type": "ListItem", "position": 2, "name": "Credit Cards", "item": "https://rupeepedia.in/credit-cards" }
+              ]
             }
           ]
         })}</script>
       </Helmet>
-
-      {/* â”€â”€â”€ Hero â”€â”€â”€ */}
       <div className="bg-brand-700 relative overflow-hidden">
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='1'%3E%3Cpath d='M0 0h1v40H0zm39 0h1v40h-1zM0 0h40v1H0zm0 39h40v1H0z'/%3E%3C/g%3E%3C/svg%3E\")" }} />
@@ -260,8 +265,8 @@ const CreditCards: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* â”€â”€â”€ Filter Bar â”€â”€â”€ */}
-        <div className="flex flex-wrap items-center gap-3 mb-6">
+        {/* â"€â"€â"€ Filter Bar â"€â"€â"€ */}
+        <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 mb-6 flex flex-wrap items-center gap-3">
           <button
             className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg transition ${
               showFilters ? "border-brand-500 bg-brand-50 text-brand-700" : "border-gray-200 bg-white text-gray-600 hover:border-brand-300"
@@ -298,7 +303,7 @@ const CreditCards: React.FC = () => {
           ))}
         </div>
 
-        {/* â”€â”€â”€ Filter Panel â”€â”€â”€ */}
+        {/* â"€â"€â"€ Filter Panel â"€â"€â"€ */}
         {showFilters && (
           <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-5 shadow-sm">
             <div>
@@ -345,7 +350,7 @@ const CreditCards: React.FC = () => {
           </div>
         )}
 
-        {/* â”€â”€â”€ Loading Skeleton â”€â”€â”€ */}
+        {/* â"€â"€â"€ Loading Skeleton â"€â"€â"€ */}
         {loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -359,7 +364,7 @@ const CreditCards: React.FC = () => {
           </div>
         )}
 
-        {/* â”€â”€â”€ Empty State â”€â”€â”€ */}
+        {/* â"€â"€â"€ Empty State â"€â"€â"€ */}
         {!loading && filteredCards.length === 0 && (
           <div className="text-center py-16">
             <Search className="w-12 h-12 mx-auto mb-4 text-gray-200" />
@@ -368,7 +373,7 @@ const CreditCards: React.FC = () => {
           </div>
         )}
 
-        {/* â”€â”€â”€ Card Grid â”€â”€â”€ */}
+        {/* â"€â"€â"€ Card Grid â"€â"€â"€ */}
         {!loading && filteredCards.length > 0 && (
           <>
             <p className="text-sm text-gray-500 mb-4">{filteredCards.length} cards found</p>
@@ -500,7 +505,7 @@ const CreditCards: React.FC = () => {
           </>
         )}
 
-        {/* â”€â”€â”€ Guide Section â”€â”€â”€ */}
+        {/* â"€â"€â"€ Guide Section â"€â"€â"€ */}
         <div className="mt-16 bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-8 border border-brand-100">
           <h2 className="text-2xl font-bold text-brand-900 mb-5 font-display">
             How to Choose the Right Credit Card?
@@ -522,7 +527,7 @@ const CreditCards: React.FC = () => {
         </div>
       </div>
 
-      {/* â”€â”€â”€ Floating Compare Bar â”€â”€â”€ */}
+      {/* â"€â"€â"€ Floating Compare Bar â"€â"€â"€ */}
       {compareIds.length > 0 && (
         <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-200 shadow-2xl shadow-black/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
@@ -573,7 +578,7 @@ const CreditCards: React.FC = () => {
   );
 };
 
-/* â”€â”€â”€ Stat Pill (hero) â”€â”€â”€ */
+/* â"€â"€â"€ Stat Pill (hero) â"€â"€â"€ */
 function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-2 bg-white/10 backdrop-blur rounded-lg px-3.5 py-2 border border-white/10">
@@ -586,7 +591,7 @@ function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string
   );
 }
 
-/* â”€â”€â”€ Card Placeholder Visual â”€â”€â”€ */
+/* â"€â"€â"€ Card Placeholder Visual â"€â"€â"€ */
 function CardPlaceholder({
   bank,
   name,

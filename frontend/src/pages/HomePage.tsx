@@ -81,11 +81,11 @@ export default function HomePage() {
 
           {/* Headline */}
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight tracking-tight">
-            Smart Money Decisions,<br className="hidden md:block" /> Made Simple
+            IFSC Code Finder, EMI Calculators<br className="hidden md:block" /> &amp; Credit Card Comparison India
           </h1>
 
           <p className="text-brand-200 mb-8 text-lg max-w-2xl mx-auto">
-            IFSC codes, EMI calculators, credit card comparisons, tax tools — everything you need to manage your finances better.
+            1,78,000+ bank branch IFSC codes · Free EMI, SIP &amp; tax calculators · Compare credit cards · Live gold rates. 100% free.
           </p>
 
           {/* CTAs */}
@@ -308,6 +308,35 @@ export default function HomePage() {
                 <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── LEARNING HUB ── */}
+      <section className="py-12 bg-white border-t border-gray-100">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="mb-6">
+            <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1">Free Guides</p>
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Learn the Basics</h2>
+          </div>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {[
+              { label: 'What is IFSC Code?',        desc: 'Full form, format & how to use it',           to: '/what-is-ifsc-code',      color: 'border-brand-100 hover:border-brand-300' },
+              { label: 'IFSC Code vs MICR Code',    desc: 'Key differences explained with examples',     to: '/ifsc-vs-micr',           color: 'border-brand-100 hover:border-brand-300' },
+              { label: 'How to Find IFSC Code',     desc: '5 easy ways — passbook, app, online',         to: '/how-to-find-ifsc-code',  color: 'border-brand-100 hover:border-brand-300' },
+              { label: 'PIN Code Guide India',      desc: 'Structure, zones & how to search',            to: '/pin-code-india',         color: 'border-indigo-100 hover:border-indigo-300' },
+              { label: 'Gold Hallmark Guide',       desc: '916, 750, 585 purity marks explained',        to: '/gold-hallmark-guide',    color: 'border-yellow-100 hover:border-yellow-300' },
+              { label: 'Why Gold Prices Change',    desc: '8 key factors driving daily gold rate moves', to: '/why-gold-prices-change', color: 'border-yellow-100 hover:border-yellow-300' },
+            ].map(({ label, desc, to, color }) => (
+              <Link key={to} to={to}
+                className={`flex items-start gap-3 p-4 rounded-xl border bg-gray-50 hover:bg-white hover:shadow-sm transition-all ${color}`}>
+                <ArrowRight size={16} className="text-brand-500 mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-gray-800 text-sm">{label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
