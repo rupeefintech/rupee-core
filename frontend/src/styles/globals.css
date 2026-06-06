@@ -14,18 +14,23 @@
   }
 
   body {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'DM Sans', system-ui, sans-serif !important;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.65;
     background: #ffffff;
     color: #0f172a;
     min-height: 100vh;
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif !important;
     letter-spacing: -0.025em;
     line-height: 1.15;
+  }
+
+  /* Force DM Sans on all text — overrides any component-level font-family */
+  p, span, a, li, td, th, label, input, select, textarea, button {
+    font-family: inherit;
   }
 }
 

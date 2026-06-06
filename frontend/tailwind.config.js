@@ -35,7 +35,9 @@ export default {
         mono:    ['"JetBrains Mono"', 'monospace'],
       },
       fontSize: {
-        base: ['16px', { lineHeight: '1.6' }],
+        xs:   ['13px', { lineHeight: '1.5' }],
+        sm:   ['14.5px', { lineHeight: '1.55' }],
+        base: ['16px', { lineHeight: '1.65' }],
         lg:   ['18px', { lineHeight: '1.6' }],
         xl:   ['20px', { lineHeight: '1.5' }],
         '2xl':['24px', { lineHeight: '1.4' }],
