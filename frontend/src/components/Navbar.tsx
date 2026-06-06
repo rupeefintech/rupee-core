@@ -60,7 +60,7 @@ export default function Navbar() {
               ₹
             </div>
             <span className="font-extrabold text-lg tracking-tight text-gray-900">
-              Rupee<span className="bg-gradient-to-r from-brand-600 to-pink-500 bg-clip-text text-transparent">pedia</span>
+              Rupee<span className="bg-gradient-to-r from-brand-600 to-blue-400 bg-clip-text text-transparent">pedia</span>
             </span>
           </Link>
 

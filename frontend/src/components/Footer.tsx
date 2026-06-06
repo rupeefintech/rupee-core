@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
   return (
-    <footer style={{ background: '#1E0938' }}>
+    <footer style={{ background: '#0d1f35' }}>
       {/* Top accent stripe */}
-      <div className="h-1 bg-gradient-to-r from-brand-600 via-pink-500 to-accent-500" />
+      <div className="h-[2px] bg-gradient-to-r from-brand-600 via-brand-400 to-brand-600" />
 
       <div className="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-5 gap-8">
 
@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
               ₹
             </div>
             <span className="font-extrabold text-base text-white tracking-tight">
-              Rupee<span className="bg-gradient-to-r from-brand-400 to-pink-400 bg-clip-text text-transparent">pedia</span>
+              Rupee<span className="bg-gradient-to-r from-brand-400 to-blue-300 bg-clip-text text-transparent">pedia</span>
             </span>
           </div>
           <p className="text-sm text-white/40 leading-relaxed">
