@@ -279,38 +279,24 @@ export const api = {
    * This ensures consistency between local and production
    */
   getByIfsc: async (ifsc: string): Promise<BranchDetail> => {
+    const upperIfsc = ifsc.toUpperCase();
     try {
-      const upperIfsc = ifsc.toUpperCase();
-      
-      // DEBUG: Log the request
-      if (import.meta.env.DEV) {
-        console.log(`[API] Fetching IFSC: ${upperIfsc} from ${API_BASE}/ifsc/${upperIfsc}`);
-      }
-
       const response = await apiClient.get(`/ifsc/${upperIfsc}`);
       const data = unwrapResponse(response);
-
-      // DEBUG: Log response structure
-      if (import.meta.env.DEV) {
-        console.log(`[API] Response received:`, { keys: Object.keys(data || {}) });
-      }
 
       if (!data || !(data.ifsc || data.IFSC)) {
         throw new Error(`Invalid response: missing IFSC`);
       }
-      // normalize
       data.ifsc = data.ifsc || data.IFSC;
 
       return data as BranchDetail;
     } catch (error: any) {
-      // Better error logging
       if (error.response?.status === 404) {
-        console.warn(`[API] IFSC not found: ${ifsc}`);
-        throw new Error('IFSC code not found');
+        const e = new Error('IFSC code not found') as any;
+        e.isNotFound = true;
+        throw e;
       }
-      
-      console.error(`[API] Error fetching IFSC ${ifsc}:`, error);
-      throw new Error(`Failed to fetch IFSC details: ${error.message}`);
+      throw error;
     }
   },
 

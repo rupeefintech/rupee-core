@@ -274,12 +274,12 @@ export default function IFSCDetailPage() {
   }, [ifsc, ifscCode, navigate]);
 
   const {
-    data: branch, isLoading, isError, refetch,
+    data: branch, isLoading, isError, error, refetch,
   } = useQuery<BranchDetail>({
     queryKey:  ['ifsc', ifscCode],
     queryFn:   () => api.getByIfsc(ifscCode),
     enabled:   !!ifscCode,
-    retry:     1,
+    retry:     (failureCount, err: any) => failureCount < 2 && !err?.isNotFound,
     staleTime: 60 * 60 * 1000,
   });
 
@@ -298,11 +298,14 @@ export default function IFSCDetailPage() {
 
   // ── Error ────────────────────────────────────────────────────────────────
   if (isError || !branch) {
+    const isNotFound = (error as any)?.isNotFound === true;
     return (
       <div className="hero-bg min-h-screen py-10">
-        <Helmet>
-          <meta name="robots" content="noindex, follow" />
-        </Helmet>
+        {isNotFound && (
+          <Helmet>
+            <meta name="robots" content="noindex, follow" />
+          </Helmet>
+        )}
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <Link to="/ifsc" className="inline-flex items-center gap-2 text-brand-600 hover:text-brand-800 font-medium text-sm mb-6 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Search
@@ -311,13 +314,27 @@ export default function IFSCDetailPage() {
             <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertCircle className="w-8 h-8 text-red-400" />
             </div>
-            <h1 className="font-display text-2xl font-bold text-brand-900 mb-2">IFSC Code Not Found</h1>
-            <p className="text-gray-500 mb-2">
-              <span className="ifsc-mono font-bold text-brand-700">{ifscCode}</span> was not found in our database.
-            </p>
-            <p className="text-gray-400 text-sm mb-6">
-              This may be a newly added branch or the code might be incorrect. Please verify with your bank.
-            </p>
+            {isNotFound ? (
+              <>
+                <h1 className="font-display text-2xl font-bold text-brand-900 mb-2">IFSC Code Not Found</h1>
+                <p className="text-gray-500 mb-2">
+                  <span className="ifsc-mono font-bold text-brand-700">{ifscCode}</span> was not found in our database.
+                </p>
+                <p className="text-gray-400 text-sm mb-6">
+                  This may be a newly added branch or the code might be incorrect. Please verify with your bank.
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="font-display text-2xl font-bold text-brand-900 mb-2">Unable to Load</h1>
+                <p className="text-gray-500 mb-2">
+                  Could not fetch details for <span className="ifsc-mono font-bold text-brand-700">{ifscCode}</span>.
+                </p>
+                <p className="text-gray-400 text-sm mb-6">
+                  This is a temporary issue. Please try again in a moment.
+                </p>
+              </>
+            )}
             <div className="flex gap-3 justify-center">
               <button onClick={() => refetch()} className="btn-secondary flex items-center gap-2">
                 <RefreshCw className="w-4 h-4" /> Try Again
