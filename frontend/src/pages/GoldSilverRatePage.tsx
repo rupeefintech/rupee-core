@@ -363,16 +363,17 @@ export default function GoldSilverRatePage() {
             </>
           ) : null}
 
-          {/* City gold rates — dark terminal style */}
-          <div className="rounded-2xl overflow-hidden bg-[#111111]">
+          {/* City gold rates — emerald jewelry aesthetic */}
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(160deg, #0a2e1f 0%, #0d3d28 50%, #082518 100%)' }}>
             {/* Header */}
-            <div className="px-5 pt-5 pb-4 flex items-center justify-between border-b border-white/[0.06]">
+            <div className="px-5 pt-5 pb-4 flex items-center justify-between border-b border-white/[0.07]">
               <div>
                 <h2 className="text-white font-bold text-base tracking-tight">Gold Rate Today by City</h2>
-                <p className="text-white/30 text-xs mt-0.5">24K price per 10g · IBJA benchmark</p>
+                <p className="text-emerald-300/40 text-xs mt-0.5">24K price per 10g · IBJA benchmark</p>
               </div>
-              <span className="flex items-center gap-1.5 text-[11px] font-semibold text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2.5 py-1 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border"
+                style={{ color: '#e8c97a', background: 'rgba(232,201,122,0.1)', borderColor: 'rgba(232,201,122,0.25)' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#e8c97a' }} />
                 Live
               </span>
             </div>
@@ -380,18 +381,18 @@ export default function GoldSilverRatePage() {
             {/* Grid */}
             <div className="p-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
               {([
-                { slug: 'mumbai',    name: 'Mumbai',    base: true  },
-                { slug: 'delhi',     name: 'Delhi'                  },
-                { slug: 'chennai',   name: 'Chennai'                },
-                { slug: 'kolkata',   name: 'Kolkata'                },
-                { slug: 'hyderabad', name: 'Hyderabad'              },
-                { slug: 'bangalore', name: 'Bangalore'              },
-                { slug: 'ahmedabad', name: 'Ahmedabad'              },
-                { slug: 'pune',      name: 'Pune'                   },
-                { slug: 'jaipur',    name: 'Jaipur'                 },
-                { slug: 'lucknow',   name: 'Lucknow'                },
-                { slug: 'surat',     name: 'Surat'                  },
-                { slug: 'patna',     name: 'Patna'                  },
+                { slug: 'mumbai',    name: 'Mumbai',    base: true },
+                { slug: 'delhi',     name: 'Delhi'                },
+                { slug: 'chennai',   name: 'Chennai'              },
+                { slug: 'kolkata',   name: 'Kolkata'              },
+                { slug: 'hyderabad', name: 'Hyderabad'            },
+                { slug: 'bangalore', name: 'Bangalore'            },
+                { slug: 'ahmedabad', name: 'Ahmedabad'            },
+                { slug: 'pune',      name: 'Pune'                 },
+                { slug: 'jaipur',    name: 'Jaipur'               },
+                { slug: 'lucknow',   name: 'Lucknow'              },
+                { slug: 'surat',     name: 'Surat'                },
+                { slug: 'patna',     name: 'Patna'                },
               ] as { slug: string; name: string; base?: boolean }[]).map(({ slug, name, base }) => {
                 const cityData = data?.cities[name];
                 const price24k = cityData?.gold_24k_per_10g ?? data?.gold.price_24k_per_10g;
@@ -404,37 +405,47 @@ export default function GoldSilverRatePage() {
                   <a
                     key={slug}
                     href={`/gold-rate-today/${slug}`}
-                    className="group relative rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-400/40 hover:bg-amber-400/[0.06] transition-all duration-200 overflow-hidden"
+                    className="group relative rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(232,201,122,0.07)';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(232,201,122,0.3)';
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)';
+                    }}
                   >
-                    {/* amber top accent line */}
-                    <div className="h-[2px] w-full bg-white/5 group-hover:bg-amber-400 transition-colors duration-200" />
+                    {/* Champagne top bar */}
+                    <div className="h-[1.5px] w-full transition-all duration-200"
+                      style={{ background: 'linear-gradient(90deg, transparent, rgba(232,201,122,0.4), transparent)' }} />
 
                     <div className="p-3">
-                      {/* City + diff badge */}
                       <div className="flex items-start justify-between gap-1 mb-2">
-                        <p className="text-white/70 text-xs font-semibold leading-none">{name}</p>
+                        <p className="text-emerald-100/60 text-xs font-medium leading-none tracking-wide">{name}</p>
                         {base ? (
-                          <span className="text-[9px] text-amber-400/70 bg-amber-400/10 px-1.5 py-0.5 rounded font-bold tracking-wide uppercase leading-none">Base</span>
+                          <span className="text-[9px] font-bold tracking-wider uppercase leading-none px-1.5 py-0.5 rounded"
+                            style={{ color: '#e8c97a', background: 'rgba(232,201,122,0.12)' }}>IBJA</span>
                         ) : diff !== null ? (
-                          <span className="text-[9px] text-white/30 leading-none">+{fmt(diff)}</span>
+                          <span className="text-[9px] text-emerald-300/40 leading-none">+{fmt(diff)}</span>
                         ) : null}
                       </div>
 
-                      {/* Price hero */}
                       {price24k ? (
                         <>
-                          <p className="text-amber-300 font-black text-[17px] leading-none tracking-tight group-hover:text-amber-200 transition-colors">
+                          <p className="font-black text-[17px] leading-none tracking-tight"
+                            style={{ color: '#e8c97a' }}>
                             ₹{fmt(price24k)}
                           </p>
-                          <p className="text-white/20 text-[10px] mt-1">24K / 10g</p>
+                          <p className="text-emerald-200/20 text-[10px] mt-1">24K · per 10g</p>
                           {price22k && (
-                            <p className="text-white/40 text-[11px] mt-1.5 font-medium">
+                            <p className="text-[11px] mt-1.5 font-medium" style={{ color: 'rgba(232,201,122,0.45)' }}>
                               22K ₹{fmt(price22k)}
                             </p>
                           )}
                         </>
                       ) : (
-                        <div className="h-5 w-20 bg-white/5 rounded animate-pulse mt-1" />
+                        <div className="h-5 w-20 rounded animate-pulse mt-1" style={{ background: 'rgba(255,255,255,0.05)' }} />
                       )}
                     </div>
                   </a>
@@ -442,8 +453,8 @@ export default function GoldSilverRatePage() {
               })}
             </div>
 
-            <div className="px-5 pb-4 text-center text-white/15 text-[10px]">
-              Prices include city-wise differentials. Click any city for 24K · 22K · 18K breakdown.
+            <div className="px-5 pb-4 text-center text-[10px]" style={{ color: 'rgba(232,201,122,0.2)' }}>
+              Prices include city-wise differentials · Click any city for full 24K · 22K · 18K breakdown
             </div>
           </div>
 

@@ -485,16 +485,17 @@ const CreditCards: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-semibold px-3 py-1.5 bg-gold-500 hover:bg-gold-600 text-brand-900 rounded-lg transition shadow-sm"
+                          className="text-xs font-semibold px-3 py-1.5 bg-brand-800 hover:bg-brand-900 text-white rounded-lg transition"
                         >
-                          Apply Now
+                          Apply Now →
                         </a>
                       ) : (
                         <Link
                           to={`/credit-cards/${card.slug}`}
-                          className="text-xs text-brand-600 font-medium hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs font-semibold px-3 py-1.5 bg-brand-800 hover:bg-brand-900 text-white rounded-lg transition"
                         >
-                          Check Eligibility &rarr;
+                          View Details →
                         </Link>
                       )}
                     </div>
