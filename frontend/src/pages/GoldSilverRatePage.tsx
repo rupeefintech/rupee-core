@@ -130,6 +130,32 @@ export default function GoldSilverRatePage() {
             }
           ]
         })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+                { '@type': 'ListItem', position: 2, name: 'Gold Rate Today', item: 'https://rupeepedia.in/gold-rate-today' },
+              ],
+            },
+            ...(data ? [{
+              '@type': 'Dataset',
+              name: 'Gold & Silver Rates India — Live Prices',
+              description: `Live gold and silver commodity prices in India. 24K gold: ₹${data.gold.price_24k_per_10g.toLocaleString('en-IN')}/10g, 22K gold: ₹${data.gold.price_22k_per_10g.toLocaleString('en-IN')}/10g. Silver: ₹${data.silver.price_per_kg.toLocaleString('en-IN')}/kg. Updated every 30 minutes.`,
+              url: 'https://rupeepedia.in/gold-rate-today',
+              creator: { '@type': 'Organization', name: 'RupeePedia', url: 'https://rupeepedia.in' },
+              dateModified: data.updated_at,
+              variableMeasured: [
+                { '@type': 'PropertyValue', name: '24K Gold per 10g (INR)', value: data.gold.price_24k_per_10g },
+                { '@type': 'PropertyValue', name: '22K Gold per 10g (INR)', value: data.gold.price_22k_per_10g },
+                { '@type': 'PropertyValue', name: 'Silver per kg (INR)', value: data.silver.price_per_kg },
+                { '@type': 'PropertyValue', name: 'USD/INR', value: data.usd_inr },
+              ],
+            }] : []),
+          ],
+        })}</script>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

@@ -31,6 +31,7 @@ import IncomeTaxCalculator from "./pages/IncomeTaxCalculator";
 import CalculatorLayout from "./components/CalculatorLayout";
 import RNORCalculatorPage from "./pages/RNORCalculatorPage";
 import GoldSilverRatePage from "./pages/GoldSilverRatePage";
+import ScrollToTop from "./components/ScrollToTop";
 import GoldCityPage from "./pages/GoldCityPage";
 import WhatIsIFSCPage from "./pages/WhatIsIFSCPage";
 import IFSCvsMICRPage from "./pages/IFSCvsMICRPage";
@@ -119,6 +120,7 @@ function AdminRoutes() {
 function PublicLayout() {
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollToTop />
       <Navbar />
       <ChatWidget />
       <main className="flex-1">

@@ -146,8 +146,11 @@ export default function BankHolidayPage() {
   const regionalCount  = filtered.filter(h => h.type === 'regional').length;
 
   const canonicalUrl = 'https://rupeepedia.in/bank-holidays';
-  const pageTitle    = `Bank Holidays ${year} India — RBI Holiday List | Rupeepedia`;
-  const pageDesc     = `Complete list of bank holidays ${year} in India. ${nationalCount} national + ${regionalCount} regional holidays. State-wise RBI bank holiday calendar for all states.`;
+  const pageTitle    = `Bank Holidays ${year} India — Complete RBI Holiday List | RupeePedia`;
+  const nextHolidayText = upcoming
+    ? `Next: ${upcoming.name} on ${new Date(upcoming.date + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} ${year}. `
+    : '';
+  const pageDesc     = `${nextHolidayText}Complete list of bank holidays ${year} in India — ${nationalCount} national + ${regionalCount} regional holidays. State-wise RBI holiday calendar.`;
 
   const faqs = [
     { q: 'Are bank holidays the same across all states in India?', a: 'No. Banks in India observe three categories: National holidays (all banks), State/UT holidays (specific states), and bank-specific closures. RBI issues a master circular each year under the Negotiable Instruments Act listing all approved holidays.' },
@@ -180,9 +183,47 @@ export default function BankHolidayPage() {
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDesc} />
         <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://rupeepedia.in/logo.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDesc} />
         <meta name="robots" content="index, follow" />
-        <script type="application/ld+json">{JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', name: `Bank Holidays ${year} India`, itemListElement: schemaEvents.map((e, i) => ({ '@type': 'ListItem', position: i + 1, item: e })) })}</script>
-        <script type="application/ld+json">{JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'WebPage',
+              name: pageTitle,
+              url: canonicalUrl,
+              description: pageDesc,
+              breadcrumb: {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+                  { '@type': 'ListItem', position: 2, name: `Bank Holidays ${year}`, item: canonicalUrl },
+                ],
+              },
+            },
+            {
+              '@type': 'ItemList',
+              name: `Bank Holidays ${year} India`,
+              itemListElement: schemaEvents.map((e, i) => ({ '@type': 'ListItem', position: i + 1, item: e })),
+            },
+            {
+              '@type': 'FAQPage',
+              mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+            },
+            ...(upcoming ? [{
+              '@type': 'SpecialAnnouncement',
+              name: `Next Bank Holiday: ${upcoming.name}`,
+              text: `The next bank holiday in India is ${upcoming.name} on ${upcoming.date}. ${upcoming.states.includes(ALL_STATES) ? 'Applicable to all states.' : `Applicable in: ${upcoming.states.slice(0, 5).join(', ')}.`}`,
+              datePosted: new Date().toISOString().split('T')[0],
+              expires: upcoming.date,
+              announcementLocation: { '@type': 'Place', name: 'India', address: { '@type': 'PostalAddress', addressCountry: 'IN' } },
+            }] : []),
+          ],
+        })}</script>
       </Helmet>
 
       {/* Hero */}
