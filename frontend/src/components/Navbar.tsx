@@ -56,7 +56,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-[9px] bg-gradient-to-br from-brand-600 to-brand-700 flex items-center justify-center text-white font-black text-base shadow-md shadow-brand-500/30 select-none">
+            <div className="w-8 h-8 rounded-[9px] bg-brand-800 flex items-center justify-center text-white font-black text-base shadow-md select-none">
               ₹
             </div>
             <span className="font-extrabold text-lg tracking-tight text-gray-900">
@@ -132,16 +132,16 @@ export default function Navbar() {
                 <div className="absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 grid grid-cols-4 gap-5 z-[999]" style={{ width: 'min(920px, 92vw)' }}>
                   {calculatorCategories.map((group) => {
                     const CatIcon = group.categoryIcon;
-                    const catColor: Record<string, string> = {
+                    const iconColor: Record<string, string> = {
                       blue: 'text-brand-600', green: 'text-emerald-600',
-                      purple: 'text-violet-600', amber: 'text-amber-600',
+                      purple: 'text-brand-700', amber: 'text-amber-600',
                     };
-                    const cc = catColor[group.color] || 'text-brand-600';
+                    const ic = iconColor[group.color] || 'text-brand-600';
                     return (
                       <div key={group.title}>
                         <Link to="/calculators" onClick={() => setCalcOpen(false)} className="flex items-center gap-2 mb-3 group/cat hover:opacity-75 transition-opacity w-fit">
-                          <CatIcon className={`w-4 h-4 ${cc}`} />
-                          <span className={`text-xs tracking-wide font-bold ${cc} group-hover/cat:underline underline-offset-2`}>{group.title}</span>
+                          <CatIcon className={`w-4 h-4 ${ic}`} />
+                          <span className="text-xs tracking-wide font-bold text-gray-800 group-hover/cat:text-brand-600 transition-colors">{group.title}</span>
                         </Link>
                         <div className="flex flex-col gap-0.5">
                           {group.items.map((item) => {
@@ -186,7 +186,7 @@ export default function Navbar() {
             {/* CTA */}
             <Link
               to="/ifsc-finder"
-              className="ml-2 px-4 py-2 bg-gradient-to-r from-brand-600 to-brand-700 text-white text-sm font-semibold rounded-full shadow-md shadow-brand-500/30 hover:shadow-brand-500/40 hover:-translate-y-px transition-all"
+              className="ml-2 px-4 py-2 bg-brand-800 hover:bg-brand-900 text-white text-sm font-semibold rounded-full shadow-md hover:-translate-y-px transition-all"
             >
               Find IFSC →
             </Link>
@@ -277,7 +277,7 @@ export default function Navbar() {
           <Link to="/pin-codes" className="px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-600">📍 PIN Codes</Link>
           <Link to="/gold-rate-today" className="px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-700">🥇 Gold & Silver Rate</Link>
           <Link to="/about" className="px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-brand-50 hover:text-brand-600">About</Link>
-          <Link to="/ifsc-finder" className="mt-1 mx-1 py-2.5 bg-gradient-to-r from-brand-600 to-brand-700 text-white text-sm font-semibold rounded-xl text-center">
+          <Link to="/ifsc-finder" className="mt-1 mx-1 py-2.5 bg-brand-800 hover:bg-brand-900 text-white text-sm font-semibold rounded-xl text-center transition-colors">
             Find IFSC →
           </Link>
         </div>
