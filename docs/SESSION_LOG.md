@@ -51,11 +51,121 @@
 - Public page: `/fd-rates` — filters (bank type, name search, tenure, senior toggle), expandable rows, FD Calculator CTA, 9-question FAQ
 - Docs: `docs/modules/10-fd-rates.md` created
 
-### What's next
-- Enter actual FD rates data via `/admin/rates` (SBI, HDFC, ICICI, Axis first)
-- Add `/savings-rates` page (same table, `product_type='savings'`)  
+### What's next (from that session — now completed)
+- ~~Enter actual FD rates data via `/admin/rates` (SBI, HDFC, ICICI, Axis first)~~
+- ~~Add `/savings-rates` page (same table, `product_type='savings'`)~~
 - Add `/loan-rates` page (same table, strong "indicative only" disclaimer)
 - Phase 2 scraping: top 5 banks daily at 10:30 AM after traffic justifies maintenance
+
+---
+
+## 07 Jun 2026
+
+### What was done
+
+1. **Contact form + user capture:**
+   - DB: `ContactMessage` Prisma model + `contact_messages` PostgreSQL table added
+   - `prisma generate` run — client updated
+   - Backend public: `POST /api/contact` — validates name/email/subject/message, stores in DB with IP hash
+   - Backend admin: `GET /api/admin/contacts?page=&unread=` (paginated), `PATCH /api/admin/contacts/:id/read`, `DELETE /api/admin/contacts/:id`
+   - Frontend: `ContactPage.tsx` redesigned — working form with subject dropdown, success state, validation errors
+   - Admin: `/admin/contacts` page (`ContactsPage.tsx`) — split-pane list+detail view, mark-read on open, reply mailto link, delete
+   - **⚠️ Action required:** Run the SQL below once to create the table in Neon:
+     ```sql
+     CREATE TABLE IF NOT EXISTS contact_messages (
+       id SERIAL PRIMARY KEY,
+       name VARCHAR(100) NOT NULL,
+       email VARCHAR(150) NOT NULL,
+       subject VARCHAR(200) NOT NULL,
+       message TEXT NOT NULL,
+       is_read BOOLEAN DEFAULT FALSE,
+       ip_hash VARCHAR(16),
+       created_at TIMESTAMPTZ DEFAULT NOW()
+     );
+     CREATE INDEX IF NOT EXISTS idx_contact_messages_is_read ON contact_messages(is_read);
+     ```
+
+2. **Admin Banks management page:**
+   - Backend: `GET /api/admin/banks/manage?page=&search=&type=` — paginated (20/page), searchable, filterable by bank type; includes branch count per bank
+   - Backend: `PUT /api/admin/banks/:id` — edit name, shortName, bankCode, bankType, headquarters, website, logoUrl, slug, isActive, isCurated, subType
+   - Frontend: `BanksPage.tsx` — replaces "Coming Soon"; full table with logo preview, pagination, inline edit modal
+   - Table shows: bank logo + name, bank code, type, HQ, branch count, active/curated status badges, RBI/Razorpay source badges
+   - Edit modal: all editable fields with type dropdown, checkboxes for isActive/isCurated
+
+3. **Homepage tiles — 2×2 bento grid redesign:**
+   - Changed from 3-column row → 2×2 grid (responsive: 1-col mobile, 2-col sm+)
+   - Added 4th tile: **FD Rates** (`/fd-rates`) — violet accent, `TrendingUp` icon
+   - Each tile now has its own accent color: IFSC (brand dark), Cards (amber), Savings (emerald), FD (violet)
+   - Improved description text for each tile; CTA arrow hover animation retained
+
+4. **Admin Sidebar + routing:**
+   - Sidebar updated: added "Contacts" (Mail icon), "Rates" link (was missing), improved active state styling
+   - `App.tsx`: `/admin/banks` now routes to `BanksPage`, `/admin/contacts` routes to `ContactsPage`
+
+5. **Docs updated:**
+   - `docs/modules/07-admin.md` — banks management, contacts management endpoints added
+   - `docs/SESSION_LOG.md` — this entry
+
+### What's next (from that session)
+- Run the `contact_messages` + `users` table SQL in Neon dashboard (see action items below)
+- Enter FD/savings rate data for top banks via `/admin/rates`
+- Add `/loan-rates` page (indicative rates, strong disclaimer)
+- Consider role-based admin access (editor vs super-admin)
+- Email notification when new contact form message arrives
+
+---
+
+## 07 Jun 2026 — Session continued
+
+### What was done
+
+1. **User capture system:**
+   - DB: `User` Prisma model added → `users` table; `prisma generate` run
+   - `POST /api/contact` now upserts into `users` table on every contact form submission (email = unique key, name updated on repeat submissions)
+   - Admin `GET /api/admin/users?page=&search=&source=` — paginated, search by name/email, filter by source
+   - Admin `PATCH /api/admin/users/:id` — toggle isActive, save internal notes
+   - Admin `DELETE /api/admin/users/:id` — hard delete user record
+   - Admin page `/admin/users` (`UsersPage.tsx`) — split-pane list+detail: email link, toggle active, delete, internal notes with save
+   - **⚠️ Action required (Neon):**
+     ```sql
+     CREATE TABLE IF NOT EXISTS users (
+       id SERIAL PRIMARY KEY,
+       name VARCHAR(100) NOT NULL,
+       email VARCHAR(150) UNIQUE NOT NULL,
+       source VARCHAR(50) DEFAULT 'contact_form',
+       is_active BOOLEAN DEFAULT TRUE,
+       notes TEXT,
+       created_at TIMESTAMPTZ DEFAULT NOW(),
+       updated_at TIMESTAMPTZ DEFAULT NOW()
+     );
+     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+     CREATE INDEX IF NOT EXISTS idx_users_source ON users(source);
+     ```
+
+2. **Admin Banks — create + soft delete:**
+   - Backend: `POST /api/admin/banks` — create new bank (name required, slug auto-generated if blank, unique constraint error handled)
+   - Backend: `DELETE /api/admin/banks/:id` — soft delete (sets `isActive=false`; branches remain intact; `updatedAt` auto-updated by Prisma `@updatedAt`)
+   - Frontend `BanksPage.tsx`: "Add Bank" button + create modal; "Deactivate" button in edit modal with confirmation dialog; inactive rows rendered at 50% opacity
+
+3. **Homepage tiles — 4-in-a-row, white + colored left border:**
+   - Changed from 2×2 grid → single 4-column row (`lg:grid-cols-4`, 2-col on sm, 1-col on mobile)
+   - All 4 cards: white bg, `border-l-4` accent per card (brand-600 / amber-500 / emerald-500 / violet-500)
+   - Section bg changed to `bg-gray-50/60` so white cards pop
+   - Matching icon bg, tag pills, CTA color per card
+
+4. **Bank type data fix script:**
+   - `backend/scripts/fix-bank-types.ts` — normalises `bankType` field from `subType` text and known PSB names
+   - Covers: public (12 PSBs by name + subType), private, small_finance, payments, regional_rural, cooperative, foreign
+   - **Run once:** `npx ts-node scripts/fix-bank-types.ts` (from `/backend`)
+
+5. **Sidebar:** Users link added (`/admin/users`)
+
+### What's next
+- Run `users` table SQL in Neon (see above)
+- Run `fix-bank-types.ts` script to normalise bank type data
+- Enter FD/savings rates for top 10 banks via `/admin/rates`
+- Add `/loan-rates` page
+- Role-based admin access (editor role)
 
 ---
 

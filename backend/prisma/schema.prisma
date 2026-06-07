@@ -384,6 +384,37 @@ model RateEntry {
   @@map("rate_entries")
 }
 
+// ─── User (public leads captured via contact form / newsletter) ──────────────
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(150)
+  source    String   @default("contact_form") @db.VarChar(50)
+  isActive  Boolean  @default(true) @map("is_active")
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([source])
+  @@map("users")
+}
+
+// ─── ContactMessage ──────────────────────────────────────────────────────────
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @db.VarChar(150)
+  subject   String   @db.VarChar(200)
+  message   String   @db.Text
+  isRead    Boolean  @default(false) @map("is_read")
+  ipHash    String?  @map("ip_hash") @db.VarChar(16)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([isRead])
+  @@map("contact_messages")
+}
+
 // ─── Blog ───────────────────────────────────────────────────────────────────
 model Blog {
   id          Int      @id @default(autoincrement())

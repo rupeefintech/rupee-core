@@ -28,6 +28,9 @@ import CreditCardsPage from "./admin/pages/CreditCardsPage";
 import CardDetailPage from "./admin/pages/CardDetailPage";
 import AddEditCardPage from "./admin/pages/AddEditCardPage";
 import RatesPage from "./admin/pages/RatesPage";
+import BanksPage from "./admin/pages/BanksPage";
+import ContactsPage from "./admin/pages/ContactsPage";
+import UsersPage from "./admin/pages/UsersPage";
 import IncomeTaxCalculator from "./pages/IncomeTaxCalculator";
 import CalculatorLayout from "./components/CalculatorLayout";
 import RNORCalculatorPage from "./pages/RNORCalculatorPage";
@@ -117,8 +120,9 @@ function AdminRoutes() {
       <Route path="/credit-cards/:slug" element={<CardDetailPage />} />
       <Route path="/credit-cards/:slug/edit" element={<AddEditCardPage />} />
       <Route path="/rates" element={<RatesPage />} />
-      <Route path="/banks" element={<AdminComingSoon title="Banks" description="Manage bank profiles, logos, and card issuer settings." />} />
-      <Route path="/users" element={<AdminComingSoon title="Users" description="Manage admin users, roles, and access permissions." />} />
+      <Route path="/banks" element={<BanksPage />} />
+      <Route path="/contacts" element={<ContactsPage />} />
+      <Route path="/users" element={<UsersPage />} />
     </Routes>
   );
 }

@@ -149,87 +149,100 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURES — 3 equal bento cards ── */}
-      <section className="py-14 bg-white">
+      {/* ── FEATURES — 4-tile row, white cards, colored left border ── */}
+      <section className="py-14 bg-gray-50/60">
         <div className="max-w-6xl mx-auto px-4">
           <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-2">What we offer</p>
           <h2 className="text-3xl font-black text-gray-900 mb-9 tracking-tight">Everything banking, in one place</h2>
 
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-            {/* IFSC — dark card */}
+            {/* IFSC */}
             <Link
               to="/ifsc-finder"
-              className="group relative rounded-2xl overflow-hidden bg-gradient-to-br from-brand-900 to-brand-700 flex flex-col transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-500/20"
+              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-brand-600 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-brand-700 p-6"
             >
-              <div className="h-[3px] bg-gradient-to-r from-brand-400 to-brand-500" />
-              <div className="p-6 flex flex-col flex-1">
-                <div className="w-11 h-11 bg-white/15 border border-white/20 rounded-xl flex items-center justify-center mb-4">
-                  <Landmark size={20} className="text-white/90" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">IFSC & Bank Search</h3>
-                <p className="text-white/60 text-sm leading-relaxed flex-1 mb-4">
-                  Find any IFSC code across 1,350+ banks. Verify NEFT, RTGS, IMPS & UPI status instantly.
-                </p>
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {['178k Branches', 'MICR Codes', 'RBI Verified'].map(t => (
-                    <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/12 text-white/80 border border-white/15">{t}</span>
-                  ))}
-                </div>
-                <span className="text-sm font-bold text-white/80 flex items-center gap-1.5 group-hover:gap-3 transition-all">
-                  Search Branches <ArrowRight size={14} />
-                </span>
+              <div className="w-11 h-11 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+                <Landmark size={20} className="text-brand-600" />
               </div>
+              <h3 className="text-base font-bold text-gray-900 mb-2">IFSC & Bank Search</h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
+                Find any IFSC code across 1,350+ banks. Verify NEFT, RTGS, IMPS & UPI status instantly.
+              </p>
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {['178k Branches', 'MICR Codes', 'RBI Verified'].map(t => (
+                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-brand-50 text-brand-700">{t}</span>
+                ))}
+              </div>
+              <span className="text-sm font-semibold text-brand-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
+                Search Branches <ArrowRight size={13} />
+              </span>
             </Link>
 
             {/* Credit Cards */}
             <Link
               to="/credit-cards"
-              className="group rounded-2xl overflow-hidden bg-white border-[1.5px] border-gray-100 flex flex-col transition-all hover:-translate-y-1 hover:shadow-xl hover:border-brand-100"
+              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-amber-500 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-amber-600 p-6"
             >
-              <div className="h-[3px] bg-gradient-to-r from-amber-400 to-brand-500" />
-              <div className="p-6 flex flex-col flex-1">
-                <div className="w-11 h-11 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
-                  <CreditCard size={20} className="text-brand-600" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Credit Cards</h3>
-                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
-                  Compare cashback, rewards & annual fees side by side. Find your perfect card from 50+ options.
-                </p>
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {['Cashback', 'Travel', 'Rewards', 'Lifetime Free'].map(t => (
-                    <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-brand-50 text-brand-700">{t}</span>
-                  ))}
-                </div>
-                <span className="text-sm font-bold text-brand-600 flex items-center gap-1.5 group-hover:gap-3 transition-all">
-                  Compare Cards <ArrowRight size={14} />
-                </span>
+              <div className="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
+                <CreditCard size={20} className="text-amber-600" />
               </div>
+              <h3 className="text-base font-bold text-gray-900 mb-2">Credit Cards</h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
+                Compare cashback, rewards & annual fees side by side. Find your perfect card from 50+ options.
+              </p>
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {['Cashback', 'Travel', 'Rewards', 'Lifetime Free'].map(t => (
+                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">{t}</span>
+                ))}
+              </div>
+              <span className="text-sm font-semibold text-amber-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
+                Compare Cards <ArrowRight size={13} />
+              </span>
             </Link>
 
-            {/* Savings Accounts */}
+            {/* Savings Rates */}
             <Link
               to="/savings-rates"
-              className="group rounded-2xl overflow-hidden bg-white border-[1.5px] border-gray-100 flex flex-col transition-all hover:-translate-y-1 hover:shadow-xl hover:border-brand-100"
+              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-emerald-500 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-emerald-600 p-6"
             >
-              <div className="h-[3px] bg-gradient-to-r from-brand-400 to-blue-500" />
-              <div className="p-6 flex flex-col flex-1">
-                <div className="w-11 h-11 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
-                  <PiggyBank size={20} className="text-brand-600" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Savings Account Rates</h3>
-                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
-                  Compare savings interest rates across all banks — zero balance, balance-tier rates, and digital accounts. Up to 9% p.a.
-                </p>
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {['Zero Balance', 'Up to 9% p.a.', 'Digital Banks'].map(t => (
-                    <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-brand-50 text-brand-700">{t}</span>
-                  ))}
-                </div>
-                <span className="text-sm font-bold text-brand-600 flex items-center gap-1.5 group-hover:gap-3 transition-all">
-                  Compare Rates <ArrowRight size={14} />
-                </span>
+              <div className="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
+                <PiggyBank size={20} className="text-emerald-600" />
               </div>
+              <h3 className="text-base font-bold text-gray-900 mb-2">Savings Account Rates</h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
+                Compare savings interest rates across all banks — zero balance, balance-tier, digital accounts. Up to 9% p.a.
+              </p>
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {['Zero Balance', 'Up to 9% p.a.', 'Digital Banks'].map(t => (
+                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">{t}</span>
+                ))}
+              </div>
+              <span className="text-sm font-semibold text-emerald-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
+                Compare Rates <ArrowRight size={13} />
+              </span>
+            </Link>
+
+            {/* FD Rates */}
+            <Link
+              to="/fd-rates"
+              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-violet-500 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-violet-600 p-6"
+            >
+              <div className="w-11 h-11 bg-violet-50 rounded-xl flex items-center justify-center mb-4">
+                <TrendingUp size={20} className="text-violet-600" />
+              </div>
+              <h3 className="text-base font-bold text-gray-900 mb-2">FD Rates</h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
+                Compare fixed deposit rates across banks and NBFCs. Highest FD rates with senior citizen benefits.
+              </p>
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {['Up to 9.5% p.a.', 'Senior Rates', 'All Tenures'].map(t => (
+                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-violet-50 text-violet-700">{t}</span>
+                ))}
+              </div>
+              <span className="text-sm font-semibold text-violet-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
+                Compare FD Rates <ArrowRight size={13} />
+              </span>
             </Link>
 
           </div>

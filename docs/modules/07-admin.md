@@ -12,6 +12,9 @@ A JWT-protected dashboard for managing credit card products, offers, and feature
 | `/admin/credit-cards/new` | Add a new credit card |
 | `/admin/credit-cards/:slug` | View card detail + manage offers |
 | `/admin/credit-cards/:slug/edit` | Edit existing card |
+| `/admin/banks` | Paginated bank management — search, filter, edit bank details |
+| `/admin/rates` | FD / Savings / Loan rates management (tabbed) |
+| `/admin/contacts` | View, read-mark, and delete contact form submissions |
 
 Admin pages are not indexed (`noindex` should be set on all admin routes).
 
@@ -26,6 +29,9 @@ frontend/src/admin/
     AddEditCardPage.tsx   # Create/edit card form
     CardDetailPage.tsx    # Card view + offer management
     AddProduct.tsx        # Legacy step-form (superseded by AddEditCardPage)
+    BanksPage.tsx         # Paginated bank list + inline edit modal
+    RatesPage.tsx         # FD/Savings/Loan rates management
+    ContactsPage.tsx      # Contact form submissions — read/delete
   components/
     Sidebar.tsx           # Nav sidebar with links
     Header.tsx            # Top bar with logout
@@ -73,8 +79,17 @@ All require `Authorization: Bearer <jwt-token>` header. Mounted in `backend/src/
 | `PUT` | `/api/admin/offers/:id` | Update offer |
 | `DELETE` | `/api/admin/offers/:id` | Delete offer |
 | `POST` | `/api/admin/offers/:id/revert` | Revert offer to previous version |
-| `GET` | `/api/admin/banks` | Bank list for dropdown |
+| `GET` | `/api/admin/banks` | Bank list for dropdown (card issuer filter by default) |
+| `GET` | `/api/admin/banks/manage?page=&search=&type=` | Paginated full bank list with branch counts |
+| `PUT` | `/api/admin/banks/:id` | Edit bank details (name, type, logo, slug, isActive, isCurated, etc.) |
 | `GET` | `/api/admin/features` | Feature tag list |
+| `GET` | `/api/admin/contacts?page=&unread=` | Paginated contact form submissions |
+| `PATCH` | `/api/admin/contacts/:id/read` | Mark contact message as read |
+| `DELETE` | `/api/admin/contacts/:id` | Delete contact message |
+| `GET` | `/api/admin/rates?type=fd` | All rate entries (including inactive) |
+| `POST` | `/api/admin/rates` | Create rate entry |
+| `PUT` | `/api/admin/rates/:id` | Update rate entry |
+| `DELETE` | `/api/admin/rates/:id` | Soft-delete rate entry |
 
 ## Database Tables Touched
 
@@ -85,13 +100,15 @@ All require `Authorization: Bearer <jwt-token>` header. Mounted in `backend/src/
 | `ProductDetails` | Fees, eligibility, reward type |
 | `ProductOffer` | Versioned offers |
 | `Feature` / `ProductFeatureMapping` | Feature tagging |
-| `Bank` | Bank dropdown in forms |
+| `Bank` | Bank dropdown in forms + full bank management |
+| `rate_entries` | FD / Savings / Loan rates (manual curation) |
+| `contact_messages` | Contact form submissions from public `/contact` page |
 
 ## Pending Features
 
-- **Banks management** — `/admin/banks` page shows "Coming Soon"
 - **User management** — `/admin/users` page shows "Coming Soon"
 - **Role-based access** — single admin role only; needs admin/editor split
 - **Blog management UI** — no admin pages for blogs yet (only API endpoints exist)
 - **Bulk CSV import** — not implemented
 - **Direct image upload** — paste URL only; no file upload
+- **Email notification** — no email alert when new contact message arrives

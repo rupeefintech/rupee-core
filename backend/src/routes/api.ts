@@ -2537,4 +2537,40 @@ router.get('/exchange-rates', async (_req: Request, res: Response) => {
   }
 })
 
+// ── POST /api/contact ─────────────────────────────────────────────────────────
+router.post('/contact', async (req: Request, res: Response) => {
+  try {
+    const { name, email, subject, message } = req.body
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ error: 'All fields are required' })
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email address' })
+    }
+    if (message.length < 10) {
+      return res.status(400).json({ error: 'Message too short' })
+    }
+    const cleanName    = String(name).slice(0, 100)
+    const cleanEmail   = String(email).slice(0, 150)
+    const cleanSubject = String(subject).slice(0, 200)
+    const cleanMessage = String(message).slice(0, 5000)
+
+    await Promise.all([
+      prisma.contactMessage.create({
+        data: { name: cleanName, email: cleanEmail, subject: cleanSubject, message: cleanMessage, ipHash: ipHash(req) },
+      }),
+      // Upsert user — captures every email that reaches out
+      prisma.user.upsert({
+        where: { email: cleanEmail },
+        create: { name: cleanName, email: cleanEmail, source: 'contact_form' },
+        update: { name: cleanName },
+      }),
+    ])
+    return res.json({ success: true, message: 'Message received. We will get back to you within 48 hours.' })
+  } catch (err: any) {
+    console.error('contact form error:', err)
+    return res.status(500).json({ error: 'Failed to submit message' })
+  }
+})
+
 export default router

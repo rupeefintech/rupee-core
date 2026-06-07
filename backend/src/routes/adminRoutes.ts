@@ -530,6 +530,229 @@ router.post("/offers/:id/revert", verifyToken, async (req, res) => {
   }
 });
 
+// ─── Contact Messages ────────────────────────────────────────────────────────
+router.get('/contacts', verifyToken, async (req, res) => {
+  try {
+    const page   = Math.max(1, Number(req.query.page ?? 1))
+    const limit  = Math.min(50, Number(req.query.limit ?? 20))
+    const unread = req.query.unread === 'true'
+
+    const where: any = unread ? { isRead: false } : {}
+    const [total, rows] = await Promise.all([
+      prisma.contactMessage.count({ where }),
+      prisma.contactMessage.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ])
+    res.json({ total, page, limit, data: rows })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+router.patch('/contacts/:id/read', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    await prisma.contactMessage.update({ where: { id }, data: { isRead: true } })
+    res.json({ success: true })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+router.delete('/contacts/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    await prisma.contactMessage.delete({ where: { id } })
+    res.json({ success: true })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+// ─── Banks Management (paginated full list) ──────────────────────────────────
+router.get('/banks/manage', verifyToken, async (req, res) => {
+  try {
+    const page   = Math.max(1, Number(req.query.page ?? 1))
+    const limit  = Math.min(100, Number(req.query.limit ?? 20))
+    const search = (req.query.search as string) || ''
+    const type   = (req.query.type  as string) || ''
+
+    const where: any = {}
+    if (search) where.name = { contains: search, mode: 'insensitive' }
+    if (type)   where.bankType = type
+
+    const [total, banks] = await Promise.all([
+      prisma.banksMaster.count({ where }),
+      prisma.banksMaster.findMany({
+        where,
+        select: {
+          id: true, name: true, shortName: true, bankCode: true, bankType: true,
+          headquarters: true, website: true, logoUrl: true, slug: true,
+          isActive: true, isCurated: true, subType: true, sourceRbi: true,
+          sourceRazorpay: true, createdAt: true, updatedAt: true,
+          _count: { select: { branches: true } },
+        },
+        orderBy: { name: 'asc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ])
+
+    res.json({
+      total, page, limit,
+      data: banks.map(b => ({ ...b, branchCount: b._count.branches, _count: undefined })),
+    })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+router.put('/banks/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    const {
+      name, shortName, bankCode, bankType, headquarters, website,
+      logoUrl, slug, isActive, isCurated, subType,
+    } = req.body
+
+    const data: any = {}
+    if (name        !== undefined) data.name        = name
+    if (shortName   !== undefined) data.shortName   = shortName   || null
+    if (bankCode    !== undefined) data.bankCode     = bankCode    || null
+    if (bankType    !== undefined) data.bankType     = bankType    || null
+    if (headquarters !== undefined) data.headquarters = headquarters || null
+    if (website     !== undefined) data.website     = website     || null
+    if (logoUrl     !== undefined) data.logoUrl     = logoUrl     || null
+    if (slug        !== undefined) data.slug        = slug        || null
+    if (isActive    !== undefined) data.isActive    = Boolean(isActive)
+    if (isCurated   !== undefined) data.isCurated   = Boolean(isCurated)
+    if (subType     !== undefined) data.subType     = subType     || null
+
+    const bank = await prisma.banksMaster.update({ where: { id }, data })
+    res.json({ data: bank })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+// POST /api/admin/banks  — create a new bank
+router.post('/banks', verifyToken, async (req, res) => {
+  try {
+    const {
+      name, shortName, bankCode, bankType, headquarters, website,
+      logoUrl, slug, isActive, isCurated, subType,
+    } = req.body
+
+    if (!name?.trim()) {
+      return res.status(400).json({ error: 'Bank name is required' })
+    }
+
+    // Auto-generate slug from name if not provided
+    const finalSlug = slug?.trim() ||
+      name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+    const bank = await prisma.banksMaster.create({
+      data: {
+        name:         name.trim(),
+        shortName:    shortName    || null,
+        bankCode:     bankCode     || null,
+        bankType:     bankType     || null,
+        headquarters: headquarters || null,
+        website:      website      || null,
+        logoUrl:      logoUrl      || null,
+        slug:         finalSlug,
+        isActive:     isActive  !== undefined ? Boolean(isActive)  : true,
+        isCurated:    isCurated !== undefined ? Boolean(isCurated) : false,
+        subType:      subType       || null,
+      },
+    })
+    return res.status(201).json({ data: bank })
+  } catch (err: any) {
+    if (err.code === 'P2002') return res.status(409).json({ error: 'Bank name or slug already exists' })
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// DELETE /api/admin/banks/:id  — soft delete (sets isActive=false)
+router.delete('/banks/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    const bank = await prisma.banksMaster.update({
+      where: { id },
+      data: { isActive: false },
+    })
+    res.json({ data: bank, message: 'Bank deactivated' })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+// ─── User Management ─────────────────────────────────────────────────────────
+router.post('/users', verifyToken, async (req, res) => {
+  try {
+    const { name, email, source, notes } = req.body
+    if (!name?.trim() || !email?.trim()) {
+      return res.status(400).json({ error: 'Name and email are required' })
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email address' })
+    }
+    const user = await prisma.user.create({
+      data: {
+        name:   name.trim(),
+        email:  email.trim().toLowerCase(),
+        source: source || 'manual',
+        notes:  notes  || null,
+      },
+    })
+    return res.status(201).json({ data: user })
+  } catch (err: any) {
+    if (err.code === 'P2002') return res.status(409).json({ error: 'Email already exists' })
+    res.status(500).json({ error: err.message })
+  }
+})
+
+router.get('/users', verifyToken, async (req, res) => {
+  try {
+    const page   = Math.max(1, Number(req.query.page ?? 1))
+    const limit  = Math.min(50, Number(req.query.limit ?? 20))
+    const search = (req.query.search as string) || ''
+    const source = (req.query.source as string) || ''
+
+    const where: any = {}
+    if (search) where.OR = [
+      { name:  { contains: search, mode: 'insensitive' } },
+      { email: { contains: search, mode: 'insensitive' } },
+    ]
+    if (source) where.source = source
+
+    const [total, users] = await Promise.all([
+      prisma.user.count({ where }),
+      prisma.user.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+    ])
+    res.json({ total, page, limit, data: users })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+router.patch('/users/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    const { isActive, notes, name } = req.body
+    const data: any = {}
+    if (isActive !== undefined) data.isActive = Boolean(isActive)
+    if (notes    !== undefined) data.notes    = notes || null
+    if (name     !== undefined) data.name     = name  || undefined
+
+    const user = await prisma.user.update({ where: { id }, data })
+    res.json({ data: user })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
+router.delete('/users/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    await prisma.user.delete({ where: { id } })
+    res.json({ success: true })
+  } catch (err: any) { res.status(500).json({ error: err.message }) }
+})
+
 // ─── Financial Rates CRUD ───────────────────────────────────────────────────
 const VALID_RATE_TYPES = ['fd', 'savings', 'loan_personal', 'loan_home', 'loan_auto'];
 

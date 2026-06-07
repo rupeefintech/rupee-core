@@ -106,8 +106,14 @@ DELETE /api/admin/rates/:id      → soft delete (sets is_active=false)
 
 ---
 
+## Savings Rates Page (Live)
+
+- URL: `/savings-rates`
+- File: `frontend/src/pages/SavingsRatesPage.tsx`
+- Same `rate_entries` table, `product_type='savings'`
+- Homepage tile added (emerald accent, 2×2 bento grid)
+
 ## Phase 2 Roadmap (after traffic)
 - Add scraping for top 5 banks (SBI, HDFC, ICICI, Axis, Kotak) — daily at 10:30 AM IST
-- Add `/savings-rates` page (same `rate_entries` table, `product_type='savings'`)
 - Add `/loan-rates` page (indicative rates + prominent "actual rate depends on credit score" disclaimer)
 - Rate change alerts: email subscribers when a bank's rate drops >0.5%
