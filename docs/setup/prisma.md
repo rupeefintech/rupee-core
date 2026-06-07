@@ -35,6 +35,10 @@ datasource db {
 | `Feature` | `Feature` | `prisma.feature` |
 | `ProductFeatureMapping` | `ProductFeatureMapping` | `prisma.productFeatureMapping` |
 | `Admin` | `admins` | `prisma.admin` |
+| `User` | `users` | `prisma.user` |
+| `ContactMessage` | `contact_messages` | `prisma.contactMessage` |
+| `RateEntry` | `rate_entries` | `prisma.rateEntry` |
+| `PostOffice` | `post_offices` | `prisma.postOffice` |
 | `Blog` | `blogs` | `prisma.blog` |
 
 ## Naming Conventions
@@ -75,10 +79,24 @@ npx prisma db push
 `prisma migrate dev` is **broken** for this project due to shadow database issues with Neon and the `20260329_consolidate_bank_tables` migration. Do not run it.
 
 **For schema changes:**
-1. Write the SQL change manually
-2. Apply via `prisma.$executeRawUnsafe()` in a one-off script or Prisma Studio
-3. Update `schema.prisma` to match
-4. Run `npx prisma generate` to regenerate the client
+1. Add the model to `schema.prisma`
+2. Run `npx prisma generate` to regenerate the client
+3. Add the CREATE TABLE SQL to `backend/scripts/create-tables.ts`
+4. Run the script to create the table in Neon:
+   ```bash
+   npx ts-node --project tsconfig.scripts.json scripts/create-tables.ts
+   ```
+
+**`create-tables.ts`** is idempotent (`IF NOT EXISTS`) — safe to re-run at any time. Contains SQL for:
+- `contact_messages`
+- `users`
+
+Add new tables to this file; do not create separate migration files.
+
+**Running scripts in general** — use `tsconfig.scripts.json` (not the main tsconfig which restricts `rootDir` to `src/`):
+```bash
+npx ts-node --project tsconfig.scripts.json scripts/<name>.ts
+```
 
 ## Critical Gotchas
 

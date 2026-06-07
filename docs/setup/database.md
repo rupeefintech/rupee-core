@@ -21,9 +21,12 @@
 | `ProductOffer` | — | Versioned offers/benefits per product |
 | `Feature` | — | Feature tags (e.g. "Lounge Access") |
 | `ProductFeatureMapping` | — | Many-to-many: Product ↔ Feature |
+| `rate_entries` | — | FD / Savings / Loan rates (manually curated) |
 | `post_offices` | ~150,000 | India Post PIN code directory (H.O/S.O/B.O) |
 | `blogs` | 31+ | Blog posts |
-| `admins` | — | Admin user accounts |
+| `admins` | — | Admin login accounts (bcrypt passwords) |
+| `users` | — | Public leads captured from contact form + manual |
+| `contact_messages` | — | Contact form submissions |
 | `data_overrides` | — | Manual field corrections audit log |
 | `search_logs` | — | IFSC search query log |
 | `sync_log` | — | Razorpay data sync history |
@@ -147,6 +150,77 @@
 | `valid_from` / `valid_to` | timestamp | |
 | `source` | varchar(50) | `manual` or `scraper` |
 
+## Rate Entries Table
+
+### `rate_entries` (Prisma: `RateEntry`)
+| Column | Type | Notes |
+|---|---|---|
+| `id` | int PK | |
+| `bank_id` | int FK → Bank | |
+| `product_type` | varchar(30) | `fd` \| `savings` \| `loan_personal` \| `loan_home` \| `loan_auto` |
+| `tenure_label` | varchar(50) | Display label e.g. "1 Year", "2-3 Years"; NULL for savings |
+| `tenure_months` | int | Numeric value for sorting; NULL for savings |
+| `rate` | decimal(5,2) | Interest rate e.g. 7.50 |
+| `senior_rate` | decimal(5,2) | Senior citizen rate (optional) |
+| `min_amount` | bigint | Minimum deposit/balance tier |
+| `max_amount` | bigint | Maximum deposit/balance tier |
+| `effective_from` | date | Rate effective date |
+| `effective_to` | date | Rate end date (NULL = still current) |
+| `source` | varchar(50) | `manual` \| `scraper` |
+| `source_url` | text | Link to bank's official rates page |
+| `last_verified` | timestamptz | When admin last confirmed this rate |
+| `verified_by` | varchar(100) | Admin email who verified |
+| `is_active` | bool | false = soft-deleted |
+| `notes` | text | Optional admin notes |
+| `created_at` / `updated_at` | timestamptz | Auto-managed |
+
+**Indexes:** `(bank_id, product_type)`, `(is_active, product_type)`
+
+**Key rules:**
+- One bank can have multiple rows (one per tenure/tier)
+- Public API groups by bank and returns best rate per bank
+- Cache key: `rates:{productType}` in Redis (1h TTL); cleared on any save via admin
+- Soft delete only — never hard delete rate history
+
+## Contact & User Tables
+
+### `contact_messages` (Prisma: `ContactMessage`)
+Created via `scripts/create-tables.ts` (migrations broken).
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | int PK | |
+| `name` | varchar(100) | |
+| `email` | varchar(150) | |
+| `subject` | varchar(200) | |
+| `message` | text | |
+| `is_read` | bool | Default false; set true when admin opens message |
+| `ip_hash` | varchar(16) | Base64 of IP — for rate-limiting audit only |
+| `created_at` | timestamptz | |
+
+**Indexes:** `is_read`
+
+### `users` (Prisma: `User`)
+Created via `scripts/create-tables.ts` (migrations broken).
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | int PK | |
+| `name` | varchar(100) | |
+| `email` | varchar(150) UNIQUE | Primary key for deduplication |
+| `source` | varchar(50) | `contact_form` \| `manual` \| `newsletter` |
+| `is_active` | bool | Admin can deactivate; default true |
+| `notes` | text | Internal admin notes |
+| `created_at` | timestamptz | First seen date |
+| `updated_at` | timestamptz | Auto-updated on any change |
+
+**Indexes:** `email` (unique), `source`
+
+**Key rules:**
+- `POST /api/contact` upserts into `users` by email on every contact form submission (update name if exists)
+- Hard delete is supported (admin can permanently remove a user)
+- `source='manual'` for users added directly via admin UI
+
 ## PIN Code Table
 
 ### `post_offices` (Prisma: `PostOffice`)
@@ -218,6 +292,15 @@
 - `post_offices.pin_code` — index
 - `post_offices.state_name` — index
 - `post_offices.district` — index
+
+### Rate Entries
+- `rate_entries(bank_id, product_type)` — composite index
+- `rate_entries(is_active, product_type)` — composite index
+
+### Contact & Users
+- `contact_messages.is_read` — index
+- `users.email` — unique index
+- `users.source` — index
 
 ### Blog
 - `blogs.category` — index

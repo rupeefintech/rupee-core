@@ -12,9 +12,10 @@ A JWT-protected dashboard for managing credit card products, offers, and feature
 | `/admin/credit-cards/new` | Add a new credit card |
 | `/admin/credit-cards/:slug` | View card detail + manage offers |
 | `/admin/credit-cards/:slug/edit` | Edit existing card |
-| `/admin/banks` | Paginated bank management — search, filter, edit bank details |
-| `/admin/rates` | FD / Savings / Loan rates management (tabbed) |
-| `/admin/contacts` | View, read-mark, and delete contact form submissions |
+| `/admin/banks` | Paginated bank list — create, edit, soft-delete banks |
+| `/admin/rates` | FD / Savings / Loan rates management (tabbed by product type) |
+| `/admin/users` | User management — view, create, edit, delete leads/contacts |
+| `/admin/contacts` | Contact form inbox — read-mark, reply, delete messages |
 
 Admin pages are not indexed (`noindex` should be set on all admin routes).
 
@@ -29,9 +30,10 @@ frontend/src/admin/
     AddEditCardPage.tsx   # Create/edit card form
     CardDetailPage.tsx    # Card view + offer management
     AddProduct.tsx        # Legacy step-form (superseded by AddEditCardPage)
-    BanksPage.tsx         # Paginated bank list + inline edit modal
-    RatesPage.tsx         # FD/Savings/Loan rates management
-    ContactsPage.tsx      # Contact form submissions — read/delete
+    BanksPage.tsx         # Paginated bank list + create modal + edit modal + soft-delete confirm
+    RatesPage.tsx         # FD/Savings/Loan rates management (tabbed)
+    UsersPage.tsx         # User list (table) + view modal (eye) + edit modal (pencil) + create
+    ContactsPage.tsx      # Contact form inbox — split-pane, mark-read on open, reply mailto
   components/
     Sidebar.tsx           # Nav sidebar with links
     Header.tsx            # Top bar with logout
@@ -81,14 +83,20 @@ All require `Authorization: Bearer <jwt-token>` header. Mounted in `backend/src/
 | `POST` | `/api/admin/offers/:id/revert` | Revert offer to previous version |
 | `GET` | `/api/admin/banks` | Bank list for dropdown (card issuer filter by default) |
 | `GET` | `/api/admin/banks/manage?page=&search=&type=` | Paginated full bank list with branch counts |
-| `PUT` | `/api/admin/banks/:id` | Edit bank details (name, type, logo, slug, isActive, isCurated, etc.) |
+| `POST` | `/api/admin/banks` | Create new bank (slug auto-generated if blank) |
+| `PUT` | `/api/admin/banks/:id` | Edit bank; `updated_at` auto-updated by Prisma |
+| `DELETE` | `/api/admin/banks/:id` | Soft delete — sets `is_active=false`; branches intact |
 | `GET` | `/api/admin/features` | Feature tag list |
 | `GET` | `/api/admin/contacts?page=&unread=` | Paginated contact form submissions |
 | `PATCH` | `/api/admin/contacts/:id/read` | Mark contact message as read |
 | `DELETE` | `/api/admin/contacts/:id` | Delete contact message |
-| `GET` | `/api/admin/rates?type=fd` | All rate entries (including inactive) |
-| `POST` | `/api/admin/rates` | Create rate entry |
-| `PUT` | `/api/admin/rates/:id` | Update rate entry |
+| `POST` | `/api/admin/users` | Create user manually |
+| `GET` | `/api/admin/users?page=&search=&source=` | Paginated user list |
+| `PATCH` | `/api/admin/users/:id` | Edit user (name, source, notes, isActive) |
+| `DELETE` | `/api/admin/users/:id` | Permanently delete user |
+| `GET` | `/api/admin/rates?type=fd` | All rate entries including inactive |
+| `POST` | `/api/admin/rates` | Create rate entry; clears Redis cache |
+| `PUT` | `/api/admin/rates/:id` | Update rate entry; clears Redis cache |
 | `DELETE` | `/api/admin/rates/:id` | Soft-delete rate entry |
 
 ## Database Tables Touched
@@ -100,15 +108,29 @@ All require `Authorization: Bearer <jwt-token>` header. Mounted in `backend/src/
 | `ProductDetails` | Fees, eligibility, reward type |
 | `ProductOffer` | Versioned offers |
 | `Feature` / `ProductFeatureMapping` | Feature tagging |
-| `Bank` | Bank dropdown in forms + full bank management |
+| `Bank` | Full bank CRUD — create, edit, soft delete |
 | `rate_entries` | FD / Savings / Loan rates (manual curation) |
-| `contact_messages` | Contact form submissions from public `/contact` page |
+| `contact_messages` | Contact form submissions |
+| `users` | Public leads — auto-captured from contact form + manually added |
+
+## Bank Management Details
+
+- **bankType normalization** — run `scripts/fix-bank-types.ts` once to normalize all 1,352 banks
+- **Soft delete** — sets `is_active=false`; `updated_at` auto-updated; branches and `bank_state_presence` remain intact
+- **Slug** — auto-generated from name if not provided on create; must be unique
+
+## User Management Details
+
+- Users are auto-captured (upsert by email) every time someone submits `/contact`
+- Manual creation via "Add User" button in admin
+- Sources: `contact_form` | `manual` | `newsletter`
+- Toggle active, add internal notes, hard delete
+- UsersPage UX: full-width table → View modal (eye icon) → Edit modal (pencil icon)
 
 ## Pending Features
 
-- **User management** — `/admin/users` page shows "Coming Soon"
 - **Role-based access** — single admin role only; needs admin/editor split
-- **Blog management UI** — no admin pages for blogs yet (only API endpoints exist)
+- **Blog management UI** — no admin pages for blogs yet (API endpoints exist)
 - **Bulk CSV import** — not implemented
 - **Direct image upload** — paste URL only; no file upload
 - **Email notification** — no email alert when new contact message arrives

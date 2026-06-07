@@ -132,21 +132,63 @@ GET /api/exchange-rates  → live INR rates for USD/EUR/GBP/AED/AUD/CAD/SGD/JPY/
                            returns: { base: 'INR', rates: { USD: 84.23, ... }, updated_at, disclaimer }
 ```
 
+### Public — Contact Form
+```
+POST /api/contact  → submit contact form (name, email, subject, message)
+                     validates all fields; stores in contact_messages + upserts into users
+                     returns: { success: true, message: "..." }
+```
+
+### Public — Financial Rates
+```
+GET /api/rates?type=fd|savings|loan_personal|loan_home|loan_auto
+                   → active rate entries grouped by bank, sorted by best rate desc
+                     1h Redis cache (key: rates:{type}); 30min in-memory
+                     returns: { type, banks: [{ bank, tenures, bestRate, lastVerified }], count }
+```
+
 ### Admin (JWT protected — `Authorization: Bearer <token>`)
 ```
-POST   /api/auth/login                    → admin login → JWT token
-GET    /api/admin/dashboard               → product count, bank count, offer stats
-GET    /api/admin/products?page=1&search= → list products (paginated)
-GET    /api/admin/credit-cards/:slug      → full card details with offers & features
-POST   /api/admin/products                → create new product
-PUT    /api/admin/products/:id            → update product + details
-DELETE /api/admin/products/:id            → delete product (cascades offers/features)
-POST   /api/admin/products/:id/offers     → add new offer
-PUT    /api/admin/offers/:id              → update offer
-DELETE /api/admin/offers/:id              → delete offer
-POST   /api/admin/offers/:id/revert       → revert offer to previous version
-GET    /api/admin/banks                   → list banks (for dropdown)
-GET    /api/admin/features                → list feature tags
+POST   /api/auth/login                           → admin login → JWT token
+
+# Dashboard
+GET    /api/admin/dashboard                      → product, bank, offer counts
+
+# Credit Cards / Products
+GET    /api/admin/products?page=1&search=        → list products (paginated)
+GET    /api/admin/credit-cards/:slug             → full card details with offers & features
+POST   /api/admin/products                       → create new product
+PUT    /api/admin/products/:id                   → update product + details
+DELETE /api/admin/products/:id                   → delete (cascades offers/features)
+POST   /api/admin/products/:id/offers            → add new offer
+PUT    /api/admin/offers/:id                     → update offer
+DELETE /api/admin/offers/:id                     → delete offer
+POST   /api/admin/offers/:id/revert              → revert offer to previous version
+GET    /api/admin/features                       → feature tag list
+
+# Banks
+GET    /api/admin/banks?search=&all=&for_rates=  → bank list for dropdowns (filtered)
+GET    /api/admin/banks/manage?page=&search=&type= → paginated full bank list + branch counts
+POST   /api/admin/banks                          → create bank (auto-slug if blank)
+PUT    /api/admin/banks/:id                      → edit bank; updatedAt auto-updated
+DELETE /api/admin/banks/:id                      → soft delete (isActive=false; branches intact)
+
+# Financial Rates (FD / Savings / Loan)
+GET    /api/admin/rates?type=fd                  → all rate entries including inactive
+POST   /api/admin/rates                          → create rate entry; clears Redis cache
+PUT    /api/admin/rates/:id                      → update rate entry; clears Redis cache
+DELETE /api/admin/rates/:id                      → soft delete (isActive=false)
+
+# Contact Messages
+GET    /api/admin/contacts?page=&unread=         → paginated inbox (unread filter optional)
+PATCH  /api/admin/contacts/:id/read              → mark as read
+DELETE /api/admin/contacts/:id                   → permanently delete
+
+# Users
+POST   /api/admin/users                          → create user manually
+GET    /api/admin/users?page=&search=&source=    → paginated user list
+PATCH  /api/admin/users/:id                      → update name / source / notes / isActive
+DELETE /api/admin/users/:id                      → permanently delete user record
 ```
 
 ## Critical Rules
@@ -255,13 +297,23 @@ npx prisma studio         # GUI to browse data
 
 ## Backend Scripts
 
+Run all scripts with:
+```bash
+npx ts-node --project tsconfig.scripts.json scripts/<name>.ts
+```
+
 | Script | Purpose |
 |---|---|
-| `backend/scripts/create-blog-table.ts` | Creates blogs table via raw SQL |
-| `backend/scripts/generate-blog.ts` | AI blog generator (Claude + Unsplash) |
-| `backend/scripts/blog-topics.ts` | 60 blog topics queue |
-| `backend/scripts/seed-blogs.ts` | Seeds pre-written blog content |
-| `backend/scripts/seed-credit-cards.ts` | Seeds credit card products |
+| `create-tables.ts` | **Idempotent** — creates `contact_messages` + `users` tables. Run after cloning or schema additions. |
+| `fix-bank-types.ts` | Normalises `bank_type` field for all 1,352 banks from subType/name. Run once. |
+| `generate-blog.ts` | AI blog generator (Claude + Unsplash) |
+| `blog-topics.ts` | 60 blog topics queue |
+| `seed-blogs.ts` | Seeds pre-written blog content |
+| `seed-credit-cards.ts` | Seeds credit card products |
+| `seed-rates.ts` / `seed-rates-all.ts` | Seeds FD/savings rate entries for top banks |
+| `create-blog-table.ts` | Legacy — creates blogs table (use create-tables.ts for new tables) |
+
+`tsconfig.scripts.json` — separate tsconfig for scripts outside `src/`. Extends main tsconfig but removes `rootDir` restriction.
 
 
 ## Frontend Compatibility
