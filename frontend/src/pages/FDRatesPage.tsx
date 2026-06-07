@@ -470,6 +470,28 @@ export default function FDRatesPage() {
             </div>
           </div>
 
+          {/* ── Compare FDs ─────────────────────────────────────────────── */}
+          <div>
+            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Compare FDs</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { to: '/compare/fd/hdfc-vs-icici',              label: 'HDFC FD vs ICICI FD',              desc: 'Side-by-side rate comparison across all tenures', tag: 'Data-driven' },
+                { to: '/compare/fd/sbi-vs-post-office-mis',     label: 'SBI FD vs Post Office MIS',        desc: 'Fixed deposit vs Monthly Income Scheme',          tag: 'Govt scheme' },
+                { to: '/compare/fd/sbi-vs-scss',                label: 'SBI FD vs SCSS',                   desc: 'FD vs Senior Citizens Savings Scheme',            tag: 'Senior' },
+              ].map(item => (
+                <Link key={item.to} to={item.to}
+                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full border border-brand-200">{item.tag}</span>
+                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-brand-500 transition-colors" />
+                  </div>
+                  <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
+                  <div className="text-[11px] text-gray-400 leading-tight">{item.desc}</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* ── Related tools ──────────────────────────────────────────── */}
           <div>
             <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Related Tools</h2>

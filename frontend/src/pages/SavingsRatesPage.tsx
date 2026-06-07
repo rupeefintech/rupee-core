@@ -864,6 +864,27 @@ export default function SavingsRatesPage() {
             </div>
           </div>
 
+          {/* ── Compare Savings Accounts ─────────────────────────────────────── */}
+          <div>
+            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Compare Savings Accounts</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                { to: '/compare/savings/sbi-vs-hdfc',          label: 'SBI vs HDFC Savings Account',       desc: 'Interest rates, min balance, and features compared' },
+                { to: '/best-savings-accounts-for-salary',     label: 'Best Savings Accounts for Salary',  desc: 'Zero balance accounts with best rates and perks'    },
+              ].map(item => (
+                <Link key={item.to} to={item.to}
+                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full border border-brand-200">Compare</span>
+                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-brand-500 transition-colors" />
+                  </div>
+                  <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
+                  <div className="text-[11px] text-gray-400 leading-tight">{item.desc}</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* ── Related tools ────────────────────────────────────────────────── */}
           <div>
             <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Related Tools</h2>

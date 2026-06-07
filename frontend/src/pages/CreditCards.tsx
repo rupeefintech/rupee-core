@@ -528,6 +528,28 @@ const CreditCards: React.FC = () => {
         </div>
       </div>
 
+      {/* Popular Comparisons */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Popular Card Comparisons</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            { to: '/credit-cards/compare/sbi-cashback-vs-hdfc-millennia',   label: 'SBI Cashback vs HDFC Millennia',   desc: 'Best cashback cards head-to-head'     },
+            { to: '/credit-cards/compare/icici-amazon-pay-vs-sbi-cashback', label: 'Amazon Pay ICICI vs SBI Cashback', desc: 'Free card vs 5% all-online card'        },
+            { to: '/credit-cards/compare/axis-ace-vs-sbi-cashback',         label: 'Axis ACE vs SBI Cashback',         desc: 'Google Pay bills vs all online spends' },
+          ].map(item => (
+            <Link key={item.to} to={item.to}
+              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full border border-brand-200">Compare</span>
+                <GitCompareArrows size={14} className="text-gray-300 group-hover:text-brand-500 transition-colors" />
+              </div>
+              <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
+              <div className="text-[11px] text-gray-400 leading-tight">{item.desc}</div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* â"€â"€â"€ Floating Compare Bar â"€â"€â"€ */}
       {compareIds.length > 0 && (
         <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-200 shadow-2xl shadow-black/10">

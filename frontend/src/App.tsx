@@ -13,6 +13,7 @@ import CityPage from "./pages/CityPage";
 import CreditCards from "./pages/CreditCards";
 import CreditCardDetail from "./pages/CreditCardDetail";
 import CreditCardCompare from "./pages/CreditCardCompare";
+import CreditCardCompareByPair from "./pages/CreditCardCompareByPair";
 import BankAccounts from "./pages/BankAccounts";
 import SalaryCalculatorPage from "./pages/SalaryCalculatorPage";
 import HRACalculatorPage from "./pages/HRACalculatorPage";
@@ -50,6 +51,11 @@ import SwiftCodePage from "./pages/SwiftCodePage";
 import CurrencyConverterPage from "./pages/CurrencyConverterPage";
 import FDRatesPage from "./pages/FDRatesPage";
 import SavingsRatesPage from "./pages/SavingsRatesPage";
+import FDCompareHDFCvsICICI from "./pages/FDCompareHDFCvsICICI";
+import FDCompareSBIvsPostOfficeMIS from "./pages/FDCompareSBIvsPostOfficeMIS";
+import FDCompareSBIvsSCSS from "./pages/FDCompareSBIvsSCSS";
+import SavingsCompareSBIvsHDFC from "./pages/SavingsCompareSBIvsHDFC";
+import BestSavingsAccountsForSalary from "./pages/BestSavingsAccountsForSalary";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const IFSCFinderPage = lazy(() => import("./pages/IFSCFinderPage"));
@@ -144,6 +150,11 @@ function PublicLayout() {
             <Route path="/currency-converter" element={<CurrencyConverterPage />} />
             <Route path="/fd-rates" element={<FDRatesPage />} />
             <Route path="/savings-rates" element={<SavingsRatesPage />} />
+            <Route path="/compare/fd/hdfc-vs-icici" element={<FDCompareHDFCvsICICI />} />
+            <Route path="/compare/fd/sbi-vs-post-office-mis" element={<FDCompareSBIvsPostOfficeMIS />} />
+            <Route path="/compare/fd/sbi-vs-scss" element={<FDCompareSBIvsSCSS />} />
+            <Route path="/compare/savings/sbi-vs-hdfc" element={<SavingsCompareSBIvsHDFC />} />
+            <Route path="/best-savings-accounts-for-salary" element={<BestSavingsAccountsForSalary />} />
             <Route path="/salary-calculator" element={<SalaryCalculatorPage />} />
             <Route path="/hra-calculator" element={<HRACalculatorPage />} />
             <Route path="/ifsc" element={<Navigate to="/ifsc-finder" replace />} />
@@ -175,6 +186,7 @@ function PublicLayout() {
             <Route path="/why-gold-prices-change" element={<WhyGoldPricesChangePage />} />
             <Route path="/credit-cards" element={<CreditCards />} />
             <Route path="/credit-cards/compare" element={<CreditCardCompare />} />
+            <Route path="/credit-cards/compare/:pair" element={<CreditCardCompareByPair />} />
             <Route path="/credit-cards/:slug" element={<CreditCardDetail />} />
 
             {/* Calculator Index (no sidebar) */}
