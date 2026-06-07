@@ -146,7 +146,7 @@ export default function PinCodeIndiaPage() {
               ].map(({ t, d }) => (
                 <div key={t} className="p-4 bg-gray-50 rounded-xl">
                   <p className="font-bold text-gray-800 text-sm mb-1.5">{t}</p>
-                  <p className="text-xs text-gray-500">{d}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{d}</p>
                 </div>
               ))}
             </div>

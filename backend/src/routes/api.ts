@@ -2331,4 +2331,210 @@ router.get('/pin/:pincode', async (req: Request, res: Response) => {
   res.json(out)
 })
 
+// ── Financial Rates (FD / Savings / Loan) ────────────────────────────────────
+// GET /api/rates?type=fd   — all active rate entries for a product type
+// Grouped by bank, sorted by best rate descending.
+// Cache: 1h Redis + 30min in-memory (updated manually by admin).
+router.get('/rates', async (req: Request, res: Response) => {
+  const type = String(req.query.type ?? 'fd').toLowerCase()
+  const VALID_TYPES = ['fd', 'savings', 'loan_personal', 'loan_home', 'loan_auto']
+  if (!VALID_TYPES.includes(type)) { res.status(400).json({ error: 'Invalid type' }); return }
+
+  const KEY = `rates:${type}`
+  const mem = memGet(KEY)
+  if (mem) { res.json(mem); return }
+  const cached = await cacheGet(KEY)
+  if (cached) { memSet(KEY, cached, 30 * 60); res.json(cached); return }
+
+  const rows = await prisma.rateEntry.findMany({
+    where: { productType: type, isActive: true, effectiveTo: null },
+    select: {
+      id: true, tenureLabel: true, tenureMonths: true,
+      rate: true, seniorRate: true, minAmount: true, maxAmount: true,
+      effectiveFrom: true, lastVerified: true, sourceUrl: true, notes: true,
+      bank: { select: { id: true, name: true, slug: true, logoUrl: true, shortName: true, bankType: true } },
+    },
+    orderBy: [{ rate: 'desc' }, { tenureMonths: 'asc' }],
+  })
+
+  // Group by bank
+  const byBank = new Map<number, any>()
+  for (const r of rows) {
+    if (!byBank.has(r.bank.id)) {
+      byBank.set(r.bank.id, { bank: r.bank, tenures: [], bestRate: 0, lastVerified: r.lastVerified })
+    }
+    const entry = byBank.get(r.bank.id)!
+    const rate = Number(r.rate)
+    entry.tenures.push({
+      id: r.id, label: r.tenureLabel, months: r.tenureMonths,
+      rate, seniorRate: r.seniorRate ? Number(r.seniorRate) : null,
+      minAmount: r.minAmount ? Number(r.minAmount) : null,
+      maxAmount: r.maxAmount ? Number(r.maxAmount) : null,
+      effectiveFrom: r.effectiveFrom, sourceUrl: r.sourceUrl, notes: r.notes,
+    })
+    if (rate > entry.bestRate) entry.bestRate = rate
+    if (r.lastVerified > entry.lastVerified) entry.lastVerified = r.lastVerified
+  }
+
+  const out = {
+    type,
+    banks: [...byBank.values()].sort((a, b) => b.bestRate - a.bestRate),
+    count: byBank.size,
+    updatedAt: new Date().toISOString(),
+  }
+
+  memSet(KEY, out, 30 * 60)
+  await cacheSet(KEY, out, 60 * 60)
+  res.json(out)
+})
+
+// ── SWIFT Code Lookup ─────────────────────────────────────────────────────────
+// GET /api/swift/search?q=HDFC&limit=20
+// MUST be registered before /:code to avoid 'search' matching as a code param
+router.get('/swift/search', async (req: Request, res: Response) => {
+  const q = String(req.query.q ?? '').trim()
+  if (!q || q.length < 2) { res.status(400).json({ error: 'q must be at least 2 characters' }); return }
+  const limit = Math.min(Number(req.query.limit) || 20, 50)
+
+  const branches = await prisma.branch.findMany({
+    where: {
+      swift: { not: null },
+      OR: [
+        { swift: { contains: q, mode: 'insensitive' } },
+        { bank: { name: { contains: q, mode: 'insensitive' } } },
+        { bank: { shortName: { contains: q, mode: 'insensitive' } } },
+      ],
+    },
+    select: {
+      ifsc: true,
+      swift: true,
+      branchName: true,
+      city: true,
+      bank: { select: { name: true, slug: true, logoUrl: true, shortName: true } },
+      state: { select: { name: true } },
+    },
+    take: limit,
+    orderBy: [{ bank: { name: 'asc' } }, { swift: 'asc' }],
+  })
+
+  res.json({
+    data: branches.map(b => ({
+      swift: b.swift,
+      ifsc: b.ifsc,
+      bank_name: b.bank.name,
+      bank_short: b.bank.shortName,
+      bank_slug: b.bank.slug,
+      bank_logo: b.bank.logoUrl,
+      branch_name: b.branchName,
+      city: b.city,
+      state_name: b.state.name,
+    })),
+  })
+})
+
+// GET /api/swift/:code — exact SWIFT/BIC code lookup
+router.get('/swift/:code', async (req: Request, res: Response) => {
+  const code = req.params.code.toUpperCase().trim()
+  if (code.length < 8 || code.length > 11) {
+    res.status(400).json({ error: 'SWIFT/BIC code must be 8–11 characters' }); return
+  }
+
+  const KEY = `swift:${code}`
+  const cached = await cacheGet(KEY)
+  if (cached) { res.json(cached); return }
+
+  const branch = await prisma.branch.findFirst({
+    where: { swift: { equals: code, mode: 'insensitive' } },
+    select: {
+      ifsc: true, swift: true, branchName: true, address: true, city: true,
+      pincode: true, phone: true, neft: true, rtgs: true, imps: true, upi: true,
+      bank: { select: { name: true, slug: true, logoUrl: true, shortName: true, website: true, headquarters: true } },
+      state: { select: { name: true } },
+      district: { select: { name: true } },
+    },
+  })
+
+  if (!branch?.swift) { res.status(404).json({ error: 'SWIFT code not found' }); return }
+
+  const out = {
+    swift: branch.swift,
+    ifsc: branch.ifsc,
+    bank_name: branch.bank.name,
+    bank_short: branch.bank.shortName,
+    bank_slug: branch.bank.slug,
+    bank_logo: branch.bank.logoUrl,
+    bank_website: branch.bank.website,
+    bank_headquarters: branch.bank.headquarters,
+    branch_name: branch.branchName,
+    address: branch.address,
+    city: branch.city,
+    pincode: branch.pincode,
+    phone: branch.phone,
+    state_name: branch.state.name,
+    district_name: branch.district?.name ?? null,
+    neft: branch.neft ? 1 : 0,
+    rtgs: branch.rtgs ? 1 : 0,
+    imps: branch.imps ? 1 : 0,
+    upi: branch.upi ? 1 : 0,
+  }
+
+  await cacheSet(KEY, out, 24 * 60 * 60)
+  res.json(out)
+})
+
+// ── Exchange Rates ────────────────────────────────────────────────────────────
+// GET /api/exchange-rates
+// Source: @fawazahmed0/currency-api via jsDelivr CDN — completely free, no API key,
+// globally cached, updated daily. Returns all currencies vs INR.
+// Cache: 6h Redis + 4h in-memory (daily data — no point refreshing more often).
+const WANTED_CURRENCIES = ['USD','EUR','GBP','AED','AUD','CAD','SGD','JPY','CHF','HKD','SAR','CNY','QAR','MYR','THB']
+
+router.get('/exchange-rates', async (_req: Request, res: Response) => {
+  const KEY = 'exchange:rates:v2'
+
+  const mem = memGet(KEY)
+  if (mem) { res.json(mem); return }
+
+  const cached = await cacheGet(KEY)
+  if (cached) { memSet(KEY, cached, 4 * 60 * 60); res.json(cached); return }
+
+  try {
+    // Primary: fawazahmed0 CDN (daily updated, globally cached on jsDelivr)
+    // Returns { date, inr: { usd: 0.01052, eur: 0.00913, ... } } — 1 INR in foreign
+    const OPTS = { signal: AbortSignal.timeout(10000) }
+    const r = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/inr.json', OPTS)
+    if (!r.ok) throw new Error(`CDN fetch failed: ${r.status}`)
+    const json: any = await r.json()
+    const inrRates: Record<string, number> = json?.inr ?? {}
+
+    if (Object.keys(inrRates).length === 0) throw new Error('Empty response from currency CDN')
+
+    // Invert: we want "INR per 1 foreign unit" (e.g. USD: 95.04 means 1 USD = ₹95.04)
+    const rates: Record<string, number> = {}
+    for (const code of WANTED_CURRENCIES) {
+      const inrPerForeign = inrRates[code.toLowerCase()]
+      if (inrPerForeign && inrPerForeign > 0) {
+        rates[code] = Math.round((1 / inrPerForeign) * 10000) / 10000
+      }
+    }
+
+    if (Object.keys(rates).length === 0) throw new Error('No matching currencies in response')
+
+    const out = {
+      base: 'INR',
+      rates,
+      data_date: json.date ?? new Date().toISOString().split('T')[0],
+      updated_at: new Date().toISOString(),
+      disclaimer: 'Mid-market rates via open-source currency data (fawazahmed0). Updated daily. Bank/transfer rates will differ.',
+    }
+
+    memSet(KEY, out, 4 * 60 * 60)
+    await cacheSet(KEY, out, 6 * 60 * 60)
+    res.json(out)
+  } catch (err) {
+    console.error('GET /api/exchange-rates error:', err)
+    res.status(500).json({ error: 'Failed to fetch exchange rates. Try again.' })
+  }
+})
+
 export default router

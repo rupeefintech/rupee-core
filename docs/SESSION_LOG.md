@@ -4,6 +4,61 @@
 
 ---
 
+## 06 Jun 2026
+
+### What was done
+
+1. **Fintech architecture review:**
+   - Evaluated traffic + monetization potential for 10 new feature ideas
+   - Key finding: No centralized Indian fintech rate API exists; FD/loan rates require scraping or manual curation
+   - Decision: Manual-first approach for rate data (FD, savings, loan) — Admin UI before scraping infra
+   - Recommended build order: SWIFT → Currency → FD rates (manual+admin) → Savings → Loan rates
+
+2. **SWIFT Code Lookup (`/swift-code-lookup`):**
+   - Backend: `GET /api/swift/search?q=` (bank name search, debounced autocomplete)
+   - Backend: `GET /api/swift/:code` (exact lookup; 24h Redis cache)
+   - Data source: `Branch.swift` field already in DB (Razorpay dataset) — zero new pipeline
+   - Frontend: `SwiftCodePage.tsx` — search + exact result + SWIFT code breakdown widget + IFSC cross-link
+   - SEO: targets "swift code lookup india", "HDFC swift code", "SBI swift code"
+
+3. **Currency Converter (`/currency-converter`):**
+   - Backend: `GET /api/exchange-rates` — 15 currency pairs via Yahoo Finance (same infra as gold page)
+   - Currencies: USD, EUR, GBP, AED, AUD, CAD, SGD, JPY, CHF, HKD, SAR, CNY, QAR, MYR, THB
+   - Cache: 15 min Redis + 10 min in-memory; graceful skip if a pair fails
+   - Frontend: `CurrencyConverterPage.tsx` — interactive converter + rate table with flags + affiliate links (Wise, Remitly)
+   - SEO: targets "inr to usd", "dollar to rupee", "currency converter india"
+
+4. **Docs updated:**
+   - `docs/modules/09-swift-currency.md` — new module doc
+   - `docs/setup/backend.md` — new endpoints documented
+   - `docs/setup/frontend.md` — new routes documented
+
+### Session continued (same day)
+
+**SEO + Nav overhaul for SWIFT/Currency pages:**
+- Both pages fully rewritten with FAQ accordions (9-10 Q&A each), JSON-LD FAQPage schema, BreadcrumbList
+- SWIFT page: static SWIFT codes table for 15 major banks, SWIFT vs IFSC comparison table, code breakdown widget
+- Currency page: quick-reference table, amount chips, affiliate links (Wise, Remitly), rate table with flags
+- Navbar: new "Finance Tools ▾" dropdown (SWIFT, Currency, Bank Holidays + FD Rates)
+- Footer: SWIFT, Currency, FD Rates added to "Tools & Data" section
+- Sitemap: `/fd-rates` (priority 0.9), `/swift-code-lookup` (0.85), `/currency-converter` (0.9) all added
+
+**FD Rates Tracker (full implementation):**
+- DB: `rate_entries` table created via raw SQL script; Prisma `RateEntry` model added; client regenerated
+- Backend public: `GET /api/rates?type=fd` — groups by bank, sorts by best rate desc; 1h Redis cache
+- Backend admin CRUD: `GET/POST/PUT/DELETE /api/admin/rates` — all JWT-protected; save clears Redis cache
+- Admin UI: `/admin/rates` page — tab by product type, freshness badges, staleness banner, add/edit modal with tenure presets
+- Public page: `/fd-rates` — filters (bank type, name search, tenure, senior toggle), expandable rows, FD Calculator CTA, 9-question FAQ
+- Docs: `docs/modules/10-fd-rates.md` created
+
+### What's next
+- Enter actual FD rates data via `/admin/rates` (SBI, HDFC, ICICI, Axis first)
+- Add `/savings-rates` page (same table, `product_type='savings'`)  
+- Add `/loan-rates` page (same table, strong "indicative only" disclaimer)
+- Phase 2 scraping: top 5 banks daily at 10:30 AM after traffic justifies maintenance
+
+---
+
 ## 22 May 2026
 
 ### What was done

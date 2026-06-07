@@ -241,10 +241,10 @@ export default function GoldSilverRatePage() {
                     </div>
                   </div>
                   <div className="text-4xl font-black mb-2 tracking-tight" style={{ color: '#C9A84C' }}>
-                    ₹{fmt(getGoldPrice(data))}
+                    {fmt(getGoldPrice(data))}
                   </div>
                   <div className="text-xs" style={{ color: 'rgba(201,168,76,0.55)' }}>
-                    Per gram: ₹{fmt(data.gold.price_24k_per_gram)} · Per tola: ₹{fmt(data.gold.price_24k_per_tola)}
+                    Per gram: {fmt(data.gold.price_24k_per_gram)} · Per tola: {fmt(data.gold.price_24k_per_tola)}
                   </div>
                 </div>
 
@@ -259,10 +259,10 @@ export default function GoldSilverRatePage() {
                     </div>
                   </div>
                   <div className="text-4xl font-black mb-2 tracking-tight" style={{ color: '#C8E0F0' }}>
-                    ₹{fmt(getSilverPrice(data))}
+                    {fmt(getSilverPrice(data))}
                   </div>
                   <div className="text-xs" style={{ color: 'rgba(200,224,240,0.5)' }}>
-                    Per gram: ₹{fmt(data.silver.price_per_gram)} · Per 100g: ₹{fmt(data.silver.price_per_100g)}
+                    Per gram: {fmt(data.silver.price_per_gram)} · Per 100g: {fmt(data.silver.price_per_100g)}
                   </div>
                 </div>
               </div>
@@ -329,29 +329,6 @@ export default function GoldSilverRatePage() {
                 </div>
               </div>
 
-              {/* City selector */}
-              <div className="rounded-2xl overflow-hidden border" style={{ background: '#FFFCF7', borderColor: '#E8DFD0' }}>
-                <div className="px-5 py-3.5 flex items-center gap-2 border-b" style={{ background: '#F5EFE4', borderColor: '#E8DFD0' }}>
-                  <MapPin size={15} style={{ color: '#8B7355' }} />
-                  <span className="font-bold text-sm" style={{ color: '#2C1810' }}>24K Gold Rate by City ({UNIT_LABELS['10g']})</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-0 divide-y divide-x" style={{ borderColor: '#EFE8DA' }}>
-                  {CITIES.map(c => {
-                    const cityData = data.cities[c];
-                    const price = cityData?.gold_24k_per_10g ?? data.gold.price_24k_per_10g;
-                    const active = city === c;
-                    return (
-                      <button key={c} onClick={() => setCity(c)}
-                        className="px-4 py-3.5 text-left transition-colors"
-                        style={{ background: active ? '#F5EFE4' : 'transparent' }}>
-                        <div className="text-xs font-semibold mb-0.5" style={{ color: active ? '#2C1810' : '#8B7355' }}>{c}</div>
-                        <div className="text-sm font-bold" style={{ color: active ? '#C9A84C' : '#2C1810' }}>{fmt(price)}</div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
               {/* Disclaimer */}
               <div className="flex gap-2.5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-xs text-blue-700">
                 <Info size={14} className="flex-shrink-0 mt-0.5" />
@@ -360,13 +337,13 @@ export default function GoldSilverRatePage() {
             </>
           ) : null}
 
-          {/* City gold rates — emerald jewelry aesthetic */}
-          <div className="rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(160deg, #0a2e1f 0%, #0d3d28 50%, #082518 100%)' }}>
+          {/* City gold rates — espresso gold aesthetic */}
+          <div className="rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(160deg, #2C1810 0%, #3D2415 50%, #1a0a04 100%)' }}>
             {/* Header */}
             <div className="px-5 pt-5 pb-4 flex items-center justify-between border-b border-white/[0.07]">
               <div>
                 <h2 className="text-white font-bold text-base tracking-tight">Gold Rate Today by City</h2>
-                <p className="text-emerald-300/40 text-xs mt-0.5">24K price per 10g · IBJA benchmark</p>
+                <p className="text-xs mt-0.5" style={{ color: 'rgba(250,240,208,0.4)' }}>24K price per 10g · IBJA benchmark</p>
               </div>
               <span className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border"
                 style={{ color: '#e8c97a', background: 'rgba(232,201,122,0.1)', borderColor: 'rgba(232,201,122,0.25)' }}>
@@ -419,12 +396,12 @@ export default function GoldSilverRatePage() {
 
                     <div className="p-3">
                       <div className="flex items-start justify-between gap-1 mb-2">
-                        <p className="text-emerald-100/60 text-xs font-medium leading-none tracking-wide">{name}</p>
+                        <p className="text-xs font-medium leading-none tracking-wide" style={{ color: 'rgba(250,240,208,0.6)' }}>{name}</p>
                         {base ? (
                           <span className="text-[9px] font-bold tracking-wider uppercase leading-none px-1.5 py-0.5 rounded"
                             style={{ color: '#e8c97a', background: 'rgba(232,201,122,0.12)' }}>IBJA</span>
                         ) : diff !== null ? (
-                          <span className="text-[9px] text-emerald-300/40 leading-none">+{fmt(diff)}</span>
+                          <span className="text-[9px] leading-none" style={{ color: 'rgba(250,240,208,0.4)' }}>+{fmt(diff)}</span>
                         ) : null}
                       </div>
 
@@ -432,12 +409,12 @@ export default function GoldSilverRatePage() {
                         <>
                           <p className="font-black text-[17px] leading-none tracking-tight"
                             style={{ color: '#e8c97a' }}>
-                            ₹{fmt(price24k)}
+                            {fmt(price24k)}
                           </p>
-                          <p className="text-emerald-200/20 text-[10px] mt-1">24K · per 10g</p>
+                          <p className="text-[10px] mt-1" style={{ color: 'rgba(250,240,208,0.25)' }}>24K · per 10g</p>
                           {price22k && (
                             <p className="text-[11px] mt-1.5 font-medium" style={{ color: 'rgba(232,201,122,0.45)' }}>
-                              22K ₹{fmt(price22k)}
+                              22K {fmt(price22k)}
                             </p>
                           )}
                         </>

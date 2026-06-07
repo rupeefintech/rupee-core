@@ -153,8 +153,8 @@ function PostOfficesTable({ offices, pin }: { offices: PostOfficeEntry[]; pin: s
                           ['Address',          `Postmaster, ${officeLabel(o.office_type)}, ${[tc(o.district), tc(o.state_name)].filter(Boolean).join(', ')}, India (IN), Pin Code: ${pin}`],
                         ] as [string, string][]).map(([label, val]) => (
                           <div key={label} className="flex gap-2">
-                            <span className="text-gray-400 shrink-0 w-32 text-xs">{label}:</span>
-                            <span className={`font-medium text-gray-800 text-xs ${
+                            <span className="text-gray-400 shrink-0 w-32 text-sm">{label}:</span>
+                            <span className={`font-medium text-gray-800 text-sm ${
                               label === 'PIN Code'        ? 'font-mono text-indigo-700' :
                               label === 'Delivery Status' ? (o.delivery ? 'text-emerald-700' : 'text-red-600') : ''
                             }`}>{val}</span>
@@ -522,41 +522,41 @@ export default function PinCodePage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-100">
                 <h2 className="font-bold text-gray-900 text-base">Understanding Post Office Types</h2>
-                <p className="text-xs text-gray-400 mt-0.5">India Post operates a three-tier structure across the country</p>
+                <p className="text-sm text-gray-400 mt-0.5">India Post operates a three-tier structure across the country</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
                 {/* H.O */}
-                <div className="p-5 space-y-2">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full">H.O</span>
-                    <span className="text-sm font-bold text-gray-800">Head Post Office</span>
+                <div className="p-6 space-y-3">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <span className="bg-amber-100 text-amber-700 text-sm font-bold px-3 py-1.5 rounded-full">H.O</span>
+                    <span className="text-base font-bold text-gray-800">Head Post Office</span>
                   </div>
-                  <p className="text-xs text-gray-500 leading-relaxed">
+                  <p className="text-sm text-gray-500 leading-relaxed">
                     Main administrative hub for a district or large city zone. Manages all Sub and Branch Post Offices beneath it. Handles Speed Post, savings accounts, money orders, and full logistics services.
                   </p>
-                  <p className="text-[11px] text-amber-600 font-semibold mt-2">Full services · District-level control</p>
+                  <p className="text-xs text-amber-600 font-semibold mt-2">Full services · District-level control</p>
                 </div>
                 {/* S.O */}
-                <div className="p-5 space-y-2">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">S.O</span>
-                    <span className="text-sm font-bold text-gray-800">Sub Post Office</span>
+                <div className="p-6 space-y-3">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <span className="bg-indigo-100 text-indigo-700 text-sm font-bold px-3 py-1.5 rounded-full">S.O</span>
+                    <span className="text-base font-bold text-gray-800">Sub Post Office</span>
                   </div>
-                  <p className="text-xs text-gray-500 leading-relaxed">
+                  <p className="text-sm text-gray-500 leading-relaxed">
                     Operates in towns and urban neighbourhoods under a Head Office. Primary interface for the public in populated areas. Provides nearly all services — savings accounts, Speed Post, and government facilities.
                   </p>
-                  <p className="text-[11px] text-indigo-600 font-semibold mt-2">Most urban PIN codes · Near-full services</p>
+                  <p className="text-xs text-indigo-600 font-semibold mt-2">Most urban PIN codes · Near-full services</p>
                 </div>
                 {/* B.O */}
-                <div className="p-5 space-y-2">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">B.O</span>
-                    <span className="text-sm font-bold text-gray-800">Branch Post Office</span>
+                <div className="p-6 space-y-3">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <span className="bg-brand-100 text-brand-700 text-sm font-bold px-3 py-1.5 rounded-full">B.O</span>
+                    <span className="text-base font-bold text-gray-800">Branch Post Office</span>
                   </div>
-                  <p className="text-xs text-gray-500 leading-relaxed">
+                  <p className="text-sm text-gray-500 leading-relaxed">
                     Most common in rural India — serves villages and remote areas under a designated Account Office. Offers letter delivery, basic savings schemes, money orders, and government benefit disbursements.
                   </p>
-                  <p className="text-[11px] text-emerald-600 font-semibold mt-2">Village-level · Limited hours &amp; services</p>
+                  <p className="text-xs text-brand-600 font-semibold mt-2">Village-level · Limited hours &amp; services</p>
                 </div>
               </div>
             </div>
@@ -760,7 +760,7 @@ export default function PinCodePage() {
                 <Building2 className="w-4 h-4 text-indigo-600" />
                 <h3 className="font-bold text-indigo-900 text-sm">Find IFSC codes near {pin}</h3>
               </div>
-              <p className="text-xs text-indigo-700/60 mb-4">Search all bank branches by PIN code, city, or bank name.</p>
+              <p className="text-sm text-indigo-700/60 mb-4">Search all bank branches by PIN code, city, or bank name.</p>
               <Link
                 to="/ifsc-finder"
                 className="flex items-center justify-center gap-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors w-full"

@@ -27,6 +27,7 @@ import AdminDashboard from "./admin/pages/Dashboard";
 import CreditCardsPage from "./admin/pages/CreditCardsPage";
 import CardDetailPage from "./admin/pages/CardDetailPage";
 import AddEditCardPage from "./admin/pages/AddEditCardPage";
+import RatesPage from "./admin/pages/RatesPage";
 import IncomeTaxCalculator from "./pages/IncomeTaxCalculator";
 import CalculatorLayout from "./components/CalculatorLayout";
 import RNORCalculatorPage from "./pages/RNORCalculatorPage";
@@ -42,6 +43,10 @@ import WhyGoldPricesChangePage from "./pages/WhyGoldPricesChangePage";
 import NRIFDCalculatorPage from "./pages/NRIFDCalculatorPage";
 import NRICapitalGainsPage from "./pages/NRICapitalGainsPage";
 import NRIRentalIncomePage from "./pages/NRIRentalIncomePage";
+import SwiftCodePage from "./pages/SwiftCodePage";
+import CurrencyConverterPage from "./pages/CurrencyConverterPage";
+import FDRatesPage from "./pages/FDRatesPage";
+import SavingsRatesPage from "./pages/SavingsRatesPage";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const IFSCFinderPage = lazy(() => import("./pages/IFSCFinderPage"));
@@ -111,6 +116,7 @@ function AdminRoutes() {
       <Route path="/credit-cards/new" element={<AddEditCardPage />} />
       <Route path="/credit-cards/:slug" element={<CardDetailPage />} />
       <Route path="/credit-cards/:slug/edit" element={<AddEditCardPage />} />
+      <Route path="/rates" element={<RatesPage />} />
       <Route path="/banks" element={<AdminComingSoon title="Banks" description="Manage bank profiles, logos, and card issuer settings." />} />
       <Route path="/users" element={<AdminComingSoon title="Users" description="Manage admin users, roles, and access permissions." />} />
     </Routes>
@@ -130,6 +136,10 @@ function PublicLayout() {
             {/* <Route path="/loans" element={<Loans />} /> */}
             <Route path="/accounts" element={<BankAccounts />} />
             <Route path="/gold-rate-today" element={<GoldSilverRatePage />} />
+            <Route path="/swift-code-lookup" element={<SwiftCodePage />} />
+            <Route path="/currency-converter" element={<CurrencyConverterPage />} />
+            <Route path="/fd-rates" element={<FDRatesPage />} />
+            <Route path="/savings-rates" element={<SavingsRatesPage />} />
             <Route path="/salary-calculator" element={<SalaryCalculatorPage />} />
             <Route path="/hra-calculator" element={<HRACalculatorPage />} />
             <Route path="/ifsc" element={<Navigate to="/ifsc-finder" replace />} />

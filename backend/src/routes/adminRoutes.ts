@@ -1,6 +1,7 @@
 import express from "express";
 import { verifyToken } from "../middleware/authMiddleware";
 import prisma from "../lib/prisma";
+import { cacheDel } from "../lib/cache";
 
 const router = express.Router();
 
@@ -460,11 +461,14 @@ const CARD_ISSUER_NAMES = [
 
 router.get("/banks", verifyToken, async (req, res) => {
   try {
-    const search = (req.query.search as string) || "";
-    const all = req.query.all === "true";
+    const search    = (req.query.search as string) || "";
+    const all       = req.query.all       === "true";
+    const forRates  = req.query.for_rates === "true";
 
     let where: any;
-    if (search) {
+    if (forRates) {
+      where = { isActive: true };  // all active banks for rate entry
+    } else if (search) {
       where = { name: { contains: search, mode: "insensitive" } };
     } else if (all) {
       where = { logoUrl: { not: null } };
@@ -475,9 +479,9 @@ router.get("/banks", verifyToken, async (req, res) => {
 
     const banks = await prisma.banksMaster.findMany({
       where,
-      select: { id: true, name: true, slug: true, logoUrl: true },
+      select: { id: true, name: true, slug: true, logoUrl: true, bankType: true },
       orderBy: { name: "asc" },
-      take: 100,
+      take: forRates ? 1500 : 100,
     });
     res.json({ banks });
   } catch (err) {
@@ -524,6 +528,105 @@ router.post("/offers/:id/revert", verifyToken, async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Failed to revert offer" });
   }
+});
+
+// ─── Financial Rates CRUD ───────────────────────────────────────────────────
+const VALID_RATE_TYPES = ['fd', 'savings', 'loan_personal', 'loan_home', 'loan_auto'];
+
+// GET /api/admin/rates?type=fd  — list all rates (including inactive) for admin
+router.get('/rates', verifyToken, async (req, res) => {
+  try {
+    const type = String(req.query.type ?? 'fd');
+    const rows = await prisma.rateEntry.findMany({
+      where: { productType: type },
+      include: { bank: { select: { id: true, name: true, slug: true, logoUrl: true, shortName: true } } },
+      orderBy: [{ isActive: 'desc' }, { rate: 'desc' }, { tenureMonths: 'asc' }],
+    });
+    res.json({ data: rows.map(r => ({
+      ...r,
+      rate:       Number(r.rate),
+      seniorRate: r.seniorRate ? Number(r.seniorRate) : null,
+      minAmount:  r.minAmount  ? Number(r.minAmount)  : null,
+      maxAmount:  r.maxAmount  ? Number(r.maxAmount)  : null,
+    })) });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// POST /api/admin/rates  — create a new rate entry
+router.post('/rates', verifyToken, async (req, res) => {
+  try {
+    const {
+      bankId, productType, tenureLabel, tenureMonths,
+      rate, seniorRate, minAmount, maxAmount,
+      effectiveFrom, sourceUrl, verifiedBy, notes,
+    } = req.body;
+
+    if (!bankId || !productType || rate === undefined) {
+      res.status(400).json({ error: 'bankId, productType, and rate are required' }); return;
+    }
+    if (!VALID_RATE_TYPES.includes(productType)) {
+      res.status(400).json({ error: `productType must be one of: ${VALID_RATE_TYPES.join(', ')}` }); return;
+    }
+
+    const entry = await prisma.rateEntry.create({
+      data: {
+        bankId:        Number(bankId),
+        productType,
+        tenureLabel:   tenureLabel   || null,
+        tenureMonths:  tenureMonths  ? Number(tenureMonths) : null,
+        rate:          Number(rate),
+        seniorRate:    seniorRate    ? Number(seniorRate)   : null,
+        minAmount:     minAmount     ? BigInt(minAmount)    : null,
+        maxAmount:     maxAmount     ? BigInt(maxAmount)    : null,
+        effectiveFrom: effectiveFrom ? new Date(effectiveFrom) : new Date(),
+        sourceUrl:     sourceUrl     || null,
+        verifiedBy:    verifiedBy    || null,
+        notes:         notes         || null,
+        lastVerified:  new Date(),
+        source:        'manual',
+      },
+    });
+    await cacheDel(`rates:${productType}`);
+    res.status(201).json({ data: { ...entry, rate: Number(entry.rate) } });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// PUT /api/admin/rates/:id  — update a rate entry
+router.put('/rates/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const {
+      tenureLabel, tenureMonths, rate, seniorRate,
+      minAmount, maxAmount, effectiveFrom, sourceUrl,
+      verifiedBy, notes, isActive,
+    } = req.body;
+
+    const data: any = { updatedAt: new Date(), lastVerified: new Date() };
+    if (tenureLabel   !== undefined) data.tenureLabel   = tenureLabel   || null;
+    if (tenureMonths  !== undefined) data.tenureMonths  = tenureMonths  ? Number(tenureMonths) : null;
+    if (rate          !== undefined) data.rate          = Number(rate);
+    if (seniorRate    !== undefined) data.seniorRate    = seniorRate    ? Number(seniorRate)   : null;
+    if (minAmount     !== undefined) data.minAmount     = minAmount     ? BigInt(minAmount)    : null;
+    if (maxAmount     !== undefined) data.maxAmount     = maxAmount     ? BigInt(maxAmount)    : null;
+    if (effectiveFrom !== undefined) data.effectiveFrom = new Date(effectiveFrom);
+    if (sourceUrl     !== undefined) data.sourceUrl     = sourceUrl     || null;
+    if (verifiedBy    !== undefined) data.verifiedBy    = verifiedBy    || null;
+    if (notes         !== undefined) data.notes         = notes         || null;
+    if (isActive      !== undefined) data.isActive      = Boolean(isActive);
+
+    const entry = await prisma.rateEntry.update({ where: { id }, data });
+    await cacheDel(`rates:${entry.productType}`);
+    res.json({ data: { ...entry, rate: Number(entry.rate) } });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// DELETE /api/admin/rates/:id  — soft delete (deactivate)
+router.delete('/rates/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    await prisma.rateEntry.update({ where: { id }, data: { isActive: false, updatedAt: new Date() } });
+    res.json({ message: 'Rate entry deactivated' });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
 });
 
 export default router;

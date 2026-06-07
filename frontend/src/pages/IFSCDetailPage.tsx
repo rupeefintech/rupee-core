@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import {
   ArrowLeft, RefreshCw, AlertCircle, Copy, CheckCheck,
   ChevronRight, ChevronDown, Shield, Zap, Wifi, Globe,
-  CreditCard, Building2, MapPin, ExternalLink,
+  CreditCard, Building2, MapPin, ExternalLink, TrendingUp, PiggyBank,
 } from 'lucide-react';
 import { api, BranchDetail, NearbyBranch } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -816,6 +816,47 @@ export default function IFSCDetailPage() {
             </div>
           </motion.div>
         )}
+
+        {/* ─ Financial tools cross-sell ─ */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+        >
+          <div className="card p-5">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="w-5 h-5 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-sm text-gray-900">FD Interest Rates 2026</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Compare fixed deposits — up to 9.5% p.a. across all banks.</p>
+                </div>
+              </div>
+              <Link to="/fd-rates"
+                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors">
+                Compare <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+          <div className="card p-5">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-brand-600 to-brand-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <PiggyBank className="w-5 h-5 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <p className="font-bold text-sm text-gray-900">Savings Account Rates</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Up to 9% p.a. — no lock-in, withdraw anytime.</p>
+                </div>
+              </div>
+              <Link to="/savings-rates"
+                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors">
+                Compare <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </motion.div>
 
         {/* ─ Row 5: Nearby Branches + FAQ ─ */}
         <motion.div

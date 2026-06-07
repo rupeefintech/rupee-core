@@ -93,6 +93,8 @@ frontend/
 /calculators/home-prepayment     → PrepaymentCalculatorPage
 /calculators/personal-prepayment → PrepaymentCalculatorPage
 /about                           → AboutPage
+/swift-code-lookup               → SwiftCodePage (exact lookup + search, links to IFSC detail)
+/currency-converter              → CurrencyConverterPage (INR ↔ 15 currencies, live rates, affiliate links)
 ```
 
 ### Admin Pages (JWT-protected)

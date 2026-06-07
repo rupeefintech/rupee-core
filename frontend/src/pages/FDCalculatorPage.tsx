@@ -1,6 +1,7 @@
 // File: frontend/src/pages/FDCalculatorPage.tsx
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import SliderInput from '../components/SliderInput';
 
 type FDType = 'fd' | 'rd' | 'ppf' | 'nps';
@@ -314,6 +315,27 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          {/* ── Related tools ── */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-base font-bold text-slate-900 mb-4">Find Actual Bank Rates</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { to: '/fd-rates',      emoji: '📈', title: 'Compare FD Rates 2026',       desc: 'Live rates from 46+ banks — up to 9.5% p.a. Senior citizen rates included.' },
+                { to: '/savings-rates', emoji: '🏦', title: 'Savings Account Rates',        desc: 'Compare savings interest rates — up to 9% at Small Finance Banks.' },
+                { to: '/calculators/rd', emoji: '🔄', title: 'Recurring Deposit Calculator', desc: 'Calculate RD maturity with monthly deposits.' },
+              ].map(item => (
+                <Link key={item.to} to={item.to}
+                  className="flex items-start gap-3 p-4 bg-slate-50 border border-slate-100 rounded-xl hover:border-brand-200 hover:bg-brand-50 transition-all group">
+                  <span className="text-xl flex-shrink-0">{item.emoji}</span>
+                  <div>
+                    <div className="font-semibold text-slate-800 text-sm group-hover:text-brand-700 transition-colors">{item.title}</div>
+                    <div className="text-xs text-slate-400 mt-0.5 leading-snug">{item.desc}</div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
 

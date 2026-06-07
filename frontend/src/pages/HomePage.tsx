@@ -209,25 +209,25 @@ export default function HomePage() {
 
             {/* Savings Accounts */}
             <Link
-              to="/accounts"
-              className="group rounded-2xl overflow-hidden bg-white border-[1.5px] border-gray-100 flex flex-col transition-all hover:-translate-y-1 hover:shadow-xl hover:border-emerald-100"
+              to="/savings-rates"
+              className="group rounded-2xl overflow-hidden bg-white border-[1.5px] border-gray-100 flex flex-col transition-all hover:-translate-y-1 hover:shadow-xl hover:border-brand-100"
             >
-              <div className="h-[3px] bg-gradient-to-r from-emerald-400 to-teal-500" />
+              <div className="h-[3px] bg-gradient-to-r from-brand-400 to-blue-500" />
               <div className="p-6 flex flex-col flex-1">
-                <div className="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
-                  <PiggyBank size={20} className="text-emerald-600" />
+                <div className="w-11 h-11 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
+                  <PiggyBank size={20} className="text-brand-600" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Savings Accounts</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Savings Account Rates</h3>
                 <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
-                  Zero-balance, high-interest and digital-first accounts compared transparently — no commissions.
+                  Compare savings interest rates across all banks — zero balance, balance-tier rates, and digital accounts. Up to 9% p.a.
                 </p>
                 <div className="flex flex-wrap gap-1.5 mb-4">
-                  {['Zero Balance', 'High Interest', 'Digital Banks'].map(t => (
-                    <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">{t}</span>
+                  {['Zero Balance', 'Up to 9% p.a.', 'Digital Banks'].map(t => (
+                    <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-brand-50 text-brand-700">{t}</span>
                   ))}
                 </div>
-                <span className="text-sm font-bold text-emerald-600 flex items-center gap-1.5 group-hover:gap-3 transition-all">
-                  Explore Accounts <ArrowRight size={14} />
+                <span className="text-sm font-bold text-brand-600 flex items-center gap-1.5 group-hover:gap-3 transition-all">
+                  Compare Rates <ArrowRight size={14} />
                 </span>
               </div>
             </Link>

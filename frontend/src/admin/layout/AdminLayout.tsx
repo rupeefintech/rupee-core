@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Helmet } from "react-helmet-async";
 import { NavLink, useNavigate } from "react-router-dom";
-import { HomeIcon, CreditCardIcon, BanknoteIcon, Users, Search, LogOut } from "lucide-react";
+import { HomeIcon, CreditCardIcon, BanknoteIcon, Users, TrendingUp, Search, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import { clearAdminToken } from "../utils/adminApi";
 
@@ -13,10 +13,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
 
   const links = [
-    { name: "Dashboard", icon: <HomeIcon size={18} />, path: "/admin", end: true },
-    { name: "Products", icon: <CreditCardIcon size={18} />, path: "/admin/credit-cards", end: false },
-    { name: "Banks", icon: <BanknoteIcon size={18} />, path: "/admin/banks", end: false },
-    { name: "Users", icon: <Users size={18} />, path: "/admin/users", end: false },
+    { name: "Dashboard", icon: <HomeIcon size={18} />,     path: "/admin",              end: true  },
+    { name: "Products",  icon: <CreditCardIcon size={18}/>, path: "/admin/credit-cards", end: false },
+    { name: "Rates",     icon: <TrendingUp size={18} />,    path: "/admin/rates",        end: false },
+    { name: "Banks",     icon: <BanknoteIcon size={18} />,  path: "/admin/banks",        end: false },
+    { name: "Users",     icon: <Users size={18} />,         path: "/admin/users",        end: false },
   ];
 
   const handleLogout = () => {

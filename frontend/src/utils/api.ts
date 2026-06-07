@@ -545,4 +545,38 @@ getCityPage: async (slug: string): Promise<{
     const data = unwrapResponse(response);
     return Array.isArray(data) ? data : data || [];
   },
+
+  // ── SWIFT Code Lookup ───────────────────────────────────────────────────────
+  getSwiftCode: async (code: string): Promise<{
+    swift: string; ifsc: string; bank_name: string; bank_short: string | null;
+    bank_slug: string | null; bank_logo: string | null; bank_website: string | null;
+    bank_headquarters: string | null; branch_name: string; address: string | null;
+    city: string | null; pincode: string | null; phone: string | null;
+    state_name: string; district_name: string | null;
+    neft: number; rtgs: number; imps: number; upi: number;
+  }> => {
+    const response = await apiClient.get(`/swift/${code.toUpperCase()}`);
+    return unwrapResponse(response);
+  },
+
+  searchSwift: async (q: string): Promise<{ data: {
+    swift: string; ifsc: string; bank_name: string; bank_short: string | null;
+    bank_slug: string | null; bank_logo: string | null;
+    branch_name: string; city: string | null; state_name: string;
+  }[] }> => {
+    const response = await apiClient.get(`/swift/search?q=${encodeURIComponent(q)}`);
+    return unwrapResponse(response);
+  },
+
+  // ── Exchange Rates ──────────────────────────────────────────────────────────
+  getExchangeRates: async (): Promise<{
+    base: string;
+    rates: Record<string, number>;
+    updated_at: string;
+    data_date?: string;
+    disclaimer: string;
+  }> => {
+    const response = await apiClient.get('/exchange-rates');
+    return unwrapResponse(response);
+  },
 };

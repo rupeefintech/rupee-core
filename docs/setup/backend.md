@@ -118,6 +118,20 @@ GET /api/blogs/:slug                               → full blog + related artic
 ```
 **IMPORTANT:** `/categories` and `/featured` must be registered BEFORE `/:slug` to avoid slug matching them.
 
+### SWIFT Code Lookup
+```
+GET /api/swift/search?q=HDFC&limit=20  → search by bank name or SWIFT prefix (case-insensitive)
+GET /api/swift/:code                   → exact SWIFT/BIC lookup (8–11 chars); 24h Redis cache
+```
+**Note:** `/swift/search` registered BEFORE `/:code` — prevent "search" matching as code param.
+
+### Exchange Rates
+```
+GET /api/exchange-rates  → live INR rates for USD/EUR/GBP/AED/AUD/CAD/SGD/JPY/CHF/HKD/SAR/CNY/QAR/MYR/THB
+                           via Yahoo Finance; 15 min Redis + 10 min in-memory cache
+                           returns: { base: 'INR', rates: { USD: 84.23, ... }, updated_at, disclaimer }
+```
+
 ### Admin (JWT protected — `Authorization: Bearer <token>`)
 ```
 POST   /api/auth/login                    → admin login → JWT token

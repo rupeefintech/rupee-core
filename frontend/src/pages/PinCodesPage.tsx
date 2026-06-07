@@ -183,7 +183,7 @@ function ByPostOffice() {
       {isFetching && <div className="text-center py-8 text-gray-400 text-sm">Searching…</div>}
       {results && !isFetching && (
         <div>
-          <p className="text-xs text-gray-500 mb-3">
+          <p className="text-sm text-gray-500 mb-3">
             {results.length} result{results.length !== 1 ? 's' : ''} for "<span className="font-medium">{query}</span>" — click any row to view full details
           </p>
           <ResultsList offices={results} pins={results.map(r => r.pin_code)} />
@@ -272,7 +272,7 @@ function ByLocation() {
         </button>
       )}
       {!pin && district && !pinsLoading && (
-        <p className="text-xs text-gray-400 text-center">Select a PIN code above to view its details</p>
+        <p className="text-sm text-gray-400 text-center">Select a PIN code above to view its details</p>
       )}
     </div>
   );

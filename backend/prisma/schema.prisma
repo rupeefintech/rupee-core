@@ -79,8 +79,9 @@ model BanksMaster {
   branches           Branch[]
   bankStatePresences BankStatePresence[]
 
-  //Products 
-  products Product[]
+  //Products
+  products    Product[]
+  rateEntries RateEntry[]
 
   @@index([isActive])
   @@map("Bank")
@@ -353,6 +354,34 @@ model PostOffice {
   @@index([stateName])
   @@index([district])
   @@map("post_offices")
+}
+
+// ─── RateEntry (FD / Savings / Loan rates — manually curated) ────────────────
+model RateEntry {
+  id            Int         @id @default(autoincrement())
+  bankId        Int         @map("bank_id")
+  bank          BanksMaster @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  productType   String      @map("product_type") @db.VarChar(30) // fd | savings | loan_personal | loan_home
+  tenureLabel   String?     @map("tenure_label")  @db.VarChar(50)  // "1 Year" | "2-3 Years"
+  tenureMonths  Int?        @map("tenure_months")
+  rate          Decimal     @db.Decimal(5, 2)
+  seniorRate    Decimal?    @map("senior_rate")    @db.Decimal(5, 2)
+  minAmount     BigInt?     @map("min_amount")
+  maxAmount     BigInt?     @map("max_amount")
+  effectiveFrom DateTime    @default(now()) @map("effective_from") @db.Date
+  effectiveTo   DateTime?   @map("effective_to")  @db.Date
+  source        String      @default("manual")    @db.VarChar(50)
+  sourceUrl     String?     @map("source_url")    @db.Text
+  lastVerified  DateTime    @default(now()) @map("last_verified")
+  verifiedBy    String?     @map("verified_by")   @db.VarChar(100)
+  isActive      Boolean     @default(true)         @map("is_active")
+  notes         String?     @db.Text
+  createdAt     DateTime    @default(now())        @map("created_at")
+  updatedAt     DateTime    @default(now()) @updatedAt @map("updated_at")
+
+  @@index([bankId, productType])
+  @@index([isActive, productType])
+  @@map("rate_entries")
 }
 
 // ─── Blog ───────────────────────────────────────────────────────────────────

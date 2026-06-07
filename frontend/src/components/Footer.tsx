@@ -28,11 +28,15 @@ const Footer: React.FC = () => {
         <div>
           <h3 className="text-white/90 font-semibold text-xs uppercase tracking-widest mb-3">Tools &amp; Data</h3>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/ifsc-finder" className="text-white/45 hover:text-white transition-colors">IFSC Code Finder</Link></li>
-            <li><Link to="/pin-codes" className="text-white/45 hover:text-white transition-colors">PIN Code Directory</Link></li>
-            <li><Link to="/gold-rate-today" className="text-white/45 hover:text-white transition-colors">Gold &amp; Silver Rates</Link></li>
-            <li><Link to="/credit-cards" className="text-white/45 hover:text-white transition-colors">Credit Cards</Link></li>
-            <li><Link to="/bank-holidays" className="text-white/45 hover:text-white transition-colors">Bank Holidays</Link></li>
+            <li><Link to="/fd-rates"           className="text-white/45 hover:text-white transition-colors">FD Interest Rates</Link></li>
+            <li><Link to="/savings-rates"     className="text-white/45 hover:text-white transition-colors">Savings Account Rates</Link></li>
+            <li><Link to="/ifsc-finder"        className="text-white/45 hover:text-white transition-colors">IFSC Code Finder</Link></li>
+            <li><Link to="/swift-code-lookup"  className="text-white/45 hover:text-white transition-colors">SWIFT Code Lookup</Link></li>
+            <li><Link to="/currency-converter" className="text-white/45 hover:text-white transition-colors">Currency Converter</Link></li>
+            <li><Link to="/pin-codes"          className="text-white/45 hover:text-white transition-colors">PIN Code Directory</Link></li>
+            <li><Link to="/gold-rate-today"    className="text-white/45 hover:text-white transition-colors">Gold &amp; Silver Rates</Link></li>
+            <li><Link to="/credit-cards"       className="text-white/45 hover:text-white transition-colors">Credit Cards</Link></li>
+            <li><Link to="/bank-holidays"      className="text-white/45 hover:text-white transition-colors">Bank Holidays</Link></li>
           </ul>
         </div>
 
