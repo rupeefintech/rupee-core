@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import AdminLayout from "../layout/AdminLayout";
 import { adminApi } from "../utils/adminApi";
 import {
@@ -33,7 +33,7 @@ export default function ContactsPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["admin-contacts", page, unreadOnly],
     queryFn: () => fetchContacts(page, unreadOnly),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
   const markRead = useMutation({

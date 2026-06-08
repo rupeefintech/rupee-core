@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import AdminLayout from "../layout/AdminLayout";
 import { adminApi } from "../utils/adminApi";
 import {
@@ -78,7 +78,7 @@ export default function BanksPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["admin-banks-manage", page, search, typeFilter],
     queryFn: () => fetchBanks(page, search, typeFilter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
   const updateMutation = useMutation({

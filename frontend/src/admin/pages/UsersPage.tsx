@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import AdminLayout from "../layout/AdminLayout";
 import { adminApi } from "../utils/adminApi";
 import {
@@ -60,7 +60,7 @@ export default function UsersPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["admin-users", page, search, sourceFilter],
     queryFn: () => fetchUsers(page, search, sourceFilter),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
   const patchMutation = useMutation({
