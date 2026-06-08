@@ -852,4 +852,132 @@ router.delete('/rates/:id', verifyToken, async (req, res) => {
   } catch (err: any) { res.status(500).json({ error: err.message }); }
 });
 
+// ─── Blogs ──────────────────────────────────────────────────────────────────
+
+// GET /api/admin/blogs?page=&limit=&search=&category=&published=
+router.get('/blogs', verifyToken, async (req, res) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 20));
+    const search = (req.query.search as string)?.trim() || undefined;
+    const category = (req.query.category as string)?.trim() || undefined;
+    const published = req.query.published as string | undefined;
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+    if (category) where.category = category;
+    if (published === 'true') where.isPublished = true;
+    if (published === 'false') where.isPublished = false;
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { slug: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    const [blogs, total] = await Promise.all([
+      prisma.blog.findMany({
+        where,
+        select: {
+          id: true, slug: true, title: true, description: true, category: true,
+          tags: true, coverImage: true, readTime: true, isPublished: true,
+          isFeatured: true, publishedAt: true, updatedAt: true,
+        },
+        orderBy: { publishedAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.blog.count({ where }),
+    ]);
+
+    res.json({ data: blogs, total, page, limit, totalPages: Math.ceil(total / limit) });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// GET /api/admin/blogs/:id — full post for editing
+router.get('/blogs/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const blog = await prisma.blog.findUnique({ where: { id } });
+    if (!blog) { res.status(404).json({ error: 'Blog not found' }); return; }
+    res.json({ data: blog });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// POST /api/admin/blogs — create
+router.post('/blogs', verifyToken, async (req, res) => {
+  try {
+    const {
+      slug, title, description, category, tags, coverImage,
+      content, readTime, isPublished, isFeatured, publishedAt,
+    } = req.body;
+
+    if (!title?.trim() || !description?.trim() || !category?.trim() || !content?.trim()) {
+      res.status(400).json({ error: 'title, description, category, and content are required' }); return;
+    }
+
+    const finalSlug = slug?.trim() ||
+      title.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+    const blog = await prisma.blog.create({
+      data: {
+        slug:        finalSlug,
+        title:       title.trim(),
+        description: description.trim(),
+        category:    category.trim(),
+        tags:        Array.isArray(tags) ? tags : [],
+        coverImage:  coverImage  || null,
+        content,
+        readTime:    readTime    || null,
+        isPublished: isPublished !== undefined ? Boolean(isPublished) : true,
+        isFeatured:  isFeatured  !== undefined ? Boolean(isFeatured)  : false,
+        publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
+      },
+    });
+    res.status(201).json({ data: blog });
+  } catch (err: any) {
+    if (err.code === 'P2002') { res.status(409).json({ error: 'A blog with this slug already exists' }); return; }
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PUT /api/admin/blogs/:id — update
+router.put('/blogs/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const {
+      slug, title, description, category, tags, coverImage,
+      content, readTime, isPublished, isFeatured, publishedAt,
+    } = req.body;
+
+    const data: any = { updatedAt: new Date() };
+    if (slug        !== undefined) data.slug        = slug.trim();
+    if (title       !== undefined) data.title       = title.trim();
+    if (description !== undefined) data.description = description.trim();
+    if (category    !== undefined) data.category    = category.trim();
+    if (tags        !== undefined) data.tags        = Array.isArray(tags) ? tags : [];
+    if (coverImage  !== undefined) data.coverImage  = coverImage || null;
+    if (content     !== undefined) data.content     = content;
+    if (readTime    !== undefined) data.readTime    = readTime || null;
+    if (isPublished !== undefined) data.isPublished = Boolean(isPublished);
+    if (isFeatured  !== undefined) data.isFeatured  = Boolean(isFeatured);
+    if (publishedAt !== undefined) data.publishedAt = new Date(publishedAt);
+
+    const blog = await prisma.blog.update({ where: { id }, data });
+    res.json({ data: blog });
+  } catch (err: any) {
+    if (err.code === 'P2002') { res.status(409).json({ error: 'A blog with this slug already exists' }); return; }
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/admin/blogs/:id — permanent delete
+router.delete('/blogs/:id', verifyToken, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    await prisma.blog.delete({ where: { id } });
+    res.json({ message: 'Blog deleted' });
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
 export default router;

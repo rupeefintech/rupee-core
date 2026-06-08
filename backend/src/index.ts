@@ -47,7 +47,7 @@ app.use(cors({
 }))
 app.use(compression() as any)
 app.use(morgan(NODE_ENV === 'development' ? 'dev' : 'combined'))
-app.use(express.json({ limit: '10kb' }))
+app.use(express.json({ limit: '2mb' }))
 app.use('/api/', rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 300,

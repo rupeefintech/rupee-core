@@ -31,6 +31,8 @@ import AddEditCardPage from "./admin/pages/AddEditCardPage";
 import RatesPage from "./admin/pages/RatesPage";
 import BanksPage from "./admin/pages/BanksPage";
 import ContactsPage from "./admin/pages/ContactsPage";
+import BlogsPage from "./admin/pages/BlogsPage";
+import AddEditBlogPage from "./admin/pages/AddEditBlogPage";
 import UsersPage from "./admin/pages/UsersPage";
 import IncomeTaxCalculator from "./pages/IncomeTaxCalculator";
 import CalculatorLayout from "./components/CalculatorLayout";
@@ -127,6 +129,9 @@ function AdminRoutes() {
       <Route path="/credit-cards/:slug/edit" element={<AddEditCardPage />} />
       <Route path="/rates" element={<RatesPage />} />
       <Route path="/banks" element={<BanksPage />} />
+      <Route path="/blog" element={<BlogsPage />} />
+      <Route path="/blog/new" element={<AddEditBlogPage />} />
+      <Route path="/blog/:id/edit" element={<AddEditBlogPage />} />
       <Route path="/contacts" element={<ContactsPage />} />
       <Route path="/users" element={<UsersPage />} />
     </Routes>
