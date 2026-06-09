@@ -141,7 +141,7 @@ export default function Navbar() {
               </button>
 
               {calcOpen && (
-                <div className="absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 grid grid-cols-4 gap-5 z-[999]" style={{ width: 'min(920px, 92vw)' }}>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-5 grid grid-cols-4 gap-5 z-[999]" style={{ width: 'min(920px, 92vw)' }}>
                   {calculatorCategories.map((group) => {
                     const CatIcon = group.categoryIcon;
                     const iconColor: Record<string, string> = {
