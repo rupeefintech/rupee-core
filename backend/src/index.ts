@@ -239,142 +239,45 @@ app.get('/sitemap-calculators.xml', (_req, res) => {
   res.send(xml);
 });
 
-// IFSC codes sitemap - part 1 (0 to 50,000)
-app.get('/sitemap-ifsc-1.xml', async (_req, res) => {
+// Helper: stream IFSC sitemap for a given alphabetic IFSC range.
+// Uses WHERE range filter (index range scan, O(result)) instead of OFFSET (O(table)).
+async function streamIfscSitemap(res: any, where: Record<string, any>, label: string) {
+  const { prisma } = require('./lib/prisma');
+  const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
   try {
-    const { prisma } = require('./lib/prisma');
-    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
-    
-    const branches = await prisma.branch.findMany({
-      select: { ifsc: true, lastUpdated: true },
-      orderBy: { ifsc: 'asc' },
-      skip: 0,
-      take: 45000,
-    });
-
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-
-    for (const branch of branches) {
-      xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
-      xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.6</priority>\n';
-      xml += '  </url>\n';
-    }
-
-    xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
     res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.send(xml);
-  } catch (error) {
-    console.error('Error generating sitemap-ifsc-1:', error);
-    res.status(500).send('Error generating sitemap');
-  }
-})
+    res.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n');
 
-// IFSC codes sitemap - part 2 (50,000 to 100,000)
-app.get('/sitemap-ifsc-2.xml', async (_req, res) => {
-  try {
-    const { prisma } = require('./lib/prisma');
-    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
-    
     const branches = await prisma.branch.findMany({
       select: { ifsc: true, lastUpdated: true },
+      where,
       orderBy: { ifsc: 'asc' },
-      skip: 45000,
-      take: 45000,
     });
 
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-
     for (const branch of branches) {
-      xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
-      xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.6</priority>\n';
-      xml += '  </url>\n';
+      const lastmod = branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15';
+      res.write(`  <url>\n    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`);
     }
 
-    xml += '</urlset>';
-    res.setHeader('Content-Type', 'application/xml');
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.send(xml);
+    res.write('</urlset>');
+    res.end();
   } catch (error) {
-    console.error('Error generating sitemap-ifsc-2:', error);
-    res.status(500).send('Error generating sitemap');
+    console.error(`Error generating ${label}:`, error);
+    if (!res.headersSent) res.status(500).send('Error generating sitemap');
+    else res.end();
   }
-})
+}
 
-// IFSC codes sitemap - part 3 (100,000+)
-app.get('/sitemap-ifsc-3.xml', async (_req, res) => {
-  try {
-    const { prisma } = require('./lib/prisma');
-    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
-    
-    const branches = await prisma.branch.findMany({
-      select: { ifsc: true, lastUpdated: true },
-      orderBy: { ifsc: 'asc' },
-      skip: 90000,
-      take: 45000,
-    });
-
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-
-    for (const branch of branches) {
-      xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
-      xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.6</priority>\n';
-      xml += '  </url>\n';
-    }
-
-    xml += '</urlset>';
-    res.setHeader('Content-Type', 'application/xml');
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.send(xml);
-  } catch (error) {
-    console.error('Error generating sitemap-ifsc-3:', error);
-    res.status(500).send('Error generating sitemap');
-  }
-})
-
-app.get('/sitemap-ifsc-4.xml', async (_req, res) => {
-  try {
-    const { prisma } = require('./lib/prisma');
-    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
-    
-    const branches = await prisma.branch.findMany({
-      select: { ifsc: true, lastUpdated: true },
-      orderBy: { ifsc: 'asc' },
-      skip: 135000,
-      take: 45000,
-    });
-
-    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-    for (const branch of branches) {
-      xml += '  <url>\n';
-      xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
-      xml += '    <changefreq>monthly</changefreq>\n';
-      xml += '    <priority>0.8</priority>\n';
-      xml += '  </url>\n';
-    }
-    xml += '</urlset>';
-    res.setHeader('Content-Type', 'application/xml');
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.send(xml);
-  } catch (error) {
-    console.error('Error generating sitemap-ifsc-4:', error);
-    res.status(500).send('Error generating sitemap');
-  }
-});
+// IFSC sitemaps split by alphabetic IFSC range — no OFFSET, fast index range scans:
+//   Part 1: A–G  (ABHY … GSFS  ~A-G bank codes)
+//   Part 2: H–L  (HDFC … LVCB)
+//   Part 3: M–R  (MAHB … RATN, includes PUNB/PNB)
+//   Part 4: S–Z  (SBIN/SBI + remaining)
+app.get('/sitemap-ifsc-1.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { lt: 'H' } }, 'sitemap-ifsc-1'));
+app.get('/sitemap-ifsc-2.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'H', lt: 'M' } }, 'sitemap-ifsc-2'));
+app.get('/sitemap-ifsc-3.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'M', lt: 'S' } }, 'sitemap-ifsc-3'));
+app.get('/sitemap-ifsc-4.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'S' } }, 'sitemap-ifsc-4'));
 
 const xmlEscape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
