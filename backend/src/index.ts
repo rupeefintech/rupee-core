@@ -90,101 +90,103 @@ app.get('/sitemap.xml', async (req, res) => {
 // Static pages sitemap
 app.get('/sitemap-static.xml', (_req, res) => {
   const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+  const today = new Date().toISOString().split('T')[0];
   const staticSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>${baseUrl}/</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>${baseUrl}/ifsc-finder</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>${baseUrl}/about</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/pin-codes</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>${baseUrl}/gold-rate-today</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>${today}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>${baseUrl}/money-guides</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/credit-cards</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/bank-holidays</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>${baseUrl}/what-is-ifsc-code</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/pin-code-india</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/gold-hallmark-guide</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/ifsc-vs-micr</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/how-to-find-ifsc-code</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>${baseUrl}/why-gold-prices-change</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>2026-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   ${['mumbai','delhi','chennai','kolkata','hyderabad','bangalore','ahmedabad','pune','jaipur','lucknow','surat','patna'].map(city => `<url>
     <loc>${baseUrl}/gold-rate-today/${city}</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <lastmod>${today}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.85</priority>
   </url>`).join('\n  ')}
 </urlset>`;
-  
+
   res.setHeader('Content-Type', 'application/xml');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
   res.send(staticSitemap);
 })
 
@@ -233,6 +235,7 @@ app.get('/sitemap-calculators.xml', (_req, res) => {
   }
   xml += '</urlset>';
   res.setHeader('Content-Type', 'application/xml');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
   res.send(xml);
 });
 
@@ -255,7 +258,7 @@ app.get('/sitemap-ifsc-1.xml', async (_req, res) => {
     for (const branch of branches) {
       xml += '  <url>\n';
       xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.6</priority>\n';
       xml += '  </url>\n';
@@ -263,6 +266,7 @@ app.get('/sitemap-ifsc-1.xml', async (_req, res) => {
 
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-ifsc-1:', error);
@@ -289,7 +293,7 @@ app.get('/sitemap-ifsc-2.xml', async (_req, res) => {
     for (const branch of branches) {
       xml += '  <url>\n';
       xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.6</priority>\n';
       xml += '  </url>\n';
@@ -297,6 +301,7 @@ app.get('/sitemap-ifsc-2.xml', async (_req, res) => {
 
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-ifsc-2:', error);
@@ -323,7 +328,7 @@ app.get('/sitemap-ifsc-3.xml', async (_req, res) => {
     for (const branch of branches) {
       xml += '  <url>\n';
       xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.6</priority>\n';
       xml += '  </url>\n';
@@ -331,6 +336,7 @@ app.get('/sitemap-ifsc-3.xml', async (_req, res) => {
 
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-ifsc-3:', error);
@@ -355,13 +361,14 @@ app.get('/sitemap-ifsc-4.xml', async (_req, res) => {
     for (const branch of branches) {
       xml += '  <url>\n';
       xml += `    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n`;
-      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n`;
+      xml += `    <lastmod>${branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.8</priority>\n';
       xml += '  </url>\n';
     }
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-ifsc-4:', error);
@@ -390,13 +397,14 @@ app.get('/sitemap-banks.xml', async (_req, res) => {
       if (!bank.slug) continue;
       xml += '  <url>\n';
       xml += `    <loc>${xmlEscape(`${baseUrl}/bank/${bank.slug}`)}</loc>\n`;
-      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += `    <lastmod>${bank.updatedAt ? bank.updatedAt.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.8</priority>\n';
       xml += '  </url>\n';
     }
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-banks:', error);
@@ -434,6 +442,7 @@ app.get('/sitemap-blogs.xml', async (_req, res) => {
     }
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-blogs:', error);
@@ -457,10 +466,11 @@ app.get('/sitemap-pin.xml', async (_req, res) => {
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
     for (const row of rows) {
-      xml += `  <url>\n    <loc>${baseUrl}/pin/${row.pinCode}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+      xml += `  <url>\n    <loc>${baseUrl}/pin/${row.pinCode}</loc>\n    <lastmod>2025-01-15</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
     }
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-pin:', error);
@@ -490,6 +500,7 @@ app.get('/sitemap-credit-cards.xml', async (_req, res) => {
     }
     xml += '</urlset>';
     res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-credit-cards:', error);

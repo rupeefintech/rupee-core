@@ -101,13 +101,10 @@ export default function StatePage() {
         )}
 
         {error && (
-          <>
-            <Helmet><meta name="robots" content="noindex, follow" /></Helmet>
-            <div className="text-center py-12">
-              <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No data found</p>
-            </div>
-          </>
+          <div className="text-center py-12">
+            <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500">No data found</p>
+          </div>
         )}
 
         {!isLoading && !error && (

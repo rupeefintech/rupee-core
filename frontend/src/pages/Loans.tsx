@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 type Loan = {
   name: string;
@@ -37,6 +38,7 @@ const Loans: React.FC = () => {
   const location = useLocation();
 
   const params = new URLSearchParams(location.search);
+  const hasParams = location.search.length > 0;
 
   const amount = Number(params.get("amount")) || 0;
   const emi = Number(params.get("emi")) || 0;
@@ -51,6 +53,12 @@ const Loans: React.FC = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
+      <Helmet>
+        <title>Compare Best Personal Loans in India | Rupeepedia</title>
+        <meta name="description" content="Compare personal, home, car and LAP loans from top banks. Find best loan offers with lowest interest rates and EMI options." />
+        <link rel="canonical" href="https://rupeepedia.in/loans" />
+        {hasParams && <meta name="robots" content="noindex, follow" />}
+      </Helmet>
 
       <h1 className="text-3xl font-bold mb-6">
         Compare Best Personal Loans in India

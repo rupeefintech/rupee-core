@@ -280,7 +280,10 @@ export default function PinCodePage() {
   if (isError || !data) {
     return (
       <div className="bg-[#f9f9ff] min-h-[60vh] flex items-center justify-center px-4">
-        <Helmet><meta name="robots" content="noindex, follow" /></Helmet>
+        <Helmet>
+          <title>PIN Code {pincode} | Rupeepedia</title>
+          <link rel="canonical" href={`https://rupeepedia.in/pin/${pincode}`} />
+        </Helmet>
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-md w-full text-center">
           <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
           <h1 className="text-lg font-bold text-gray-800 mb-2">PIN code {pincode} not found</h1>

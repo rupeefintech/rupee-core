@@ -148,7 +148,7 @@ function PublicLayout() {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* <Route path="/loans" element={<Loans />} /> */}
+            <Route path="/loans" element={<Loans />} />
             <Route path="/accounts" element={<BankAccounts />} />
             <Route path="/gold-rate-today" element={<GoldSilverRatePage />} />
             <Route path="/swift-code-lookup" element={<SwiftCodePage />} />
