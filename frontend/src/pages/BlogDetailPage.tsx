@@ -87,6 +87,15 @@ export default function BlogDetailPage() {
             },
           })}
         </script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Money Guides', item: 'https://rupeepedia.in/money-guides' },
+            { '@type': 'ListItem', position: 3, name: blog.title, item: `https://rupeepedia.in/money-guides/${slug}` },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="bg-gray-50 min-h-screen">

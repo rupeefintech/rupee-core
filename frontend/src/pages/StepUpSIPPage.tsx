@@ -51,6 +51,15 @@ export default function StepUpSIPPage() {
         <meta name="description" content="Free Step-Up SIP Calculator — see how increasing your SIP by 10% annually can double your corpus vs flat SIP. Calculate year-wise growth." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/step-up-sip" />
         <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'Step-Up SIP Calculator', item: 'https://rupeepedia.in/calculators/step-up-sip' },
+          ],
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
           "mainEntity": faqs.map(f => ({

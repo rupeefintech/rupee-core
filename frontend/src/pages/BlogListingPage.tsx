@@ -53,6 +53,14 @@ export default function BlogListingPage() {
         <title>Guides - Banking, PIN Codes, Gold, Tax & Financial Tips | Rupeepedia</title>
         <meta name="description" content="Expert guides on IFSC & banking, PIN codes & India Post, live gold & silver rates, income tax, NRI banking, credit cards, and investments. Simple, actionable advice for every Indian." />
         <link rel="canonical" href="https://rupeepedia.in/money-guides" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Money Guides', item: 'https://rupeepedia.in/money-guides' },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

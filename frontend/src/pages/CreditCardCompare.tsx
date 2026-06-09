@@ -76,6 +76,15 @@ export default function CreditCardCompare() {
         <title>Compare Credit Cards - {cards.map((c) => c.name).join(" vs ")} | Rupeepedia</title>
         <meta name="description" content={`Side-by-side comparison of ${cards.map((c) => c.name).join(", ")}. Compare fees, rewards, and features.`} />
         <link rel="canonical" href="https://rupeepedia.in/credit-cards/compare" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Credit Cards', item: 'https://rupeepedia.in/credit-cards' },
+            { '@type': 'ListItem', position: 3, name: 'Compare', item: 'https://rupeepedia.in/credit-cards/compare' },
+          ],
+        })}</script>
       </Helmet>
 
       {/* Header */}

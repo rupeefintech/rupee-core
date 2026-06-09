@@ -59,6 +59,14 @@ export default function BankAccounts() {
         <meta property="og:description" content="Compare savings, FD, and digital bank accounts. Real rates, no commissions." />
         <meta property="og:url"         content="https://rupeepedia.in/accounts" />
         <meta property="og:type"        content="website" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Bank Accounts', item: 'https://rupeepedia.in/accounts' },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="min-h-screen bg-gray-50">

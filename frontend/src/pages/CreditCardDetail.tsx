@@ -123,6 +123,17 @@ export default function CreditCardDetail() {
         <title>{card.name} - Review, Benefits & Apply | Rupeepedia</title>
         <meta name="description" content={`${card.name} from ${card.bank.name}. Annual fee: ${formatINR(card.details.annualFee)}. ${activeOffers[0]?.title || ""}`} />
         <link rel="canonical" href={`https://rupeepedia.in/credit-cards/${slug}`} />
+        <meta property="og:title" content={`${card.name} - Review, Benefits & Apply | Rupeepedia`} />
+        <meta property="og:url" content={`https://rupeepedia.in/credit-cards/${slug}`} />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Credit Cards', item: 'https://rupeepedia.in/credit-cards' },
+            { '@type': 'ListItem', position: 3, name: card.name, item: `https://rupeepedia.in/credit-cards/${slug}` },
+          ],
+        })}</script>
       </Helmet>
 
       {/* Breadcrumb */}

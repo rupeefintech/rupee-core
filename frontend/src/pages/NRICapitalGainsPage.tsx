@@ -138,6 +138,15 @@ export default function NRICapitalGainsPage() {
         <title>NRI Capital Gains Tax Calculator — Property & Equity | RupeePedia</title>
         <meta name="description" content="Calculate capital gains tax for NRIs on sale of Indian property or equity. Includes indexation, surcharge, cess, and TDS estimation." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/nri-capital-gains" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
+            { '@type': 'ListItem', position: 3, name: 'NRI Capital Gains', item: 'https://rupeepedia.in/calculators/nri-capital-gains' },
+          ],
+        })}</script>
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-4 py-8">

@@ -23,6 +23,14 @@ export default function AboutPage() {
           content="RupeePedia is India's most complete IFSC code finder, PIN code directory, live gold & silver rates platform, and financial knowledge hub. 177,000+ bank branches, 150,000+ post offices — all free."
         />
         <link rel="canonical" href="https://rupeepedia.in/about" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'About', item: 'https://rupeepedia.in/about' },
+          ],
+        })}</script>
       </Helmet>
 
       {/* ── Hero ── */}

@@ -67,6 +67,14 @@ export default function ContactPage() {
         <title>Contact Us | Rupeepedia</title>
         <meta name="description" content="Get in touch with the Rupeepedia team. Report incorrect IFSC data, ask questions, or share feedback." />
         <link rel="canonical" href="https://rupeepedia.in/contact" />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://rupeepedia.in/contact' },
+          ],
+        })}</script>
       </Helmet>
 
       {/* Hero */}

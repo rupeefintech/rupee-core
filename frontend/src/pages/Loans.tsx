@@ -58,6 +58,14 @@ const Loans: React.FC = () => {
         <meta name="description" content="Compare personal, home, car and LAP loans from top banks. Find best loan offers with lowest interest rates and EMI options." />
         <link rel="canonical" href="https://rupeepedia.in/loans" />
         {hasParams && <meta name="robots" content="noindex, follow" />}
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
+            { '@type': 'ListItem', position: 2, name: 'Loans', item: 'https://rupeepedia.in/loans' },
+          ],
+        })}</script>
       </Helmet>
 
       <h1 className="text-3xl font-bold mb-6">
