@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, RotateCcw } from "lucide-react";
+import { ArrowLeft, Plus, RotateCcw, Power, PowerOff } from "lucide-react";
 import AdminLayout from "../layout/AdminLayout";
 import { adminApi } from "../utils/adminApi";
 
@@ -145,6 +145,17 @@ export default function CardDetailPage() {
       await reloadCard();
     } catch {
       alert("Failed to revert offer.");
+    }
+  };
+
+  // Toggle a single offer's active status without affecting other offers —
+  // lets multiple offers be active on a card at the same time.
+  const handleToggleActive = async (offerId: number, isActive: boolean) => {
+    try {
+      await adminApi.put(`/admin/offers/${offerId}`, { isActive });
+      await reloadCard();
+    } catch {
+      alert(`Failed to ${isActive ? "activate" : "deactivate"} offer.`);
     }
   };
 
@@ -519,6 +530,14 @@ export default function CardDetailPage() {
                         <td className="px-4 py-3 text-right">
                           <div className="flex items-center justify-end gap-2">
                             <button
+                              onClick={() => handleToggleActive(offer.id, false)}
+                              title="Deactivate this offer"
+                              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-gray-300 text-gray-600 rounded hover:bg-gray-50"
+                            >
+                              <PowerOff size={12} />
+                              Deactivate
+                            </button>
+                            <button
                               onClick={() => startEditOffer(offer)}
                               className="px-3 py-1 text-xs font-medium bg-blue-600 text-white rounded hover:bg-blue-700"
                             >
@@ -593,12 +612,23 @@ export default function CardDetailPage() {
                         </td>
                         <td className="px-4 py-3 text-right">
                           {!offer.isActive ? (
-                            <button
-                              onClick={() => handleRevertOffer(offer.id)}
-                              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-gray-300 text-gray-600 rounded hover:bg-gray-50"
-                            >
-                              Revert
-                            </button>
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => handleToggleActive(offer.id, true)}
+                                title="Activate alongside the other active offers"
+                                className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-green-500 text-green-600 rounded hover:bg-green-50"
+                              >
+                                <Power size={12} />
+                                Activate
+                              </button>
+                              <button
+                                onClick={() => handleRevertOffer(offer.id)}
+                                title="Make this the only active offer"
+                                className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-gray-300 text-gray-600 rounded hover:bg-gray-50"
+                              >
+                                Revert
+                              </button>
+                            </div>
                           ) : (
                             <span className="text-xs text-gray-400">Current</span>
                           )}
@@ -646,13 +676,24 @@ export default function CardDetailPage() {
                           : "N/A"}
                       </span>
                       {!offer.isActive ? (
-                        <button
-                          onClick={() => handleRevertOffer(offer.id)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50"
-                        >
-                          <RotateCcw size={12} />
-                          Revert
-                        </button>
+                        <>
+                          <button
+                            onClick={() => handleToggleActive(offer.id, true)}
+                            title="Activate alongside the other active offers"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium border border-green-500 text-green-600 rounded-lg hover:bg-green-50"
+                          >
+                            <Power size={12} />
+                            Activate
+                          </button>
+                          <button
+                            onClick={() => handleRevertOffer(offer.id)}
+                            title="Make this the only active offer"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50"
+                          >
+                            <RotateCcw size={12} />
+                            Revert
+                          </button>
+                        </>
                       ) : (
                         <span className="text-xs text-gray-400 px-3">Current</span>
                       )}
