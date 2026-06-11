@@ -15,6 +15,7 @@ import chatRouter from './routes/chat'
 dotenv.config()
 
 const app      = express()
+app.set('trust proxy', 1) // Render sits behind a reverse proxy — needed for correct per-IP rate limiting
 const PORT     = Number(process.env.PORT) || 3001
 const NODE_ENV = process.env.NODE_ENV || 'development'
 // v2 — bank filter cache key fix
