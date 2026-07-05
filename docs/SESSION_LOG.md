@@ -4,6 +4,31 @@
 
 ---
 
+## 05 Jul 2026 — SEO indexing sprint
+
+### Context
+GSC audit: 56k crawled-not-indexed, 68k discovered-not-indexed, 534 404s, 37 5xx, 797 noindex (unexamined). Only 4 of ~28 calculators indexed — correlation: page content size ↔ indexed.
+
+### Fixes shipped (all on main, deployed via Vercel)
+1. **Legacy bank URL 404s** (`cb507dc`) — all 534 GSC 404s were old-scheme `/bank/<slug>-<bankId>` URLs. `api/render.ts` now 301s to clean slug (probe-verified — 5 real slugs end in digits, e.g. `reserve-bank-of-india-227`); `BankPage.tsx` does client-side Navigate fallback. Verified live.
+2. **5xx errors** (`7a9d000`) — Render cold start > 8s edge timeout → 503 to Googlebot. Timeout raised to 20s. Root cause remains Render free-tier spin-down: recommend paid plan or UptimeRobot ping.
+3. **Calculator content expansion** (RNOR `48b7254`; batch 1 `661fd2f` HRA/GST/income-tax; batch 2 `15d6e5e` step-up-sip/SWP/prepayment×2; batch 3 `9eba467` eligibility×2/CAGR/XIRR). Pattern per page: visible article + examples + comparison tables (some live-computed from inputs), FAQs 4→12+ always mounted in DOM, FAQPage JSON-LD generated from rendered list, WebApplication schema, related-calculator links.
+4. **Bug fixes found en route**: income-tax FAQ schema had FY 2024-25 slabs (code had 2025-26); FAQPage schema with no visible FAQs; missing 87A marginal relief; GST slabs pre-GST-2.0 (now 5/18/40 + 3% gold, 12/28 legacy); dead buttons.
+
+### Key learnings
+- "Alternate page with proper canonical" GSC bucket = benign (verified: /ifsc self-canonicals correct).
+- Bot-SSR exists: `frontend/api/render.ts` (Vercel edge) serves SSR to bots for /ifsc, /bank, /state, /city, /money-guides. Calculators are NOT bot-SSR'd — Google renders JS for them.
+- Collapsed accordion content that unmounts = invisible to Google. Keep mounted, toggle `hidden` class.
+
+### Next steps
+- Batch 4 remaining thin calculators: mutual-fund, NRI FD, NRI capital gains, NRI rental income
+- User: Request Indexing in GSC for expanded URLs (~10/day quota); Validate Fix on 404 + 5xx buckets
+- Investigate noindex bucket (797 pages) — samples not yet provided
+- Clean dirty bank slugs (apostrophes/parens, 5 digit-suffixed) with redirects
+- Keep-warm for Render backend (paid plan or UptimeRobot)
+
+---
+
 ## 06 Jun 2026
 
 ### What was done
