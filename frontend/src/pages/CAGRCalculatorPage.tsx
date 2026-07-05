@@ -1,6 +1,8 @@
 // File: frontend/src/pages/CAGRCalculatorPage.tsx
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 function fmtINR(n: number) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
 function fmtShort(n: number) {
@@ -36,6 +38,12 @@ export default function CAGRCalculatorPage() {
     { q: 'What is a good CAGR?', a: 'It depends on the asset class. For equity mutual funds, 12–15% CAGR over 10 years is considered good. For FDs, 6–7% is typical. Nifty 50 has delivered approximately 12% CAGR over the last 20 years.' },
     { q: 'What is the difference between CAGR and IRR?', a: 'CAGR assumes a single investment at start and single withdrawal at end. IRR (and XIRR) handles multiple cash flows at different dates — like SIP investments. For lumpsum investments, CAGR = IRR.' },
     { q: 'Can CAGR be negative?', a: 'Yes. If your investment\'s final value is less than the initial value, CAGR will be negative. For example, ₹1 lakh falling to ₹80,000 in 3 years gives CAGR = -7.1%, meaning the investment lost 7.1% per year on average.' },
+    { q: 'What is the Rule of 72?', a: 'A quick mental shortcut: divide 72 by the CAGR to estimate how many years an investment takes to double. At 12% CAGR money doubles in about 6 years; at 8% in about 9 years; at 6% in 12 years. It works in reverse too — if your investment doubled in 5 years, its CAGR is roughly 72 ÷ 5 ≈ 14.4%.' },
+    { q: 'Does CAGR account for volatility or risk?', a: 'No — that is both its strength and its blind spot. CAGR draws a smooth line between two endpoints; an investment that went +80%, −40%, +30% and one that went +10% steadily can show the same CAGR with wildly different risk. Always read CAGR alongside drawdowns or volatility, and check rolling CAGRs over multiple windows rather than one cherry-picked period.' },
+    { q: 'How do I compare mutual funds using CAGR?', a: 'Compare like with like: same category, same period, and prefer longer windows (5–10 years) that include at least one market fall. Fund factsheets report 1/3/5-year CAGRs. Rolling returns — CAGR computed across many overlapping windows — are better than point-to-point CAGR, which can flatter or punish a fund based purely on the start date.' },
+    { q: 'Is CAGR the same as annualised return?', a: 'For a lumpsum with no interim cash flows, yes — CAGR is the annualised return. The terms diverge when money moves in or out along the way (SIPs, top-ups, withdrawals): then annualised return should be computed with XIRR, and CAGR is simply the wrong tool.' },
+    { q: 'Should I use CAGR or absolute return for periods under a year?', a: 'Neither annualise nor use CAGR for sub-year periods — annualising a 3-month gain of 8% into "36% CAGR" is misleading extrapolation. SEBI requires funds to show simple absolute returns for periods below one year. Use CAGR only for multi-year comparisons.' },
+    { q: 'What CAGR should I assume for future planning?', a: 'Planning assumptions, not promises: large-cap equity 10–12%, mid/small-cap 12–14% (with much higher volatility), hybrid funds 9–10%, debt funds and FDs 6–7%, gold 8–9% (long-run INR terms), real estate 6–9% ex-rental. Using 15%+ for planning sets unrealistic targets — better to be surprised on the upside.' },
   ];
 
   return (
@@ -52,6 +60,17 @@ export default function CAGRCalculatorPage() {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="CAGR Calculator 2026 — Compound Annual Growth Rate Calculator | RupeePedia" />
         <meta name="twitter:description" content="Free CAGR Calculator — calculate the Compound Annual Growth Rate of any investment. Enter initial value, final value, and duration to get instant CAGR." />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: 'CAGR Calculator',
+          url: 'https://rupeepedia.in/calculators/cagr',
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Any',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+          description: 'Free CAGR calculator — compound annual growth rate from initial value, final value and duration, with absolute return, wealth multiplier and rate comparison table.',
+          publisher: { '@type': 'Organization', name: 'RupeePedia', url: 'https://rupeepedia.in' },
+        })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -228,6 +247,95 @@ export default function CAGRCalculatorPage() {
             </div>
           </div>
 
+          {/* ── Article (always in DOM for SEO) ── */}
+          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">What CAGR tells you — and what it hides</h2>
+              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+                <p>
+                  <strong>CAGR (Compound Annual Growth Rate)</strong> answers one question: at what steady annual rate would
+                  my money have had to grow to get from the starting value to the ending value? The formula is
+                  <strong> CAGR = (Final ÷ Initial)<sup>1/years</sup> − 1</strong>. It converts any messy multi-year journey into a
+                  single comparable number, which is why fund factsheets, stock returns and FD rates all speak CAGR.
+                </p>
+                <p>
+                  Its blind spots matter as much as its usefulness. CAGR only sees two endpoints — it hides volatility,
+                  drawdowns and the path in between. It is also extremely sensitive to the chosen dates: measuring a fund
+                  from a market bottom flatters it; from a peak, punishes it. And for investments with ongoing cash flows
+                  like SIPs, CAGR is simply the wrong tool — use <Link to="/calculators/xirr" className="text-brand-600 font-semibold hover:underline">XIRR</Link> there.
+                </p>
+                <p>
+                  Quick intuition anchors: 12% CAGR doubles money every ~6 years (Rule of 72), turns ₹10 lakh into
+                  ₹31 lakh in 10 years, and ₹96 lakh in 20 years. The difference between 10% and 12% CAGR looks small
+                  in a year and enormous over decades — that is compounding's whole trick.
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">Typical long-term CAGRs by asset class (India)</h2>
+              <div className="overflow-x-auto rounded-lg border border-slate-100">
+                <table className="w-full text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50">
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Asset class</th>
+                      <th className="text-right px-4 py-2.5 font-semibold text-slate-500">Typical long-run CAGR</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ['Nifty 50 (equity)', '11–12%', 'Over 15–20 year windows, with deep interim falls'],
+                      ['Mid/small-cap funds', '12–15%', 'Higher long-run CAGR, far higher volatility'],
+                      ['Hybrid / balanced funds', '9–10%', 'Equity-debt mix smooths the ride'],
+                      ['PPF / EPF', '7.1–8.25%', 'Government-set, tax-free'],
+                      ['Bank FDs', '6–7.5%', 'Fully taxable at slab rate'],
+                      ['Gold (INR)', '8–9%', 'Long-run; driven by import price and rupee'],
+                      ['Inflation (CPI)', '5–6%', 'The hurdle every investment must beat'],
+                    ].map(([a, c, n]) => (
+                      <tr key={a} className="border-t border-slate-50">
+                        <td className="px-4 py-2.5 font-semibold text-slate-700">{a}</td>
+                        <td className="px-4 py-2.5 text-right font-bold text-brand-600">{c}</td>
+                        <td className="px-4 py-2.5 text-slate-500">{n}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">Historical ranges for context, not predictions. Past returns don't guarantee future performance.</p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">CAGR vs absolute return vs XIRR</h2>
+              <div className="overflow-x-auto rounded-lg border border-slate-100">
+                <table className="w-full text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50">
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Metric</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Accounts for time?</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Handles multiple cash flows?</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Use for</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ['Absolute return', 'No', 'No', 'Quick gain % — meaningless without the period'],
+                      ['CAGR', 'Yes', 'No', 'Lumpsum investments, fund/stock comparisons'],
+                      ['XIRR', 'Yes', 'Yes', 'SIPs, top-ups, withdrawals — real portfolios'],
+                    ].map(([m, t, c, u]) => (
+                      <tr key={m} className="border-t border-slate-50">
+                        <td className="px-4 py-2.5 font-bold text-brand-600">{m}</td>
+                        <td className="px-4 py-2.5 text-slate-600">{t}</td>
+                        <td className="px-4 py-2.5 text-slate-600">{c}</td>
+                        <td className="px-4 py-2.5 text-slate-600">{u}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </article>
+
           {/* FAQ */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
@@ -239,8 +347,30 @@ export default function CAGRCalculatorPage() {
                     <span>{faq.q}</span>
                     <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
-                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">{faq.a}</div>}
+                  {/* Always mounted so content stays in the DOM for search engines */}
+                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Related tools */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {[
+                { path: '/calculators/xirr', label: 'XIRR Calculator', desc: 'Annualised return for SIPs and multiple cash flows' },
+                { path: '/calculators/lumpsum', label: 'Lumpsum Calculator', desc: 'Project growth at an assumed CAGR' },
+                { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Monthly investment growth projection' },
+                { path: '/calculators/fd', label: 'FD Calculator', desc: 'Fixed deposit maturity at guaranteed rates' },
+              ].map(t => (
+                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                </Link>
               ))}
             </div>
           </div>

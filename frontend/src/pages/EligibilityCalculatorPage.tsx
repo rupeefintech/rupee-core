@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import SliderInput from '../components/SliderInput';
 
 type EligType = 'home' | 'personal';
@@ -48,10 +50,18 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
   const lenders  = isHome ? HOME_LENDERS : PERSONAL_LENDERS;
 
   const faqs = [
-    { q: 'How do banks calculate loan eligibility?', a: 'Banks primarily use FOIR (Fixed Obligation to Income Ratio). Total EMIs (including proposed loan) should not exceed 40–50% of gross monthly income. Your credit score, employer profile, and age also matter.' },
-    { q: 'What is FOIR?', a: 'FOIR (Fixed Obligation to Income Ratio) is the percentage of your income going toward loan EMIs. Most banks allow FOIR of 40–55%. If your FOIR exceeds this, your loan may be rejected or the amount reduced.' },
-    { q: 'Does my credit score affect eligibility?', a: 'Yes significantly. A CIBIL score of 750+ gets you the best rates and higher eligibility. Below 650, most banks will reject the application. A score of 650–750 may get approval with higher rates.' },
-    { q: 'Can I improve my loan eligibility?', a: 'Yes: (1) Add a co-applicant with income, (2) Clear existing loans to reduce FOIR, (3) Increase tenure to reduce EMI burden, (4) Improve CIBIL score by clearing dues, (5) Show additional income sources.' },
+    { q: 'How do banks calculate loan eligibility?', a: 'Banks primarily use FOIR (Fixed Obligation to Income Ratio): all your EMIs — existing plus the proposed loan — should not exceed 40–55% of gross monthly income. From your affordable EMI, the maximum loan is back-calculated using the interest rate and tenure (the same annuity formula this calculator uses). On top of the FOIR math, lenders layer credit score, employment stability, age, and — for home loans — the property\'s value (LTV limits).' },
+    { q: 'What is FOIR?', a: 'FOIR (Fixed Obligation to Income Ratio) is the percentage of monthly income already committed to fixed obligations like EMIs and rent. If you earn ₹1 lakh and pay ₹20,000 in EMIs, your FOIR is 20%. Most banks cap total FOIR (including the new EMI) at 40–50% for average incomes, stretching to 55–65% for high earners. Cross the cap and the loan is rejected or the amount reduced.' },
+    { q: `How much ${isHome ? 'home' : 'personal'} loan can I get on my salary?`, a: isHome ? 'Rough rule: about 60 times your net monthly salary for a 20-year home loan at current rates, if you have no other EMIs. On ₹75,000/month that is roughly ₹45–50 lakh. Longer tenure, a co-applicant, or fewer obligations push it up; the bank also caps the loan at 75–90% of the property value (LTV), whichever is lower.' : 'Personal loans typically max out at 20–24 times net monthly salary, subject to FOIR. On ₹75,000/month with no other EMIs, that is roughly ₹15–18 lakh over 5 years. Shorter tenures and existing EMIs reduce it sharply; premium salary-account holders often get pre-approved offers at the upper end.' },
+    { q: 'Does my credit score affect eligibility?', a: 'Heavily. A CIBIL score of 750+ gets the best rates and the full FOIR-based amount. 700–750 usually passes with slightly higher rates. 650–700 means reduced amounts and rate premiums. Below 650, most mainstream lenders decline. Score matters more for personal loans (unsecured) than home loans (property-backed).' },
+    { q: 'What income do banks count?', a: 'Net monthly salary is the base. Most lenders add: 100% of a co-applicant\'s salary, rental income (usually 70–80% of it), and a portion of regular bonus or incentives (often 50%). Not counted: one-time income, most cash income, and income without documentation. Self-employed applicants are assessed on 2–3 years of ITR-declared profit instead.' },
+    { q: 'Can I improve my loan eligibility?', a: 'Five levers, in order of impact: (1) add an earning co-applicant — combined income can nearly double eligibility; (2) close or prepay existing loans to cut FOIR; (3) stretch the tenure — lower EMI per lakh borrowed means a bigger loan for the same FOIR; (4) lift your CIBIL score above 750 before applying; (5) document all income sources including rent and bonuses.' },
+    { q: 'How does age affect eligibility?', a: `Lenders want the loan closed before retirement (typically age 60–65 for salaried, 65–70 for self-employed). A 45-year-old applying for a ${isHome ? '20-year home loan may be capped at 15 years' : '5-year personal loan is usually fine, but a 58-year-old is not'} — and a shorter maximum tenure means a higher EMI per lakh, which shrinks the eligible amount under the same FOIR.` },
+    { q: 'What documents are needed?', a: 'Salaried: PAN, Aadhaar, last 3 months\' salary slips, 6 months\' bank statements, Form 16 or ITR. Self-employed: PAN, Aadhaar, 2–3 years of ITRs with computation, bank statements, and business proof (GST registration, licences). Home loans additionally need the complete property document chain, sale agreement and approved plan.' },
+    { q: 'Are self-employed applicants eligible?', a: 'Yes, assessed differently: banks average the last 2–3 years of net profit from ITRs instead of salary slips, and typically apply stricter FOIR and higher rates. Stable or rising declared income, clean GST filings, and banking turnover matching the ITR strengthen the case. Under-declaring income to save tax is the single biggest reason self-employed eligibility disappoints.' },
+    { q: 'Why do banks reject applications despite sufficient income?', a: 'Common reasons: credit report issues (missed payments, settled accounts, too many recent enquiries), unstable employment (frequent job changes, probation), unserviceable pin codes, high existing credit card utilisation, income not matching bank credits, or — for home loans — legal/technical problems with the property itself. The FOIR math is necessary but not sufficient.' },
+    { q: 'Does checking my eligibility hurt my credit score?', a: 'Using calculators like this one — never; nothing is reported. A lender\'s "soft" pre-approval check also does not affect the score. Only formal applications trigger "hard" enquiries, and several hard enquiries within a few months makes you look credit-hungry and can shave points. Shortlist first with calculators, then apply to one or two lenders.' },
+    { q: 'How accurate is this calculator?', a: 'It applies the standard 50% FOIR rule and the exact annuity formula banks use to convert affordable EMI into a loan amount, so it lands close to real sanctions for clean profiles. Actual offers vary with the lender\'s FOIR policy (40–65%), your credit score, employer category and property specifics — treat the result as a reliable planning number, not a sanction letter.' },
   ];
 
   return (
@@ -68,6 +78,17 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator 2026 | RupeePedia`} />
         <meta name="twitter:description" content={`Check your ${isHome ? 'home' : 'personal'} loan eligibility instantly. Know the maximum loan amount you can get based on your income and existing obligations.`} />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: `${isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator`,
+          url: `https://rupeepedia.in/calculators/${isHome ? 'home-loan-eligibility' : 'personal-loan-eligibility'}`,
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Any',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+          description: `Free ${isHome ? 'home' : 'personal'} loan eligibility calculator using the FOIR method banks apply — maximum loan amount from your income, existing EMIs, rate and tenure.`,
+          publisher: { '@type': 'Organization', name: 'RupeePedia', url: 'https://rupeepedia.in' },
+        })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -214,6 +235,63 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
             </div>
           )}
 
+          {/* ── Article (always in DOM for SEO) ── */}
+          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">How banks decide your {isHome ? 'home' : 'personal'} loan eligibility</h2>
+              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+                <p>
+                  Every lender starts from the same question: <strong>what EMI can this applicant safely pay?</strong> The
+                  standard yardstick is <strong>FOIR</strong> — Fixed Obligation to Income Ratio. Add up all your committed
+                  monthly payments (existing EMIs plus the proposed one) and they should stay within roughly
+                  40–55% of gross monthly income. Whatever EMI room is left after your current obligations becomes
+                  your maximum affordable EMI, and the loan amount is simply that EMI run backwards through the
+                  interest rate and tenure.
+                </p>
+                <p>
+                  That is why the four sliders above are the four levers that matter: income and obligations set the
+                  EMI room, while <strong>rate and tenure decide how much loan each rupee of EMI buys</strong>. At 8.5% for
+                  20 years, ₹1,000 of EMI supports about ₹1.15 lakh of home loan; at 12% for 5 years, the same ₹1,000
+                  supports only about ₹45,000 of personal loan. Stretching tenure is the quickest legitimate way to
+                  raise eligibility — at the cost of more total interest.
+                </p>
+                <p>
+                  The FOIR result is then filtered through credit score, employment profile and age{isHome ? ', and capped by the property: RBI LTV rules limit home loans to 75–90% of the property value depending on ticket size' : ''}. Two
+                  applicants with identical salaries can get very different sanctions because of these filters.
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">Eligibility at a glance — {isHome ? 'home' : 'personal'} loan on different salaries</h2>
+              <p className="text-xs text-slate-400 mb-3">Assuming no existing EMIs, {rate.toFixed(1)}% p.a., {tenure}-year tenure, 50% FOIR — computed with the same formula as the calculator.</p>
+              <div className="overflow-x-auto rounded-lg border border-slate-100">
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Net monthly income</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Max EMI (50%)</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Eligible loan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[30000, 50000, 75000, 100000, 150000, 200000].map(inc => {
+                      const emi = inc * 0.5;
+                      const loan = emi * (Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n));
+                      return (
+                        <tr key={inc} className={`border-t border-slate-50 ${inc === income ? 'bg-brand-50' : ''}`}>
+                          <td className="px-4 py-2.5 font-bold text-brand-600">{fmtINR(inc)}</td>
+                          <td className="px-4 py-2.5 text-right text-slate-600">{fmtINR(emi)}</td>
+                          <td className="px-4 py-2.5 text-right font-bold text-slate-800">{fmtShort(loan)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </article>
+
           {/* FAQ */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
@@ -225,8 +303,35 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
                     <span>{faq.q}</span>
                     <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
-                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">{faq.a}</div>}
+                  {/* Always mounted so content stays in the DOM for search engines */}
+                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Related tools */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {(isHome ? [
+                { path: '/calculators/home-loan-emi', label: 'Home Loan EMI Calculator', desc: 'EMI and amortisation for the amount you qualify for' },
+                { path: '/calculators/home-prepayment', label: 'Home Loan Prepayment', desc: 'Interest saved by prepaying early' },
+                { path: '/calculators/personal-loan-eligibility', label: 'Personal Loan Eligibility', desc: 'Same check for personal loans' },
+                { path: '/calculators/salary-calculator', label: 'Salary Calculator', desc: 'Know your exact net monthly income' },
+              ] : [
+                { path: '/calculators/personal-loan-emi', label: 'Personal Loan EMI Calculator', desc: 'EMI and amortisation for the amount you qualify for' },
+                { path: '/calculators/personal-prepayment', label: 'Personal Loan Prepayment', desc: 'Interest saved by closing early' },
+                { path: '/calculators/home-loan-eligibility', label: 'Home Loan Eligibility', desc: 'Same check for home loans' },
+                { path: '/calculators/salary-calculator', label: 'Salary Calculator', desc: 'Know your exact net monthly income' },
+              ]).map(t => (
+                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                </Link>
               ))}
             </div>
           </div>
