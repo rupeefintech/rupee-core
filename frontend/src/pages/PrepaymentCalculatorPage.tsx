@@ -1,6 +1,8 @@
 // File: frontend/src/pages/PrepaymentCalculatorPage.tsx
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import SliderInput from '../components/SliderInput';
 
 type PrepayType = 'home' | 'personal';
@@ -54,10 +56,17 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
   const monthsSaved    = tenure * 12 - newTotalMonths;
 
   const faqs = [
-    { q: 'Should I prepay or invest the extra money?', a: 'If your loan rate is higher than expected investment returns, prepay. Home loans at 8.5% vs equity returns of 12%+ — invest. Personal loans at 15%+ — prepay first. Also factor in tax benefits on home loan interest.' },
-    { q: 'Does prepayment reduce EMI or tenure?', a: 'Most banks default to reducing tenure (saving maximum interest). Some allow you to choose. Reducing tenure saves more interest; reducing EMI improves monthly cash flow.' },
-    { q: 'Is there a penalty for prepayment?', a: 'For floating rate home loans — RBI mandates zero prepayment penalty. For fixed rate loans (personal, car) — banks may charge 1–5% of prepaid amount. Check your loan agreement.' },
-    { q: 'What is the best time to prepay?', a: 'The earlier, the better. In the first few years, most of your EMI goes toward interest. Prepaying early reduces the principal on which future interest is calculated, maximizing your savings.' },
+    { q: 'Should I prepay my loan or invest the extra money?', a: 'Compare the loan\'s interest rate with realistic post-tax investment returns. Personal loans at 12–18% almost always beat any safe investment — prepay those first. Home loans at 8–9% are borderline: long-term equity may return more, but prepayment is a guaranteed, risk-free saving. Factor in the home-loan tax deduction (interest under Section 24b in the old regime), which lowers the effective loan cost, and never prepay out of your emergency fund.' },
+    { q: 'Does prepayment reduce my EMI or my tenure?', a: 'Your choice, but banks default to reducing tenure — which is also what saves the most interest. Keeping the same EMI after prepayment means every future EMI has a bigger principal component, closing the loan years early. Reducing the EMI instead keeps the tenure and improves monthly cash flow, but saves much less interest. Choose EMI reduction only if your budget is genuinely strained.' },
+    { q: 'Is there a penalty for prepaying?', a: 'For floating-rate loans to individuals — including most home loans — the RBI prohibits any prepayment or foreclosure charge. Fixed-rate loans can carry charges of 2–5% of the prepaid amount, and personal loans commonly charge 2–5% foreclosure fees, sometimes with a 6–12 month lock-in before prepayment is allowed at all. Check your sanction letter before planning.' },
+    { q: 'When is the best time to prepay?', a: 'As early in the tenure as possible. EMIs are interest-heavy at the start — in the first years of a 20-year home loan, 60–70% of each EMI is interest. A prepayment in year 2 kills interest that would have been charged for the next 18 years; the same prepayment in year 15 saves relatively little. The calculator\'s "Prepay After" slider shows exactly how the savings shrink as you delay.' },
+    { q: 'How much does one prepayment actually save?', a: 'More than most people expect. On a ₹50 lakh home loan at 8.5% for 20 years (EMI ≈ ₹43,400), a single ₹5 lakh prepayment at the end of year one saves roughly ₹16 lakh of interest and closes the loan about 4 years early — a guaranteed return far above any FD. Run your own numbers in the calculator above.' },
+    { q: 'Are many small prepayments as good as one big one?', a: 'Yes — what matters is money hitting the principal early. Paying one extra EMI a year, or rounding your EMI up (₹43,400 → ₹50,000), quietly cuts years off the loan. Small regular prepayments are also behaviourally easier than saving up a large lump sum while paying interest in the meantime.' },
+    { q: 'Does prepaying a home loan affect my tax deductions?', a: 'In the old regime you deduct home-loan interest up to ₹2 lakh a year (Section 24b) and principal within 80C. Prepaying reduces future interest, which reduces that deduction — but the deduction only refunds your slab rate (~31% at most) of interest you actually paid. Saving 100% of the interest beats recovering 31% of it. In the new regime there is no deduction for a self-occupied house, so prepayment is a pure win.' },
+    { q: 'Does prepayment help my credit score?', a: 'A prepayment that reduces outstanding balance lowers your credit utilisation and is neutral-to-positive. Full foreclosure closes the account — the score effect is minor either way. Never keep a loan running just for the credit history; the interest cost dwarfs any score benefit.' },
+    { q: 'Is there a minimum prepayment amount?', a: 'Most lenders require part-prepayments to be at least 1–3 times the EMI, and some cap the number of free part-payments per year (common on personal loans). Home loan part-payments through internet banking are usually instant; some banks still want a branch visit for foreclosure. Ask for an updated amortisation schedule after every prepayment.' },
+    { q: 'Should I break an FD or redeem investments to prepay?', a: 'Compare after-tax returns. An FD earning 7% taxed at 30% yields ~4.9% — clearly worse than saving 8.5% loan interest, so using a maturing FD to prepay usually wins. Long-term equity at 12%+ expected returns generally beats prepaying a home loan, but not a personal loan. Keep 6 months of expenses liquid regardless.' },
+    { q: 'How does this prepayment calculator work?', a: 'It builds the loan\'s amortisation schedule month by month: EMI from the standard formula, interest on the outstanding balance each month, then applies your lump-sum prepayment in the month you choose while keeping the EMI unchanged. The result is the new closure date, and interest saved is the difference between total payments in the original and new schedules.' },
   ];
 
   return (
@@ -74,6 +83,17 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={`${isHome ? 'Home' : 'Personal'} Loan Prepayment Calculator 2026 | RupeePedia`} />
         <meta name="twitter:description" content={`Calculate how much interest you save by prepaying your ${isHome ? 'home' : 'personal'} loan. See months saved and total interest saved.`} />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: `${isHome ? 'Home' : 'Personal'} Loan Prepayment Calculator`,
+          url: `https://rupeepedia.in/calculators/${isHome ? 'home-prepayment' : 'personal-prepayment'}`,
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Any',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+          description: `Free calculator showing interest saved and months cut when you make a lump-sum prepayment on a ${isHome ? 'home' : 'personal'} loan, using a month-by-month amortisation schedule.`,
+          publisher: { '@type': 'Organization', name: 'RupeePedia', url: 'https://rupeepedia.in' },
+        })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -173,6 +193,81 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
             </div>
           </div>
 
+          {/* ── Article (always in DOM for SEO) ── */}
+          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">Why prepaying early saves so much interest</h2>
+              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+                <p>
+                  Loan EMIs are <strong>interest-heavy at the start</strong>. Interest each month is charged on the entire
+                  outstanding balance, so early in a {isHome ? '20-year home loan' : '5-year personal loan'} most of your EMI
+                  services interest and only a sliver reduces principal. A lump-sum prepayment cuts the balance directly —
+                  and every future month's interest is computed on that smaller balance, for the rest of the tenure.
+                </p>
+                <p>
+                  That's why timing dominates: the same prepayment made in month 12 saves several times more interest
+                  than in the final years, when the balance is already small and most interest has been paid. It is also
+                  why keeping your <strong>EMI unchanged and shortening the tenure</strong> (the default in this calculator)
+                  saves far more than lowering the EMI: the unchanged EMI attacks principal harder every month after the
+                  prepayment.
+                </p>
+                <p>
+                  With your current inputs — {fmtShort(loanAmt)} at {rate.toFixed(1)}% for {tenure} years, prepaying {fmtShort(prepayAmt)} in
+                  month {prepayMonth} — you save <strong>{fmtShort(Math.max(intSaved, 0))}</strong> of interest and close the loan{' '}
+                  <strong>{Math.floor(Math.max(monthsSaved, 0) / 12)} years {Math.max(monthsSaved, 0) % 12} months early</strong>. Interest saved is a
+                  guaranteed, tax-free, risk-free return of {rate.toFixed(1)}% — compare that honestly with what the same money would earn invested.
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">Reduce tenure vs reduce EMI</h2>
+              <div className="overflow-x-auto rounded-lg border border-slate-100">
+                <table className="w-full text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50">
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">After prepayment…</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Reduce tenure (recommended)</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Reduce EMI</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ['Monthly outgo', 'Unchanged', 'Lower'],
+                      ['Interest saved', 'Maximum', 'Much less'],
+                      ['Loan closes', 'Years earlier', 'On original date'],
+                      ['Best for', 'Anyone who can afford the current EMI', 'Genuinely strained monthly budgets'],
+                    ].map(([f, a, b]) => (
+                      <tr key={f} className="border-t border-slate-50">
+                        <td className="px-4 py-2.5 font-semibold text-slate-700">{f}</td>
+                        <td className="px-4 py-2.5 text-green-700">{a}</td>
+                        <td className="px-4 py-2.5 text-slate-600">{b}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">Checklist before you prepay</h2>
+              <ul className="text-sm text-slate-600 space-y-2">
+                {[
+                  ['Emergency fund intact?', 'Keep 6 months of expenses liquid. Prepayment is irreversible — the bank won\'t give the money back if you lose your job next month.'],
+                  ['Costlier debt first', 'Credit card balances (36–42%) and personal loans (12–18%) always come before a home loan (8–9%).'],
+                  [isHome ? 'Check the rate type' : 'Check foreclosure charges', isHome ? 'Floating-rate home loans have zero prepayment charges by RBI rule; fixed-rate loans may charge 2–5%.' : 'Personal loans commonly charge 2–5% foreclosure fees and may lock prepayment for the first 6–12 months.'],
+                  ['Get the updated schedule', 'After prepaying, collect a fresh amortisation schedule and confirm the outstanding balance and new closure date in writing.'],
+                  ['Tell the bank: reduce tenure', 'If you don\'t specify, some lenders reduce the EMI instead, which quietly costs you most of the benefit.'],
+                ].map(([t, d]) => (
+                  <li key={t} className="flex gap-2.5">
+                    <span className="text-brand-500 font-bold flex-shrink-0">✓</span>
+                    <span><strong className="text-slate-800">{t}</strong> {d}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </article>
+
           {/* FAQ */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
@@ -184,8 +279,35 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                     <span>{faq.q}</span>
                     <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
-                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">{faq.a}</div>}
+                  {/* Always mounted so content stays in the DOM for search engines */}
+                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Related tools */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {(isHome ? [
+                { path: '/calculators/home-loan-emi', label: 'Home Loan EMI Calculator', desc: 'EMI, interest and amortisation schedule' },
+                { path: '/calculators/home-loan-eligibility', label: 'Home Loan Eligibility', desc: 'How much loan your income supports' },
+                { path: '/calculators/personal-prepayment', label: 'Personal Loan Prepayment', desc: 'Same analysis for personal loans' },
+                { path: '/calculators/income-tax', label: 'Income Tax Calculator', desc: 'Check the Section 24b deduction impact' },
+              ] : [
+                { path: '/calculators/personal-loan-emi', label: 'Personal Loan EMI Calculator', desc: 'EMI, interest and amortisation schedule' },
+                { path: '/calculators/personal-loan-eligibility', label: 'Personal Loan Eligibility', desc: 'How much loan your income supports' },
+                { path: '/calculators/home-prepayment', label: 'Home Loan Prepayment', desc: 'Same analysis for home loans' },
+                { path: '/calculators/emi', label: 'EMI Calculator', desc: 'Generic loan EMI calculator' },
+              ]).map(t => (
+                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                </Link>
               ))}
             </div>
           </div>
