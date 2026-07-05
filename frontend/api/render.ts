@@ -433,7 +433,7 @@ export default async function handler(req: Request): Promise<Response> {
       const code = ifscMatch[1].toUpperCase();
       const res  = await fetch(`${BACKEND}/api/ifsc/${code}`, {
         headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
-        signal:  AbortSignal.timeout(8000),
+        signal:  AbortSignal.timeout(20000),
       });
       if (res.status === 404) return new Response(notFoundHtml('IFSC code'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       if (res.ok) return new Response(renderIFSC(await res.json()), { headers: SSR_HEADERS });
@@ -445,7 +445,7 @@ export default async function handler(req: Request): Promise<Response> {
       const urlSlug = bankMatch[1];
       const res = await fetch(`${BACKEND}/api/bank/${urlSlug}`, {
         headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
-        signal:  AbortSignal.timeout(8000),
+        signal:  AbortSignal.timeout(20000),
       });
       if (res.status === 404) {
         // Legacy URL scheme was /bank/<slug>-<bankId>. If stripping a trailing
@@ -455,6 +455,8 @@ export default async function handler(req: Request): Promise<Response> {
         if (legacy) {
           const probe = await fetch(`${BACKEND}/api/bank/${legacy[1]}`, {
             headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+            // Short timeout: this only runs after the first fetch got a response,
+            // so the backend is already warm. Keeps worst-case under the edge 25s cap.
             signal:  AbortSignal.timeout(8000),
           });
           if (probe.ok) {
@@ -475,7 +477,7 @@ export default async function handler(req: Request): Promise<Response> {
       const [, bankSlug, stateSlug] = stateMatch;
       const res = await fetch(`${BACKEND}/api/state/${bankSlug}/${stateSlug}`, {
         headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
-        signal:  AbortSignal.timeout(8000),
+        signal:  AbortSignal.timeout(20000),
       });
       if (res.status === 404) return new Response(notFoundHtml('State'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       if (res.ok) return new Response(renderState(await res.json(), bankSlug, stateSlug), { headers: SSR_HEADERS });
@@ -487,7 +489,7 @@ export default async function handler(req: Request): Promise<Response> {
       const [, bankSlug, stateSlug, citySlug] = cityMatch;
       const res = await fetch(`${BACKEND}/api/city/${bankSlug}/${stateSlug}/${citySlug}`, {
         headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
-        signal:  AbortSignal.timeout(8000),
+        signal:  AbortSignal.timeout(20000),
       });
       if (res.status === 404) return new Response(notFoundHtml('City'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       if (res.ok) return new Response(renderCity(await res.json(), bankSlug, stateSlug, citySlug), { headers: SSR_HEADERS });
@@ -498,7 +500,7 @@ export default async function handler(req: Request): Promise<Response> {
     if (blogMatch) {
       const res = await fetch(`${BACKEND}/api/blogs/${blogMatch[1]}`, {
         headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
-        signal:  AbortSignal.timeout(8000),
+        signal:  AbortSignal.timeout(20000),
       });
       if (res.status === 404) return new Response(notFoundHtml('Article'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       if (res.ok) return new Response(renderBlog(await res.json()), { headers: BLOG_HEADERS });
