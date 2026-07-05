@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../utils/api';
@@ -18,6 +18,11 @@ export default function BankPage() {
 
   const bankInfo = data?.bank;
   const states = data?.states ?? [];
+
+  // Legacy URL scheme was /bank/<slug>-<bankId> — retry without the numeric suffix
+  if (error && bank && /-\d+$/.test(bank)) {
+    return <Navigate to={`/bank/${bank.replace(/-\d+$/, '')}`} replace />;
+  }
 
   return (
     <>

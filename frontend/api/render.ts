@@ -447,7 +447,25 @@ export default async function handler(req: Request): Promise<Response> {
         headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
         signal:  AbortSignal.timeout(8000),
       });
-      if (res.status === 404) return new Response(notFoundHtml('Bank'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      if (res.status === 404) {
+        // Legacy URL scheme was /bank/<slug>-<bankId>. If stripping a trailing
+        // numeric suffix yields a valid slug, 301 to the current URL.
+        // (Cannot redirect blindly — a few real slugs also end in digits.)
+        const legacy = urlSlug.match(/^(.+)-\d+$/);
+        if (legacy) {
+          const probe = await fetch(`${BACKEND}/api/bank/${legacy[1]}`, {
+            headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+            signal:  AbortSignal.timeout(8000),
+          });
+          if (probe.ok) {
+            return new Response(null, {
+              status: 301,
+              headers: { Location: `${SITE}/bank/${legacy[1]}` },
+            });
+          }
+        }
+        return new Response(notFoundHtml('Bank'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      }
       if (res.ok) return new Response(renderBank(await res.json(), urlSlug), { headers: SSR_HEADERS });
     }
 
