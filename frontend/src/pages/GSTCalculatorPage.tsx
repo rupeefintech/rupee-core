@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 function fmtINR(n: number) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
 
-const GST_RATES = [3, 5, 12, 18, 28];
+// Post GST 2.0 (Sept 2025): 5% and 18% are the main slabs, 40% is the demerit
+// rate, 3% stays for gold/silver. 12% and 28% kept for legacy invoices.
+const GST_RATES = [3, 5, 12, 18, 28, 40];
+const CURRENT_RATES = [3, 5, 18, 40];
 
 export default function GSTCalculatorPage() {
   const [amount,    setAmount]    = useState(10000);
@@ -25,27 +30,46 @@ export default function GSTCalculatorPage() {
   const sgst = gstAmount / 2;
 
   const faqs = [
-    { q: 'What is GST?', a: 'GST (Goods and Services Tax) is a unified indirect tax levied on supply of goods and services in India. It replaced multiple taxes like VAT, service tax, excise duty etc. GST has 5 slabs: 0%, 3%, 5%, 12%, 18%, and 28%.' },
-    { q: 'What is the difference between CGST, SGST and IGST?', a: 'For intra-state transactions, GST is split equally into CGST (Central GST) and SGST (State GST). For inter-state transactions, IGST (Integrated GST) is levied at the full rate by the Centre.' },
-    { q: 'What is inclusive vs exclusive GST?', a: 'Exclusive: GST is added on top of the base price (most common for B2B). Inclusive: The price already includes GST (common for retail/B2C). Use this calculator to convert between both.' },
-    { q: 'Which items have 0% GST?', a: 'Essential items like fresh fruits, vegetables, milk, eggs, cereals, bread, salt, and educational services are exempt from GST or taxed at 0%.' },
-    { q: 'What items attract 28% GST?', a: 'Luxury and sin goods: cars, motorcycles, air conditioners, tobacco, aerated drinks, casinos, and online gaming attract 28% GST, often with an additional cess.' },
+    { q: 'What is GST?', a: 'GST (Goods and Services Tax) is India\'s unified indirect tax on the supply of goods and services, in force since July 2017. It replaced VAT, service tax, excise duty and a dozen other levies. After the September 2025 rate rationalisation ("GST 2.0"), the structure is: 0% (exempt essentials), 5% (merit rate for daily-use items), 18% (standard rate for most goods and services), 40% (demerit rate for sin and luxury goods), plus a special 3% rate for gold and silver.' },
+    { q: 'What changed in the GST 2.0 reform of September 2025?', a: 'From September 22, 2025, the GST Council collapsed the four-slab structure into two main rates. Almost everything at 12% moved down to 5%, and most 28% items moved down to 18% (ACs, TVs, refrigerators, cement, small cars). A new 40% demerit rate applies to pan masala, aerated and caffeinated drinks, luxury cars, yachts and online money gaming. Individual life and health insurance premiums became exempt. Tobacco products temporarily stayed at 28% plus cess until compensation cess obligations are cleared.' },
+    { q: 'What is the difference between CGST, SGST and IGST?', a: 'For sales within one state (intra-state), GST is split equally: half as CGST to the Centre and half as SGST to the state — an 18% sale means 9% CGST + 9% SGST. For sales across states (inter-state) and imports, the full rate is charged as IGST by the Centre, which later settles the state\'s share. The buyer pays the same total either way.' },
+    { q: 'What is inclusive vs exclusive GST, and what are the formulas?', a: 'Exclusive means GST is added on top of the base price: GST = base × rate / 100 (common in B2B quotes). Inclusive means the price already contains GST, as with retail MRP: base = price × 100 / (100 + rate), and GST = price − base. For example, an MRP of ₹1,180 at 18% has a base of ₹1,000 and GST of ₹180. Use the Add GST / Remove GST toggle in this calculator to convert both ways.' },
+    { q: 'Which items have 0% GST or are exempt?', a: 'Fresh fruits and vegetables, milk, curd, paneer, eggs, cereals, unbranded flour and rice, bread, salt, books and printed newspapers, education services, healthcare services, and — since September 2025 — individual life insurance and health insurance premiums. Petrol, diesel, ATF and alcohol for human consumption remain outside GST entirely (states tax them separately).' },
+    { q: 'What items are in the 5% slab?', a: 'The 5% merit rate covers most daily-use and mass-consumption items: packaged and branded food items, edible oils, sugar, tea, coffee, soaps, shampoos, toothpaste, footwear and apparel below threshold values, bicycles, medicines and medical devices, agricultural machinery, and restaurant service (without input tax credit). Much of this list moved from 12% to 5% in the September 2025 reform.' },
+    { q: 'What items are in the 18% slab?', a: 'The 18% standard rate applies to most goods and services: electronics and appliances (including ACs, TVs and refrigerators that earlier attracted 28%), cement, small cars and two-wheelers up to 350cc, telecom, banking and insurance services (other than exempt individual life/health policies), software, professional services, and hotel stays above threshold tariffs.' },
+    { q: 'What attracts the 40% GST rate?', a: 'The 40% demerit rate is charged on sin and super-luxury goods: pan masala, aerated and caffeinated sugary drinks, luxury cars above engine/length thresholds, motorcycles above 350cc, yachts, private aircraft, and betting, casinos and online money gaming. Tobacco and cigarettes are slated to move to 40% but temporarily continue at 28% plus compensation cess.' },
+    { q: 'Why is gold taxed at 3% GST?', a: 'Gold, silver and precious-metal jewellery have a special concessional 3% rate (plus 5% on jewellery making charges) to keep the organised bullion trade competitive and discourage smuggling. This rate was deliberately left untouched in the September 2025 rationalisation. Rough diamonds attract a nominal 0.25%.' },
+    { q: 'How do I remove GST from an MRP to find the base price?', a: 'Divide the MRP by (1 + rate/100). Example: a product with MRP ₹2,360 at 18% GST — base price = 2360 / 1.18 = ₹2,000, GST amount = ₹360. Select "Remove GST" mode in this calculator, enter the MRP and pick the rate; it shows the base price, total GST, and the CGST/SGST split automatically.' },
+    { q: 'Who must register for GST?', a: 'Businesses must register once aggregate turnover crosses ₹40 lakh for goods or ₹20 lakh for services (₹20 lakh / ₹10 lakh in special-category states). Registration is mandatory regardless of turnover for inter-state suppliers of goods, e-commerce sellers, and those liable under reverse charge. Registration is free on gst.gov.in and gives you a 15-character GSTIN.' },
+    { q: 'What is the composition scheme?', a: 'Small businesses with turnover up to ₹1.5 crore (₹75 lakh in special-category states) can opt for the composition scheme: pay a flat 1% of turnover (manufacturers and traders) or 5% (restaurants) instead of normal GST, with quarterly filing. The trade-offs: no input tax credit, no inter-state sales, and you cannot charge GST on invoices. Service providers have a similar scheme at 6% up to ₹50 lakh.' },
+    { q: 'What is input tax credit (ITC)?', a: 'ITC lets a registered business subtract the GST it paid on purchases from the GST it collects on sales, so tax applies only to the value added at each stage. Example: a retailer collects ₹1,800 GST on sales and paid ₹1,200 GST on stock — net payment to the government is ₹600. ITC requires valid supplier invoices, and the supplier must have filed returns reporting the sale.' },
   ];
 
   return (
     <>
       <Helmet>
-        <title>GST Calculator 2026 — Calculate GST Online | RupeePedia</title>
-        <meta name="description" content="Free GST Calculator — instantly calculate GST amount, CGST, SGST for any amount. Supports all GST slabs: 3%, 5%, 12%, 18%, 28%." />
+        <title>GST Calculator 2026 — Add or Remove GST (5%, 18%, 40% Slabs) | RupeePedia</title>
+        <meta name="description" content="Free GST Calculator updated for the new GST slabs — add or remove GST, see CGST/SGST/IGST split for 3%, 5%, 18% and 40% rates. With slab-wise item lists, formulas, examples and FAQs." />
         <link rel="canonical" href="https://rupeepedia.in/calculators/gst" />
-        <meta property="og:title" content="GST Calculator 2026 — Calculate GST Online | RupeePedia" />
-        <meta property="og:description" content="Free GST Calculator — instantly calculate GST amount, CGST, SGST for any amount. Supports all GST slabs: 3%, 5%, 12%, 18%, 28%." />
+        <meta property="og:title" content="GST Calculator 2026 — Add or Remove GST (5%, 18%, 40% Slabs) | RupeePedia" />
+        <meta property="og:description" content="Add or remove GST and see the CGST/SGST split — updated for the new 5% / 18% / 40% GST structure." />
         <meta property="og:url" content="https://rupeepedia.in/calculators/gst" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://rupeepedia.in/logo.png" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="GST Calculator 2026 — Calculate GST Online | RupeePedia" />
-        <meta name="twitter:description" content="Free GST Calculator — instantly calculate GST amount, CGST, SGST for any amount. Supports all GST slabs: 3%, 5%, 12%, 18%, 28%." />
+        <meta name="twitter:title" content="GST Calculator 2026 | RupeePedia" />
+        <meta name="twitter:description" content="Add or remove GST and see the CGST/SGST split — updated for the new 5% / 18% / 40% GST structure." />
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: 'GST Calculator',
+          url: 'https://rupeepedia.in/calculators/gst',
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Any',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+          description: 'Free GST calculator for the current Indian GST slabs (3%, 5%, 18%, 40%) — add GST to a base price or extract GST from an MRP, with CGST/SGST/IGST breakdown.',
+          publisher: { '@type': 'Organization', name: 'RupeePedia', url: 'https://rupeepedia.in' },
+        })}</script>
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
@@ -102,14 +126,18 @@ export default function GSTCalculatorPage() {
                 {/* GST Rate */}
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-3">Select GST Rate</label>
-                  <div className="grid grid-cols-5 gap-2">
-                    {GST_RATES.map(r => (
-                      <button key={r} onClick={() => setGstRate(r)}
-                        className={`py-2.5 rounded-lg text-sm font-bold border transition-all ${gstRate === r ? 'bg-brand-600 border-brand-600 text-white' : 'border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-600'}`}>
-                        {r}%
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-6 gap-2">
+                    {GST_RATES.map(r => {
+                      const legacy = !CURRENT_RATES.includes(r);
+                      return (
+                        <button key={r} onClick={() => setGstRate(r)}
+                          className={`py-2.5 rounded-lg text-sm font-bold border transition-all ${gstRate === r ? 'bg-brand-600 border-brand-600 text-white' : legacy ? 'border-slate-100 text-slate-300 hover:border-brand-200 hover:text-brand-400' : 'border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-600'}`}>
+                          {r}%
+                        </button>
+                      );
+                    })}
                   </div>
+                  <p className="text-[11px] text-slate-400 mt-2">Current slabs: 5% &amp; 18% (main), 40% (demerit), 3% (gold). 12% &amp; 28% kept for older invoices.</p>
                 </div>
               </div>
 
@@ -167,6 +195,92 @@ export default function GSTCalculatorPage() {
             </div>
           </div>
 
+          {/* ── Article (always in DOM for SEO) ── */}
+          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">What is GST and how is it calculated?</h2>
+              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+                <p>
+                  <strong>GST (Goods and Services Tax)</strong> is India's single indirect tax on the supply of goods and
+                  services, in force since July 2017. Every invoice charges GST at the rate applicable to the product or
+                  service, and the tax splits into <strong>CGST + SGST</strong> for sales within a state or <strong>IGST</strong> for
+                  inter-state sales — the buyer pays the same total either way.
+                </p>
+                <p>
+                  Since the <strong>September 2025 rate rationalisation ("GST 2.0")</strong>, India effectively has a two-rate
+                  structure: <strong>5%</strong> for merit and daily-use goods and <strong>18%</strong> as the standard rate, with a
+                  <strong> 40% demerit rate</strong> for sin and super-luxury items and a special <strong>3%</strong> rate for gold and
+                  silver. The old 12% and 28% slabs were largely folded into 5% and 18% — this calculator keeps them
+                  available for older invoices.
+                </p>
+                <p>The two formulas this calculator applies:</p>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div className="border border-slate-100 rounded-lg p-3">
+                    <div className="text-xs font-bold text-slate-800 mb-1">Add GST (exclusive price)</div>
+                    <p className="text-xs">GST = Base × Rate ÷ 100<br />Total = Base + GST</p>
+                    <p className="text-[11px] text-slate-400 mt-1.5">₹10,000 at 18% → GST ₹1,800 → total ₹11,800</p>
+                  </div>
+                  <div className="border border-slate-100 rounded-lg p-3">
+                    <div className="text-xs font-bold text-slate-800 mb-1">Remove GST (inclusive price / MRP)</div>
+                    <p className="text-xs">Base = Price × 100 ÷ (100 + Rate)<br />GST = Price − Base</p>
+                    <p className="text-[11px] text-slate-400 mt-1.5">₹11,800 at 18% → base ₹10,000, GST ₹1,800</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">GST slabs after the 2025 reform — what falls where</h2>
+              <div className="overflow-x-auto rounded-lg border border-slate-100">
+                <table className="w-full text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50">
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Rate</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Category</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Typical items</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ['0%', 'Exempt essentials', 'Fresh produce, milk, curd, paneer, eggs, cereals, bread, books, education & healthcare services, individual life & health insurance premiums'],
+                      ['3%', 'Precious metals', 'Gold, silver, jewellery (making charges 5%); rough diamonds 0.25%'],
+                      ['5%', 'Merit / daily use', 'Packaged foods, edible oil, soaps, shampoo, toothpaste, medicines, bicycles, footwear & apparel below thresholds, restaurants (no ITC)'],
+                      ['18%', 'Standard rate', 'Most services, electronics, ACs, TVs, refrigerators, cement, small cars, two-wheelers ≤350cc, telecom, banking, software'],
+                      ['40%', 'Demerit / luxury', 'Pan masala, aerated & caffeinated drinks, luxury cars, motorcycles >350cc, yachts, private aircraft, betting & online money gaming'],
+                    ].map(([rate, cat, items]) => (
+                      <tr key={rate} className="border-t border-slate-50 align-top">
+                        <td className="px-4 py-2.5 font-bold text-brand-600 whitespace-nowrap">{rate}</td>
+                        <td className="px-4 py-2.5 font-semibold text-slate-700 whitespace-nowrap">{cat}</td>
+                        <td className="px-4 py-2.5 text-slate-500">{items}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">
+                Petrol, diesel, ATF and alcohol remain outside GST. Tobacco products temporarily continue at 28% + compensation cess.
+                Item classifications can change with GST Council notifications — verify current rates on cbic-gst.gov.in for filings.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">GST calculation examples</h2>
+              <div className="space-y-2 text-sm text-slate-600">
+                {[
+                  ['Restaurant bill (5%)', 'Food total ₹2,000 → GST ₹100 (CGST ₹50 + SGST ₹50) → bill ₹2,100.'],
+                  ['Laptop purchase (18%)', 'Listed price ₹59,000 inclusive → base = 59,000 ÷ 1.18 = ₹50,000, GST = ₹9,000 (₹4,500 CGST + ₹4,500 SGST).'],
+                  ['Gold chain (3% + 5% making)', '₹1,00,000 gold value → ₹3,000 GST; ₹10,000 making charges → ₹500 GST. Total tax ₹3,500.'],
+                  ['Inter-state B2B supply (18%)', '₹1,00,000 goods from Maharashtra to Karnataka → IGST ₹18,000 charged in full; buyer claims it as input tax credit.'],
+                ].map(([t, d]) => (
+                  <div key={t} className="border border-slate-100 rounded-lg p-3">
+                    <div className="text-xs font-bold text-slate-800">{t}</div>
+                    <p className="text-xs text-slate-500 mt-0.5">{d}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </article>
+
           {/* FAQ */}
           <div className="bg-white rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
@@ -178,8 +292,30 @@ export default function GSTCalculatorPage() {
                     <span>{faq.q}</span>
                     <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
-                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">{faq.a}</div>}
+                  {/* Always mounted so content stays in the DOM for search engines */}
+                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Related tools */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {[
+                { path: '/calculators/income-tax', label: 'Income Tax Calculator', desc: 'Old vs new regime tax on your income' },
+                { path: '/calculators/salary-calculator', label: 'Salary Calculator', desc: 'In-hand salary from CTC' },
+                { path: '/calculators/emi', label: 'EMI Calculator', desc: 'Loan EMI, interest and amortisation' },
+                { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Mutual fund SIP growth projection' },
+              ].map(t => (
+                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                </Link>
               ))}
             </div>
           </div>

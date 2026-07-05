@@ -23,8 +23,13 @@ function calcNewTax(income: number) {
     tax += chunk * s.rate;
     prev = s.upto;
   }
-  // Rebate under 12L for New Regime
-  if (income <= 1200000) tax = 0;
+  // Section 87A rebate: zero tax up to ₹12L taxable income
+  if (income <= 1200000) {
+    tax = 0;
+  } else {
+    // Marginal relief: tax can't exceed the income above ₹12L
+    tax = Math.min(tax, income - 1200000);
+  }
   return tax;
 }
 
@@ -50,6 +55,76 @@ function calcOldTax(income: number) {
 const addCess = (t: number) => t * 1.04;
 const fmt = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
+// ── SLAB DATA (for visible tables + article) ──────
+const NEW_SLABS = [
+  ["Up to ₹4,00,000", "Nil"],
+  ["₹4,00,001 – ₹8,00,000", "5%"],
+  ["₹8,00,001 – ₹12,00,000", "10%"],
+  ["₹12,00,001 – ₹16,00,000", "15%"],
+  ["₹16,00,001 – ₹20,00,000", "20%"],
+  ["₹20,00,001 – ₹24,00,000", "25%"],
+  ["Above ₹24,00,000", "30%"],
+];
+
+const OLD_SLABS = [
+  ["Up to ₹2,50,000", "Nil"],
+  ["₹2,50,001 – ₹5,00,000", "5%"],
+  ["₹5,00,001 – ₹10,00,000", "20%"],
+  ["Above ₹10,00,000", "30%"],
+];
+
+// ── FAQ DATA (rendered on page + JSON-LD) ─────────
+const FAQS: { q: string; a: string }[] = [
+  {
+    q: "What are the new tax regime slabs for FY 2025-26 (AY 2026-27)?",
+    a: "New regime slabs for FY 2025-26: up to ₹4 lakh — nil; ₹4–8 lakh — 5%; ₹8–12 lakh — 10%; ₹12–16 lakh — 15%; ₹16–20 lakh — 20%; ₹20–24 lakh — 25%; above ₹24 lakh — 30%. A 4% health and education cess applies on the tax. With the Section 87A rebate, taxable income up to ₹12 lakh pays zero tax.",
+  },
+  {
+    q: "Is income up to ₹12 lakh really tax-free in the new regime?",
+    a: "Yes. The Section 87A rebate (up to ₹60,000) wipes out the slab tax on taxable income up to ₹12 lakh. Salaried taxpayers also get the ₹75,000 standard deduction, so salary up to ₹12.75 lakh can be fully tax-free. If taxable income barely crosses ₹12 lakh, marginal relief caps the tax at the amount by which income exceeds ₹12 lakh — earning ₹12.1 lakh can never leave you worse off than earning ₹12 lakh. The rebate does not apply to special-rate income like equity capital gains.",
+  },
+  {
+    q: "What is the difference between the old and new tax regime?",
+    a: "The old regime has higher slab rates but allows most deductions and exemptions: 80C up to ₹1.5 lakh, HRA, home loan interest under 24(b), 80D medical insurance, NPS 80CCD(1B) and more. The new regime has lower rates and a bigger rebate but disallows almost all of those, keeping mainly the ₹75,000 standard deduction and employer NPS contributions under 80CCD(2). The new regime is the default; the old regime must be opted into.",
+  },
+  {
+    q: "Which regime should I choose?",
+    a: "Compare both with your actual numbers — the break-even depends on how much you can deduct. Rough guide: if your total old-regime deductions (80C + HRA + home loan interest + 80D + NPS) exceed roughly ₹4–4.5 lakh for incomes above ₹16 lakh, the old regime can win; below that, the new regime almost always gives lower tax because of the ₹12 lakh rebate and lower rates. This calculator shows both liabilities side by side for your inputs.",
+  },
+  {
+    q: "What deductions are allowed in the new tax regime?",
+    a: "Very few: the ₹75,000 standard deduction on salary and pension, employer's NPS contribution under Section 80CCD(2) (up to 14% of basic), Agniveer corpus fund contributions, and interest on home loan for a let-out property (set off against rental income). Not allowed: 80C investments, HRA exemption, LTA, 80D health insurance, 80CCD(1B) self NPS, savings interest 80TTA, and home loan interest on self-occupied property.",
+  },
+  {
+    q: "What is the standard deduction for FY 2025-26?",
+    a: "₹75,000 in the new regime and ₹50,000 in the old regime, applied automatically to salary and pension income — no proofs needed. This calculator applies ₹75,000 for the new regime automatically; for the old regime it applies ₹50,000 plus whatever deductions you enter.",
+  },
+  {
+    q: "Can I switch between old and new regime every year?",
+    a: "Salaried taxpayers (no business income) can choose either regime every year at the time of filing, regardless of what they told their employer for TDS. Taxpayers with business or professional income can switch out of the new regime only once — after returning to it, they cannot opt for the old regime again (Form 10-IEA applies).",
+  },
+  {
+    q: "What is marginal relief in the new regime?",
+    a: "Without relief, crossing ₹12 lakh by one rupee would trigger about ₹61,500 of tax. Marginal relief caps the tax at the amount by which taxable income exceeds ₹12 lakh — at ₹12.5 lakh income, slab tax would be ₹67,500, but relief limits it to ₹50,000 (plus cess). The relief phases out around ₹12.75 lakh taxable income, beyond which normal slab tax applies.",
+  },
+  {
+    q: "When does surcharge apply?",
+    a: "Surcharge on income tax: 10% for total income above ₹50 lakh, 15% above ₹1 crore, 25% above ₹2 crore, and 37% above ₹5 crore (the 37% band is capped at 25% in the new regime). Marginal relief applies at each threshold. This calculator does not include surcharge — for incomes above ₹50 lakh, treat results as indicative.",
+  },
+  {
+    q: "What is the 4% cess?",
+    a: "The Health and Education Cess is 4% charged on the income tax amount (including surcharge, if any) in both regimes. Tax of ₹1,00,000 becomes ₹1,04,000 after cess. This calculator includes the 4% cess in all figures shown.",
+  },
+  {
+    q: "Do I still need to file an ITR if my income is below ₹12 lakh?",
+    a: "Yes, if your total income exceeds the basic exemption limit (₹4 lakh new regime / ₹2.5 lakh old regime), you must file an ITR even though the rebate makes your tax zero — the rebate is claimed in the return. Filing is also mandatory in cases like foreign assets, high-value transactions, or TDS refunds you want back.",
+  },
+  {
+    q: "Does this calculator include HRA, capital gains or business income?",
+    a: "This calculator compares regimes on gross income with common old-regime deductions (80C, 80D, HRA exemption, home loan interest, NPS). It does not compute capital gains tax (different rates apply), business income, surcharge above ₹50 lakh, or AMT. Use our HRA Calculator to work out the HRA exemption figure to enter here.",
+  },
+];
+
 // ── COMPONENT ─────────────────────────────────────
 export default function TaxCalculatorPage() {
   const [income, setIncome] = useState(1200000);
@@ -58,6 +133,7 @@ export default function TaxCalculatorPage() {
   const [homeLoan, setHomeLoan] = useState(0);
   const [nps, setNps] = useState(0);
   const [medical, setMedical] = useState(25000);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const result = useMemo(() => {
     const oldDeductions = c80c + hra + homeLoan + nps + medical + 50000;
@@ -90,12 +166,22 @@ export default function TaxCalculatorPage() {
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
-          mainEntity: [
-            { '@type': 'Question', name: 'How do I use this income tax calculator?', acceptedAnswer: { '@type': 'Answer', text: 'Enter your annual income, select applicable deductions (80C, HRA, NPS, standard deduction), and the calculator instantly shows your tax liability under both Old and New tax regimes for FY 2025-26.' } },
-            { '@type': 'Question', name: 'What is the difference between Old and New tax regime?', acceptedAnswer: { '@type': 'Answer', text: 'The Old regime lets you claim deductions (80C up to ₹1.5L, HRA, NPS, home loan interest etc.) but has higher slab rates. The New regime has lower slab rates but most deductions are not allowed. New regime is now the default from FY 2023-24.' } },
-            { '@type': 'Question', name: 'What are the New tax regime slabs for FY 2025-26?', acceptedAnswer: { '@type': 'Answer', text: 'New regime slabs: Up to ₹3L — nil; ₹3L–₹7L — 5%; ₹7L–₹10L — 10%; ₹10L–₹12L — 15%; ₹12L–₹15L — 20%; Above ₹15L — 30%. Income up to ₹12L is tax-free due to Section 87A rebate.' } },
-            { '@type': 'Question', name: 'Which regime should I choose?', acceptedAnswer: { '@type': 'Answer', text: 'If your total deductions exceed ₹3.75 lakh (for income above ₹15L), the Old regime generally saves more tax. For lower incomes or fewer deductions, the New regime is usually better. Use this calculator to compare both for your specific situation.' } },
-          ],
+          mainEntity: FAQS.map(f => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+        })}</script>
+        <script type="application/ld+json">{JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebApplication',
+          name: 'Income Tax Calculator',
+          url: 'https://rupeepedia.in/calculators/income-tax',
+          applicationCategory: 'FinanceApplication',
+          operatingSystem: 'Any',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+          description: 'Free income tax calculator for FY 2025-26 (AY 2026-27) comparing old vs new regime, with the ₹12 lakh rebate, marginal relief, standard deduction and 4% cess applied.',
+          publisher: { '@type': 'Organization', name: 'RupeePedia', url: 'https://rupeepedia.in' },
         })}</script>
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
@@ -202,12 +288,138 @@ export default function TaxCalculatorPage() {
                    </div>
                 </div>
 
-                <button className="w-full mt-6 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-brand-500/30 flex items-center justify-center gap-2">
-                   Download Detailed Report
-                </button>
+                <p className="mt-6 text-[11px] text-slate-400 leading-relaxed">
+                  Includes ₹75,000 / ₹50,000 standard deduction, Section 87A rebate with marginal relief, and 4% cess.
+                  Surcharge (income above ₹50 lakh), capital gains and business income are not modelled.
+                </p>
               </Card>
             </div>
 
+          </div>
+
+          {/* ── Slab tables ── */}
+          <div className="mt-10 grid md:grid-cols-2 gap-6">
+            {[
+              { title: "New Regime Slabs — FY 2025-26 (AY 2026-27)", slabs: NEW_SLABS, note: "Default regime. Taxable income up to ₹12 lakh pays zero tax via the Section 87A rebate (₹12.75 lakh for salaried with standard deduction)." },
+              { title: "Old Regime Slabs — FY 2025-26", slabs: OLD_SLABS, note: "Opt-in regime. Higher rates, but 80C, HRA, home loan interest, 80D and NPS deductions are allowed. Rebate makes taxable income up to ₹5 lakh tax-free." },
+            ].map(t => (
+              <Card key={t.title}>
+                <h2 className="font-bold text-slate-800 mb-4">{t.title}</h2>
+                <table className="w-full text-sm border-collapse">
+                  <thead>
+                    <tr className="text-left text-xs text-slate-400 uppercase tracking-wide">
+                      <th className="pb-2">Taxable income</th>
+                      <th className="pb-2 text-right">Rate</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {t.slabs.map(([range, rate]) => (
+                      <tr key={range} className="border-t border-slate-100">
+                        <td className="py-2 text-slate-600">{range}</td>
+                        <td className="py-2 text-right font-bold text-brand-600">{rate}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="text-[11px] text-slate-400 mt-3">{t.note}</p>
+              </Card>
+            ))}
+          </div>
+
+          {/* ── Article ── */}
+          <div className="mt-10">
+            <Card>
+              <article className="space-y-6">
+                <section>
+                  <h2 className="font-bold text-slate-800 text-lg mb-3">Old vs new regime — how to actually decide</h2>
+                  <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+                    <p>
+                      Since FY 2023-24 the <strong>new regime is the default</strong>: lower slab rates, a ₹75,000 standard
+                      deduction, and a Section 87A rebate that makes taxable income up to <strong>₹12 lakh completely
+                      tax-free</strong> in FY 2025-26. The price you pay is losing almost every deduction — no 80C, no HRA
+                      exemption, no home loan interest on a self-occupied house, no 80D.
+                    </p>
+                    <p>
+                      The old regime only wins when your deductions are large enough to offset its higher rates — and after
+                      the FY 2025-26 slab cuts, that bar is high. Below ₹12.75 lakh salary the new regime wins outright
+                      (zero tax). At ₹16 lakh you'd need about ₹6 lakh of genuine deductions for the old regime to break
+                      even; at ₹24 lakh, roughly ₹8 lakh. In practice only taxpayers stacking a large HRA exemption with
+                      full 80C, NPS and substantial home loan interest still benefit from the old regime. Enter your real
+                      numbers above — the comparison is exact for slab income.
+                    </p>
+                    <p>
+                      Salaried taxpayers can re-choose the regime <strong>every year at filing</strong>, so the decision is never
+                      locked in. If you have business income, switching back to the old regime is a one-time option — decide
+                      carefully.
+                    </p>
+                  </div>
+                </section>
+
+                <section>
+                  <h2 className="font-bold text-slate-800 text-lg mb-3">Three quick examples (FY 2025-26, salaried)</h2>
+                  <div className="grid md:grid-cols-3 gap-3">
+                    {[
+                      { t: "₹10 lakh salary", d: "New regime: taxable ₹9.25L after standard deduction → 87A rebate applies → tax ₹0. Old regime can't beat zero. New regime wins." },
+                      { t: "₹16 lakh salary, ₹3.3L deductions", d: "New regime: taxable ₹15.25L → ~₹1.13L tax after cess. Old regime with 80C ₹1.5L + 80D ₹25k + HRA ₹1.05L + std ₹50k: taxable ₹12.7L → ~₹2.01L. New regime wins by ~₹88k." },
+                      { t: "₹24 lakh salary, ₹8.5L deductions", d: "Big HRA ₹4L + home loan ₹2L + 80C ₹1.5L + NPS ₹50k + 80D ₹25k + std ₹50k: old taxable ₹15.5L → ~₹2.89L. New regime: taxable ₹23.25L → ~₹2.93L. Old regime wins — barely." },
+                    ].map(ex => (
+                      <div key={ex.t} className="border border-slate-100 rounded-2xl p-4">
+                        <div className="text-xs font-bold text-slate-800 mb-1">{ex.t}</div>
+                        <p className="text-xs text-slate-500 leading-relaxed">{ex.d}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-3">Figures rounded, cess included, surcharge excluded. Your exact numbers may differ — use the calculator above.</p>
+                </section>
+              </article>
+            </Card>
+          </div>
+
+          {/* ── FAQ ── */}
+          <div className="mt-10">
+            <Card>
+              <h2 className="font-bold text-slate-800 text-lg mb-4">Income tax FAQs — FY 2025-26</h2>
+              <div className="space-y-2">
+                {FAQS.map((faq, i) => (
+                  <div key={i} className="border border-slate-100 rounded-2xl overflow-hidden">
+                    <button
+                      onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                      className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                    >
+                      <span>{faq.q}</span>
+                      <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`}>▼</span>
+                    </button>
+                    {/* Always mounted so content stays in the DOM for search engines */}
+                    <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? "" : "hidden"}`}>
+                      {faq.a}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+
+          {/* ── Related tools ── */}
+          <div className="mt-10">
+            <Card>
+              <h2 className="font-bold text-slate-800 text-lg mb-4">Related calculators</h2>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  { path: "/calculators/hra-calculator", label: "HRA Calculator", desc: "Work out the HRA exemption to enter above" },
+                  { path: "/calculators/salary-calculator", label: "Salary Calculator", desc: "In-hand salary from CTC with tax and PF" },
+                  { path: "/calculators/nps", label: "NPS Calculator", desc: "Retirement corpus from NPS contributions" },
+                  { path: "/calculators/ppf", label: "PPF Calculator", desc: "80C favourite — tax-free PPF growth" },
+                ].map(t => (
+                  <Link key={t.path} to={t.path} className="border border-slate-100 rounded-2xl p-4 hover:shadow-md transition group">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
+                      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                    </div>
+                    <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                  </Link>
+                ))}
+              </div>
+            </Card>
           </div>
         </div>
       </div>
