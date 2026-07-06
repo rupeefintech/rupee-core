@@ -32,7 +32,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     <Helmet><meta name="robots" content="noindex, nofollow" /></Helmet>
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar — blue to match mockup */}
-      <aside className="w-56 bg-[#1e3a5f] text-white flex flex-col shrink-0">
+      <aside className="w-56 bg-[#312E81] text-white flex flex-col shrink-0">
         <div className="h-16 flex items-center gap-2.5 px-5 border-b border-white/10">
           <div className="h-7 w-7 bg-white rounded-md flex items-center justify-center shrink-0 p-0.5">
             <img src="/logo.png" alt="Rupeepedia" className="h-full w-full object-contain" />

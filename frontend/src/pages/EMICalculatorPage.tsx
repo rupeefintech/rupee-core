@@ -64,7 +64,7 @@ function DonutChart({ principal, interest }: { principal: number; interest: numb
         style={{ transform: 'rotate(-90deg)', transformOrigin: '50px 50px' }}
       />
       {/* Principal arc */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#2563eb" strokeWidth="14"
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#4F46E5" strokeWidth="14"
         strokeDasharray={`${pDash} ${iDash}`}
         strokeDashoffset={0}
         strokeLinecap="butt"
