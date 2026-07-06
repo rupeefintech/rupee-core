@@ -8,6 +8,13 @@
     { "src": "^/city/([^/]+)/([^/]+)/([^/]+)$",          "dest": "/api/render?path=/city/$1/$2/$3" },
     { "src": "^/money-guides/([^/]+)$",                  "dest": "/api/render?path=/money-guides/$1" },
     { "src": "^/pin/([0-9]{6})$",                        "dest": "/api/render?path=/pin/$1" },
+    { "src": "^/gold-rate-today$",                       "dest": "/api/render?path=/gold-rate-today" },
+    { "src": "^/gold-rate-today/([a-z-]+)$",             "dest": "/api/render?path=/gold-rate-today/$1" },
+    { "src": "^/fd-rates$",                              "dest": "/api/render?path=/fd-rates" },
+    { "src": "^/savings-rates$",                         "dest": "/api/render?path=/savings-rates" },
+    { "src": "^/currency-converter$",                    "dest": "/api/render?path=/currency-converter" },
+    { "src": "^/swift-code-lookup$",                     "dest": "/api/render?path=/swift-code-lookup" },
+    { "src": "^/bank-holidays$",                         "dest": "/api/render?path=/bank-holidays" },
 
     { "src": "^/sitemap.xml$", "dest": "https://api.rupeepedia.in/sitemap.xml" },
     { "src": "^/sitemap-static.xml$", "dest": "https://api.rupeepedia.in/sitemap-static.xml" },

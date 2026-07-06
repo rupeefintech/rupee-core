@@ -16,6 +16,8 @@
 
 export const config = { runtime: 'edge' };
 
+import { HOLIDAYS_2025, HOLIDAYS_2026, ALL_STATES } from '../src/data/bankHolidays';
+
 const BACKEND = 'https://rupeepedia-backend.onrender.com';
 const SITE    = 'https://rupeepedia.in';
 
@@ -496,6 +498,416 @@ ${head(title, desc, canonical, [placeLd, breadcrumbLd])}
 </html>`;
 }
 
+// ── Gold rate page renderer ───────────────────────────────────────────────────
+// citySlug: lowercase slug from URL, or null for the all-India page
+
+function renderGold(resp: any, citySlug: string | null): string {
+  const gold    = resp.gold || {};
+  const silver  = resp.silver || {};
+  const cities  = resp.cities || {};
+  const updated = resp.updated_at ? new Date(resp.updated_at) : new Date();
+  const dateStr = updated.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' });
+
+  const cityName = citySlug ? tc(citySlug) : null;
+  const cityData = cityName ? cities[cityName] : null;
+
+  const g24 = cityData ? cityData.gold_24k_per_10g : gold.price_24k_per_10g;
+  const g22 = cityData ? cityData.gold_22k_per_10g : gold.price_22k_per_10g;
+  const inr = (n: number) => '₹' + Math.round(n || 0).toLocaleString('en-IN');
+
+  const canonical = cityName ? `${SITE}/gold-rate-today/${citySlug}` : `${SITE}/gold-rate-today`;
+  const where     = cityName ? `in ${cityName}` : 'in India';
+  const title     = `Gold Rate Today ${cityName ? 'in ' + cityName : 'in India'} — 22K & 24K Price (${dateStr}) | RupeePedia`;
+  const desc      = `Gold rate today ${where} (${dateStr}): 24K ${inr(g24)}/10g, 22K ${inr(g22)}/10g. Live gold and silver prices per gram, 10 grams and tola, updated from international spot rates.`;
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Gold Rate Today', item: `${SITE}/gold-rate-today` },
+      ...(cityName ? [{ '@type': 'ListItem', position: 3, name: `Gold Rate in ${cityName}`, item: canonical }] : []),
+    ],
+  };
+
+  const goldRows = [
+    ['24K Gold (99.9% pure)', inr((g24 || 0) / 10) + '/g', inr(g24) + '/10g', inr((g24 || 0) * 1.16638) + '/tola'],
+    ['22K Gold (jewellery)',  inr((g22 || 0) / 10) + '/g', inr(g22) + '/10g', inr((g22 || 0) * 1.16638) + '/tola'],
+    ['18K Gold',              inr((gold.price_18k_per_10g || 0) / 10) + '/g', inr(gold.price_18k_per_10g) + '/10g', ''],
+    ['14K Gold',              inr((gold.price_14k_per_10g || 0) / 10) + '/g', inr(gold.price_14k_per_10g) + '/10g', ''],
+  ];
+
+  const cityEntries = Object.entries(cities) as [string, any][];
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb">
+    <a href="${SITE}">RupeePedia</a> &rsaquo;
+    ${cityName ? `<a href="${SITE}/gold-rate-today">Gold Rate Today</a> &rsaquo; <span>${esc(cityName)}</span>` : '<span>Gold Rate Today</span>'}
+  </nav>
+
+  <main>
+    <h1>Gold Rate Today ${cityName ? 'in ' + esc(cityName) : 'in India'} — ${esc(dateStr)}</h1>
+    <p>
+      Today's gold price ${esc(where)}: <strong>24 karat gold ${inr(g24)} per 10 grams</strong> and
+      <strong>22 karat gold ${inr(g22)} per 10 grams</strong>. Silver is trading at
+      <strong>${inr(silver.price_per_kg)} per kg</strong> (${inr(silver.price_per_10g)}/10g).
+      Rates are derived from the international spot price (gold $${gold.spot_usd_per_oz}/oz) converted
+      at USD/INR ${resp.usd_inr}, aligned with IBJA/MCX benchmarks. Jewellers add 3% GST and making charges.
+    </p>
+
+    <table>
+      <caption>Gold price ${esc(where)} by purity — ${esc(dateStr)}</caption>
+      <thead><tr><th>Purity</th><th>Per gram</th><th>Per 10 grams</th><th>Per tola</th></tr></thead>
+      <tbody>
+        ${goldRows.map(r => `<tr>${r.map((c, i) => i === 0 ? `<th scope="row">${c}</th>` : `<td>${c}</td>`).join('')}</tr>`).join('\n        ')}
+      </tbody>
+    </table>
+
+    <table>
+      <caption>Silver price today</caption>
+      <tbody>
+        <tr><th scope="row">Per kg</th><td>${inr(silver.price_per_kg)}</td></tr>
+        <tr><th scope="row">Per 100 grams</th><td>${inr(silver.price_per_100g)}</td></tr>
+        <tr><th scope="row">Per 10 grams</th><td>${inr(silver.price_per_10g)}</td></tr>
+      </tbody>
+    </table>
+
+    <section>
+      <h2>Gold rate in major Indian cities (24K per 10g)</h2>
+      <table>
+        <thead><tr><th>City</th><th>24K per 10g</th><th>22K per 10g</th></tr></thead>
+        <tbody>
+          ${cityEntries.map(([c, v]) => `<tr><th scope="row"><a href="${SITE}/gold-rate-today/${c.toLowerCase()}">${esc(c)}</a></th><td>${inr(v.gold_24k_per_10g)}</td><td>${inr(v.gold_22k_per_10g)}</td></tr>`).join('\n          ')}
+        </tbody>
+      </table>
+      <p>City prices differ slightly due to local taxes, transport and jeweller association rates.</p>
+    </section>
+
+    <section>
+      <h2>22K vs 24K gold — which price applies to you?</h2>
+      <p>
+        24K (999) is investment-grade gold used for coins and bars. Jewellery is almost always
+        22K (916) or 18K (750) because pure gold is too soft — so the 22K rate is what jewellers quote.
+        The final bill adds 3% GST on the metal value and making charges of 8–25%. Always check the
+        BIS hallmark (purity mark + 6-digit HUID) before buying.
+      </p>
+    </section>
+
+    <nav aria-label="Related pages">
+      <h2>Explore more</h2>
+      <ul>
+        ${cityName ? `<li><a href="${SITE}/gold-rate-today">Gold rate in all Indian cities</a></li>` : ''}
+        <li><a href="${SITE}/gold-hallmark-guide">Gold Hallmark Guide — BIS, HUID, purity marks</a></li>
+        <li><a href="${SITE}/why-gold-prices-change">Why Gold Prices Change Daily</a></li>
+        <li><a href="${SITE}/calculators">Financial Calculators</a></li>
+      </ul>
+    </nav>
+
+    <p><small>${esc(resp.disclaimer || '')}</small></p>
+  </main>
+</body>
+</html>`;
+}
+
+// ── FD / Savings rates page renderer ──────────────────────────────────────────
+
+function renderRates(resp: any, kind: 'fd' | 'savings'): string {
+  const banks = (resp.banks || []).slice(0, 40);
+  const isFD  = kind === 'fd';
+  const canonical = `${SITE}/${isFD ? 'fd-rates' : 'savings-rates'}`;
+  const year  = new Date().getFullYear();
+
+  const best = banks[0];
+  const title = isFD
+    ? `FD Interest Rates ${year} — Compare Best Fixed Deposit Rates of ${banks.length}+ Indian Banks | RupeePedia`
+    : `Savings Account Interest Rates ${year} — Compare ${banks.length}+ Indian Banks | RupeePedia`;
+  const desc = isFD
+    ? `Compare FD interest rates across ${banks.length}+ Indian banks${best ? ` — best rate ${best.bestRate}% (${best.bank?.name})` : ''}. Regular and senior citizen fixed deposit rates by tenure, updated regularly.`
+    : `Compare savings account interest rates across ${banks.length}+ Indian banks${best ? ` — highest ${best.bestRate}% (${best.bank?.name})` : ''}. Zero-balance and tiered rates compared.`;
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: isFD ? 'FD Interest Rates' : 'Savings Account Rates', item: canonical },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb">
+    <a href="${SITE}">RupeePedia</a> &rsaquo; <span>${isFD ? 'FD Interest Rates' : 'Savings Account Rates'}</span>
+  </nav>
+  <main>
+    <h1>${isFD ? `FD Interest Rates ${year} — Best Fixed Deposit Rates in India` : `Savings Account Interest Rates ${year} — Bank-wise Comparison`}</h1>
+    <p>
+      ${isFD
+        ? `Compare fixed deposit interest rates from ${banks.length}+ Indian banks side by side. ${best ? `The highest FD rate right now is <strong>${best.bestRate}%</strong> from <strong>${esc(best.bank?.name || '')}</strong>.` : ''} Senior citizens typically earn 0.25–0.75% extra.`
+        : `Compare savings account interest rates from ${banks.length}+ Indian banks. ${best ? `The highest savings rate right now is <strong>${best.bestRate}%</strong> from <strong>${esc(best.bank?.name || '')}</strong>.` : ''} Small finance banks generally pay the most; large banks pay 2.5–3%.`}
+    </p>
+
+    <table>
+      <caption>${isFD ? 'Best FD rate per bank (all tenures)' : 'Savings account rates by bank'}</caption>
+      <thead><tr><th>Bank</th><th>${isFD ? 'Best FD Rate' : 'Max Rate'}</th><th>Sample tenures / tiers</th></tr></thead>
+      <tbody>
+        ${banks.map((b: any) => `<tr>
+          <th scope="row">${b.bank?.slug ? `<a href="${SITE}/bank/${esc(b.bank.slug)}">${esc(b.bank?.name || '')}</a>` : esc(b.bank?.name || '')}</th>
+          <td><strong>${b.bestRate}%</strong></td>
+          <td>${(b.tenures || []).slice(0, 4).map((t: any) => `${esc(t.label || '')}: ${t.rate}%${t.seniorRate ? ' (senior ' + t.seniorRate + '%)' : ''}`).join(' · ')}</td>
+        </tr>`).join('\n        ')}
+      </tbody>
+    </table>
+
+    <section>
+      <h2>${isFD ? 'How to pick an FD' : 'How savings interest works'}</h2>
+      <p>
+        ${isFD
+          ? 'Rates vary by tenure, not just bank — a bank\'s 1-year and 5-year rates can differ by 1.5%. Interest above ₹40,000/year (₹50,000 for seniors) attracts TDS. Deposits up to ₹5 lakh per bank are insured by DICGC. Small finance banks pay more but the same ₹5 lakh insurance limit applies.'
+          : 'Savings interest is calculated on daily balance and credited quarterly. Interest up to ₹10,000/year is deductible under 80TTA (₹50,000 for seniors under 80TTB, old regime). Tiered accounts pay higher rates only on balances above thresholds — check the tier that matches your balance, not the headline rate.'}
+      </p>
+    </section>
+
+    <nav aria-label="Related pages">
+      <h2>Explore more</h2>
+      <ul>
+        <li><a href="${SITE}/${isFD ? 'savings-rates' : 'fd-rates'}">${isFD ? 'Savings Account Rates' : 'FD Interest Rates'}</a></li>
+        <li><a href="${SITE}/calculators/fd">FD Calculator — maturity and interest</a></li>
+        <li><a href="${SITE}/bank-holidays">Bank Holidays ${year}</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>`;
+}
+
+// ── Currency converter page renderer ──────────────────────────────────────────
+
+function renderCurrency(resp: any): string {
+  const rates: Record<string, number> = resp.rates || {};
+  const canonical = `${SITE}/currency-converter`;
+  const usd = rates['USD'];
+
+  const title = `Currency Converter — Live INR Exchange Rates Today (USD, EUR, GBP, AED) | RupeePedia`;
+  const desc  = `Live Indian Rupee exchange rates${usd ? `: 1 USD = ₹${usd}` : ''}. Convert INR to USD, EUR, GBP, AED, SGD, CAD, AUD and more at mid-market rates, updated daily.`;
+
+  const NAMES: Record<string, string> = {
+    USD: 'US Dollar', EUR: 'Euro', GBP: 'British Pound', AED: 'UAE Dirham',
+    SGD: 'Singapore Dollar', CAD: 'Canadian Dollar', AUD: 'Australian Dollar',
+    JPY: 'Japanese Yen', CHF: 'Swiss Franc', SAR: 'Saudi Riyal', QAR: 'Qatari Riyal',
+    KWD: 'Kuwaiti Dinar', BHD: 'Bahraini Dinar', OMR: 'Omani Rial', MYR: 'Malaysian Ringgit',
+    THB: 'Thai Baht', HKD: 'Hong Kong Dollar', NZD: 'New Zealand Dollar', CNY: 'Chinese Yuan',
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Currency Converter', item: canonical },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb"><a href="${SITE}">RupeePedia</a> &rsaquo; <span>Currency Converter</span></nav>
+  <main>
+    <h1>Currency Converter — INR Exchange Rates Today</h1>
+    <p>
+      Live mid-market exchange rates for the Indian Rupee, updated daily.
+      ${usd ? `Today 1 US Dollar = <strong>₹${usd}</strong>.` : ''}
+      Bank and money-transfer rates include a margin of 0.5–4% over these mid-market rates.
+    </p>
+    <table>
+      <caption>INR exchange rates (1 unit of foreign currency in ₹)</caption>
+      <thead><tr><th>Currency</th><th>Code</th><th>Rate in INR</th></tr></thead>
+      <tbody>
+        ${Object.entries(rates).map(([code, val]) => `<tr><th scope="row">${esc(NAMES[code] || code)}</th><td>${esc(code)}</td><td>₹${val}</td></tr>`).join('\n        ')}
+      </tbody>
+    </table>
+    <section>
+      <h2>Sending money to or from India?</h2>
+      <p>
+        Remittances to India are tax-free for the recipient if from close relatives (gifts above ₹50,000
+        from non-relatives are taxable). Outward remittances under LRS above ₹10 lakh/year attract TCS.
+        Compare transfer services on the total INR received, not the advertised rate — fees hide in the margin.
+      </p>
+    </section>
+    <nav aria-label="Related pages">
+      <h2>Explore more</h2>
+      <ul>
+        <li><a href="${SITE}/swift-code-lookup">SWIFT Code Lookup for international transfers</a></li>
+        <li><a href="${SITE}/calculators/nri-fd">NRI FD Calculator — NRE vs NRO vs FCNR</a></li>
+      </ul>
+    </nav>
+    <p><small>${esc(resp.disclaimer || '')}</small></p>
+  </main>
+</body>
+</html>`;
+}
+
+// ── SWIFT code lookup page renderer (static content) ─────────────────────────
+
+const POPULAR_SWIFT: { bank: string; swift: string; hq: string }[] = [
+  { bank: 'State Bank of India',      swift: 'SBININBB', hq: 'Mumbai'    },
+  { bank: 'HDFC Bank',                swift: 'HDFCINBB', hq: 'Mumbai'    },
+  { bank: 'ICICI Bank',               swift: 'ICICINBB', hq: 'Mumbai'    },
+  { bank: 'Axis Bank',                swift: 'AXISINBB', hq: 'Mumbai'    },
+  { bank: 'Kotak Mahindra Bank',      swift: 'KKBKINBB', hq: 'Mumbai'    },
+  { bank: 'Punjab National Bank',     swift: 'PUNBINBB', hq: 'New Delhi' },
+  { bank: 'Bank of Baroda',           swift: 'BARBINBB', hq: 'Vadodara'  },
+  { bank: 'Canara Bank',              swift: 'CNRBINBB', hq: 'Bangalore' },
+  { bank: 'IndusInd Bank',            swift: 'INDBINBB', hq: 'Pune'      },
+  { bank: 'Yes Bank',                 swift: 'YESBINBB', hq: 'Mumbai'    },
+  { bank: 'IDFC FIRST Bank',          swift: 'IDFBINBB', hq: 'Mumbai'    },
+  { bank: 'Federal Bank',             swift: 'FDRLINBB', hq: 'Aluva'     },
+  { bank: 'Citibank India',           swift: 'CITIINBX', hq: 'Mumbai'    },
+  { bank: 'HSBC India',               swift: 'HSBCINBB', hq: 'Mumbai'    },
+  { bank: 'Standard Chartered India', swift: 'SCBLINBB', hq: 'Mumbai'    },
+];
+
+function renderSwift(): string {
+  const canonical = `${SITE}/swift-code-lookup`;
+  const title = 'SWIFT Code Lookup — Find SWIFT/BIC Codes of Indian Banks | RupeePedia';
+  const desc  = 'Find SWIFT/BIC codes for Indian banks — SBI, HDFC, ICICI, Axis and more. SWIFT code format explained, plus how to receive international wire transfers to India.';
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'SWIFT Code Lookup', item: canonical },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb"><a href="${SITE}">RupeePedia</a> &rsaquo; <span>SWIFT Code Lookup</span></nav>
+  <main>
+    <h1>SWIFT Code Lookup — Indian Bank SWIFT/BIC Codes</h1>
+    <p>
+      A SWIFT code (also called BIC) is an 8–11 character identifier banks use for international
+      wire transfers. To receive money from abroad in your Indian account, you share your bank's
+      SWIFT code, your account number, and the branch details with the sender.
+    </p>
+
+    <table>
+      <caption>SWIFT codes of major Indian banks (head office)</caption>
+      <thead><tr><th>Bank</th><th>SWIFT Code</th><th>Head Office</th></tr></thead>
+      <tbody>
+        ${POPULAR_SWIFT.map(r => `<tr><th scope="row">${esc(r.bank)}</th><td><strong>${esc(r.swift)}</strong></td><td>${esc(r.hq)}</td></tr>`).join('\n        ')}
+      </tbody>
+    </table>
+
+    <section>
+      <h2>SWIFT code format</h2>
+      <p>
+        Example <strong>HDFCINBB</strong>: first 4 letters = bank code (HDFC), next 2 = country
+        (IN, India), next 2 = location (BB, Mumbai), optional last 3 = branch code (XXX or omitted
+        means head office). Most international transfers to India only need the 8-character
+        head-office code — the money reaches your branch via your account number.
+      </p>
+    </section>
+
+    <section>
+      <h2>SWIFT vs IFSC</h2>
+      <p>
+        IFSC codes route domestic transfers (NEFT/RTGS/IMPS inside India); SWIFT codes route
+        international transfers. For inward remittances you typically need both: SWIFT for the
+        international leg, and your branch details for final credit.
+      </p>
+    </section>
+
+    <nav aria-label="Related pages">
+      <h2>Explore more</h2>
+      <ul>
+        <li><a href="${SITE}/ifsc-finder">IFSC Code Finder for domestic transfers</a></li>
+        <li><a href="${SITE}/currency-converter">Currency Converter — live INR rates</a></li>
+        <li><a href="${SITE}/calculators/nri-fd">NRI FD Calculator</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>`;
+}
+
+// ── Bank holidays page renderer (static data) ─────────────────────────────────
+
+function renderHolidays(): string {
+  const canonical = `${SITE}/bank-holidays`;
+  const title = 'Bank Holidays 2025 & 2026 India — Complete RBI Holiday List | RupeePedia';
+  const desc  = `Complete list of bank holidays in India for 2025 and 2026 — ${HOLIDAYS_2025.length} holidays in 2025, ${HOLIDAYS_2026.length} in 2026. National and state-wise RBI holiday calendar.`;
+
+  const fmtDate = (iso: string) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+  };
+
+  const holidayTable = (rows: typeof HOLIDAYS_2025, year: number) => `
+    <table>
+      <caption>Bank holidays ${year} in India</caption>
+      <thead><tr><th>Date</th><th>Holiday</th><th>Type</th><th>States</th></tr></thead>
+      <tbody>
+        ${rows.map(h => `<tr>
+          <td>${esc(fmtDate(h.date))}</td>
+          <th scope="row">${esc(h.name)}</th>
+          <td>${h.type === 'national' ? 'National' : 'Regional'}</td>
+          <td>${h.states.includes(ALL_STATES) ? 'All India' : esc(h.states.slice(0, 6).join(', ')) + (h.states.length > 6 ? '…' : '')}</td>
+        </tr>`).join('\n        ')}
+      </tbody>
+    </table>`;
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Bank Holidays', item: canonical },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb"><a href="${SITE}">RupeePedia</a> &rsaquo; <span>Bank Holidays</span></nav>
+  <main>
+    <h1>Bank Holidays in India — 2025 &amp; 2026 RBI Calendar</h1>
+    <p>
+      Bank holidays in India are declared under the Negotiable Instruments Act via RBI circulars.
+      National holidays close all banks; regional holidays apply state-wise. ATMs, UPI, IMPS,
+      internet and mobile banking work 24×7 even on holidays — only branches and NEFT/RTGS
+      settlement pause.
+    </p>
+    <h2>Bank holidays 2026</h2>
+    ${holidayTable(HOLIDAYS_2026, 2026)}
+    <h2>Bank holidays 2025</h2>
+    ${holidayTable(HOLIDAYS_2025, 2025)}
+    <section>
+      <h2>Second and fourth Saturdays</h2>
+      <p>
+        In addition to the dates above, all banks in India are closed on every Sunday and on the
+        second and fourth Saturday of each month. Regional lists vary — check your state's RBI
+        circular for local festival holidays.
+      </p>
+    </section>
+    <nav aria-label="Related pages">
+      <h2>Explore more</h2>
+      <ul>
+        <li><a href="${SITE}/ifsc-finder">IFSC Code Finder</a></li>
+        <li><a href="${SITE}/fd-rates">FD Interest Rates</a></li>
+        <li><a href="${SITE}/calculators">Financial Calculators</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>`;
+}
+
 // ── SSR headers ───────────────────────────────────────────────────────────────
 
 const SSR_HEADERS = {
@@ -507,6 +919,13 @@ const SSR_HEADERS = {
 const BLOG_HEADERS = {
   'Content-Type':  'text/html; charset=utf-8',
   'Cache-Control': 's-maxage=3600, stale-while-revalidate=600',
+  'X-Renderer':    'bot-ssr',
+};
+
+// Prices change intraday — cache briefly so the date/price stay fresh
+const GOLD_HEADERS = {
+  'Content-Type':  'text/html; charset=utf-8',
+  'Cache-Control': 's-maxage=1800, stale-while-revalidate=300',
   'X-Renderer':    'bot-ssr',
 };
 
@@ -606,6 +1025,52 @@ export default async function handler(req: Request): Promise<Response> {
       });
       if (res.status === 404) return new Response(notFoundHtml('Article'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       if (res.ok) return new Response(renderBlog(await res.json()), { headers: BLOG_HEADERS });
+    }
+
+    // /gold-rate-today and /gold-rate-today/:city
+    const goldMatch = path.match(/^\/gold-rate-today(?:\/([a-z-]+))?$/);
+    if (goldMatch) {
+      const citySlug = goldMatch[1] || null;
+      const res = await fetch(`${BACKEND}/api/commodity-prices`, {
+        headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+        signal:  AbortSignal.timeout(20000),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        // Unknown city slug → 404 (city list is fixed server-side)
+        if (citySlug && !(data.cities || {})[tc(citySlug)]) {
+          return new Response(notFoundHtml('City gold rate'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+        }
+        return new Response(renderGold(data, citySlug), { headers: GOLD_HEADERS });
+      }
+    }
+
+    // /fd-rates and /savings-rates
+    const ratesMatch = path.match(/^\/(fd|savings)-rates$/);
+    if (ratesMatch) {
+      const kind = ratesMatch[1] as 'fd' | 'savings';
+      const res = await fetch(`${BACKEND}/api/rates?type=${kind}`, {
+        headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+        signal:  AbortSignal.timeout(20000),
+      });
+      if (res.ok) return new Response(renderRates(await res.json(), kind), { headers: GOLD_HEADERS });
+    }
+
+    // /currency-converter
+    if (path === '/currency-converter') {
+      const res = await fetch(`${BACKEND}/api/exchange-rates`, {
+        headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+        signal:  AbortSignal.timeout(20000),
+      });
+      if (res.ok) return new Response(renderCurrency(await res.json()), { headers: GOLD_HEADERS });
+    }
+
+    // /swift-code-lookup and /bank-holidays — static content, no backend needed
+    if (path === '/swift-code-lookup') {
+      return new Response(renderSwift(), { headers: SSR_HEADERS });
+    }
+    if (path === '/bank-holidays') {
+      return new Response(renderHolidays(), { headers: SSR_HEADERS });
     }
 
     // /pin/:pincode
