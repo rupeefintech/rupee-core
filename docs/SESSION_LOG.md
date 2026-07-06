@@ -13,9 +13,15 @@
    - NRI Rental Income: was taxing at flat 30% — actual tax is slab rates (new regime, no 87A rebate for NRIs); 30% is only the tenant TDS rate. Calculator now computes slab tax and shows the refund vs 31.2% TDS.
 3. **Breadcrumb hero rollout** (`e01748b`): new shared `frontend/src/components/CalculatorHero.tsx` (Home > Calculators > X breadcrumb + icon + brand gradient banner, Income-Tax-page style) applied to ALL calculator pages: CAGR, GST, SWP, XIRR, Step-Up SIP, EMI (all variants), Eligibility, Prepayment, SIP/Lumpsum/Goal, FD/RD/PPF/NPS, plus added where missing entirely (HRA, RNOR). Income Tax + Salary already had their own.
 
+### Later same day — bot-SSR gap sweep + indigo rebrand
+4. **PIN pages invisible to Google** (`834da55`): render.ts comment claimed /pin/:pin was bot-SSR'd but there was NO implementation and NO vercel.json route — ~19k PIN pages served the empty SPA shell to Googlebot. Added renderPin() (post office + bank branch tables, Place JSON-LD) + vercel route. /pin-codes hub FAQ answers were unmounted — now always in DOM. Verified live with Googlebot UA.
+5. **Same gap on all tool pages** (`1cebee6`): gold-rate-today (+12 city pages), fd-rates, savings-rates, currency-converter, swift-code-lookup, bank-holidays — all SPA-only. Added renderers for each (gold purity/city tables 30-min cache, bank-wise rates, INR fx table, static SWIFT + holidays). Holiday data extracted to `frontend/src/data/bankHolidays.ts` shared by page + edge renderer. All 7 verified live via Googlebot UA.
+6. **Indigo rebrand** (`fd02982`): user chose PIN-page indigo as sitewide brand. Tailwind `brand` scale redefined blue/navy → indigo (600=#4F46E5, 950=#1E1B4B); hardcoded hexes updated in globals.css, toast, footer, admin sidebar, EMI donut. Calculator icon accents untouched.
+
 ### Current state
 - All ~28 calculator pages now have full content + consistent hero/breadcrumb. Build passes.
 - Calculator content program COMPLETE — no thin calculator pages left.
+- Bot-SSR now covers: ifsc, bank, state, city, money-guides, pin, gold (+cities), fd-rates, savings-rates, currency-converter, swift-code-lookup, bank-holidays.
 
 ### Next steps
 - User: Request Indexing in GSC for batch 3+4 URLs (~10/day quota); Validate Fix on 404 + 5xx buckets
