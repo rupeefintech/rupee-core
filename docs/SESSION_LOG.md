@@ -4,6 +4,27 @@
 
 ---
 
+## 06 Jul 2026 — Calculator expansion batch 4 + hero banners
+
+### What was done
+1. **Batch 4 (final) calculator content expansion** (`dd5d6e8`): Mutual Fund, NRI FD, NRI Capital Gains, NRI Rental Income. Same pattern as batches 1–3: visible article + worked examples + tables, FAQs expanded to 12–13 and always mounted in DOM, FAQPage JSON-LD generated from rendered list, WebApplication schema, related-calculator links.
+2. **Tax logic corrections found en route:**
+   - NRI Capital Gains: property LTCG was 20%-with-indexation — NRIs don't get that option post 23-Jul-2024, now 12.5% without indexation; equity STCG 30% → 20% (Sec 111A); ₹1.25L Sec 112A exemption applied; surcharge capped 15% on LTCG/equity STCG; property TDS estimate now on full sale price (Sec 195 practice) with Form 13 guidance.
+   - NRI Rental Income: was taxing at flat 30% — actual tax is slab rates (new regime, no 87A rebate for NRIs); 30% is only the tenant TDS rate. Calculator now computes slab tax and shows the refund vs 31.2% TDS.
+3. **Breadcrumb hero rollout** (`e01748b`): new shared `frontend/src/components/CalculatorHero.tsx` (Home > Calculators > X breadcrumb + icon + brand gradient banner, Income-Tax-page style) applied to ALL calculator pages: CAGR, GST, SWP, XIRR, Step-Up SIP, EMI (all variants), Eligibility, Prepayment, SIP/Lumpsum/Goal, FD/RD/PPF/NPS, plus added where missing entirely (HRA, RNOR). Income Tax + Salary already had their own.
+
+### Current state
+- All ~28 calculator pages now have full content + consistent hero/breadcrumb. Build passes.
+- Calculator content program COMPLETE — no thin calculator pages left.
+
+### Next steps
+- User: Request Indexing in GSC for batch 3+4 URLs (~10/day quota); Validate Fix on 404 + 5xx buckets
+- Investigate noindex bucket (797 pages) — samples still needed
+- Clean dirty bank slugs (apostrophes/parens, 5 digit-suffixed) with redirects
+- Keep-warm for Render backend (paid plan or UptimeRobot)
+
+---
+
 ## 05 Jul 2026 — SEO indexing sprint
 
 ### Context
