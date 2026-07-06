@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
   return (
-    <footer style={{ background: '#1E1B4B' }}>
+    <footer style={{ background: 'linear-gradient(160deg, #312E81 0%, #1E1B4B 70%)' }}>
       {/* Top accent stripe */}
       <div className="h-[2px] bg-gradient-to-r from-brand-600 via-brand-400 to-brand-600" />
 
