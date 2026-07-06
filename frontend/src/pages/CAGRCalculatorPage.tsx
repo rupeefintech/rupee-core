@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, TrendingUp } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 
 function fmtINR(n: number) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
 function fmtShort(n: number) {
@@ -92,10 +93,13 @@ export default function CAGRCalculatorPage() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">CAGR Calculator</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate the Compound Annual Growth Rate of any investment instantly.</p>
-        </div>
+        <CalculatorHero
+          crumb="CAGR"
+          title="CAGR"
+          accent="Calculator"
+          subtitle="Compound Annual Growth Rate of any investment, instantly."
+          icon={TrendingUp}
+        />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
           {/* Main card */}

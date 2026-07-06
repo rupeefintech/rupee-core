@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import SliderInput from '../components/SliderInput';
+import CalculatorHero from '../components/CalculatorHero';
+import { PiggyBank } from 'lucide-react';
 
 type FDType = 'fd' | 'rd' | 'ppf' | 'nps';
 interface Props { type?: FDType }
@@ -120,10 +122,14 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className={`bg-gradient-to-br ${cfg.accent} text-white py-10 px-4 text-center`}>
-          <h1 className="text-2xl font-bold mb-2">{cfg.title}</h1>
-          <p className="text-white/80 text-sm max-w-md mx-auto">{cfg.desc}</p>
-        </div>
+        <CalculatorHero
+          crumb={type.toUpperCase()}
+          title={type.toUpperCase()}
+          accent="Calculator"
+          subtitle={cfg.desc}
+          icon={PiggyBank}
+          widthClass="max-w-4xl"
+        />
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
           <div className={`bg-white rounded-lg shadow-lg border-l-4 ${borderMap[cfg.color]} p-6`}>

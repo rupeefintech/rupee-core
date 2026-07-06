@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, PiggyBank } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 import SliderInput from '../components/SliderInput';
 
 type PrepayType = 'home' | 'personal';
@@ -115,10 +116,14 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">{isHome ? 'Home' : 'Personal'} Loan Prepayment Calculator</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">See exactly how much interest you save and how many months you cut off by making a lump sum prepayment.</p>
-        </div>
+        <CalculatorHero
+          crumb="Prepayment"
+          title={`${isHome ? 'Home' : 'Personal'} Loan Prepayment`}
+          accent="Calculator"
+          subtitle="Interest saved and months cut off by a lump sum prepayment."
+          icon={PiggyBank}
+          widthClass="max-w-4xl"
+        />
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">

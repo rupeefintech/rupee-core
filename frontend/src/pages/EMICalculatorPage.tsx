@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useLocation } from "react-router-dom";
+import CalculatorHero from '../components/CalculatorHero';
 
 
 
@@ -209,13 +210,13 @@ const profile = getLoanProfile();
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
 
-        {/* Hero — same gradient style as IFSCDetailPage */}
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">{d.title}</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">
-            Calculate your monthly EMI instantly. Plan smarter with full amortization schedule & payment breakdown.
-          </p>
-        </div>
+        <CalculatorHero
+          crumb="EMI"
+          title={d.title.replace(' EMI Calculator', '')}
+          accent="EMI Calculator"
+          subtitle="Monthly EMI with full amortization schedule and payment breakdown."
+          widthClass="max-w-4xl"
+        />
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
 

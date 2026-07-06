@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Plus, Trash2, Globe, AlertCircle, CheckCircle, Info, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -329,14 +330,18 @@ export default function RNORCalculatorPage() {
         })}</script>
       </Helmet>
 
+      <CalculatorHero
+        crumb="RNOR Status"
+        title="RNOR Status"
+        accent="Calculator"
+        subtitle={`NRI, RNOR or Resident under Section 6 — updated for ${FY_LABEL}.`}
+        icon={Globe}
+      />
+
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-bold text-gray-900">RNOR Status Calculator</h1>
-            <span className="text-[11px] font-bold bg-brand-50 text-brand-700 border border-brand-100 px-2 py-0.5 rounded-full">Updated for {FY_LABEL}</span>
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500">
             Check whether you are <strong className="text-gray-700">NRI</strong>, <strong className="text-gray-700">RNOR</strong> or <strong className="text-gray-700">Resident (ROR)</strong> under
             Section 6 of the Income Tax Act. Enter your India stay dates to see your residential status for every financial year — and exactly how many years RNOR applies.
           </p>

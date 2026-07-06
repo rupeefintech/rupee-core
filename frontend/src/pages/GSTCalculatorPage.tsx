@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Receipt } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 
 function fmtINR(n: number) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
 
@@ -91,10 +92,13 @@ export default function GSTCalculatorPage() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">GST Calculator</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate GST amount, CGST, SGST instantly for any product or service.</p>
-        </div>
+        <CalculatorHero
+          crumb="GST"
+          title="GST"
+          accent="Calculator"
+          subtitle="GST amount, CGST and SGST for any product or service."
+          icon={Receipt}
+        />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">

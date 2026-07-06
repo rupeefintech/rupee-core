@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { CheckCircle, AlertCircle, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle, AlertCircle, ArrowRight, ChevronDown, ChevronUp, Home } from "lucide-react";
+import CalculatorHero from "../components/CalculatorHero";
 
 const fmt = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
@@ -257,11 +258,18 @@ export default function HRACalculatorPage() {
         })}</script>
       </Helmet>
 
+      <CalculatorHero
+        crumb="HRA"
+        title="HRA"
+        accent="Calculator"
+        subtitle="House Rent Allowance exemption under Section 10(13A)."
+        icon={Home}
+      />
+
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">HRA Calculator — House Rent Allowance Exemption</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500">
             Calculate how much of your HRA is <strong className="text-gray-700">tax-exempt</strong> under Section 10(13A) and how much is taxable — with the full min-of-three breakdown.
           </p>
         </div>

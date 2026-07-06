@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, TrendingUp } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 import SliderInput from '../components/SliderInput';
 
 // Simulate a step-up SIP: monthly compounding, SIP raised once a year
@@ -111,10 +112,13 @@ export default function StepUpSIPPage() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-white to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">Step-Up SIP Calculator</h1>
-          <p className="text-brand-200 text-sm max-w-md mx-auto">See how increasing your SIP every year accelerates your wealth creation dramatically.</p>
-        </div>
+        <CalculatorHero
+          crumb="Step-Up SIP"
+          title="Step-Up SIP"
+          accent="Calculator"
+          subtitle="How yearly SIP increases accelerate wealth creation."
+          icon={TrendingUp}
+        />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">

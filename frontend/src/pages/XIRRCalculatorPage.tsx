@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, TrendingUp } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 
 function fmtINR(n: number) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
 
@@ -142,10 +143,13 @@ export default function XIRRCalculatorPage() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">XIRR Calculator</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate the Extended Internal Rate of Return on your SIP investments with multiple cash flows.</p>
-        </div>
+        <CalculatorHero
+          crumb="XIRR"
+          title="XIRR"
+          accent="Calculator"
+          subtitle="True annualised return on SIPs and multiple cash flows."
+          icon={TrendingUp}
+        />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">

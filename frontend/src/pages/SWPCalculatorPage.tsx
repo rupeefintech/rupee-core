@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Wallet } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 import SliderInput from '../components/SliderInput';
 
 // How many months a corpus lasts at a given monthly withdrawal (capped at 100 years)
@@ -108,10 +109,13 @@ export default function SWPCalculatorPage() {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">SWP Calculator</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">Calculate how long your investment corpus will last with regular monthly withdrawals.</p>
-        </div>
+        <CalculatorHero
+          crumb="SWP"
+          title="SWP"
+          accent="Calculator"
+          subtitle="How long your corpus lasts with monthly withdrawals."
+          icon={Wallet}
+        />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BadgeCheck } from 'lucide-react';
+import CalculatorHero from '../components/CalculatorHero';
 import SliderInput from '../components/SliderInput';
 
 type EligType = 'home' | 'personal';
@@ -110,10 +111,14 @@ export default function EligibilityCalculatorPage({ type = 'home' }: Props) {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">{isHome ? 'Home' : 'Personal'} Loan Eligibility Calculator</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">Find out the maximum loan amount you are eligible for based on your monthly income.</p>
-        </div>
+        <CalculatorHero
+          crumb="Eligibility"
+          title={`${isHome ? 'Home' : 'Personal'} Loan Eligibility`}
+          accent="Calculator"
+          subtitle="Maximum loan amount your monthly income qualifies for."
+          icon={BadgeCheck}
+          widthClass="max-w-4xl"
+        />
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
           {/* Calculator card */}

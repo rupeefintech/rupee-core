@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import SliderInput from '../components/SliderInput';
+import CalculatorHero from '../components/CalculatorHero';
 
 type SIPTab = 'sip' | 'lumpsum' | 'goal';
 interface Props { defaultTab?: SIPTab }
@@ -136,10 +137,11 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-          <h1 className="text-2xl font-bold mb-2">{meta.h1}</h1>
-          <p className="text-brand-100 text-sm max-w-md mx-auto">{meta.desc}</p>
-        </div>
+        <CalculatorHero
+          crumb="SIP"
+          title={meta.h1}
+          subtitle={meta.desc}
+        />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
           <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
