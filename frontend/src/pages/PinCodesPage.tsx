@@ -290,11 +290,10 @@ function LandingFAQItem({ q, a }: { q: string; a: string }) {
         <span className="font-semibold text-gray-800 text-sm pr-4">{q}</span>
         <ChevronDown className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
-      {open && (
-        <div className="px-6 pb-5 pt-1 text-sm text-gray-500 leading-relaxed border-t border-gray-100">
-          {a}
-        </div>
-      )}
+      {/* Always mounted so content stays in the DOM for search engines */}
+      <div className={`px-6 pb-5 pt-1 text-sm text-gray-500 leading-relaxed border-t border-gray-100 ${open ? '' : 'hidden'}`}>
+        {a}
+      </div>
     </div>
   );
 }

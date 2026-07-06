@@ -7,6 +7,7 @@
     { "src": "^/state/([^/]+)/([^/]+)$",                 "dest": "/api/render?path=/state/$1/$2" },
     { "src": "^/city/([^/]+)/([^/]+)/([^/]+)$",          "dest": "/api/render?path=/city/$1/$2/$3" },
     { "src": "^/money-guides/([^/]+)$",                  "dest": "/api/render?path=/money-guides/$1" },
+    { "src": "^/pin/([0-9]{6})$",                        "dest": "/api/render?path=/pin/$1" },
 
     { "src": "^/sitemap.xml$", "dest": "https://api.rupeepedia.in/sitemap.xml" },
     { "src": "^/sitemap-static.xml$", "dest": "https://api.rupeepedia.in/sitemap-static.xml" },

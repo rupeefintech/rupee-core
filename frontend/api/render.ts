@@ -394,6 +394,108 @@ ${head(title_, desc_, canonical, [articleLd, breadcrumbLd])}
 </html>`;
 }
 
+// ── PIN code page renderer ────────────────────────────────────────────────────
+
+function renderPin(resp: any): string {
+  const d         = resp.data || resp;
+  const pin       = d.pin_code || '';
+  const state     = d.state_name || '';
+  const district  = d.district || '';
+  const offices   = (d.post_offices || []).slice(0, 60);
+  const branches  = (d.bank_branches || []).slice(0, 30);
+  const stats     = d.stats || {};
+  const canonical = `${SITE}/pin/${pin}`;
+
+  const mainOffice = offices.length ? tc(offices[0].office_name || '') : '';
+  const locality   = [district, state].filter(Boolean).join(', ');
+
+  const title = `${pin} PIN Code — ${mainOffice ? mainOffice + ', ' : ''}${locality} | Post Offices & Details | RupeePedia`;
+  const desc  = `PIN code ${pin} details: ${stats.post_office_count || offices.length} post office${(stats.post_office_count || offices.length) === 1 ? '' : 's'} in ${locality}${mainOffice ? ' including ' + mainOffice : ''}${stats.branch_count ? ', plus ' + stats.branch_count + ' bank branches with IFSC codes' : ''}. Zip code lookup for ${locality}.`;
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home',      item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'PIN Codes', item: `${SITE}/pin-codes` },
+      { '@type': 'ListItem', position: 3, name: `PIN ${pin}`, item: canonical },
+    ],
+  };
+
+  const placeLd = {
+    '@context': 'https://schema.org', '@type': 'Place',
+    name: `PIN Code ${pin}${locality ? ' — ' + locality : ''}`,
+    url: canonical,
+    address: {
+      '@type': 'PostalAddress',
+      postalCode: pin,
+      addressLocality: district || undefined,
+      addressRegion: state || undefined,
+      addressCountry: 'IN',
+    },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [placeLd, breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb">
+    <a href="${SITE}">RupeePedia</a> &rsaquo;
+    <a href="${SITE}/pin-codes">PIN Codes</a> &rsaquo;
+    <span>${esc(pin)}</span>
+  </nav>
+
+  <main>
+    <h1>${esc(pin)} PIN Code — ${esc(locality)}</h1>
+    <p>
+      PIN code <strong>${esc(pin)}</strong> serves <strong>${esc(locality)}</strong> with
+      ${stats.post_office_count || offices.length} post office${(stats.post_office_count || offices.length) === 1 ? '' : 's'}
+      (${stats.delivery_offices || 0} delivery)${stats.branch_count ? ` and ${stats.branch_count} bank branches from ${stats.bank_count} banks` : ''}.
+      Use this postal code (zip code) for addressing mail, courier deliveries and online forms for ${esc(district || state)}.
+    </p>
+
+    <table>
+      <caption>Post Offices under PIN ${esc(pin)}</caption>
+      <thead><tr><th>Post Office</th><th>Type</th><th>Delivery</th><th>District</th><th>State</th></tr></thead>
+      <tbody>
+        ${offices.map((o: any) => `<tr><td>${esc(tc(o.office_name || ''))}</td><td>${esc(o.office_type || '')}</td><td>${o.delivery ? 'Delivery' : 'Non-delivery'}</td><td>${esc(o.district || '')}</td><td>${esc(o.state_name || '')}</td></tr>`).join('\n        ')}
+      </tbody>
+    </table>
+
+    ${branches.length ? `<section>
+      <h2>Bank branches in PIN ${esc(pin)}</h2>
+      <table>
+        <caption>Banks and IFSC codes in ${esc(pin)}</caption>
+        <thead><tr><th>Bank</th><th>Branch</th><th>IFSC Code</th><th>City</th></tr></thead>
+        <tbody>
+          ${branches.map((b: any) => `<tr><td>${b.bank_slug ? `<a href="${SITE}/bank/${esc(b.bank_slug)}">${esc(b.bank_name || '')}</a>` : esc(b.bank_name || '')}</td><td>${esc(tc(b.branch_name || ''))}</td><td><a href="${SITE}/ifsc/${esc(b.ifsc)}">${esc(b.ifsc)}</a></td><td>${esc(tc(b.city || ''))}</td></tr>`).join('\n          ')}
+        </tbody>
+      </table>
+    </section>` : ''}
+
+    <section>
+      <h2>About PIN code ${esc(pin)}</h2>
+      <p>
+        Postal Index Number (PIN) ${esc(pin)} belongs to postal circle of ${esc(state)}.
+        The first digit (${esc(pin[0] || '')}) identifies the region, the first two digits the sub-region,
+        the first three digits (${esc(pin.slice(0, 3))}) the sorting district, and the last three digits
+        the specific post office. India Post uses this 6-digit code to route mail; internationally it
+        serves as the zip code / postal code for ${esc(locality)}.
+      </p>
+    </section>
+
+    <nav aria-label="Related pages">
+      <h2>Explore more</h2>
+      <ul>
+        <li><a href="${SITE}/pin-codes">PIN Code Finder — search any PIN or post office</a></li>
+        <li><a href="${SITE}/pin-code-india">PIN Code System in India — how it works</a></li>
+        <li><a href="${SITE}/ifsc-finder">IFSC Code Finder</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>`;
+}
+
 // ── SSR headers ───────────────────────────────────────────────────────────────
 
 const SSR_HEADERS = {
@@ -504,6 +606,17 @@ export default async function handler(req: Request): Promise<Response> {
       });
       if (res.status === 404) return new Response(notFoundHtml('Article'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       if (res.ok) return new Response(renderBlog(await res.json()), { headers: BLOG_HEADERS });
+    }
+
+    // /pin/:pincode
+    const pinMatch = path.match(/^\/pin\/(\d{6})$/);
+    if (pinMatch) {
+      const res = await fetch(`${BACKEND}/api/pin/${pinMatch[1]}`, {
+        headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+        signal:  AbortSignal.timeout(20000),
+      });
+      if (res.status === 404) return new Response(notFoundHtml('PIN code'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      if (res.ok) return new Response(renderPin(await res.json()), { headers: SSR_HEADERS });
     }
   } catch (_err) {
     // Timeout or network error — tell Google to retry later
