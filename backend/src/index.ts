@@ -311,20 +311,28 @@ app.get('/sitemap-calculators.xml', (_req, res) => {
 async function streamIfscSitemap(res: any, where: Record<string, any>, label: string) {
   const { prisma } = require('./lib/prisma');
   const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+  const BATCH = 5000; // keeps each query fast + short-lived so it can't hog a DB connection and starve /health
   try {
     res.setHeader('Content-Type', 'application/xml');
     res.setHeader('Cache-Control', 'public, max-age=86400');
     res.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n');
 
-    const branches = await prisma.branch.findMany({
-      select: { ifsc: true, lastUpdated: true },
-      where,
-      orderBy: { ifsc: 'asc' },
-    });
+    let cursor: string | undefined;
+    for (;;) {
+      const branches = await prisma.branch.findMany({
+        select: { ifsc: true, lastUpdated: true },
+        where: cursor ? { ...where, ifsc: { ...(where.ifsc || {}), gt: cursor } } : where,
+        orderBy: { ifsc: 'asc' },
+        take: BATCH,
+      });
 
-    for (const branch of branches) {
-      const lastmod = branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15';
-      res.write(`  <url>\n    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`);
+      for (const branch of branches) {
+        const lastmod = branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15';
+        res.write(`  <url>\n    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`);
+      }
+
+      if (branches.length < BATCH) break;
+      cursor = branches[branches.length - 1].ifsc;
     }
 
     res.write('</urlset>');
@@ -558,5 +566,9 @@ const server = app.listen(PORT, async () => {
 const shutdown = () => server.close(() => process.exit(0))
 process.on('SIGTERM', shutdown)
 process.on('SIGINT', shutdown)
+
+// Log and survive instead of crashing the whole process on one bad request/query
+process.on('unhandledRejection', (reason) => console.error('Unhandled rejection:', reason))
+process.on('uncaughtException', (err) => console.error('Uncaught exception:', err))
 
 export default app

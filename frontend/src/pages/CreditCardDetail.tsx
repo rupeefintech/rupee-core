@@ -234,7 +234,7 @@ export default function CreditCardDetail() {
                   <a
                     href={card.applyUrl}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer sponsored"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-gold-500 hover:bg-gold-600 text-brand-900 rounded-xl font-semibold transition text-sm shadow-lg shadow-gold-500/20"
                   >
                     Apply Now

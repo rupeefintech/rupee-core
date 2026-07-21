@@ -836,6 +836,223 @@ ${head(title, desc, canonical, [breadcrumbLd])}
 </html>`;
 }
 
+// ── Credit card detail page renderer ──────────────────────────────────────────
+
+function renderCard(card: any): string {
+  const name      = card.name || '';
+  const bankName  = card.bank?.name || '';
+  const bankSlug  = card.bank?.slug || '';
+  const network   = card.network || '';
+  const d         = card.details || {};
+  const feeText   = d.annualFee === 0 ? 'Lifetime Free' : d.annualFee != null ? `₹${d.annualFee}/year` : 'N/A';
+  const canonical = `${SITE}/credit-cards/${card.slug}`;
+
+  const title = `${name} — Fees, Rewards & Eligibility | RupeePedia`;
+  const desc  = `${name} by ${bankName}: annual fee ${feeText}${d.rewardType ? `, ${d.rewardType} rewards` : ''}. Compare eligibility, fees and benefits before applying.`;
+
+  const productLd: Record<string, unknown> = {
+    '@context': 'https://schema.org', '@type': 'FinancialProduct',
+    name, url: canonical,
+    ...(card.aboutCard ? { description: card.aboutCard } : {}),
+    provider: { '@type': 'BankOrCreditUnion', name: bankName },
+    feesAndCommissionsSpecification: JSON.stringify({
+      joiningFee: d.joiningFee ?? 0,
+      annualFee: d.annualFee ?? 0,
+      currency: 'INR',
+    }),
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Credit Cards', item: `${SITE}/credit-cards` },
+      { '@type': 'ListItem', position: 3, name, item: canonical },
+    ],
+  };
+
+  const rows = [
+    ['Bank', bankSlug ? `<a href="${SITE}/bank/${esc(bankSlug)}">${esc(bankName)}</a>` : esc(bankName)],
+    ['Network', esc(network)],
+    ['Annual Fee', esc(feeText)],
+    ['Joining Fee', d.joiningFee != null ? `₹${d.joiningFee}` : ''],
+    ['Reward Type', esc(d.rewardType || '')],
+    ['Minimum Income', d.minIncome != null ? `₹${d.minIncome.toLocaleString('en-IN')}/year` : ''],
+    ['Forex Markup', d.forexMarkup != null ? `${d.forexMarkup}%` : ''],
+    ['APR', esc(d.apr || '')],
+  ].filter(([, v]) => v);
+
+  const features: string[] = card.features || [];
+  const offers = (card.offers || []).filter((o: any) => o.isActive);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [productLd, breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb">
+    <a href="${SITE}">RupeePedia</a> &rsaquo;
+    <a href="${SITE}/credit-cards">Credit Cards</a> &rsaquo;
+    <span>${esc(name)}</span>
+  </nav>
+
+  <main>
+    <h1>${esc(name)}</h1>
+    <p>${esc(card.aboutCard || `${name} is a credit card from ${bankName}${network ? ' on the ' + network + ' network' : ''}.`)}</p>
+
+    <table>
+      <caption>${esc(name)} — fees &amp; details</caption>
+      <tbody>
+        ${rows.map(([k, v]) => `<tr><th scope="row">${k}</th><td>${v}</td></tr>`).join('\n        ')}
+      </tbody>
+    </table>
+
+    ${features.length ? `<section>
+      <h2>Key features</h2>
+      <ul>
+        ${features.map((f) => `<li>${esc(f)}</li>`).join('\n        ')}
+      </ul>
+    </section>` : ''}
+
+    ${offers.length ? `<section>
+      <h2>Current offers</h2>
+      <ul>
+        ${offers.map((o: any) => `<li><strong>${esc(o.title)}</strong>${o.description ? ' — ' + esc(o.description) : ''}</li>`).join('\n        ')}
+      </ul>
+    </section>` : ''}
+
+    ${card.applyUrl ? `<p><a href="${esc(card.applyUrl)}" rel="sponsored noopener" target="_blank">Apply for ${esc(name)}</a></p>` : ''}
+
+    <nav aria-label="Related pages">
+      <h2>Explore more</h2>
+      <ul>
+        <li><a href="${SITE}/credit-cards">Compare all credit cards</a></li>
+        ${bankSlug ? `<li><a href="${SITE}/bank/${esc(bankSlug)}">${esc(bankName)} IFSC codes</a></li>` : ''}
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>`;
+}
+
+function renderCardsList(cards: any[]): string {
+  const canonical = `${SITE}/credit-cards`;
+  const title = `Best Credit Cards in India — Compare ${cards.length}+ Cards | RupeePedia`;
+  const desc  = `Compare ${cards.length}+ credit cards in India by annual fee, rewards, cashback, fuel and lounge benefits. Updated from official bank sources.`;
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Credit Cards', item: canonical },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(title, desc, canonical, [breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb"><a href="${SITE}">RupeePedia</a> &rsaquo; <span>Credit Cards</span></nav>
+  <main>
+    <h1>Best Credit Cards in India</h1>
+    <p>Compare ${cards.length}+ credit cards across cashback, travel, fuel and lifetime-free categories.</p>
+    <table>
+      <caption>Credit cards compared</caption>
+      <thead><tr><th>Card</th><th>Bank</th><th>Annual Fee</th></tr></thead>
+      <tbody>
+        ${cards.map((c: any) => `<tr>
+          <td><a href="${SITE}/credit-cards/${esc(c.slug)}">${esc(c.name)}</a></td>
+          <td>${esc(c.bank?.name || '')}</td>
+          <td>${c.annualFee === 0 ? 'Free' : c.annualFee != null ? '₹' + c.annualFee : 'N/A'}</td>
+        </tr>`).join('\n        ')}
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>`;
+}
+
+// ── Calculator page renderer (no DB model — static slug map) ─────────────────
+// Kept in sync manually with frontend/src/utils/calculators.ts (that file pulls
+// in lucide-react/JSX and can't be imported from this edge function).
+
+const CALCULATORS: Record<string, { name: string; desc: string }> = {
+  'emi':                       { name: 'EMI Calculator',                  desc: 'Calculate monthly EMI for any loan — enter amount, rate and tenure.' },
+  'home-loan-emi':             { name: 'Home Loan EMI Calculator',        desc: 'Plan your home loan repayment with an accurate EMI breakdown.' },
+  'personal-loan-emi':         { name: 'Personal Loan EMI Calculator',    desc: 'Check your personal loan EMI instantly.' },
+  'car-loan-emi':              { name: 'Car Loan EMI Calculator',         desc: 'Know your car loan monthly payment before you buy.' },
+  'education-loan-emi':        { name: 'Education Loan EMI Calculator',   desc: 'Plan education loan repayment across your course tenure.' },
+  'business-loan-emi':         { name: 'Business Loan EMI Calculator',    desc: 'Calculate business loan EMI and total interest outgo.' },
+  'lap-emi':                   { name: 'Loan Against Property EMI Calculator', desc: 'Calculate LAP EMI and eligibility.' },
+  'sip':                       { name: 'SIP Calculator',                  desc: 'Project your SIP investment returns over time.' },
+  'lumpsum':                   { name: 'Lumpsum Calculator',              desc: 'Calculate lumpsum investment growth at a given return rate.' },
+  'goal-sip':                  { name: 'Goal-based SIP Calculator',       desc: 'Find the monthly SIP needed to reach a financial goal.' },
+  'swp':                       { name: 'SWP Calculator',                 desc: 'Plan systematic withdrawals from your investments.' },
+  'step-up-sip':               { name: 'Step-Up SIP Calculator',          desc: 'Calculate SIP returns with annual step-up increments.' },
+  'mutual-fund':                { name: 'Mutual Fund Returns Calculator', desc: 'Estimate mutual fund returns over your investment horizon.' },
+  'cagr':                      { name: 'CAGR Calculator',                 desc: 'Find the compound annual growth rate between two values.' },
+  'xirr':                      { name: 'XIRR Calculator',                 desc: 'Calculate returns on investments with irregular cash flows.' },
+  'fd':                        { name: 'FD Calculator',                   desc: 'Calculate fixed deposit maturity value and interest earned.' },
+  'rd':                        { name: 'RD Calculator',                   desc: 'Know your recurring deposit maturity amount.' },
+  'ppf':                       { name: 'PPF Calculator',                  desc: 'Calculate PPF maturity value over the 15-year lock-in.' },
+  'nps':                       { name: 'NPS Calculator',                  desc: 'Plan your NPS pension corpus and monthly annuity.' },
+  'home-loan-eligibility':     { name: 'Home Loan Eligibility Calculator', desc: 'Check the maximum home loan you qualify for.' },
+  'personal-loan-eligibility': { name: 'Personal Loan Eligibility Calculator', desc: 'Know your personal loan eligibility instantly.' },
+  'home-prepayment':           { name: 'Home Loan Prepayment Calculator', desc: 'See how much you save by prepaying your home loan.' },
+  'personal-prepayment':       { name: 'Personal Loan Prepayment Calculator', desc: 'Calculate savings from prepaying a personal loan.' },
+  'gst':                       { name: 'GST Calculator',                  desc: 'Calculate GST on any amount — inclusive or exclusive.' },
+  'salary-calculator':         { name: 'Salary Calculator',               desc: 'Convert CTC to in-hand salary with a full tax breakdown.' },
+  'hra-calculator':            { name: 'HRA Calculator',                  desc: 'Calculate your HRA tax exemption.' },
+  'income-tax':                { name: 'Income Tax Calculator',           desc: 'Compare old vs new tax regime and find which saves more.' },
+  'rnor-status':               { name: 'RNOR Status Calculator',          desc: 'Check your NRI / RNOR / ROR residential status for tax purposes.' },
+  'nri-fd':                    { name: 'NRI FD Calculator',                desc: 'Compare NRE, NRO and FCNR FD returns after tax.' },
+  'nri-capital-gains':         { name: 'NRI Capital Gains Tax Calculator', desc: 'Calculate tax on sale of Indian property or equity as an NRI.' },
+  'nri-rental-income':         { name: 'NRI Rental Income Tax Calculator', desc: 'Calculate tax and TDS on rental income from Indian property.' },
+};
+
+function renderCalculator(slug: string): string {
+  const c = CALCULATORS[slug];
+  const canonical = `${SITE}/calculators/${slug}`;
+  const name = c?.name || `${tc(slug.replace(/-/g, ' '))} Calculator`;
+  const desc = c?.desc || `Free ${name} with instant results. No signup required.`;
+
+  const appLd = {
+    '@context': 'https://schema.org', '@type': 'SoftwareApplication',
+    name, url: canonical, applicationCategory: 'FinanceApplication', operatingSystem: 'Web',
+    description: desc,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Calculators', item: `${SITE}/calculators` },
+      { '@type': 'ListItem', position: 3, name, item: canonical },
+    ],
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+${head(`${name} — Free Online Calculator | RupeePedia`, desc, canonical, [appLd, breadcrumbLd])}
+<body>
+  <nav aria-label="Breadcrumb">
+    <a href="${SITE}">RupeePedia</a> &rsaquo;
+    <a href="${SITE}/calculators">Calculators</a> &rsaquo;
+    <span>${esc(name)}</span>
+  </nav>
+  <main>
+    <h1>${esc(name)}</h1>
+    <p>${esc(desc)}</p>
+    <nav aria-label="Related pages">
+      <ul>
+        <li><a href="${SITE}/calculators">All financial calculators</a></li>
+      </ul>
+    </nav>
+  </main>
+</body>
+</html>`;
+}
+
 // ── Bank holidays page renderer (static data) ─────────────────────────────────
 
 function renderHolidays(): string {
@@ -1071,6 +1288,35 @@ export default async function handler(req: Request): Promise<Response> {
     }
     if (path === '/bank-holidays') {
       return new Response(renderHolidays(), { headers: SSR_HEADERS });
+    }
+
+    // /credit-cards/:slug (excludes /credit-cards/compare, /credit-cards/new — real app routes, not product slugs)
+    const cardMatch = path.match(/^\/credit-cards\/([\w-]+)$/);
+    if (cardMatch && !['compare', 'new'].includes(cardMatch[1])) {
+      const res = await fetch(`${BACKEND}/api/products/${cardMatch[1]}`, {
+        headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+        signal:  AbortSignal.timeout(20000),
+      });
+      if (res.status === 404) return new Response(notFoundHtml('Credit card'), { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      if (res.ok) return new Response(renderCard(await res.json()), { headers: SSR_HEADERS });
+    }
+
+    // /credit-cards (listing)
+    if (path === '/credit-cards') {
+      const res = await fetch(`${BACKEND}/api/products?category=credit_card&limit=100`, {
+        headers: { 'User-Agent': 'RupeePedia-Renderer/1.0' },
+        signal:  AbortSignal.timeout(20000),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return new Response(renderCardsList(data.products || []), { headers: SSR_HEADERS });
+      }
+    }
+
+    // /calculators/:slug
+    const calcMatch = path.match(/^\/calculators\/([\w-]+)$/);
+    if (calcMatch) {
+      return new Response(renderCalculator(calcMatch[1]), { headers: SSR_HEADERS });
     }
 
     // /pin/:pincode

@@ -483,7 +483,7 @@ const CreditCards: React.FC = () => {
                         <a
                           href={card.applyUrl}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="noopener noreferrer sponsored"
                           onClick={(e) => e.stopPropagation()}
                           className="text-xs font-semibold px-3 py-1.5 bg-brand-800 hover:bg-brand-900 text-white rounded-lg transition"
                         >
