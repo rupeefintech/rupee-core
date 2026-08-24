@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 
 import { Link } from "react-router-dom";
 
-import { IndianRupee, Info, ChevronRight } from "lucide-react";
+import { IndianRupee, Info, ChevronRight, ArrowRight } from "lucide-react";
 
 
 
@@ -283,45 +283,51 @@ export default function SalaryCalculatorPage() {
 
 
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-bg">
 
         {/* Hero */}
 
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4">
+        <header className="py-8 md:py-10">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-120px] right-[-80px] w-[380px] h-[380px] rounded-full opacity-25 blur-[30px]"
+                     style={{ background: 'radial-gradient(50% 50% at 50% 50%, var(--acc-glow), transparent 70%)' }} />
+              </div>
+              <div className="relative z-[2]">
 
-          <div className="max-w-5xl mx-auto">
+                <nav className="flex items-center gap-1.5 text-muted text-sm mb-4">
 
-            <nav className="flex items-center gap-1.5 text-brand-100 text-sm mb-4">
+                  <Link to="/" className="hover:text-ink">Home</Link>
 
-              <Link to="/" className="hover:text-white">Home</Link>
+                  <ChevronRight className="w-3 h-3" />
 
-              <ChevronRight className="w-3 h-3" />
+                  <Link to="/calculators" className="hover:text-ink">Calculators</Link>
 
-              <Link to="/calculators" className="hover:text-white">Calculators</Link>
+                  <ChevronRight className="w-3 h-3" />
 
-              <ChevronRight className="w-3 h-3" />
+                  <span className="text-ink font-medium">Salary Calculator</span>
 
-              <span className="text-white font-medium">Salary Calculator</span>
+                </nav>
 
-            </nav>
+                <h1 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center gap-3 text-ink">
 
-            <h1 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center gap-3">
+                  <IndianRupee className="w-8 h-8" />
 
-              <IndianRupee className="w-8 h-8" />
+                  Salary Calculator
 
-              Salary Calculator
+                </h1>
 
-            </h1>
+                <p className="text-muted max-w-lg">
 
-            <p className="text-brand-100 max-w-lg">
+                  Calculate your in-hand salary from CTC with full breakdown &mdash; Basic, HRA, EPF, tax under Old &amp; New regime.
 
-              Calculate your in-hand salary from CTC with full breakdown &mdash; Basic, HRA, EPF, tax under Old &amp; New regime.
+                </p>
 
-            </p>
-
+              </div>
+            </div>
           </div>
-
-        </div>
+        </header>
 
 
 
@@ -339,11 +345,11 @@ export default function SalaryCalculatorPage() {
 
               {/* Regime Toggle */}
 
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+              <div className="bg-surface rounded-2xl border border-line p-5">
 
-                <label className="block text-sm font-semibold text-gray-700 mb-3">Tax Regime</label>
+                <label className="block text-sm font-semibold text-body mb-3">Tax Regime</label>
 
-                <div className="flex rounded-xl bg-gray-100 p-1">
+                <div className="flex rounded-xl bg-surface-2 p-1">
 
                   {(["new", "old"] as const).map((r) => (
 
@@ -357,9 +363,9 @@ export default function SalaryCalculatorPage() {
 
                         regime === r
 
-                          ? "bg-brand-600 text-white shadow-sm"
+                          ? "bg-acc text-white"
 
-                          : "text-gray-500 hover:text-gray-700"
+                          : "text-muted hover:text-body"
 
                       }`}
 
@@ -373,7 +379,7 @@ export default function SalaryCalculatorPage() {
 
                 </div>
 
-                <p className="text-xs text-gray-400 mt-2 flex items-start gap-1">
+                <p className="text-xs text-faint mt-2 flex items-start gap-1">
 
                   <Info className="w-3 h-3 mt-0.5 flex-shrink-0" />
 
@@ -391,15 +397,15 @@ export default function SalaryCalculatorPage() {
 
               {/* CTC & Structure */}
 
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm space-y-4">
+              <div className="bg-surface rounded-2xl border border-line p-5 space-y-4">
 
-                <h3 className="text-sm font-semibold text-gray-700">Salary Structure</h3>
+                <h3 className="text-sm font-semibold text-body">Salary Structure</h3>
 
 
 
                 <div>
 
-                  <label className="text-xs text-gray-500 mb-1 block">Annual CTC</label>
+                  <label className="text-xs text-muted mb-1 block">Annual CTC</label>
 
                   <input
 
@@ -409,7 +415,7 @@ export default function SalaryCalculatorPage() {
 
                     onChange={(e) => setCtc(Math.max(0, Number(e.target.value)))}
 
-                    className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+                    className="w-full px-3 py-2.5 border border-line rounded-xl text-sm text-ink bg-bg-2 focus:outline-none focus:border-acc focus:ring-2 focus:ring-acc/20"
 
                   />
 
@@ -423,11 +429,11 @@ export default function SalaryCalculatorPage() {
 
                     onChange={(e) => setCtc(Number(e.target.value))}
 
-                    className="w-full mt-2 accent-brand-600"
+                    className="w-full mt-2 accent-acc"
 
                   />
 
-                  <div className="flex justify-between text-[10px] text-gray-400 mt-0.5">
+                  <div className="flex justify-between text-[10px] text-faint mt-0.5">
 
                     <span>0</span><span>25L</span><span>50L</span><span>75L</span><span>1Cr</span>
 
@@ -441,7 +447,7 @@ export default function SalaryCalculatorPage() {
 
                   <div>
 
-                    <label className="text-xs text-gray-500 mb-1 block">Basic (% CTC)</label>
+                    <label className="text-xs text-muted mb-1 block">Basic (% CTC)</label>
 
                     <input
 
@@ -451,7 +457,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setBasicPct(Number(e.target.value))}
 
-                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-brand-400"
+                      className="w-full px-2 py-2 border border-line rounded-lg text-sm text-ink bg-bg-2 text-center focus:outline-none focus:border-acc"
 
                     />
 
@@ -459,7 +465,7 @@ export default function SalaryCalculatorPage() {
 
                   <div>
 
-                    <label className="text-xs text-gray-500 mb-1 block">HRA (% Basic)</label>
+                    <label className="text-xs text-muted mb-1 block">HRA (% Basic)</label>
 
                     <input
 
@@ -469,7 +475,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setHraPct(Number(e.target.value))}
 
-                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-brand-400"
+                      className="w-full px-2 py-2 border border-line rounded-lg text-sm text-ink bg-bg-2 text-center focus:outline-none focus:border-acc"
 
                     />
 
@@ -477,7 +483,7 @@ export default function SalaryCalculatorPage() {
 
                   <div>
 
-                    <label className="text-xs text-gray-500 mb-1 block">EPF (% Basic)</label>
+                    <label className="text-xs text-muted mb-1 block">EPF (% Basic)</label>
 
                     <input
 
@@ -487,7 +493,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setEpfPct(Number(e.target.value))}
 
-                      className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:border-brand-400"
+                      className="w-full px-2 py-2 border border-line rounded-lg text-sm text-ink bg-bg-2 text-center focus:outline-none focus:border-acc"
 
                     />
 
@@ -503,15 +509,15 @@ export default function SalaryCalculatorPage() {
 
               {regime === "old" && (
 
-                <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm space-y-4">
+                <div className="bg-surface rounded-2xl border border-line p-5 space-y-4">
 
-                  <h3 className="text-sm font-semibold text-gray-700">Deductions (Old Regime)</h3>
+                  <h3 className="text-sm font-semibold text-body">Deductions (Old Regime)</h3>
 
 
 
                   <div>
 
-                    <label className="text-xs text-gray-500 mb-1 block">Section 80C &mdash; max 1.5L</label>
+                    <label className="text-xs text-muted mb-1 block">Section 80C &mdash; max 1.5L</label>
 
                     <input
 
@@ -521,7 +527,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setSec80c(Math.min(150000, Number(e.target.value)))}
 
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400"
+                      className="w-full px-3 py-2.5 border border-line rounded-xl text-sm text-ink bg-bg-2 focus:outline-none focus:border-acc"
 
                     />
 
@@ -529,7 +535,7 @@ export default function SalaryCalculatorPage() {
 
                   <div>
 
-                    <label className="text-xs text-gray-500 mb-1 block">Section 80D &mdash; Health Insurance</label>
+                    <label className="text-xs text-muted mb-1 block">Section 80D &mdash; Health Insurance</label>
 
                     <input
 
@@ -539,7 +545,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setSec80d(Number(e.target.value))}
 
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400"
+                      className="w-full px-3 py-2.5 border border-line rounded-xl text-sm text-ink bg-bg-2 focus:outline-none focus:border-acc"
 
                     />
 
@@ -547,7 +553,7 @@ export default function SalaryCalculatorPage() {
 
                   <div>
 
-                    <label className="text-xs text-gray-500 mb-1 block">Monthly Rent Paid &mdash; for HRA</label>
+                    <label className="text-xs text-muted mb-1 block">Monthly Rent Paid &mdash; for HRA</label>
 
                     <input
 
@@ -557,13 +563,13 @@ export default function SalaryCalculatorPage() {
 
                       onChange={(e) => setRentPaid(Number(e.target.value))}
 
-                      className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-brand-400"
+                      className="w-full px-3 py-2.5 border border-line rounded-xl text-sm text-ink bg-bg-2 focus:outline-none focus:border-acc"
 
                     />
 
                   </div>
 
-                  <label className="flex items-center gap-2 text-sm text-gray-600">
+                  <label className="flex items-center gap-2 text-sm text-muted">
 
                     <input
 
@@ -573,7 +579,7 @@ export default function SalaryCalculatorPage() {
 
                       onChange={() => setIsMetro(!isMetro)}
 
-                      className="accent-brand-600 w-4 h-4"
+                      className="accent-acc w-4 h-4"
 
                     />
 
@@ -597,23 +603,23 @@ export default function SalaryCalculatorPage() {
 
               {/* In-Hand Highlight */}
 
-              <div className="bg-gradient-to-r from-brand-700 to-brand-800 rounded-2xl p-6 text-white shadow-lg">
+              <div className="bg-gradient-to-r from-acc-deep to-surface border border-acc/25 rounded-2xl p-6 text-ink shadow-acc-glow">
 
                 <div className="grid grid-cols-2 gap-4">
 
                   <div>
 
-                    <p className="text-brand-100 text-xs font-medium mb-1">Monthly In-Hand</p>
+                    <p className="text-muted text-xs font-medium mb-1">Monthly In-Hand</p>
 
-                    <p className="text-3xl font-bold">{fmtM(breakdown.netAnnualSalary)}</p>
+                    <p className="text-3xl font-bold text-ink">{fmtM(breakdown.netAnnualSalary)}</p>
 
                   </div>
 
                   <div>
 
-                    <p className="text-brand-100 text-xs font-medium mb-1">Annual In-Hand</p>
+                    <p className="text-muted text-xs font-medium mb-1">Annual In-Hand</p>
 
-                    <p className="text-3xl font-bold">{fmt(breakdown.netAnnualSalary)}</p>
+                    <p className="text-3xl font-bold text-ink">{fmt(breakdown.netAnnualSalary)}</p>
 
                   </div>
 
@@ -625,13 +631,13 @@ export default function SalaryCalculatorPage() {
 
               {/* Salary Breakdown Table */}
 
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="bg-surface rounded-2xl border border-line overflow-hidden">
 
-                <div className="bg-gray-50 px-5 py-3 border-b border-gray-200 flex items-center justify-between">
+                <div className="bg-surface-2 px-5 py-3 border-b border-line flex items-center justify-between">
 
-                  <h3 className="text-sm font-bold text-gray-800">Salary Breakdown</h3>
+                  <h3 className="text-sm font-bold text-ink">Salary Breakdown</h3>
 
-                  <div className="flex gap-8 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                  <div className="flex gap-8 text-[10px] font-semibold text-faint uppercase tracking-wider">
 
                     <span className="w-24 text-right">Yearly</span>
 
@@ -641,7 +647,7 @@ export default function SalaryCalculatorPage() {
 
                 </div>
 
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-line">
 
                   <Row label="CTC (Cost to Company)" yearly={ctc} isBold />
 
@@ -671,17 +677,17 @@ export default function SalaryCalculatorPage() {
 
               {/* Tax Calculation */}
 
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="bg-surface rounded-2xl border border-line overflow-hidden">
 
-                <div className="bg-gray-50 px-5 py-3 border-b border-gray-200 flex items-center justify-between">
+                <div className="bg-surface-2 px-5 py-3 border-b border-line flex items-center justify-between">
 
-                  <h3 className="text-sm font-bold text-gray-800">Tax Calculation ({regime === "new" ? "New Regime" : "Old Regime"})</h3>
+                  <h3 className="text-sm font-bold text-ink">Tax Calculation ({regime === "new" ? "New Regime" : "Old Regime"})</h3>
 
-                  <span className="text-xs bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full font-semibold">FY 2025-26</span>
+                  <span className="text-xs bg-acc-deep text-acc px-2 py-0.5 rounded-full font-semibold">FY 2025-26</span>
 
                 </div>
 
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-line">
 
                   <Row label="Gross Salary" yearly={breakdown.grossSalary} />
 
@@ -721,15 +727,15 @@ export default function SalaryCalculatorPage() {
 
               {/* Take-Home Summary */}
 
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="bg-surface rounded-2xl border border-line overflow-hidden">
 
-                <div className="bg-gray-50 px-5 py-3 border-b border-gray-200">
+                <div className="bg-surface-2 px-5 py-3 border-b border-line">
 
-                  <h3 className="text-sm font-bold text-gray-800">Take-Home Summary</h3>
+                  <h3 className="text-sm font-bold text-ink">Take-Home Summary</h3>
 
                 </div>
 
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-line">
 
                   <Row label="Gross Salary" yearly={breakdown.grossSalary} />
 
@@ -749,11 +755,11 @@ export default function SalaryCalculatorPage() {
 
               {/* Tax Slabs Info */}
 
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="bg-surface rounded-2xl border border-line overflow-hidden">
 
-                <div className="bg-gray-50 px-5 py-3 border-b border-gray-200">
+                <div className="bg-surface-2 px-5 py-3 border-b border-line">
 
-                  <h3 className="text-sm font-bold text-gray-800">
+                  <h3 className="text-sm font-bold text-ink">
 
                     {regime === "new" ? "New Regime" : "Old Regime"} Tax Slabs &mdash; FY 2025-26
 
@@ -767,7 +773,7 @@ export default function SalaryCalculatorPage() {
 
                     <thead>
 
-                      <tr className="text-left text-gray-500 text-xs">
+                      <tr className="text-left text-muted text-xs">
 
                         <th className="pb-2 font-medium">Income Slab</th>
 
@@ -777,7 +783,7 @@ export default function SalaryCalculatorPage() {
 
                     </thead>
 
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-line">
 
                       {regime === "new" ? (
 
@@ -819,7 +825,7 @@ export default function SalaryCalculatorPage() {
 
                   </table>
 
-                  <p className="text-xs text-gray-400 mt-3">
+                  <p className="text-xs text-faint mt-3">
 
                     + 4% Health &amp; Education Cess on total tax.
 
@@ -837,6 +843,28 @@ export default function SalaryCalculatorPage() {
 
         </div>
 
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 pb-12">
+        <div className="bg-surface rounded-lg border border-line p-6">
+          <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {[
+              { path: '/calculators/income-tax', label: 'Income Tax Calculator', desc: 'Old vs new regime tax on your income' },
+              { path: '/calculators/hra-calculator', label: 'HRA Calculator', desc: 'HRA tax exemption — metro & non-metro' },
+              { path: '/calculators/emi', label: 'EMI Calculator', desc: 'Loan EMI, interest and amortisation' },
+              { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Project SIP returns' },
+            ].map(t => (
+              <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                  <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
+                </div>
+                <p className="text-[11px] text-faint mt-1">{t.desc}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
 
     </>
@@ -871,9 +899,9 @@ function Row({ label, yearly, isBold, isHighlight, isGreen, isRed, isDeduct, sub
 
 }) {
 
-  const textColor = isGreen ? "text-green-600" : isRed ? "text-red-600" : isDeduct ? "text-red-500" : "text-gray-800";
+  const textColor = isGreen ? "text-mint" : isRed ? "text-coral" : isDeduct ? "text-coral/80" : "text-ink";
 
-  const bg = isHighlight ? "bg-brand-50" : "";
+  const bg = isHighlight ? "bg-acc-deep" : "";
 
   const font = isBold ? "font-semibold" : "font-normal";
 
@@ -885,7 +913,7 @@ function Row({ label, yearly, isBold, isHighlight, isGreen, isRed, isDeduct, sub
 
     <div className={`flex items-center justify-between px-5 py-2.5 ${bg}`}>
 
-      <span className={`text-sm flex-1 min-w-0 ${sub ? "pl-3 text-gray-500" : "text-gray-700"} ${isBold ? "font-semibold" : ""}`}>
+      <span className={`text-sm flex-1 min-w-0 ${sub ? "pl-3 text-muted" : "text-body"} ${isBold ? "font-semibold" : ""}`}>
 
         {label}
 
@@ -907,7 +935,7 @@ function Row({ label, yearly, isBold, isHighlight, isGreen, isRed, isDeduct, sub
 
           {prefix}{fmtM(yearly)}
 
-          {showMonthlyOnly && <span className="text-xs text-gray-400 ml-1">/mo</span>}
+          {showMonthlyOnly && <span className="text-xs text-faint ml-1">/mo</span>}
 
         </span>
 
@@ -927,9 +955,9 @@ function SlabRow({ slab, rate }: { slab: string; rate: string }) {
 
     <tr>
 
-      <td className="py-2 text-gray-700">{slab}</td>
+      <td className="py-2 text-body">{slab}</td>
 
-      <td className="py-2 text-right font-semibold text-gray-800">{rate}</td>
+      <td className="py-2 text-right font-semibold text-ink">{rate}</td>
 
     </tr>
 

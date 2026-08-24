@@ -111,7 +111,7 @@ export default function StepUpSIPPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-white to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb="Step-Up SIP"
           title="Step-Up SIP"
@@ -121,7 +121,7 @@ export default function StepUpSIPPage() {
         />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-[13px] border border-line border-l-4 border-l-acc p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <SliderInput label="Initial monthly SIP"        value={monthly} min={500} max={200000} step={500}  display={fmtINR(monthly)} onChange={setMonthly} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="purple" />
@@ -131,38 +131,38 @@ export default function StepUpSIPPage() {
               </div>
 
               <div className="flex flex-col justify-center gap-4">
-                <div className="bg-slate-50 rounded-xl p-5 space-y-2">
+                <div className="bg-surface-2 rounded-xl p-5 space-y-2">
                   <div className="flex justify-between py-1.5">
-                    <span className="text-sm text-slate-500">Invested amount</span>
-                    <span className="text-sm font-semibold">{fmtINR(invested)}</span>
+                    <span className="text-sm text-muted">Invested amount</span>
+                    <span className="text-sm font-semibold text-ink">{fmtINR(invested)}</span>
                   </div>
                   <div className="flex justify-between py-1.5">
-                    <span className="text-sm text-slate-500">Est. returns</span>
-                    <span className="text-sm font-semibold text-green-600">{fmtINR(gains)}</span>
+                    <span className="text-sm text-muted">Est. returns</span>
+                    <span className="text-sm font-semibold text-mint">{fmtINR(gains)}</span>
                   </div>
-                  <div className="flex justify-between py-1.5 border-t border-slate-200 pt-3">
-                    <span className="text-sm text-slate-500">Total corpus</span>
-                    <span className="text-base font-bold text-slate-900">{fmtShort(corpus)}</span>
+                  <div className="flex justify-between py-1.5 border-t border-line pt-3">
+                    <span className="text-sm text-muted">Total corpus</span>
+                    <span className="text-base font-bold text-ink">{fmtShort(corpus)}</span>
                   </div>
                   <div className="mt-4 h-10 rounded-xl overflow-hidden flex text-white text-sm font-bold">
-                    <div className="flex items-center justify-center bg-brand-400" style={{ width: `${Math.round((invested / corpus) * 100)}%` }}>
+                    <div className="flex items-center justify-center bg-violet-500/60" style={{ width: `${Math.round((invested / corpus) * 100)}%` }}>
                       {Math.round((invested / corpus) * 100)}%
                     </div>
-                    <div className="flex items-center justify-center bg-brand-600 flex-1">
+                    <div className="flex items-center justify-center bg-violet-500 flex-1">
                       {Math.round((gains / corpus) * 100)}%
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-brand-50 border border-brand-100 rounded-xl p-4">
-                  <div className="text-xs font-semibold text-brand-700 mb-2">vs Flat SIP (₹{monthly.toLocaleString('en-IN')}/mo)</div>
+                <div className="bg-violet-500/10 border border-violet-500/25 rounded-xl p-4">
+                  <div className="text-xs font-semibold text-violet mb-2">vs Flat SIP (₹{monthly.toLocaleString('en-IN')}/mo)</div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500">Flat SIP corpus</span>
-                    <span className="font-semibold">{fmtShort(flatCorpus)}</span>
+                    <span className="text-muted">Flat SIP corpus</span>
+                    <span className="font-semibold text-ink">{fmtShort(flatCorpus)}</span>
                   </div>
                   <div className="flex justify-between text-sm mt-1">
-                    <span className="text-slate-500">Step-Up advantage</span>
-                    <span className="font-bold text-green-600">+{fmtShort(extraVsFlat)}</span>
+                    <span className="text-muted">Step-Up advantage</span>
+                    <span className="font-bold text-mint">+{fmtShort(extraVsFlat)}</span>
                   </div>
                 </div>
               </div>
@@ -170,24 +170,24 @@ export default function StepUpSIPPage() {
 
             {/* Year-wise table */}
             <div className="mt-8">
-              <h2 className="text-base font-bold text-slate-900 mb-3">Year-wise SIP Growth</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-base font-bold text-ink mb-3">Year-wise SIP Growth</h2>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Year</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">SIP Amount</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Total Invested</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Corpus</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted">Year</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">SIP Amount</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Total Invested</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Corpus</th>
                     </tr>
                   </thead>
                   <tbody>
                     {yearData.map(row => (
-                      <tr key={row.year} className="border-t border-slate-50 hover:bg-slate-50">
-                        <td className="px-4 py-2.5 font-medium text-slate-700">Year {row.year}</td>
-                        <td className="px-4 py-2.5 text-right text-brand-600 font-medium">{fmtINR(row.sip)}</td>
-                        <td className="px-4 py-2.5 text-right text-slate-600">{fmtINR(row.invested)}</td>
-                        <td className="px-4 py-2.5 text-right font-bold text-slate-800">{fmtINR(row.corpus)}</td>
+                      <tr key={row.year} className="border-t border-line hover:bg-surface-2">
+                        <td className="px-4 py-2.5 font-medium text-body">Year {row.year}</td>
+                        <td className="px-4 py-2.5 text-right text-violet font-medium">{fmtINR(row.sip)}</td>
+                        <td className="px-4 py-2.5 text-right text-muted">{fmtINR(row.invested)}</td>
+                        <td className="px-4 py-2.5 text-right font-bold text-ink">{fmtINR(row.corpus)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -197,10 +197,10 @@ export default function StepUpSIPPage() {
           </div>
 
           {/* ── Article (always in DOM for SEO) ── */}
-          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+          <article className="bg-surface rounded-[13px] border border-line p-6 space-y-8">
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">What is a Step-Up SIP and why does it beat a flat SIP?</h2>
-              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <h2 className="text-xl font-bold text-ink mb-3">What is a Step-Up SIP and why does it beat a flat SIP?</h2>
+              <div className="text-sm text-muted space-y-3 leading-relaxed">
                 <p>
                   A <strong>Step-Up SIP</strong> (top-up SIP) raises your monthly investment by a fixed percentage every
                   year — typically 5–15%, mirroring salary increments. A flat ₹10,000 SIP stays ₹10,000 for twenty
@@ -222,16 +222,16 @@ export default function StepUpSIPPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">Step-up rate comparison for your inputs</h2>
-              <p className="text-xs text-slate-400 mb-3">Starting at {fmtINR(monthly)}/month, {rate}% expected return, {years} years — computed with the same engine as the calculator above.</p>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-xl font-bold text-ink mb-3">Step-up rate comparison for your inputs</h2>
+              <p className="text-xs text-faint mb-3">Starting at {fmtINR(monthly)}/month, {rate}% expected return, {years} years — computed with the same engine as the calculator above.</p>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Annual step-up</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Total invested</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Final corpus</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">vs flat SIP</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted">Annual step-up</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Total invested</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Final corpus</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">vs flat SIP</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -239,11 +239,11 @@ export default function StepUpSIPPage() {
                       const sim = simulateStepUp(monthly, s, rate, years);
                       const flat = simulateStepUp(monthly, 0, rate, years);
                       return (
-                        <tr key={s} className={`border-t border-slate-50 ${s === stepUp ? 'bg-brand-50' : ''}`}>
-                          <td className="px-4 py-2.5 font-bold text-brand-600">{s === 0 ? 'Flat SIP (0%)' : `${s}%`}</td>
-                          <td className="px-4 py-2.5 text-right text-slate-600">{fmtShort(sim.invested)}</td>
-                          <td className="px-4 py-2.5 text-right font-bold text-slate-800">{fmtShort(sim.corpus)}</td>
-                          <td className="px-4 py-2.5 text-right text-green-600 font-semibold">{s === 0 ? '—' : '+' + fmtShort(sim.corpus - flat.corpus)}</td>
+                        <tr key={s} className={`border-t border-line ${s === stepUp ? 'bg-violet-500/10' : ''}`}>
+                          <td className="px-4 py-2.5 font-bold text-violet">{s === 0 ? 'Flat SIP (0%)' : `${s}%`}</td>
+                          <td className="px-4 py-2.5 text-right text-muted">{fmtShort(sim.invested)}</td>
+                          <td className="px-4 py-2.5 text-right font-bold text-ink">{fmtShort(sim.corpus)}</td>
+                          <td className="px-4 py-2.5 text-right text-mint font-semibold">{s === 0 ? '—' : '+' + fmtShort(sim.corpus - flat.corpus)}</td>
                         </tr>
                       );
                     })}
@@ -253,8 +253,8 @@ export default function StepUpSIPPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">How to set up a Step-Up SIP</h2>
-              <ol className="text-sm text-slate-600 space-y-2 list-decimal ml-5">
+              <h2 className="text-xl font-bold text-ink mb-3">How to set up a Step-Up SIP</h2>
+              <ol className="text-sm text-muted space-y-2 list-decimal ml-5">
                 <li><strong>Pick the fund and base amount</strong> — start with the highest amount you can comfortably sustain today.</li>
                 <li><strong>Choose the top-up type</strong> — percentage (compounds, better long term) or fixed amount (easier to budget). Most AMC forms and apps offer both.</li>
                 <li><strong>Set a cap if you want one</strong> — e.g. stop increasing once the instalment reaches ₹50,000/month.</li>
@@ -265,26 +265,26 @@ export default function StepUpSIPPage() {
           </article>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
                   {/* Always mounted so content stays in the DOM for search engines */}
-                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
+                  <div className={`px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Related tools */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
                 { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Flat SIP growth projection' },
@@ -292,12 +292,12 @@ export default function StepUpSIPPage() {
                 { path: '/calculators/lumpsum', label: 'Lumpsum Calculator', desc: 'One-time investment growth' },
                 { path: '/calculators/swp', label: 'SWP Calculator', desc: 'Turn the corpus into monthly income later' },
               ].map(t => (
-                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
-                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
                 </Link>
               ))}
             </div>

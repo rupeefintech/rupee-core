@@ -1,156 +1,28 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ChevronDown, X, Loader2, Info, CheckCircle2, Shield, MapPin, Building2, ArrowRight } from 'lucide-react';
-import { api, BranchDetail } from '../utils/api';
+import { motion } from 'framer-motion';
+import { Search, Loader2, Info, Shield, MapPin, ArrowRight } from 'lucide-react';
+import { api } from '../utils/api';
+import { Combobox } from '../components/ui/Combobox';
+import { Card } from '../components/ui/Card';
 
-// ── Searchable Combobox ───────────────────────────────────────────────────────
-interface Option { value: string; label: string; icon?: string; }
+const IFSC_RE = /^[A-Za-z]{4}0[A-Za-z0-9]{6}$/;
 
-function Combobox({ label, value, onChange, options, placeholder, disabled, loading, minChars = 0, renderOption }: {
-  label: string; value: string; onChange: (v: string) => void;
-  options: Option[]; placeholder?: string;
-  disabled?: boolean; loading?: boolean; minChars?: number;
-  renderOption?: (opt: Option, highlighted: React.ReactNode) => React.ReactNode;
-}) {
-  const [open, setOpen]   = useState(false);
-  const [query, setQuery] = useState('');
-  const inputRef          = useRef<HTMLInputElement>(null);
-  const containerRef      = useRef<HTMLDivElement>(null);
+const POPULAR_BANKS = [
+  { name: 'State Bank Of India', logo: '/images/banks/State_Bank_Of_India.webp' },
+  { name: 'HDFC Bank', logo: '/images/banks/Hdfc_Bank.webp' },
+  { name: 'ICICI Bank', logo: '/images/banks/Icici_Bank.webp' },
+  { name: 'Axis Bank', logo: '/images/banks/Axis_Bank.webp' },
+  { name: 'Kotak Mahindra Bank', logo: '/images/banks/Kotak_Mahindra_Bank.webp' },
+  { name: 'Punjab National Bank', logo: '/images/banks/Punjab_National_Bank.webp' },
+  { name: 'Bank Of Baroda', logo: '/images/banks/Bank_Of_Baroda.webp' },
+  { name: 'Canara Bank', logo: '/images/banks/Canara_Bank.webp' },
+  { name: 'Union Bank Of India', logo: '/images/banks/Union_Bank_Of_India.webp' },
+  { name: 'IndusInd Bank', logo: '/images/banks/Indusind_Bank.webp' },
+];
 
-  const selectedOpt = options.find(o => o.value === value);
-  const selectedLabel = selectedOpt?.label ?? '';
-  const selectedIcon = selectedOpt?.icon;
-  const filtered = query.length < Math.max(minChars, 1)
-    ? options
-    : options.filter(o => o.label.toLowerCase().includes(query.toLowerCase()));
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false); setQuery('');
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
-  const handleOpen = () => {
-    if (disabled || loading) return;
-    setQuery(''); setOpen(true);
-    setTimeout(() => inputRef.current?.focus(), 50);
-  };
-
-  const handleSelect = useCallback((opt: Option) => {
-    onChange(opt.value); setQuery(''); setOpen(false);
-  }, [onChange]);
-
-  const handleClear = (e: React.MouseEvent) => {
-    e.stopPropagation(); onChange(''); setQuery(''); setOpen(false);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') { setOpen(false); setQuery(''); }
-    if (e.key === 'Enter' && filtered.length === 1) handleSelect(filtered[0]);
-  };
-
-  function highlight(text: string, q: string) {
-    if (!q) return <>{text}</>;
-    const idx = text.toLowerCase().indexOf(q.toLowerCase());
-    if (idx === -1) return <>{text}</>;
-    return (
-      <>
-        {text.slice(0, idx)}
-        <mark className="bg-yellow-100 text-yellow-800 rounded px-0.5 not-italic">
-          {text.slice(idx, idx + q.length)}
-        </mark>
-        {text.slice(idx + q.length)}
-      </>
-    );
-  }
-
-  return (
-    <div className="relative" ref={containerRef}>
-      <label className="block text-sm font-semibold text-brand-800 mb-2">{label}</label>
-      <div
-        onClick={handleOpen}
-        className={`relative flex items-center rounded-xl px-3 py-2.5 bg-white transition-all cursor-pointer min-h-[50px]
-          border-2 ${open ? 'border-brand-500 ring-2 ring-brand-100 shadow-sm' : 'border-gray-200 hover:border-brand-300'}
-          ${disabled || loading ? 'opacity-50 cursor-not-allowed bg-gray-50' : ''}`}
-      >
-        {open ? (
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={minChars > 0 ? `Type ${minChars}+ chars to filter…` : `Search ${options.length} options…`}
-            className="flex-1 outline-none text-sm text-brand-900 bg-transparent font-body"
-            onClick={e => e.stopPropagation()}
-          />
-        ) : (
-          <span className={`flex-1 text-sm truncate flex items-center gap-2 ${selectedLabel ? 'text-brand-900 font-semibold' : 'text-gray-400'}`}>
-            {loading ? 'Loading…' : (<>
-              {selectedIcon && <img src={selectedIcon} alt="" className="w-5 h-5 object-contain rounded flex-shrink-0" />}
-              {selectedLabel || placeholder || `Select ${label}`}
-            </>)}
-          </span>
-        )}
-        <div className="flex items-center gap-1 ml-2 flex-shrink-0">
-          {loading && <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />}
-          {!loading && value && !open && (
-            <button onClick={handleClear} className="p-0.5 rounded-full hover:bg-gray-100 text-gray-400 hover:text-brand-600">
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-          <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`} />
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -4, scaleY: 0.97 }}
-            animate={{ opacity: 1, y: 0, scaleY: 1 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.1 }}
-            style={{ transformOrigin: 'top' }}
-            className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-2xl shadow-2xl max-h-60 overflow-y-auto"
-          >
-            {minChars > 0 && query.length < minChars && options.length > 20 && (
-              <div className="px-3 py-2 text-xs text-gray-400 border-b border-gray-100 flex items-center gap-1.5 sticky top-0 bg-white rounded-t-2xl">
-                <Search className="w-3 h-3" /> Type {minChars}+ characters to filter {options.length} options
-              </div>
-            )}
-            {filtered.length === 0 ? (
-              <div className="px-3 py-6 text-sm text-gray-400 text-center">No matches for "{query}"</div>
-            ) : (
-              filtered.map(opt => (
-                <button
-                  key={opt.value}
-                  onClick={() => handleSelect(opt)}
-                  className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center gap-2
-                    ${opt.value === value ? 'bg-brand-50 text-brand-700 font-semibold' : 'text-brand-900 hover:bg-gray-50'}`}
-                >
-                  {opt.value === value
-                    ? <CheckCircle2 className="w-3.5 h-3.5 text-brand-500 flex-shrink-0" />
-                    : <span className="w-3.5 h-3.5 flex-shrink-0" />}
-                  {renderOption
-                    ? renderOption(opt, highlight(opt.label, query))
-                    : <span>{highlight(opt.label, query)}</span>}
-                </button>
-              ))
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// ── Main Page ─────────────────────────────────────────────────────────────────
 export default function IFSCFinderPage() {
   const [selectedBank,     setSelectedBank]     = useState('');
   const [selectedState,    setSelectedState]    = useState('');
@@ -158,6 +30,8 @@ export default function IFSCFinderPage() {
   const [selectedBranch,   setSelectedBranch]   = useState('');
   const [searching,        setSearching]        = useState(false);
   const [searchErr,        setSearchErr]        = useState('');
+  const [quickQuery,       setQuickQuery]       = useState('');
+  const [quickErr,         setQuickErr]         = useState('');
   const navigate = useNavigate();
 
   const { data: banks = [] }  = useQuery({ queryKey: ['banks'],  queryFn: api.getBanks  });
@@ -209,6 +83,25 @@ export default function IFSCFinderPage() {
   const handleDistrictChange = (v: string) => {
     setSelectedDistrict(v); setSelectedBranch(''); setSearchErr('');
   };
+
+  const handleQuickSearch = () => {
+    const q = quickQuery.trim();
+    if (!q) return;
+    setQuickErr('');
+    if (IFSC_RE.test(q)) {
+      navigate(`/ifsc/${q.toUpperCase()}`);
+      return;
+    }
+    const match = banks.find(b => b.name.toLowerCase().includes(q.toLowerCase()));
+    if (match) {
+      handleBankChange(String(match.id));
+      document.getElementById('guided-search')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    setQuickErr(`No bank matched "${q}" — try the exact IFSC code, or pick your bank below.`);
+  };
+
+  const currentStep = selectedBranch ? 4 : selectedDistrict ? 4 : selectedState ? 3 : selectedBank ? 2 : 1;
 
   const handleSearch = async () => {
     if (!selectedBranch) { setSearchErr('Please select a branch to continue.'); return; }
@@ -291,228 +184,222 @@ export default function IFSCFinderPage() {
         })}</script>
       </Helmet>
 
-      {/* Hero — uses existing hero-bg class */}
-      <section className="hero-bg py-14 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <span className="inline-flex items-center gap-2 bg-brand-100 text-brand-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5 border border-brand-200">
-              <Shield className="w-3.5 h-3.5" /> RBI Verified Data · Updated Fortnightly
-            </span>
-            <h1 className="font-display text-4xl sm:text-5xl font-bold text-brand-900 mb-3 leading-tight">
-              IFSC Code Finder
-            </h1>
-            <p className="text-gray-500 text-lg max-w-xl mx-auto">
-              Find IFSC &amp; MICR codes for any bank branch across India
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      {/* Hero */}
+      <header className="py-8 md:py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute top-[-160px] left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full opacity-25 blur-[20px]"
+                   style={{ background: 'radial-gradient(50% 50% at 50% 50%, var(--acc-glow), transparent 70%)' }} />
+              <div className="absolute inset-0 opacity-[0.35]"
+                   style={{ backgroundImage: 'radial-gradient(rgb(var(--line-2-rgb)) 1px, transparent 1px)', backgroundSize: '28px 28px', maskImage: 'radial-gradient(ellipse 60% 60% at 50% 30%, black 0%, transparent 75%)' }} />
+            </div>
+            <div className="relative z-[2]">
+              <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                  <span className="inline-flex items-center gap-2 bg-acc-deep text-acc text-xs font-semibold px-3 py-1.5 rounded-full mb-5 border border-acc/30">
+                    <Shield className="w-3.5 h-3.5" /> RBI Verified Data · Updated Fortnightly
+                  </span>
+                  <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink mb-3 leading-tight">
+                    IFSC &amp; MICR Code Finder
+                  </h1>
+                  <p className="text-muted text-lg max-w-xl mx-auto mb-8">
+                    Search 1,78,000+ RBI-verified bank branches by IFSC code, bank name, or branch location
+                  </p>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-6 pb-16">
+                  {/* Quick search */}
+                  <div className="flex flex-col sm:flex-row gap-2.5 max-w-xl mx-auto">
+                    <div className="relative flex-1">
+                      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-faint" />
+                      <input
+                        type="text"
+                        value={quickQuery}
+                        onChange={e => { setQuickQuery(e.target.value); setQuickErr(''); }}
+                        onKeyDown={e => e.key === 'Enter' && handleQuickSearch()}
+                        placeholder="Search by IFSC (SBIN0000691), Bank (HDFC), or Branch…"
+                        className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm bg-bg-2 border border-line-2 text-ink placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc transition-all"
+                      />
+                    </div>
+                    <button
+                      onClick={handleQuickSearch}
+                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-sm font-semibold px-6 py-3.5 rounded-xl shadow-acc-glow hover:-translate-y-px transition-all shrink-0"
+                    >
+                      <Search className="w-4 h-4" /> Search
+                    </button>
+                  </div>
+                  {quickErr && (
+                    <p className="text-coral text-xs mt-2.5 flex items-center justify-center gap-1.5">
+                      <Info className="w-3.5 h-3.5" /> {quickErr}
+                    </p>
+                  )}
+
+                  {/* Popular banks */}
+                  <div className="flex items-center flex-wrap justify-center gap-2 mt-6">
+                    <span className="text-xs text-faint font-medium mr-1">Popular Banks:</span>
+                    {POPULAR_BANKS.map(b => {
+                      const matchedBank = banks.find(bk => bk.name.toLowerCase() === b.name.toLowerCase());
+                      const isSelected = matchedBank && String(matchedBank.id) === selectedBank;
+                      return (
+                        <button
+                          key={b.name}
+                          onClick={() => { if (matchedBank) handleBankChange(String(matchedBank.id)); }}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+                            isSelected
+                              ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                              : 'bg-bg-2 text-body border-line-2 hover:border-acc/40'
+                          }`}
+                        >
+                          <img src={b.logo} alt="" className="w-4 h-4 object-contain rounded-sm" />
+                          {b.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="relative bg-bg -mt-6 pb-16 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-[0.25]"
+             style={{ backgroundImage: 'radial-gradient(rgb(var(--line-2-rgb)) 1px, transparent 1px)', backgroundSize: '28px 28px', maskImage: 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)' }} />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="lg:col-span-8 min-w-0">
 
         {/* Search Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-          className="card p-6 sm:p-8 shadow-md"
-        >
-          <h2 className="font-display text-lg font-bold text-brand-900 mb-5 flex items-center gap-2">
-            <Search className="w-5 h-5 text-brand-600" /> Search by Bank &amp; Branch
-          </h2>
+        <motion.div id="guided-search" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="scroll-mt-24">
+          <Card className="p-6 sm:p-8 relative z-[2]">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-display text-lg font-bold text-ink flex items-center gap-2">
+                <Search className="w-5 h-5 text-acc" /> Select Bank, State, District &amp; Branch
+              </h2>
+              <span className="text-xs text-faint font-medium shrink-0">Step {currentStep} of 4</span>
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Combobox
-              label="1. Bank Name"
-              value={selectedBank}
-              onChange={handleBankChange}
-              options={sortedBanks.map(b => ({ value: String(b.id), label: b.name }))}
-              placeholder="Select bank…"
-            />
-            <Combobox
-              label="2. State"
-              value={selectedState}
-              onChange={handleStateChange}
-              options={sortedStates.map(s => ({
-                value: String(s.id),
-                label: s.name + (s.branchCount ? ` (${s.branchCount} branches)` : ''),
-                icon: s.logo_url || undefined,
-              }))}
-              placeholder={selectedBank ? (loadingStates ? 'Loading states…' : 'Select state…') : 'Select bank first…'}
-              disabled={!selectedBank}
-              loading={loadingStates}
-              renderOption={(opt, highlighted) => (
-                <span className="flex items-center gap-2.5">
-                  {opt.icon ? (
-                    <img src={opt.icon} alt="" className="w-7 h-7 object-contain rounded-md flex-shrink-0" />
-                  ) : (
-                    <span className="w-7 h-7 bg-brand-50 rounded-md flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-4 h-4 text-brand-500" />
-                    </span>
-                  )}
-                  <span>{highlighted}</span>
-                </span>
-              )}
-            />
-            <Combobox
-              label="3. District"
-              value={selectedDistrict}
-              onChange={handleDistrictChange}
-              options={sortedDistricts.map(d => ({ value: String(d.id), label: d.name }))}
-              placeholder={selectedState ? 'Select district…' : 'Select state first…'}
-              disabled={!selectedState}
-              loading={loadingDistricts}
-            />
-            <Combobox
-              label="4. Branch"
-              value={selectedBranch}
-              onChange={(v) => { setSelectedBranch(v); setSearchErr(''); }}
-              options={sortedBranches.map(b => ({ value: b.ifsc, label: `${b.branch_name}${b.city ? ' — ' + b.city : ''}` }))}
-              placeholder={selectedDistrict ? 'Select branch…' : 'Select district first…'}
-              disabled={!selectedDistrict}
-              loading={loadingBranches}
-              minChars={3}
-            />
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Combobox
+                label="1. Bank Name"
+                value={selectedBank}
+                onChange={handleBankChange}
+                options={sortedBanks.map(b => ({ value: String(b.id), label: b.name }))}
+                placeholder="Select bank…"
+              />
+              <Combobox
+                label="2. State"
+                value={selectedState}
+                onChange={handleStateChange}
+                options={sortedStates.map(s => ({
+                  value: String(s.id),
+                  label: s.name + (s.branchCount ? ` (${s.branchCount} branches)` : ''),
+                  icon: s.logo_url || undefined,
+                }))}
+                placeholder={selectedBank ? (loadingStates ? 'Loading states…' : 'Select state…') : 'Select bank first…'}
+                disabled={!selectedBank}
+                loading={loadingStates}
+                renderOption={(opt, highlighted) => (
+                  <span className="flex items-center gap-2.5">
+                    {opt.icon ? (
+                      <img src={opt.icon} alt="" className="w-7 h-7 object-contain rounded-md flex-shrink-0" />
+                    ) : (
+                      <span className="w-7 h-7 bg-acc-deep rounded-md flex items-center justify-center flex-shrink-0">
+                        <MapPin className="w-4 h-4 text-acc" />
+                      </span>
+                    )}
+                    <span>{highlighted}</span>
+                  </span>
+                )}
+              />
+              <Combobox
+                label="3. District"
+                value={selectedDistrict}
+                onChange={handleDistrictChange}
+                options={sortedDistricts.map(d => ({ value: String(d.id), label: d.name }))}
+                placeholder={selectedState ? 'Select district…' : 'Select state first…'}
+                disabled={!selectedState}
+                loading={loadingDistricts}
+              />
+              <Combobox
+                label="4. Branch"
+                value={selectedBranch}
+                onChange={(v) => { setSelectedBranch(v); setSearchErr(''); }}
+                options={sortedBranches.map(b => ({ value: b.ifsc, label: `${b.branch_name}${b.city ? ' — ' + b.city : ''}` }))}
+                placeholder={selectedDistrict ? 'Select branch…' : 'Select district first…'}
+                disabled={!selectedDistrict}
+                loading={loadingBranches}
+                minChars={3}
+              />
+            </div>
 
-          {searchErr && (
-            <p className="text-red-500 text-sm mt-3 flex items-center gap-1.5">
-              <Info className="w-4 h-4" /> {searchErr}
-            </p>
-          )}
+            {searchErr && (
+              <p className="text-coral text-sm mt-3 flex items-center gap-1.5">
+                <Info className="w-4 h-4" /> {searchErr}
+              </p>
+            )}
 
-          <button
-            onClick={handleSearch}
-            disabled={!selectedBranch || searching}
-            className="btn-primary mt-5 flex items-center gap-2 text-base"
-          >
-            {searching
-              ? <><Loader2 className="w-4 h-4 animate-spin" /> Searching…</>
-              : <><Search className="w-4 h-4" /> Get IFSC Details</>}
-          </button>
+            <button
+              onClick={handleSearch}
+              disabled={!selectedBranch || searching}
+              className="mt-5 inline-flex items-center gap-2 text-base font-semibold px-[18px] py-[13px] rounded-[13px] bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all disabled:opacity-60 disabled:pointer-events-none"
+            >
+              {searching
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Searching…</>
+                : <><Search className="w-4 h-4" /> Get IFSC Details</>}
+            </button>
+          </Card>
         </motion.div>
 
-        {/* Popular Banks */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="card p-6 sm:p-8 mt-8"
-        >
-          <h2 className="font-display text-lg font-bold text-brand-900 mb-5 flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-brand-600" /> Popular Banks
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {[
-              { name: 'State Bank Of India', logo: '/images/banks/State_Bank_Of_India.webp' },
-              { name: 'HDFC Bank', logo: '/images/banks/Hdfc_Bank.webp' },
-              { name: 'ICICI Bank', logo: '/images/banks/Icici_Bank.webp' },
-              { name: 'Axis Bank', logo: '/images/banks/Axis_Bank.webp' },
-              { name: 'Kotak Mahindra Bank', logo: '/images/banks/Kotak_Mahindra_Bank.webp' },
-              { name: 'Punjab National Bank', logo: '/images/banks/Punjab_National_Bank.webp' },
-              { name: 'Bank Of Baroda', logo: '/images/banks/Bank_Of_Baroda.webp' },
-              { name: 'Canara Bank', logo: '/images/banks/Canara_Bank.webp' },
-              { name: 'Union Bank Of India', logo: '/images/banks/Union_Bank_Of_India.webp' },
-              { name: 'IndusInd Bank', logo: '/images/banks/Indusind_Bank.webp' },
-              { name: 'Yes Bank', logo: '/images/banks/Yes_Bank.webp' },
-              { name: 'Bank Of India', logo: '/images/banks/Bank_Of_India.webp' },
-              { name: 'Indian Bank', logo: '/images/banks/Indian_Bank.webp' },
-              { name: 'Central Bank Of India', logo: '/images/banks/Central_Bank_Of_India.webp' },
-              { name: 'IDBI', logo: '/images/banks/Idbi.webp' },
-            ].map((b) => {
-              const matchedBank = banks.find(bk => bk.name.toLowerCase() === b.name.toLowerCase());
-              return (
-                <button
-                  key={b.name}
-                  onClick={() => {
-                    if (matchedBank) {
-                      handleBankChange(String(matchedBank.id));
-                    }
-                  }}
-                  className={`flex items-center gap-2.5 p-3 rounded-xl border transition-all text-left
-                    ${matchedBank && String(matchedBank.id) === selectedBank
-                      ? 'border-brand-400 bg-brand-50 shadow-sm'
-                      : 'border-gray-200 hover:border-brand-300 hover:shadow-sm bg-white'}`}
-                >
-                  <img src={b.logo} alt={b.name} className="w-8 h-8 object-contain flex-shrink-0" />
-                  <span className="text-sm font-medium text-gray-800 truncate">{b.name}</span>
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
+      </div>
 
-        {/* What is IFSC Code */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="card p-6 sm:p-8 mt-8"
-        >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-4">What is an IFSC Code?</h2>
-          <p className="text-gray-600 leading-relaxed mb-4">
-            IFSC stands for <strong>Indian Financial System Code</strong>. It is an 11-character alphanumeric code assigned by the Reserve Bank of India (RBI)
-            to uniquely identify every bank branch that participates in electronic fund transfers. The IFSC code is essential for
-            <strong> NEFT</strong> (National Electronic Funds Transfer), <strong>RTGS</strong> (Real Time Gross Settlement), and <strong>IMPS</strong> (Immediate Payment Service) transactions.
-          </p>
-          <div className="bg-gray-50 rounded-xl p-4 mb-4">
-            <h3 className="font-semibold text-brand-800 mb-2">IFSC Code Format</h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              An IFSC code like <span className="font-mono bg-brand-50 text-brand-700 px-1.5 py-0.5 rounded">HDFC0001234</span> has three parts:
-            </p>
-            <ul className="mt-2 space-y-1 text-sm text-gray-600">
-              <li><strong>First 4 characters</strong> — Bank code (e.g., HDFC = HDFC Bank)</li>
-              <li><strong>5th character</strong> — Always <span className="font-mono">0</span> (reserved for future use)</li>
-              <li><strong>Last 6 characters</strong> — Branch code (unique to each branch)</li>
-            </ul>
-          </div>
-        </motion.div>
-
-        {/* How to Find IFSC Code */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-          className="card p-6 sm:p-8 mt-8"
-        >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-4">How to Find Your IFSC Code?</h2>
-          <div className="space-y-3">
-            {[
-              { step: '1', title: 'Use this IFSC Finder', desc: 'Select your bank, state, district and branch from the dropdowns above to instantly find the IFSC code.' },
-              { step: '2', title: 'Check your cheque book', desc: 'The IFSC code is printed on the cheque leaf, usually near the MICR code at the bottom.' },
-              { step: '3', title: 'Check your bank passbook', desc: 'The first page of your passbook typically has the branch IFSC code printed along with account details.' },
-              { step: '4', title: 'Visit your bank\'s website', desc: 'Most banks have a branch locator on their official website that shows the IFSC code.' },
-              { step: '5', title: 'Internet / Mobile banking', desc: 'Log in to your net banking or mobile banking app — the branch IFSC is shown in account details.' },
-            ].map(item => (
-              <div key={item.step} className="flex gap-3">
-                <span className="w-7 h-7 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
-                  {item.step}
-                </span>
-                <div>
-                  <p className="font-semibold text-gray-800">{item.title}</p>
-                  <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+      {/* Sidebar */}
+      <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-20">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+          className="bg-gradient-to-br from-acc-deep to-surface border border-acc/30 rounded-2xl p-6 shadow-acc-glow relative overflow-hidden">
+          <div className="relative z-10">
+            <h3 className="text-base font-bold text-ink mb-4">Trusted by Millions</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { n: '1,78,000+', label: 'Bank Branches' },
+                { n: '1,350+', label: 'Banks Covered' },
+                { n: '43', label: 'States & UTs' },
+                { n: 'RBI', label: 'Verified Data' },
+              ].map(({ n, label }) => (
+                <div key={label}>
+                  <p className="text-xl font-extrabold text-ink leading-none">{n}</p>
+                  <p className="text-[11px] text-faint font-semibold uppercase tracking-wide mt-1">{label}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          <Shield className="absolute -bottom-6 -right-6 w-32 h-32 text-acc opacity-10" />
         </motion.div>
 
-        {/* Why is IFSC Important */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-          className="card p-6 sm:p-8 mt-8"
-        >
-          <h2 className="font-display text-xl font-bold text-brand-900 mb-4">Why is IFSC Code Important?</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { title: 'NEFT Transfers', desc: 'Required for National Electronic Fund Transfer, processed in hourly batches.' },
-              { title: 'RTGS Transfers', desc: 'Needed for Real Time Gross Settlement — instant transfers for amounts above Rs. 2 lakh.' },
-              { title: 'IMPS Transfers', desc: 'Used for Immediate Payment Service — 24/7 instant mobile/internet fund transfers.' },
-              { title: 'UPI Payments', desc: 'While UPI uses VPA, bank-to-bank UPI transfers may need the IFSC code for verification.' },
-            ].map(item => (
-              <div key={item.title} className="flex gap-3 p-3 rounded-lg bg-gray-50">
-                <ArrowRight className="w-4 h-4 text-brand-500 flex-shrink-0 mt-1" />
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">{item.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+          <Card className="p-5">
+            <h3 className="font-bold text-ink text-sm mb-3">Related Tools &amp; Guides</h3>
+            <div className="flex flex-col gap-1">
+              {[
+                { label: 'SWIFT Code Lookup', to: '/swift-code-lookup' },
+                { label: 'PIN Code Directory', to: '/pin-codes' },
+                { label: 'FD Interest Rates', to: '/fd-rates' },
+                { label: 'Bank Holidays', to: '/bank-holidays' },
+                { label: 'What is IFSC Code?', to: '/what-is-ifsc-code' },
+                { label: 'How to Find IFSC Code', to: '/how-to-find-ifsc-code' },
+                { label: 'IFSC vs MICR', to: '/ifsc-vs-micr' },
+              ].map(item => (
+                <Link key={item.to} to={item.to}
+                  className="flex items-center justify-between text-sm text-body hover:text-acc px-2 py-2 rounded-lg hover:bg-surface-2 transition-colors">
+                  {item.label} <ArrowRight className="w-3.5 h-3.5 text-faint" />
+                </Link>
+              ))}
+            </div>
+          </Card>
         </motion.div>
+      </aside>
 
+      </div>
       </div>
     </>
   );

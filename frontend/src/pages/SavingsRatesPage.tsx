@@ -2,10 +2,11 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
   ChevronDown, ChevronUp, ChevronRight, Clock, ExternalLink, Search,
-  ShieldCheck, RefreshCw, PiggyBank, Zap, Users,
-  Building2, CreditCard, TrendingUp, ArrowUpDown,
+  ShieldCheck, RefreshCw, PiggyBank, Zap,
+  Building2, TrendingUp, ArrowUpDown,
   Info, Smartphone, BriefcaseBusiness, Wallet,
   CheckCircle2,
 } from 'lucide-react';
@@ -93,9 +94,9 @@ const TOP_PICKS = [
     rateNote: 'on balances above ₹50 Lakh',
     badge: '🏆 Best Rate',
     feature: 'Fully licensed, DICGC insured up to ₹5 lakh',
-    borderCls: 'border-t-4 border-t-emerald-500',
-    rateCls: 'text-emerald-700',
-    badgeCls: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    borderCls: 'border-t-4 border-t-mint',
+    rateCls: 'text-mint',
+    badgeCls: 'bg-mint/10 text-mint border-mint/30',
   },
   {
     category: 'Best Private Bank',
@@ -104,9 +105,9 @@ const TOP_PICKS = [
     rateNote: 'on balances above ₹5 Lakh',
     badge: '⭐ Top Private',
     feature: 'Zero balance option + high-yield tiers for all balances',
-    borderCls: 'border-t-4 border-t-brand-500',
-    rateCls: 'text-brand-700',
-    badgeCls: 'bg-brand-50 text-brand-700 border-brand-200',
+    borderCls: 'border-t-4 border-t-acc',
+    rateCls: 'text-acc',
+    badgeCls: 'bg-acc-deep text-acc border-acc/30',
   },
   {
     category: 'Best Zero Balance',
@@ -115,9 +116,9 @@ const TOP_PICKS = [
     rateNote: 'BSBDA · no minimum balance',
     badge: '🏦 Most Accessible',
     feature: '22,000+ branches · zero penalty · RBI-mandated BSBDA',
-    borderCls: 'border-t-4 border-t-blue-500',
-    rateCls: 'text-blue-700',
-    badgeCls: 'bg-blue-50 text-blue-700 border-blue-200',
+    borderCls: 'border-t-4 border-t-cyan',
+    rateCls: 'text-cyan',
+    badgeCls: 'bg-cyan/10 text-cyan border-cyan/30',
   },
   {
     category: 'Best Digital Account',
@@ -126,9 +127,9 @@ const TOP_PICKS = [
     rateNote: 'open in 10 min · no branch needed',
     badge: '📱 Instant Open',
     feature: 'Video KYC only · zero balance · smart savings tools',
-    borderCls: 'border-t-4 border-t-violet-500',
-    rateCls: 'text-violet-700',
-    badgeCls: 'bg-violet-50 text-violet-700 border-violet-200',
+    borderCls: 'border-t-4 border-t-violet',
+    rateCls: 'text-violet',
+    badgeCls: 'bg-violet-500/10 text-violet border-violet/30',
   },
 ];
 
@@ -140,9 +141,9 @@ const SCENARIOS = [
     need: 'Instant access with no minimum balance penalty',
     pick: 'Zero Balance (BSBDA)',
     examples: 'SBI BSBDA · HDFC Basic Savings · Kotak 811',
-    bgCls: 'bg-green-50 border-green-200',
-    iconCls: 'text-green-600 bg-green-100',
-    pickCls: 'text-green-700 font-semibold',
+    bgCls: 'bg-mint/5 border-mint/30',
+    iconCls: 'text-mint bg-mint/10',
+    pickCls: 'text-mint font-semibold',
   },
   {
     Icon: BriefcaseBusiness,
@@ -150,9 +151,9 @@ const SCENARIOS = [
     need: 'No min balance as long as salary is credited monthly',
     pick: 'Private Bank Salary Account',
     examples: 'HDFC Salary · ICICI Corporate · Axis Prime',
-    bgCls: 'bg-brand-50 border-brand-200',
-    iconCls: 'text-brand-600 bg-brand-100',
-    pickCls: 'text-brand-700 font-semibold',
+    bgCls: 'bg-acc-deep border-acc/30',
+    iconCls: 'text-acc bg-acc/15',
+    pickCls: 'text-acc font-semibold',
   },
   {
     Icon: TrendingUp,
@@ -160,9 +161,9 @@ const SCENARIOS = [
     need: 'Highest possible rate on surplus parked funds',
     pick: 'Small Finance Bank',
     examples: 'Utkarsh SFB · ESAF SFB · Jana SFB · AU SFB',
-    bgCls: 'bg-emerald-50 border-emerald-200',
-    iconCls: 'text-emerald-600 bg-emerald-100',
-    pickCls: 'text-emerald-700 font-semibold',
+    bgCls: 'bg-mint/5 border-mint/30',
+    iconCls: 'text-mint bg-mint/10',
+    pickCls: 'text-mint font-semibold',
   },
   {
     Icon: Smartphone,
@@ -170,9 +171,9 @@ const SCENARIOS = [
     need: 'Open from phone, no branch visit, modern UX',
     pick: 'Neo / Digital Bank',
     examples: 'Fi Money · Jupiter · Niyo · Freo (all DICGC-insured)',
-    bgCls: 'bg-violet-50 border-violet-200',
-    iconCls: 'text-violet-600 bg-violet-100',
-    pickCls: 'text-violet-700 font-semibold',
+    bgCls: 'bg-violet-500/5 border-violet/30',
+    iconCls: 'text-violet bg-violet-500/10',
+    pickCls: 'text-violet font-semibold',
   },
 ];
 
@@ -244,7 +245,7 @@ function daysSince(iso: string) {
 }
 function FreshBadge({ lastVerified }: { lastVerified: string }) {
   const d = daysSince(lastVerified);
-  const cls = d <= 7 ? 'bg-green-100 text-green-700' : d <= 30 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700';
+  const cls = d <= 7 ? 'bg-mint/10 text-mint' : d <= 30 ? 'bg-gold/10 text-gold' : 'bg-coral/10 text-coral';
   return (
     <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold ${cls}`}>
       <Clock className="w-2 h-2" />{d === 0 ? 'Today' : `${d}d ago`}
@@ -260,21 +261,21 @@ function fmtMinBalance(t: Tier): string {
   return 'Standard';
 }
 function rateColor(rate: number) {
-  if (rate >= 6) return 'text-emerald-700 font-extrabold';
-  if (rate >= 4) return 'text-amber-600 font-bold';
-  return 'text-gray-700 font-semibold';
+  if (rate >= 6) return 'text-mint font-extrabold';
+  if (rate >= 4) return 'text-gold font-bold';
+  return 'text-body font-semibold';
 }
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={`border-l-2 transition-all pl-4 ${open ? 'border-brand-400' : 'border-gray-200'}`}>
+    <div className={`border-l-2 transition-all pl-4 ${open ? 'border-acc' : 'border-line'}`}>
       <button onClick={() => setOpen(v => !v)} aria-expanded={open}
-        className="w-full flex justify-between items-start py-3 text-left text-sm font-semibold text-gray-800 hover:text-brand-700 transition-colors gap-3">
+        className="w-full flex justify-between items-start py-3 text-left text-sm font-semibold text-ink hover:text-acc transition-colors gap-3">
         <span className="leading-snug">{q}</span>
-        {open ? <ChevronUp className="w-4 h-4 text-brand-500 flex-shrink-0 mt-0.5" />
-               : <ChevronDown className="w-4 h-4 text-gray-300 flex-shrink-0 mt-0.5" />}
+        {open ? <ChevronUp className="w-4 h-4 text-acc flex-shrink-0 mt-0.5" />
+               : <ChevronDown className="w-4 h-4 text-faint flex-shrink-0 mt-0.5" />}
       </button>
-      {open && <p className="pb-3 text-sm text-gray-500 leading-relaxed">{a}</p>}
+      {open && <p className="pb-3 text-sm text-muted leading-relaxed">{a}</p>}
     </div>
   );
 }
@@ -361,578 +362,581 @@ export default function SavingsRatesPage() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
+      {/* ── Hero ── */}
+      <header className="py-8 md:py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="relative z-[2]">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+                <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 flex-wrap font-mono">
+                  <Link to="/" className="hover:text-acc transition-colors">Home</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <Link to="/accounts" className="hover:text-acc transition-colors">Bank Accounts</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <span className="text-acc font-semibold">Savings Account Rates</span>
+                </nav>
 
-        {/* ── Hero ──────────────────────────────────────────────────────────── */}
-        <div className="bg-gradient-to-br from-brand-800 via-brand-900 to-slate-900 text-white">
-          <div className="max-w-5xl mx-auto px-4 py-12">
-            <nav className="flex items-center gap-1.5 text-brand-300 text-xs mb-5">
-              <Link to="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <Link to="/accounts" className="hover:text-white transition-colors">Bank Accounts</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <span className="text-white font-medium">Savings Account Rates</span>
-            </nav>
-
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <PiggyBank className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold">Best Savings Account Interest Rates 2026</h1>
-                <p className="text-brand-200 mt-1 text-sm">Compare savings account rates across all Indian banks</p>
-              </div>
-            </div>
-            <p className="text-brand-200 text-base max-w-2xl mb-8">
-              Compare savings account rates across public, private, and small finance banks in India.
-              Interest calculated daily on closing balance, credited quarterly. All accounts DICGC-insured.
-            </p>
-
-            {!isLoading && !isError && (
-              <div className="flex flex-wrap gap-4">
-                {[
-                  { label: 'Banks Tracked',    value: hasDBData ? `${banks.length}+` : '100+' },
-                  { label: 'Best Rate',         value: `${bestRate ?? 'Up to 9'}% p.a.`        },
-                  { label: 'Interest Credited', value: 'Quarterly'                              },
-                  { label: 'DICGC Insurance',   value: 'Up to ₹5 Lakh'                         },
-                ].map(s => (
-                  <div key={s.label} className="bg-white/10 rounded-xl px-4 py-2.5">
-                    <div className="font-bold text-white text-lg">{s.value}</div>
-                    <div className="text-brand-300 text-xs">{s.label}</div>
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 bg-acc-deep rounded-2xl flex items-center justify-center flex-shrink-0 text-acc">
+                    <PiggyBank className="w-6 h-6" />
                   </div>
-                ))}
+                  <div>
+                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">Best Savings Account Interest Rates 2026</h1>
+                    <p className="text-body mt-1 text-sm">Compare savings account rates across all Indian banks</p>
+                  </div>
+                </div>
+                <p className="text-body text-base max-w-2xl mb-8">
+                  Compare savings account rates across public, private, and small finance banks in India.
+                  Interest calculated daily on closing balance, credited quarterly. All accounts DICGC-insured.
+                </p>
+
+                {!isLoading && !isError && (
+                  <div className="flex flex-wrap gap-4 sm:gap-6">
+                    {[
+                      { n: hasDBData ? `${banks.length}+` : '100+', label: 'Banks Tracked'    },
+                      { n: `${bestRate ?? 'Up to 9'}% p.a.`,          label: 'Best Rate'        },
+                      { n: 'Quarterly',                                label: 'Interest Credited' },
+                      { n: 'Up to ₹5 Lakh',                            label: 'DICGC Insurance'   },
+                    ].map(({ n, label }) => (
+                      <div key={label}>
+                        <p className="text-2xl font-extrabold text-ink leading-none">{n}</p>
+                        <p className="text-[11px] text-faint font-semibold uppercase tracking-wide mt-0.5">{label}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="bg-bg max-w-5xl mx-auto px-4 sm:px-6 py-7 space-y-8">
+
+        {/* ── Account type tabs ────────────────────────────────────────────── */}
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {ACCOUNT_TYPES.map(f => {
+            const { Icon } = f;
+            const active = accountFilter === f.value;
+            return (
+              <button key={f.value} onClick={() => setAccountFilter(f.value)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border whitespace-nowrap transition-all flex-shrink-0 ${
+                  active
+                    ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                    : 'bg-surface text-muted border-line hover:border-acc/40 hover:text-acc'
+                }`}>
+                <Icon className="w-3.5 h-3.5" />
+                {f.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── Top Picks ────────────────────────────────────────────────────── */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-ink">Top Picks for 2026</h2>
+            <span className="text-xs text-faint">Updated June 2026</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {TOP_PICKS.map(p => (
+              <div key={p.bank} className={`bg-surface rounded-2xl border border-line ${p.borderCls} p-5 flex flex-col gap-3 hover:border-line-2 transition-colors`}>
+                <div>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 border rounded-full ${p.badgeCls}`}>{p.badge}</span>
+                  <p className="text-[11px] text-faint mt-2 font-semibold uppercase tracking-wide">{p.category}</p>
+                  <p className="font-bold text-ink text-sm mt-0.5 leading-snug">{p.bank}</p>
+                </div>
+                <div>
+                  <div className={`text-2xl font-extrabold ${p.rateCls}`}>{p.rate}</div>
+                  <div className="text-[11px] text-faint">{p.rateNote}</div>
+                </div>
+                <p className="text-xs text-muted leading-relaxed flex-1">{p.feature}</p>
+                <Link to="/ifsc-finder"
+                  className={`text-xs font-semibold flex items-center gap-1 ${p.rateCls} hover:underline`}>
+                  Find branches <ChevronDown className="w-3 h-3 -rotate-90" />
+                </Link>
               </div>
-            )}
+            ))}
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-4 py-7 space-y-8">
-
-          {/* ── Account type tabs ────────────────────────────────────────────── */}
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-            {ACCOUNT_TYPES.map(f => {
-              const { Icon } = f;
-              const active = accountFilter === f.value;
-              return (
-                <button key={f.value} onClick={() => setAccountFilter(f.value)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border whitespace-nowrap transition-all flex-shrink-0 ${
-                    active
-                      ? 'bg-brand-700 text-white border-brand-700 shadow-md shadow-brand-200'
-                      : 'bg-white text-gray-600 border-gray-200 hover:border-brand-300 hover:text-brand-700'
-                  }`}>
-                  <Icon className="w-3.5 h-3.5" />
-                  {f.label}
-                </button>
-              );
-            })}
+        {/* ── Filter bar ───────────────────────────────────────────────────── */}
+        <div className="bg-surface rounded-2xl px-4 py-3 border border-line flex flex-wrap gap-3 items-center">
+          <div className="relative flex-1 min-w-[160px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted pointer-events-none" />
+            <input value={search} onChange={e => setSearch(e.target.value)}
+              placeholder="Search bank…"
+              className="w-full pl-8 pr-3 py-2 bg-bg-2 border border-line-2 rounded-lg text-sm text-ink focus:ring-2 focus:ring-acc/20 focus:border-acc outline-none transition-all" />
           </div>
+          <select value={bankTypeFilter} onChange={e => setBankTypeFilter(e.target.value)}
+            className="bg-bg-2 border border-line-2 rounded-lg px-3 py-2 text-sm text-ink focus:ring-2 focus:ring-acc/20 focus:border-acc outline-none transition-all">
+            {BANK_TYPES.map(t => <option key={t}>{t}</option>)}
+          </select>
+          <label className="flex items-center gap-2 cursor-pointer px-3 py-2 border border-line rounded-lg hover:border-acc/40 transition-colors whitespace-nowrap">
+            <input type="checkbox" checked={showSenior} onChange={e => setShowSenior(e.target.checked)}
+              className="w-3.5 h-3.5 accent-acc" />
+            <span className="text-sm text-body font-medium">Senior Rates</span>
+          </label>
+          <button onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
+            className="flex items-center gap-1.5 px-3 py-2 border border-line rounded-lg text-sm text-muted hover:border-acc/40 transition-colors whitespace-nowrap">
+            <ArrowUpDown className="w-3.5 h-3.5" />
+            Rate {sortDir === 'desc' ? '↓ High–Low' : '↑ Low–High'}
+          </button>
+          <button onClick={() => refetch()} className="p-2 hover:bg-surface-2 rounded-lg transition-colors" title="Refresh">
+            <RefreshCw className="w-4 h-4 text-muted" />
+          </button>
+        </div>
 
-          {/* ── Top Picks ────────────────────────────────────────────────────── */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900">Top Picks for 2026</h2>
-              <span className="text-xs text-gray-400">Updated June 2026</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {TOP_PICKS.map(p => (
-                <div key={p.bank} className={`bg-white rounded-2xl shadow-sm border border-gray-100 ${p.borderCls} p-5 flex flex-col gap-3 hover:shadow-md transition-shadow`}>
-                  <div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 border rounded-full ${p.badgeCls}`}>{p.badge}</span>
-                    <p className="text-[11px] text-gray-400 mt-2 font-semibold uppercase tracking-wide">{p.category}</p>
-                    <p className="font-bold text-gray-900 text-sm mt-0.5 leading-snug">{p.bank}</p>
-                  </div>
-                  <div>
-                    <div className={`text-2xl font-extrabold ${p.rateCls}`}>{p.rate}</div>
-                    <div className="text-[11px] text-gray-400">{p.rateNote}</div>
-                  </div>
-                  <p className="text-xs text-gray-500 leading-relaxed flex-1">{p.feature}</p>
-                  <Link to="/ifsc-finder"
-                    className={`text-xs font-semibold flex items-center gap-1 ${p.rateCls} hover:underline`}>
-                    Find branches <ChevronDown className="w-3 h-3 -rotate-90" />
-                  </Link>
-                </div>
-              ))}
-            </div>
+        {/* Disclaimer */}
+        <div className="flex items-start gap-2.5 px-4 py-3 bg-gold/10 border border-gold/30 rounded-xl text-xs text-gold">
+          <ShieldCheck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+          <span>
+            Rates sourced from bank websites and verified manually. Always confirm before opening — rates change without notice.
+            Interest calculated daily on closing balance, credited quarterly.{' '}
+            <Link to="/fd-rates" className="font-bold underline">Want higher guaranteed returns? Compare FD rates →</Link>
+          </span>
+        </div>
+
+        {/* ── Loading / Error ──────────────────────────────────────────────── */}
+        {isLoading && (
+          <div className="bg-surface rounded-2xl p-10 text-center border border-line">
+            <div className="w-7 h-7 border-2 border-acc border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-faint text-sm">Loading rates…</p>
           </div>
-
-          {/* ── Filter bar ───────────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl px-4 py-3 shadow-sm border border-gray-100 flex flex-wrap gap-3 items-center">
-            <div className="relative flex-1 min-w-[160px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
-              <input value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="Search bank…"
-                className="w-full pl-8 pr-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-300" />
-            </div>
-            <select value={bankTypeFilter} onChange={e => setBankTypeFilter(e.target.value)}
-              className="border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-300">
-              {BANK_TYPES.map(t => <option key={t}>{t}</option>)}
-            </select>
-            <label className="flex items-center gap-2 cursor-pointer px-3 py-2 border border-gray-200 rounded-xl hover:border-brand-300 transition-colors whitespace-nowrap">
-              <input type="checkbox" checked={showSenior} onChange={e => setShowSenior(e.target.checked)}
-                className="w-3.5 h-3.5 accent-brand-600" />
-              <span className="text-sm text-gray-700 font-medium">Senior Rates</span>
-            </label>
-            <button onClick={() => setSortDir(d => d === 'desc' ? 'asc' : 'desc')}
-              className="flex items-center gap-1.5 px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-600 hover:border-brand-300 transition-colors whitespace-nowrap">
-              <ArrowUpDown className="w-3.5 h-3.5" />
-              Rate {sortDir === 'desc' ? '↓ High–Low' : '↑ Low–High'}
-            </button>
-            <button onClick={() => refetch()} className="p-2 hover:bg-gray-100 rounded-xl transition-colors" title="Refresh">
-              <RefreshCw className="w-4 h-4 text-gray-400" />
-            </button>
+        )}
+        {isError && (
+          <div className="bg-surface rounded-2xl p-8 text-center border border-line">
+            <p className="text-muted text-sm">Failed to load.{' '}
+              <button onClick={() => refetch()} className="text-acc underline font-semibold">Retry</button>
+            </p>
           </div>
+        )}
 
-          {/* Disclaimer */}
-          <div className="flex items-start gap-2.5 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
-            <ShieldCheck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-            <span>
-              Rates sourced from bank websites and verified manually. Always confirm before opening — rates change without notice.
-              Interest calculated daily on closing balance, credited quarterly.{' '}
-              <Link to="/fd-rates" className="font-bold underline">Want higher guaranteed returns? Compare FD rates →</Link>
-            </span>
-          </div>
-
-          {/* ── Loading / Error ──────────────────────────────────────────────── */}
-          {isLoading && (
-            <div className="bg-white rounded-2xl p-10 text-center shadow-sm border border-gray-100">
-              <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-gray-400 text-sm">Loading rates…</p>
-            </div>
-          )}
-          {isError && (
-            <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-              <p className="text-gray-500 text-sm">Failed to load.{' '}
-                <button onClick={() => refetch()} className="text-brand-600 underline font-semibold">Retry</button>
-              </p>
-            </div>
-          )}
-
-          {/* ── MAIN TABLE — DB data ─────────────────────────────────────────── */}
-          {!isLoading && !isError && hasDBData && (
-            <>
-              {grouped.size === 0 ? (
-                <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-                  <p className="text-gray-500 text-sm">No banks match your filters.{' '}
-                    <button onClick={() => { setBankTypeFilter('All'); setSearch(''); setAccountFilter('all'); }}
-                      className="text-brand-600 underline font-semibold">Clear all</button>
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {Array.from(grouped.entries()).map(([sector, sectorBanks]) => (
-                    <div key={sector}>
-                      <div className="flex items-center gap-3 mb-3">
-                        <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">{sector}</h2>
-                        <div className="flex-1 border-t border-gray-200" />
-                        <span className="text-xs text-gray-400">{sectorBanks.length} bank{sectorBanks.length !== 1 ? 's' : ''}</span>
-                      </div>
-                      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <table className="w-full text-sm">
-                          <thead>
-                            <tr className="border-b border-gray-100 text-[11px] text-gray-400 uppercase tracking-wide bg-gray-50">
-                              <th className="text-left px-5 py-3 font-semibold">Bank</th>
-                              <th className="text-center px-4 py-3 font-semibold">Interest Rate</th>
-                              <th className="text-center px-4 py-3 font-semibold hidden sm:table-cell">Min Balance</th>
-                              <th className="text-center px-4 py-3 font-semibold hidden md:table-cell">Last Verified</th>
-                              <th className="px-4 py-3" />
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-50">
-                            {sectorBanks.map(b => {
-                              const isExp   = expanded.has(b.bank.id);
-                              const hasZero = b.tenures.some(t => isZeroBalance(t));
-                              const rateMin = Math.min(...b.tenures.map(t => showSenior ? (t.seniorRate ?? t.rate) : t.rate));
-                              const rateMax = Math.max(...b.tenures.map(t => showSenior ? (t.seniorRate ?? t.rate) : t.rate));
-                              const minBal  = hasZero ? '₹0' : (b.tenures[0]?.minAmount != null ? `₹${b.tenures[0].minAmount.toLocaleString('en-IN')}` : 'Standard');
-
-                              return (
-                                <>
-                                  <tr key={b.bank.id}
-                                    onClick={() => toggleExpand(b.bank.id)}
-                                    className="hover:bg-brand-50/30 cursor-pointer transition-colors">
-                                    <td className="px-5 py-4">
-                                      <div className="flex items-center gap-3">
-                                        {b.bank.logoUrl
-                                          ? <img src={b.bank.logoUrl} alt={b.bank.name} className="w-8 h-8 object-contain rounded-lg border border-gray-100 flex-shrink-0 bg-white" />
-                                          : <div className="w-8 h-8 bg-brand-50 border border-brand-100 rounded-lg flex items-center justify-center text-brand-700 font-bold text-sm flex-shrink-0">{b.bank.name.charAt(0)}</div>}
-                                        <div>
-                                          <div className="font-semibold text-gray-900 leading-tight">{b.bank.name}</div>
-                                          <div className="flex items-center gap-1 mt-0.5">
-                                            {hasZero && <span className="text-[9px] px-1.5 py-0.5 bg-green-100 text-green-700 font-bold rounded-full">Zero Balance</span>}
-                                            {b.tenures.some(t => t.seniorRate) && <span className="text-[9px] px-1.5 py-0.5 bg-blue-100 text-blue-700 font-bold rounded-full">Senior Rate</span>}
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td className="px-4 py-4 text-center">
-                                      <span className={`text-base ${rateColor(rateMax)}`}>
-                                        {rateMin === rateMax ? `${rateMax}%` : `${rateMin}–${rateMax}%`}
-                                      </span>
-                                      <div className="text-[10px] text-gray-400">p.a.</div>
-                                    </td>
-                                    <td className="px-4 py-4 text-center hidden sm:table-cell text-sm text-gray-600 font-medium">{minBal}</td>
-                                    <td className="px-4 py-4 text-center hidden md:table-cell">
-                                      <FreshBadge lastVerified={b.lastVerified} />
-                                    </td>
-                                    <td className="px-4 py-4 text-right">
-                                      <span className="flex items-center gap-1 text-xs font-semibold text-brand-600 ml-auto justify-end">
-                                        {isExp ? 'Hide' : 'View'} {isExp ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                                      </span>
-                                    </td>
-                                  </tr>
-
-                                  {isExp && (
-                                    <tr key={`exp-${b.bank.id}`}>
-                                      <td colSpan={5} className="px-0 py-0 border-t border-brand-100/60">
-                                        {/* Account type cards */}
-                                        <div className="bg-[#f7f6ff] px-5 py-4">
-                                          <p className="text-[10px] font-bold uppercase tracking-widest text-brand-600 mb-3">
-                                            {b.tenures.length} Savings Account{b.tenures.length !== 1 ? ' Types' : ''}
-                                          </p>
-                                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                            {b.tenures.map(t => {
-                                              const isZero  = isZeroBalance(t);
-                                              const dispRate = showSenior && t.seniorRate ? t.seniorRate : t.rate;
-                                              const acctName = t.label ?? 'Standard Savings Account';
-                                              // derive tags
-                                              const tags: { label: string; cls: string }[] = [];
-                                              if (isZero)       tags.push({ label: 'Zero Balance', cls: 'bg-green-100 text-green-700' });
-                                              if (t.seniorRate) tags.push({ label: 'Senior Rate Available', cls: 'bg-blue-100 text-blue-700' });
-                                              if ((acctName).toLowerCase().includes('salary')) tags.push({ label: 'Salary Account', cls: 'bg-purple-100 text-purple-700' });
-                                              if ((acctName).toLowerCase().includes('premium') || (acctName).toLowerCase().includes('above ₹50')) tags.push({ label: 'Premium', cls: 'bg-amber-100 text-amber-700' });
-                                              if ((acctName).toLowerCase().includes('digital') || (acctName).toLowerCase().includes('811') || (acctName).toLowerCase().includes('instant')) tags.push({ label: 'Digital', cls: 'bg-violet-100 text-violet-700' });
-
-                                              const borderCls = dispRate >= 6 ? 'border-l-emerald-400' : dispRate >= 4 ? 'border-l-amber-400' : 'border-l-gray-300';
-                                              const rateCls2  = dispRate >= 6 ? 'text-emerald-700' : dispRate >= 4 ? 'text-amber-600' : 'text-brand-700';
-
-                                              return (
-                                                <div key={t.id} className={`bg-white rounded-xl border border-gray-100 shadow-sm border-l-4 ${borderCls} p-4 flex flex-col gap-3`}>
-                                                  {/* Account name */}
-                                                  <div>
-                                                    <p className="font-semibold text-gray-900 text-sm leading-snug">{acctName}</p>
-                                                    {tags.length > 0 && (
-                                                      <div className="flex flex-wrap gap-1 mt-1.5">
-                                                        {tags.map(tag => (
-                                                          <span key={tag.label} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${tag.cls}`}>{tag.label}</span>
-                                                        ))}
-                                                      </div>
-                                                    )}
-                                                  </div>
-
-                                                  {/* Rate */}
-                                                  <div className="flex items-end gap-2">
-                                                    <span className={`text-2xl font-extrabold leading-none ${rateCls2}`}>{dispRate}%</span>
-                                                    <span className="text-xs text-gray-400 mb-0.5">p.a.</span>
-                                                    {showSenior && t.seniorRate && (
-                                                      <span className="text-xs text-blue-600 font-semibold mb-0.5">(senior)</span>
-                                                    )}
-                                                  </div>
-
-                                                  {/* Details grid */}
-                                                  <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
-                                                    <div>
-                                                      <p className="text-gray-400">Min Balance</p>
-                                                      <p className="font-semibold text-gray-700">{fmtMinBalance(t)}</p>
-                                                    </div>
-                                                    {t.seniorRate && !showSenior && (
-                                                      <div>
-                                                        <p className="text-gray-400">Senior Rate</p>
-                                                        <p className="font-semibold text-blue-700">{t.seniorRate}% p.a.</p>
-                                                      </div>
-                                                    )}
-                                                    {t.notes && !isZero && (
-                                                      <div className="col-span-2">
-                                                        <p className="text-gray-400 text-[10px] leading-snug">{t.notes}</p>
-                                                      </div>
-                                                    )}
-                                                  </div>
-
-                                                  {/* Source */}
-                                                  {t.sourceUrl && (
-                                                    <a href={t.sourceUrl} target="_blank" rel="noopener noreferrer"
-                                                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-500 hover:underline mt-auto">
-                                                      Official source <ExternalLink className="w-2.5 h-2.5" />
-                                                    </a>
-                                                  )}
-                                                </div>
-                                              );
-                                            })}
-                                          </div>
-                                        </div>
-
-                                        {/* Interlinks */}
-                                        <div className="px-6 py-3 bg-white border-t border-gray-100 flex flex-wrap items-center gap-4">
-                                          {b.bank.slug && (
-                                            <Link to={`/bank/${b.bank.slug}`}
-                                              className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:underline">
-                                              <Building2 className="w-3 h-3" /> Find {b.bank.shortName ?? b.bank.name} branches
-                                            </Link>
-                                          )}
-                                          <Link to="/fd-rates" className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:underline">
-                                            <TrendingUp className="w-3 h-3" /> Compare FD rates
-                                          </Link>
-                                          <Link to="/calculators/fd" className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:underline">
-                                            🧮 FD Calculator
-                                          </Link>
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  )}
-                                </>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-
-          {/* ── STATIC TABLE — when DB empty ─────────────────────────────────── */}
-          {!isLoading && !isError && !hasDBData && (
-            <>
-              <div className="flex items-start gap-2 px-4 py-3 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-700">
-                <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                <span>Showing indicative rates for major Indian banks (June 2026). Live verified rates appear once added via admin — these are reference rates only. Always confirm with your bank.</span>
+        {/* ── MAIN TABLE — DB data ─────────────────────────────────────────── */}
+        {!isLoading && !isError && hasDBData && (
+          <>
+            {grouped.size === 0 ? (
+              <div className="bg-surface rounded-2xl p-8 text-center border border-line">
+                <p className="text-muted text-sm">No banks match your filters.{' '}
+                  <button onClick={() => { setBankTypeFilter('All'); setSearch(''); setAccountFilter('all'); }}
+                    className="text-acc underline font-semibold">Clear all</button>
+                </p>
               </div>
-              {(['Small Finance Bank', 'Private Sector', 'Public Sector'] as const).map(sector => {
-                const sbs = STATIC_SAVINGS.filter(b => b.sector === sector);
-                return (
+            ) : (
+              <div className="space-y-6">
+                {Array.from(grouped.entries()).map(([sector, sectorBanks]) => (
                   <div key={sector}>
                     <div className="flex items-center gap-3 mb-3">
-                      <h2 className="text-xs font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">{sector}</h2>
-                      <div className="flex-1 border-t border-gray-200" />
+                      <h2 className="text-xs font-bold text-faint uppercase tracking-widest whitespace-nowrap">{sector}</h2>
+                      <div className="flex-1 border-t border-line" />
+                      <span className="text-xs text-faint">{sectorBanks.length} bank{sectorBanks.length !== 1 ? 's' : ''}</span>
                     </div>
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-surface rounded-2xl border border-line overflow-hidden">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="bg-gray-50 border-b border-gray-100 text-[11px] text-gray-400 uppercase tracking-wide">
+                          <tr className="border-b border-line text-[11px] text-muted uppercase tracking-wide bg-surface-2">
                             <th className="text-left px-5 py-3 font-semibold">Bank</th>
-                            <th className="text-left px-4 py-3 font-semibold">Balance Tier</th>
-                            <th className="text-center px-4 py-3 font-semibold">Rate p.a.</th>
+                            <th className="text-center px-4 py-3 font-semibold">Interest Rate</th>
                             <th className="text-center px-4 py-3 font-semibold hidden sm:table-cell">Min Balance</th>
+                            <th className="text-center px-4 py-3 font-semibold hidden md:table-cell">Last Verified</th>
+                            <th className="px-4 py-3" />
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-50">
-                          {sbs.flatMap((b, bi) => b.tiers.map((t, ti) => (
-                            <tr key={`${bi}-${ti}`} className="hover:bg-gray-50">
-                              <td className="px-5 py-3 font-medium text-gray-800">{ti === 0 ? b.bank : ''}</td>
-                              <td className="px-4 py-3 text-gray-600 text-xs">
-                                {t.label}
-                                {t.zeroBalance && <span className="ml-2 text-[9px] px-1.5 py-0.5 bg-green-100 text-green-700 font-bold rounded-full">Zero Balance</span>}
-                              </td>
-                              <td className={`px-4 py-3 text-center text-sm ${rateColor(t.rate)}`}>{t.rate}%</td>
-                              <td className="px-4 py-3 text-center text-xs text-gray-400 hidden sm:table-cell">{t.minBalance}</td>
-                            </tr>
-                          )))}
+                        <tbody className="divide-y divide-line">
+                          {sectorBanks.map(b => {
+                            const isExp   = expanded.has(b.bank.id);
+                            const hasZero = b.tenures.some(t => isZeroBalance(t));
+                            const rateMin = Math.min(...b.tenures.map(t => showSenior ? (t.seniorRate ?? t.rate) : t.rate));
+                            const rateMax = Math.max(...b.tenures.map(t => showSenior ? (t.seniorRate ?? t.rate) : t.rate));
+                            const minBal  = hasZero ? '₹0' : (b.tenures[0]?.minAmount != null ? `₹${b.tenures[0].minAmount.toLocaleString('en-IN')}` : 'Standard');
+
+                            return (
+                              <>
+                                <tr key={b.bank.id}
+                                  onClick={() => toggleExpand(b.bank.id)}
+                                  className="hover:bg-acc-deep cursor-pointer transition-colors">
+                                  <td className="px-5 py-4">
+                                    <div className="flex items-center gap-3">
+                                      {b.bank.logoUrl
+                                        ? <img src={b.bank.logoUrl} alt={b.bank.name} className="w-8 h-8 object-contain rounded-lg border border-line flex-shrink-0 bg-surface" />
+                                        : <div className="w-8 h-8 bg-acc-deep border border-acc/30 rounded-lg flex items-center justify-center text-acc font-bold text-sm flex-shrink-0">{b.bank.name.charAt(0)}</div>}
+                                      <div>
+                                        <div className="font-semibold text-ink leading-tight">{b.bank.name}</div>
+                                        <div className="flex items-center gap-1 mt-0.5">
+                                          {hasZero && <span className="text-[9px] px-1.5 py-0.5 bg-mint/10 text-mint font-bold rounded-full">Zero Balance</span>}
+                                          {b.tenures.some(t => t.seniorRate) && <span className="text-[9px] px-1.5 py-0.5 bg-acc-deep text-acc font-bold rounded-full">Senior Rate</span>}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="px-4 py-4 text-center">
+                                    <span className={`text-base ${rateColor(rateMax)}`}>
+                                      {rateMin === rateMax ? `${rateMax}%` : `${rateMin}–${rateMax}%`}
+                                    </span>
+                                    <div className="text-[10px] text-faint">p.a.</div>
+                                  </td>
+                                  <td className="px-4 py-4 text-center hidden sm:table-cell text-sm text-body font-medium">{minBal}</td>
+                                  <td className="px-4 py-4 text-center hidden md:table-cell">
+                                    <FreshBadge lastVerified={b.lastVerified} />
+                                  </td>
+                                  <td className="px-4 py-4 text-right">
+                                    <span className="flex items-center gap-1 text-xs font-semibold text-acc ml-auto justify-end">
+                                      {isExp ? 'Hide' : 'View'} {isExp ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                                    </span>
+                                  </td>
+                                </tr>
+
+                                {isExp && (
+                                  <tr key={`exp-${b.bank.id}`}>
+                                    <td colSpan={5} className="px-0 py-0 border-t border-acc/20">
+                                      {/* Account type cards */}
+                                      <div className="bg-acc-deep px-5 py-4">
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-acc mb-3">
+                                          {b.tenures.length} Savings Account{b.tenures.length !== 1 ? ' Types' : ''}
+                                        </p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                          {b.tenures.map(t => {
+                                            const isZero  = isZeroBalance(t);
+                                            const dispRate = showSenior && t.seniorRate ? t.seniorRate : t.rate;
+                                            const acctName = t.label ?? 'Standard Savings Account';
+                                            // derive tags
+                                            const tags: { label: string; cls: string }[] = [];
+                                            if (isZero)       tags.push({ label: 'Zero Balance', cls: 'bg-mint/10 text-mint' });
+                                            if (t.seniorRate) tags.push({ label: 'Senior Rate Available', cls: 'bg-acc-deep text-acc' });
+                                            if ((acctName).toLowerCase().includes('salary')) tags.push({ label: 'Salary Account', cls: 'bg-violet-500/10 text-violet' });
+                                            if ((acctName).toLowerCase().includes('premium') || (acctName).toLowerCase().includes('above ₹50')) tags.push({ label: 'Premium', cls: 'bg-gold/10 text-gold' });
+                                            if ((acctName).toLowerCase().includes('digital') || (acctName).toLowerCase().includes('811') || (acctName).toLowerCase().includes('instant')) tags.push({ label: 'Digital', cls: 'bg-cyan/10 text-cyan' });
+
+                                            const borderCls = dispRate >= 6 ? 'border-l-mint' : dispRate >= 4 ? 'border-l-gold' : 'border-l-line-2';
+                                            const rateCls2  = dispRate >= 6 ? 'text-mint' : dispRate >= 4 ? 'text-gold' : 'text-acc';
+
+                                            return (
+                                              <div key={t.id} className={`bg-surface rounded-xl border border-line border-l-4 ${borderCls} p-4 flex flex-col gap-3`}>
+                                                {/* Account name */}
+                                                <div>
+                                                  <p className="font-semibold text-ink text-sm leading-snug">{acctName}</p>
+                                                  {tags.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1 mt-1.5">
+                                                      {tags.map(tag => (
+                                                        <span key={tag.label} className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${tag.cls}`}>{tag.label}</span>
+                                                      ))}
+                                                    </div>
+                                                  )}
+                                                </div>
+
+                                                {/* Rate */}
+                                                <div className="flex items-end gap-2">
+                                                  <span className={`text-2xl font-extrabold leading-none ${rateCls2}`}>{dispRate}%</span>
+                                                  <span className="text-xs text-faint mb-0.5">p.a.</span>
+                                                  {showSenior && t.seniorRate && (
+                                                    <span className="text-xs text-acc font-semibold mb-0.5">(senior)</span>
+                                                  )}
+                                                </div>
+
+                                                {/* Details grid */}
+                                                <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs">
+                                                  <div>
+                                                    <p className="text-faint">Min Balance</p>
+                                                    <p className="font-semibold text-body">{fmtMinBalance(t)}</p>
+                                                  </div>
+                                                  {t.seniorRate && !showSenior && (
+                                                    <div>
+                                                      <p className="text-faint">Senior Rate</p>
+                                                      <p className="font-semibold text-acc">{t.seniorRate}% p.a.</p>
+                                                    </div>
+                                                  )}
+                                                  {t.notes && !isZero && (
+                                                    <div className="col-span-2">
+                                                      <p className="text-faint text-[10px] leading-snug">{t.notes}</p>
+                                                    </div>
+                                                  )}
+                                                </div>
+
+                                                {/* Source */}
+                                                {t.sourceUrl && (
+                                                  <a href={t.sourceUrl} target="_blank" rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-acc hover:underline mt-auto">
+                                                    Official source <ExternalLink className="w-2.5 h-2.5" />
+                                                  </a>
+                                                )}
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+
+                                      {/* Interlinks */}
+                                      <div className="px-6 py-3 bg-surface border-t border-line flex flex-wrap items-center gap-4">
+                                        {b.bank.slug && (
+                                          <Link to={`/bank/${b.bank.slug}`}
+                                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-acc hover:underline">
+                                            <Building2 className="w-3 h-3" /> Find {b.bank.shortName ?? b.bank.name} branches
+                                          </Link>
+                                        )}
+                                        <Link to="/fd-rates" className="inline-flex items-center gap-1.5 text-xs font-semibold text-acc hover:underline">
+                                          <TrendingUp className="w-3 h-3" /> Compare FD rates
+                                        </Link>
+                                        <Link to="/calculators/fd" className="inline-flex items-center gap-1.5 text-xs font-semibold text-acc hover:underline">
+                                          🧮 FD Calculator
+                                        </Link>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                )}
+                              </>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
                   </div>
-                );
-              })}
-            </>
-          )}
+                ))}
+              </div>
+            )}
+          </>
+        )}
 
-          {/* ── FD Cross-link CTA ────────────────────────────────────────────── */}
-          <div className="flex items-center gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 flex-wrap">
-            <div className="w-11 h-11 bg-brand-800 rounded-xl flex items-center justify-center flex-shrink-0">
-              <TrendingUp className="w-5 h-5 text-white" />
+        {/* ── STATIC TABLE — when DB empty ─────────────────────────────────── */}
+        {!isLoading && !isError && !hasDBData && (
+          <>
+            <div className="flex items-start gap-2 px-4 py-3 bg-acc-deep border border-acc/30 rounded-xl text-xs text-acc">
+              <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+              <span>Showing indicative rates for major Indian banks (June 2026). Live verified rates appear once added via admin — these are reference rates only. Always confirm with your bank.</span>
             </div>
-            <div className="flex-1 min-w-[180px]">
-              <p className="font-bold text-gray-900 text-sm">Looking for higher guaranteed returns?</p>
-              <p className="text-xs text-gray-400 mt-0.5">Fixed Deposits offer up to 9.5% p.a. — rate is locked in at booking, no market risk.</p>
-            </div>
-            <Link to="/fd-rates"
-              className="flex items-center gap-1.5 px-4 py-2.5 bg-brand-800 text-white font-bold rounded-xl hover:bg-brand-900 transition-colors whitespace-nowrap text-sm flex-shrink-0">
-              Compare FD Rates <ChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          {/* ── Which account is right for you ──────────────────────────────── */}
-          <div>
-            <h2 className="text-lg font-bold text-gray-900 mb-1">Which savings account is right for you?</h2>
-            <p className="text-sm text-gray-400 mb-4">Pick your situation — we'll tell you which account type fits best.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {SCENARIOS.map(s => {
-                const { Icon } = s;
-                return (
-                  <div key={s.title} className={`rounded-2xl border p-5 ${s.bgCls}`}>
-                    <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${s.iconCls}`}>
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900 text-sm">{s.title}</p>
-                        <p className="text-xs text-gray-500 mt-0.5 leading-snug">{s.need}</p>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-3.5 border-t border-black/5 space-y-1">
-                      <div className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" />
-                        <div>
-                          <span className="text-xs text-gray-500">Best pick: </span>
-                          <span className={`text-xs ${s.pickCls}`}>{s.pick}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <Building2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-300" />
-                        <span className="text-[11px] text-gray-400 leading-snug">{s.examples}</span>
-                      </div>
-                    </div>
+            {(['Small Finance Bank', 'Private Sector', 'Public Sector'] as const).map(sector => {
+              const sbs = STATIC_SAVINGS.filter(b => b.sector === sector);
+              return (
+                <div key={sector}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <h2 className="text-xs font-bold text-faint uppercase tracking-widest whitespace-nowrap">{sector}</h2>
+                    <div className="flex-1 border-t border-line" />
                   </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ── How to open ──────────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-100">
-              <h2 className="font-bold text-gray-900">How to Open a Savings Account in India</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Online: under 10 minutes. Offline: visit any branch.</p>
-            </div>
-            <div className="divide-y divide-gray-50">
-              {OPEN_STEPS.map((step, i) => (
-                <div key={i} className="px-6 py-5 flex items-start gap-5">
-                  <div className="w-9 h-9 bg-brand-700 text-white text-xs font-extrabold rounded-full flex items-center justify-center flex-shrink-0 shadow-sm shadow-brand-200">
-                    {step.n}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-semibold text-gray-900 text-sm">{step.title}</p>
-                      <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-semibold">{step.tag}</span>
-                    </div>
-                    <p className="text-xs text-gray-500 leading-relaxed">{step.desc}</p>
+                  <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-surface-2 border-b border-line text-[11px] text-muted uppercase tracking-wide">
+                          <th className="text-left px-5 py-3 font-semibold">Bank</th>
+                          <th className="text-left px-4 py-3 font-semibold">Balance Tier</th>
+                          <th className="text-center px-4 py-3 font-semibold">Rate p.a.</th>
+                          <th className="text-center px-4 py-3 font-semibold hidden sm:table-cell">Min Balance</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-line">
+                        {sbs.flatMap((b, bi) => b.tiers.map((t, ti) => (
+                          <tr key={`${bi}-${ti}`} className="hover:bg-surface-2">
+                            <td className="px-5 py-3 font-medium text-ink">{ti === 0 ? b.bank : ''}</td>
+                            <td className="px-4 py-3 text-body text-xs">
+                              {t.label}
+                              {t.zeroBalance && <span className="ml-2 text-[9px] px-1.5 py-0.5 bg-mint/10 text-mint font-bold rounded-full">Zero Balance</span>}
+                            </td>
+                            <td className={`px-4 py-3 text-center text-sm ${rateColor(t.rate)}`}>{t.rate}%</td>
+                            <td className="px-4 py-3 text-center text-xs text-faint hidden sm:table-cell">{t.minBalance}</td>
+                          </tr>
+                        )))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
+              );
+            })}
+          </>
+        )}
 
-          {/* ── Savings vs FD ────────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <h2 className="font-bold text-gray-900">Savings Account vs Fixed Deposit</h2>
-              <Link to="/fd-rates" className="flex items-center gap-1 px-3 py-1.5 bg-brand-700 text-white text-xs font-bold rounded-lg hover:bg-brand-800 transition-colors">
-              Compare FD Rates <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gray-50 text-[11px] text-gray-400 uppercase tracking-wide border-b border-gray-100">
-                    <th className="text-left px-5 py-3 font-semibold">Feature</th>
-                    <th className="text-left px-5 py-3 font-semibold text-brand-700">Savings Account</th>
-                    <th className="text-left px-5 py-3 font-semibold text-blue-700">Fixed Deposit</th>
-                    <th className="px-4 py-3 hidden sm:table-cell" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {VS_ROWS.map(r => (
-                    <tr key={r.f} className="hover:bg-gray-50">
-                      <td className="px-5 py-3 font-medium text-gray-600 text-sm">{r.f}</td>
-                      <td className={`px-5 py-3 text-sm ${r.better === 'sa' ? 'font-semibold text-brand-700' : 'text-gray-600'}`}>{r.s}</td>
-                      <td className={`px-5 py-3 text-sm ${r.better === 'fd' ? 'font-semibold text-blue-700' : 'text-gray-600'}`}>{r.fd}</td>
-                      <td className="px-4 py-3 hidden sm:table-cell text-center">
-                        {r.better === 'sa' && <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-50 text-brand-700 border border-brand-100 rounded-full">Savings wins</span>}
-                        {r.better === 'fd' && <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-full">FD wins</span>}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* ── FD Cross-link CTA ────────────────────────────────────────────── */}
+        <div className="flex items-center gap-4 bg-surface rounded-2xl border border-line px-5 py-4 flex-wrap">
+          <div className="w-11 h-11 bg-acc-deep rounded-xl flex items-center justify-center flex-shrink-0 text-acc">
+            <TrendingUp className="w-5 h-5" />
           </div>
-
-          {/* ── Tax callouts ─────────────────────────────────────────────────── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-brand-50 border border-brand-100 rounded-2xl p-5">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-brand-600 mb-2">Section 80TTA · Under 60 years</p>
-              <p className="font-bold text-gray-900 text-base mb-1.5">Deduct up to <span className="text-brand-700">₹10,000</span>/year</p>
-              <p className="text-sm text-gray-600 leading-relaxed">On savings account interest only (not FDs). Available to individuals and HUFs. Interest above ₹10k taxed at your slab rate.</p>
-            </div>
-            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-blue-600 mb-2">Section 80TTB · Senior Citizens (60+)</p>
-              <p className="font-bold text-gray-900 text-base mb-1.5">Deduct up to <span className="text-blue-700">₹50,000</span>/year</p>
-              <p className="text-sm text-gray-600 leading-relaxed">Covers savings <em>and</em> FD interest combined. A senior earning ₹70k interest pays tax on only ₹20k.{' '}
-                <Link to="/calculators/fd" className="text-blue-700 font-semibold hover:underline">FD Calculator →</Link>
-              </p>
-            </div>
+          <div className="flex-1 min-w-[180px]">
+            <p className="font-bold text-ink text-sm">Looking for higher guaranteed returns?</p>
+            <p className="text-xs text-faint mt-0.5">Fixed Deposits offer up to 9.5% p.a. — rate is locked in at booking, no market risk.</p>
           </div>
-
-          {/* ── Compare Savings Accounts ─────────────────────────────────────── */}
-          <div>
-            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Compare Savings Accounts</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { to: '/compare/savings/sbi-vs-hdfc',          label: 'SBI vs HDFC Savings Account',       desc: 'Interest rates, min balance, and features compared' },
-                { to: '/best-savings-accounts-for-salary',     label: 'Best Savings Accounts for Salary',  desc: 'Zero balance accounts with best rates and perks'    },
-              ].map(item => (
-                <Link key={item.to} to={item.to}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full border border-brand-200">Compare</span>
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-brand-500 transition-colors" />
-                  </div>
-                  <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
-                  <div className="text-[11px] text-gray-400 leading-tight">{item.desc}</div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* ── Related tools ────────────────────────────────────────────────── */}
-          <div>
-            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Related Tools</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {[
-                { to: '/fd-rates',           emoji: '📈', title: 'FD Interest Rates',    desc: 'Up to 9.5% — better than savings'       },
-                { to: '/calculators/fd',     emoji: '🧮', title: 'FD Calculator',        desc: 'Maturity amount with compounding'       },
-                { to: '/credit-cards',       emoji: '💳', title: 'Credit Cards',         desc: 'Cashback & lifetime free cards'         },
-                { to: '/ifsc-finder',        emoji: '🏦', title: 'IFSC Code Finder',     desc: 'Find any branch IFSC instantly'         },
-                { to: '/swift-code-lookup',  emoji: '🌐', title: 'SWIFT Code Lookup',    desc: 'International transfer codes'           },
-                { to: '/currency-converter', emoji: '💱', title: 'Currency Converter',   desc: 'Live INR ↔ USD, EUR, AED'               },
-              ].map(item => (
-                <Link key={item.to} to={item.to}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-200 hover:shadow-md transition-all group flex items-start gap-3">
-                  <span className="text-xl flex-shrink-0">{item.emoji}</span>
-                  <div>
-                    <div className="font-semibold text-gray-800 text-xs group-hover:text-brand-700 transition-colors">{item.title}</div>
-                    <div className="text-[11px] text-gray-400 mt-0.5 leading-tight">{item.desc}</div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* ── FAQs ─────────────────────────────────────────────────────────── */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-1">Frequently Asked Questions</h2>
-            <p className="text-sm text-gray-400 mb-5">Everything about savings accounts in India</p>
-            <div className="space-y-6">
-              {FAQ_GROUPS.map(g => (
-                <div key={g.title}>
-                  <h3 className="text-[11px] font-bold text-brand-700 uppercase tracking-widest mb-3">{g.title}</h3>
-                  <div className="space-y-0.5">
-                    {g.faqs.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Footer note */}
-          <p className="text-xs text-gray-400 text-center pb-4">
-            {hasDBData ? 'Rates manually curated and verified from bank websites.' : 'Indicative rates — verify with your bank before opening.'}{' '}
-            Last updated: {data?.updatedAt ? new Date(data.updatedAt).toLocaleDateString('en-IN') : 'June 2026'}.{' '}
-            <Link to="/fd-rates" className="text-brand-500 hover:underline">Compare FD rates</Link>{' '}·{' '}
-            <Link to="/accounts" className="text-brand-500 hover:underline">All bank accounts</Link>
-          </p>
+          <Link to="/fd-rates"
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-br from-acc to-acc-2 text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all whitespace-nowrap text-sm flex-shrink-0">
+            Compare FD Rates <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
+
+        {/* ── Which account is right for you ──────────────────────────────── */}
+        <div>
+          <h2 className="text-lg font-bold text-ink mb-1">Which savings account is right for you?</h2>
+          <p className="text-sm text-faint mb-4">Pick your situation — we'll tell you which account type fits best.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {SCENARIOS.map(s => {
+              const { Icon } = s;
+              return (
+                <div key={s.title} className={`rounded-2xl border p-5 ${s.bgCls}`}>
+                  <div className="flex items-start gap-3">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${s.iconCls}`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-ink text-sm">{s.title}</p>
+                      <p className="text-xs text-muted mt-0.5 leading-snug">{s.need}</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-3.5 border-t border-line/60 space-y-1">
+                    <div className="flex items-start gap-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-faint" />
+                      <div>
+                        <span className="text-xs text-muted">Best pick: </span>
+                        <span className={`text-xs ${s.pickCls}`}>{s.pick}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <Building2 className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-faint" />
+                      <span className="text-[11px] text-faint leading-snug">{s.examples}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── How to open ──────────────────────────────────────────────────── */}
+        <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+          <div className="px-6 py-5 border-b border-line">
+            <h2 className="font-bold text-ink">How to Open a Savings Account in India</h2>
+            <p className="text-xs text-faint mt-0.5">Online: under 10 minutes. Offline: visit any branch.</p>
+          </div>
+          <div className="divide-y divide-line">
+            {OPEN_STEPS.map((step, i) => (
+              <div key={i} className="px-6 py-5 flex items-start gap-5">
+                <div className="w-9 h-9 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-extrabold rounded-full flex items-center justify-center flex-shrink-0 shadow-acc-glow">
+                  {step.n}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="font-semibold text-ink text-sm">{step.title}</p>
+                    <span className="text-[10px] bg-surface-2 text-muted px-2 py-0.5 rounded-full font-semibold">{step.tag}</span>
+                  </div>
+                  <p className="text-xs text-muted leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Savings vs FD ────────────────────────────────────────────────── */}
+        <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+          <div className="px-5 py-4 border-b border-line flex items-center justify-between">
+            <h2 className="font-bold text-ink">Savings Account vs Fixed Deposit</h2>
+            <Link to="/fd-rates" className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-bold rounded-lg shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
+            Compare FD Rates <ChevronRight className="w-3.5 h-3.5" />
+          </Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-surface-2 text-[11px] text-muted uppercase tracking-wide border-b border-line">
+                  <th className="text-left px-5 py-3 font-semibold">Feature</th>
+                  <th className="text-left px-5 py-3 font-semibold text-acc">Savings Account</th>
+                  <th className="text-left px-5 py-3 font-semibold text-cyan">Fixed Deposit</th>
+                  <th className="px-4 py-3 hidden sm:table-cell" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {VS_ROWS.map(r => (
+                  <tr key={r.f} className="hover:bg-surface-2">
+                    <td className="px-5 py-3 font-medium text-muted text-sm">{r.f}</td>
+                    <td className={`px-5 py-3 text-sm ${r.better === 'sa' ? 'font-semibold text-acc' : 'text-body'}`}>{r.s}</td>
+                    <td className={`px-5 py-3 text-sm ${r.better === 'fd' ? 'font-semibold text-cyan' : 'text-body'}`}>{r.fd}</td>
+                    <td className="px-4 py-3 hidden sm:table-cell text-center">
+                      {r.better === 'sa' && <span className="text-[10px] font-bold px-2 py-0.5 bg-acc-deep text-acc border border-acc/30 rounded-full">Savings wins</span>}
+                      {r.better === 'fd' && <span className="text-[10px] font-bold px-2 py-0.5 bg-cyan/10 text-cyan border border-cyan/30 rounded-full">FD wins</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* ── Tax callouts ─────────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-acc-deep border border-acc/30 rounded-2xl p-5">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-acc mb-2">Section 80TTA · Under 60 years</p>
+            <p className="font-bold text-ink text-base mb-1.5">Deduct up to <span className="text-acc">₹10,000</span>/year</p>
+            <p className="text-sm text-muted leading-relaxed">On savings account interest only (not FDs). Available to individuals and HUFs. Interest above ₹10k taxed at your slab rate.</p>
+          </div>
+          <div className="bg-cyan/5 border border-cyan/30 rounded-2xl p-5">
+            <p className="text-[11px] font-bold uppercase tracking-widest text-cyan mb-2">Section 80TTB · Senior Citizens (60+)</p>
+            <p className="font-bold text-ink text-base mb-1.5">Deduct up to <span className="text-cyan">₹50,000</span>/year</p>
+            <p className="text-sm text-muted leading-relaxed">Covers savings <em>and</em> FD interest combined. A senior earning ₹70k interest pays tax on only ₹20k.{' '}
+              <Link to="/calculators/fd" className="text-cyan font-semibold hover:underline">FD Calculator →</Link>
+            </p>
+          </div>
+        </div>
+
+        {/* ── Compare Savings Accounts ─────────────────────────────────────── */}
+        <div>
+          <h2 className="text-sm font-bold text-faint uppercase tracking-widest mb-3">Compare Savings Accounts</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { to: '/compare/savings/sbi-vs-hdfc',          label: 'SBI vs HDFC Savings Account',       desc: 'Interest rates, min balance, and features compared' },
+              { to: '/best-savings-accounts-for-salary',     label: 'Best Savings Accounts for Salary',  desc: 'Zero balance accounts with best rates and perks'    },
+            ].map(item => (
+              <Link key={item.to} to={item.to}
+                className="bg-surface rounded-xl p-4 border border-line hover:border-acc/40 transition-all group flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold px-2 py-0.5 bg-acc-deep text-acc rounded-full border border-acc/30">Compare</span>
+                  <ChevronRight className="w-4 h-4 text-faint group-hover:text-acc transition-colors" />
+                </div>
+                <div className="font-semibold text-ink text-sm group-hover:text-acc transition-colors">{item.label}</div>
+                <div className="text-[11px] text-faint leading-tight">{item.desc}</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Related tools ────────────────────────────────────────────────── */}
+        <div>
+          <h2 className="text-sm font-bold text-faint uppercase tracking-widest mb-3">Related Tools</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              { to: '/fd-rates',           emoji: '📈', title: 'FD Interest Rates',    desc: 'Up to 9.5% — better than savings'       },
+              { to: '/calculators/fd',     emoji: '🧮', title: 'FD Calculator',        desc: 'Maturity amount with compounding'       },
+              { to: '/credit-cards',       emoji: '💳', title: 'Credit Cards',         desc: 'Cashback & lifetime free cards'         },
+              { to: '/ifsc-finder',        emoji: '🏦', title: 'IFSC Code Finder',     desc: 'Find any branch IFSC instantly'         },
+              { to: '/swift-code-lookup',  emoji: '🌐', title: 'SWIFT Code Lookup',    desc: 'International transfer codes'           },
+              { to: '/currency-converter', emoji: '💱', title: 'Currency Converter',   desc: 'Live INR ↔ USD, EUR, AED'               },
+            ].map(item => (
+              <Link key={item.to} to={item.to}
+                className="bg-surface rounded-xl p-4 border border-line hover:border-acc/30 transition-all group flex items-start gap-3">
+                <span className="text-xl flex-shrink-0">{item.emoji}</span>
+                <div>
+                  <div className="font-semibold text-body text-xs group-hover:text-acc transition-colors">{item.title}</div>
+                  <div className="text-[11px] text-faint mt-0.5 leading-tight">{item.desc}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* ── FAQs ─────────────────────────────────────────────────────────── */}
+        <div>
+          <h2 className="text-xl font-bold text-ink mb-1">Frequently Asked Questions</h2>
+          <p className="text-sm text-faint mb-5">Everything about savings accounts in India</p>
+          <div className="space-y-6">
+            {FAQ_GROUPS.map(g => (
+              <div key={g.title}>
+                <h3 className="text-[11px] font-bold text-acc uppercase tracking-widest mb-3">{g.title}</h3>
+                <div className="space-y-0.5">
+                  {g.faqs.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer note */}
+        <p className="text-xs text-faint text-center pb-4">
+          {hasDBData ? 'Rates manually curated and verified from bank websites.' : 'Indicative rates — verify with your bank before opening.'}{' '}
+          Last updated: {data?.updatedAt ? new Date(data.updatedAt).toLocaleDateString('en-IN') : 'June 2026'}.{' '}
+          <Link to="/fd-rates" className="text-acc hover:underline">Compare FD rates</Link>{' '}·{' '}
+          <Link to="/accounts" className="text-acc hover:underline">All bank accounts</Link>
+        </p>
       </div>
     </>
   );

@@ -92,11 +92,11 @@ function headlineOffice(offices: PostOfficeEntry[]) {
 
 function TypeBadge({ type }: { type: string | null | undefined }) {
   const map: Record<string, string> = {
-    'H.O': 'bg-amber-100 text-amber-700',
-    'S.O': 'bg-indigo-100 text-indigo-700',
-    'B.O': 'bg-emerald-100 text-emerald-700',
+    'H.O': 'bg-gold/10 text-gold',
+    'S.O': 'bg-acc-deep text-acc',
+    'B.O': 'bg-mint/10 text-mint',
   };
-  const cls = (type && map[type]) ?? 'bg-gray-100 text-gray-600';
+  const cls = (type && map[type]) ?? 'bg-surface-2 text-muted';
   return (
     <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${cls}`}>
       {officeLabel(type)}
@@ -107,32 +107,32 @@ function TypeBadge({ type }: { type: string | null | undefined }) {
 function PostOfficesTable({ offices, pin }: { offices: PostOfficeEntry[]; pin: string }) {
   const [expanded, setExpanded] = useState<number | null>(null);
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-100 shadow-sm">
+    <div className="overflow-x-auto rounded-xl border border-line bg-surface">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-[#f9f9ff] border-b border-gray-100 text-xs font-semibold text-gray-400">
+          <tr className="bg-surface-2 border-b border-line text-xs font-semibold text-muted">
             <th className="px-4 py-3 text-left w-10">#</th>
             <th className="px-4 py-3 text-left">Branch Name</th>
             <th className="px-4 py-3 text-left hidden sm:table-cell">Branch Type</th>
             <th className="px-4 py-3 text-left">Details</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-line">
           {offices.map((o, i) => {
             const open = expanded === i;
             return (
               <>
-                <tr key={i} className={`transition-colors ${open ? 'bg-indigo-50/40' : 'hover:bg-indigo-50/20'}`}>
-                  <td className="px-4 py-3 text-gray-400 font-medium">{i + 1}</td>
+                <tr key={i} className={`transition-colors ${open ? 'bg-acc-deep' : 'hover:bg-surface-2'}`}>
+                  <td className="px-4 py-3 text-faint font-medium">{i + 1}</td>
                   <td className="px-4 py-3">
-                    <span className="font-semibold text-gray-800">{tc(o.office_name)}</span>
+                    <span className="font-semibold text-ink">{tc(o.office_name)}</span>
                     <span className="sm:hidden ml-2"><TypeBadge type={o.office_type} /></span>
                   </td>
                   <td className="px-4 py-3 hidden sm:table-cell"><TypeBadge type={o.office_type} /></td>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => setExpanded(open ? null : i)}
-                      className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-semibold text-xs transition-colors"
+                      className="inline-flex items-center gap-1 text-acc hover:text-ink font-semibold text-xs transition-colors"
                     >
                       Details {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
@@ -140,7 +140,7 @@ function PostOfficesTable({ offices, pin }: { offices: PostOfficeEntry[]; pin: s
                 </tr>
                 {open && (
                   <tr key={`d-${i}`}>
-                    <td colSpan={4} className="bg-indigo-50/60 border-t border-indigo-100 px-5 py-4">
+                    <td colSpan={4} className="bg-acc-deep border-t border-acc/20 px-5 py-4">
                       <div className="grid sm:grid-cols-2 gap-x-10 gap-y-2 text-sm max-w-2xl">
                         {([
                           ['Post Office',      tc(o.office_name)],
@@ -153,10 +153,10 @@ function PostOfficesTable({ offices, pin }: { offices: PostOfficeEntry[]; pin: s
                           ['Address',          `Postmaster, ${officeLabel(o.office_type)}, ${[tc(o.district), tc(o.state_name)].filter(Boolean).join(', ')}, India (IN), Pin Code: ${pin}`],
                         ] as [string, string][]).map(([label, val]) => (
                           <div key={label} className="flex gap-2">
-                            <span className="text-gray-400 shrink-0 w-32 text-sm">{label}:</span>
-                            <span className={`font-medium text-gray-800 text-sm ${
-                              label === 'PIN Code'        ? 'font-mono text-indigo-700' :
-                              label === 'Delivery Status' ? (o.delivery ? 'text-emerald-700' : 'text-red-600') : ''
+                            <span className="text-muted shrink-0 w-32 text-sm">{label}:</span>
+                            <span className={`font-medium text-ink text-sm ${
+                              label === 'PIN Code'        ? 'font-mono text-acc' :
+                              label === 'Delivery Status' ? (o.delivery ? 'text-mint' : 'text-coral') : ''
                             }`}>{val}</span>
                           </div>
                         ))}
@@ -166,7 +166,7 @@ function PostOfficesTable({ offices, pin }: { offices: PostOfficeEntry[]; pin: s
                               href={`https://www.google.com/maps?q=${o.latitude},${o.longitude}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 text-xs text-acc hover:text-ink font-semibold transition-colors"
                             >
                               <MapPin className="w-3 h-3" /> View on Google Maps
                             </a>
@@ -188,19 +188,19 @@ function PostOfficesTable({ offices, pin }: { offices: PostOfficeEntry[]; pin: s
 function FAQItem({ q, a }: { q: string; a: string; n: number }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-gray-100 last:border-0 sm:border-0 sm:bg-white sm:rounded-xl sm:shadow-sm sm:overflow-hidden">
+    <div className="border-b border-line last:border-0 sm:border-0 sm:bg-surface sm:rounded-xl sm:border sm:border-line sm:overflow-hidden">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between py-4 sm:px-5 text-left hover:text-[#3525cd] sm:hover:bg-indigo-50/30 transition-colors"
+        className="w-full flex items-center justify-between py-4 sm:px-5 text-left hover:text-acc sm:hover:bg-surface-2 transition-colors"
       >
-        <span className="font-semibold text-gray-800 text-sm pr-4">{q}</span>
+        <span className="font-semibold text-ink text-sm pr-4">{q}</span>
         {open
-          ? <ChevronUp className="w-4 h-4 text-indigo-400 shrink-0" />
-          : <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
+          ? <ChevronUp className="w-4 h-4 text-acc shrink-0" />
+          : <ChevronDown className="w-4 h-4 text-muted shrink-0" />
         }
       </button>
       {open && (
-        <div className="pb-4 sm:px-5 text-sm text-gray-600 leading-relaxed sm:border-t sm:border-gray-100 sm:pt-3">
+        <div className="pb-4 sm:px-5 text-sm text-muted leading-relaxed sm:border-t sm:border-line sm:pt-3">
           {a}
         </div>
       )}
@@ -218,26 +218,26 @@ function MobileBankRow({ b }: { b: PinBranch }) {
         className="w-full flex items-center justify-between gap-3 active:opacity-70"
       >
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
-            <Building2 className="w-4 h-4 text-indigo-700" />
+          <div className="w-9 h-9 rounded-full bg-acc-deep flex items-center justify-center shrink-0">
+            <Building2 className="w-4 h-4 text-acc" />
           </div>
           <div className="text-left min-w-0">
-            <p className="text-sm font-semibold text-gray-800 truncate">{tc(b.bank_name)}</p>
-            <p className="text-xs text-gray-400 truncate">{tc(b.branch_name)}</p>
+            <p className="text-sm font-semibold text-ink truncate">{tc(b.bank_name)}</p>
+            <p className="text-xs text-faint truncate">{tc(b.branch_name)}</p>
           </div>
         </div>
-        <ChevronDown className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-muted shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
         <div className="mt-3 ml-12 grid grid-cols-2 gap-3 text-xs">
           <div>
-            <p className="text-gray-400 uppercase tracking-wider font-semibold mb-0.5">IFSC</p>
-            <Link to={`/ifsc/${b.ifsc}`} className="ifsc-mono font-bold text-[#3525cd] hover:underline">{b.ifsc}</Link>
+            <p className="text-faint uppercase tracking-wider font-semibold mb-0.5">IFSC</p>
+            <Link to={`/ifsc/${b.ifsc}`} className="ifsc-mono font-bold text-acc hover:underline">{b.ifsc}</Link>
           </div>
           {b.city && (
             <div>
-              <p className="text-gray-400 uppercase tracking-wider font-semibold mb-0.5">City</p>
-              <p className="text-gray-700">{tc(b.city)}</p>
+              <p className="text-faint uppercase tracking-wider font-semibold mb-0.5">City</p>
+              <p className="text-body">{tc(b.city)}</p>
             </div>
           )}
         </div>
@@ -269,26 +269,26 @@ export default function PinCodePage() {
 
   if (!/^\d{6}$/.test(pincode ?? '')) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-        <AlertCircle className="w-12 h-12 text-red-300 mx-auto mb-3" />
-        <p className="text-gray-500">Invalid PIN code — must be 6 digits.</p>
-        <Link to="/pin-codes" className="mt-4 inline-block text-indigo-600 hover:underline text-sm">← PIN Directory</Link>
+      <div className="bg-bg min-h-screen max-w-2xl mx-auto px-4 py-20 text-center">
+        <AlertCircle className="w-12 h-12 text-coral/60 mx-auto mb-3" />
+        <p className="text-muted">Invalid PIN code — must be 6 digits.</p>
+        <Link to="/pin-codes" className="mt-4 inline-block text-acc hover:underline text-sm">← PIN Directory</Link>
       </div>
     );
   }
   if (isLoading) return <LoadingSpinner message={`Looking up PIN ${pincode}…`} />;
   if (isError || !data) {
     return (
-      <div className="bg-[#f9f9ff] min-h-[60vh] flex items-center justify-center px-4">
+      <div className="bg-bg min-h-[60vh] flex items-center justify-center px-4">
         <Helmet>
           <title>PIN Code {pincode} | Rupeepedia</title>
           <link rel="canonical" href={`https://rupeepedia.in/pin/${pincode}`} />
         </Helmet>
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-md w-full text-center">
-          <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-3" />
-          <h1 className="text-lg font-bold text-gray-800 mb-2">PIN code {pincode} not found</h1>
-          <p className="text-sm text-gray-500 mb-5">No post offices found for this PIN code.</p>
-          <Link to="/pin-codes" className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">← Browse PIN Directory</Link>
+        <div className="bg-surface rounded-2xl border border-line p-8 max-w-md w-full text-center">
+          <AlertCircle className="w-10 h-10 text-coral mx-auto mb-3" />
+          <h1 className="text-lg font-bold text-ink mb-2">PIN code {pincode} not found</h1>
+          <p className="text-sm text-muted mb-5">No post offices found for this PIN code.</p>
+          <Link to="/pin-codes" className="text-acc hover:text-ink text-sm font-medium">← Browse PIN Directory</Link>
         </div>
       </div>
     );
@@ -400,24 +400,26 @@ export default function PinCodePage() {
       </Helmet>
 
       {/* ── Hero ── */}
-      <section className="bg-[#f9f9ff] py-10 md:py-14 border-b border-indigo-100/30">
+      <header className="py-8 md:py-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="relative z-[2]">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
-            <nav className="flex items-center gap-1.5 text-xs text-gray-400 mb-6 flex-wrap">
-              <Link to="/"          className="hover:text-indigo-600 transition-colors">Home</Link>
+            <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 flex-wrap font-mono">
+              <Link to="/"          className="hover:text-acc transition-colors">Home</Link>
               <ChevronRight className="w-3 h-3" />
-              <Link to="/pin-codes" className="hover:text-indigo-600 transition-colors">PIN Codes</Link>
+              <Link to="/pin-codes" className="hover:text-acc transition-colors">PIN Codes</Link>
               <ChevronRight className="w-3 h-3" />
-              <span className="text-indigo-700 font-mono font-semibold">{pin}</span>
+              <span className="text-acc font-semibold">{pin}</span>
             </nav>
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold text-[#3525cd] tracking-tight mb-2 font-mono">
+                <h1 className="font-display text-3xl md:text-4xl font-extrabold text-acc tracking-tight mb-2 font-mono">
                   PIN Code: {pin}
                 </h1>
                 {headline && (
-                  <p className="text-gray-600 text-lg">
+                  <p className="text-body text-lg">
                     {tc(headline.office_name)}, {officeLabel(headline.office_type)}
                     {distLabel && `, ${distLabel}`}
                     {stateLabel && `, ${stateLabel}`}.
@@ -425,10 +427,10 @@ export default function PinCodePage() {
                 )}
               </div>
               <div className="flex gap-3">
-                <button className="flex items-center gap-2 bg-indigo-700 text-white sm:px-5 px-3 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-500/20 hover:bg-indigo-800 transition-all active:scale-95">
+                <button className="flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white sm:px-5 px-3 py-2.5 rounded-xl text-sm font-semibold shadow-acc-glow transition-all active:scale-95">
                   <Share2 className="w-4 h-4" /> <span className="hidden sm:inline">Share</span>
                 </button>
-                <button className="flex items-center justify-center p-2.5 rounded-xl border border-gray-200 bg-white text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95">
+                <button className="flex items-center justify-center p-2.5 rounded-xl border border-line bg-surface text-acc hover:bg-surface-2 transition-all active:scale-95">
                   <Bookmark className="w-4 h-4" />
                 </button>
               </div>
@@ -443,19 +445,21 @@ export default function PinCodePage() {
                 { n: stats.bank_count,        label: 'Banks'         },
               ].map(({ n, label }) => (
                 <div key={label}>
-                  <p className="text-2xl font-extrabold text-gray-900 leading-none">{n}</p>
-                  <p className="text-[11px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">{label}</p>
+                  <p className="text-2xl font-extrabold text-ink leading-none">{n}</p>
+                  <p className="text-[11px] text-faint font-semibold uppercase tracking-wide mt-0.5">{label}</p>
                 </div>
               ))}
             </div>
           </motion.div>
+            </div>
+          </div>
         </div>
-      </section>
+      </header>
 
       <AdUnit slot={AD_SLOTS.PIN_TOP} className="max-w-5xl mx-auto px-4 pt-6" />
 
       {/* ── Bento grid ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div className="bg-bg max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
           {/* ── Left column (8/12) ── */}
@@ -463,12 +467,12 @@ export default function PinCodePage() {
 
             {/* Post Office Primary Details */}
             {headline && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+              <div className="bg-surface rounded-2xl border border-line p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-700">
+                  <div className="w-10 h-10 bg-acc-deep rounded-xl flex items-center justify-center text-acc">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <h2 className="text-lg font-bold text-gray-900">Post Office Primary Details</h2>
+                  <h2 className="text-lg font-bold text-ink">Post Office Primary Details</h2>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-10">
                   {[
@@ -480,22 +484,22 @@ export default function PinCodePage() {
                     ['Delivery Status', headline.delivery ? 'Delivery' : 'Non-Delivery', false],
                   ].map(([label, val, bold]) => (
                     <div key={label as string} className="space-y-1">
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{label}</p>
+                      <p className="text-xs font-semibold text-faint uppercase tracking-wider">{label}</p>
                       {label === 'Office Type' ? (
                         <TypeBadge type={headline.office_type} />
                       ) : label === 'Delivery Status' ? (
-                        <span className={`flex items-center gap-2 text-sm font-medium ${headline.delivery ? 'text-emerald-600' : 'text-red-500'}`}>
-                          <span className={`w-2 h-2 rounded-full ${headline.delivery ? 'bg-emerald-500' : 'bg-red-400'}`} />
+                        <span className={`flex items-center gap-2 text-sm font-medium ${headline.delivery ? 'text-mint' : 'text-coral'}`}>
+                          <span className={`w-2 h-2 rounded-full ${headline.delivery ? 'bg-mint' : 'bg-coral'}`} />
                           {val as string}
                         </span>
                       ) : (
-                        <p className={`text-sm text-gray-800 ${bold ? 'font-bold text-base' : ''}`}>{val as string}</p>
+                        <p className={`text-sm text-ink ${bold ? 'font-bold text-base' : ''}`}>{val as string}</p>
                       )}
                     </div>
                   ))}
                   <div className="sm:col-span-2 space-y-1">
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Full Address</p>
-                    <p className="text-sm text-gray-700 leading-relaxed">
+                    <p className="text-xs font-semibold text-faint uppercase tracking-wider">Full Address</p>
+                    <p className="text-sm text-body leading-relaxed">
                       Postmaster, {officeLabel(headline.office_type)}, {[tc(headline.district), tc(headline.state_name)].filter(Boolean).join(', ')}, India (IN), Pin Code: {pin}.
                     </p>
                   </div>
@@ -505,14 +509,14 @@ export default function PinCodePage() {
 
             {/* All Post Offices (if multiple) */}
             {post_offices.length > 1 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-700">
+              <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+                <div className="px-6 py-5 border-b border-line flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center text-gold">
                     <Info className="w-5 h-5" />
                   </div>
                   <div>
-                    <h2 className="font-bold text-gray-900 text-base">All Post Offices in {pin}</h2>
-                    <p className="text-xs text-gray-400">{post_offices.length} offices</p>
+                    <h2 className="font-bold text-ink text-base">All Post Offices in {pin}</h2>
+                    <p className="text-xs text-faint">{post_offices.length} offices</p>
                   </div>
                 </div>
                 <div className="p-4">
@@ -522,95 +526,95 @@ export default function PinCodePage() {
             )}
 
             {/* HO / SO / BO explainer */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-5 border-b border-gray-100">
-                <h2 className="font-bold text-gray-900 text-base">Understanding Post Office Types</h2>
-                <p className="text-sm text-gray-400 mt-0.5">India Post operates a three-tier structure across the country</p>
+            <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+              <div className="px-6 py-5 border-b border-line">
+                <h2 className="font-bold text-ink text-base">Understanding Post Office Types</h2>
+                <p className="text-sm text-faint mt-0.5">India Post operates a three-tier structure across the country</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+              <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-line">
                 {/* H.O */}
                 <div className="p-6 space-y-3">
                   <div className="flex items-center gap-2.5 mb-3">
-                    <span className="bg-amber-100 text-amber-700 text-sm font-bold px-3 py-1.5 rounded-full">H.O</span>
-                    <span className="text-base font-bold text-gray-800">Head Post Office</span>
+                    <span className="bg-gold/10 text-gold text-sm font-bold px-3 py-1.5 rounded-full">H.O</span>
+                    <span className="text-base font-bold text-ink">Head Post Office</span>
                   </div>
-                  <p className="text-sm text-gray-500 leading-relaxed">
+                  <p className="text-sm text-muted leading-relaxed">
                     Main administrative hub for a district or large city zone. Manages all Sub and Branch Post Offices beneath it. Handles Speed Post, savings accounts, money orders, and full logistics services.
                   </p>
-                  <p className="text-xs text-amber-600 font-semibold mt-2">Full services · District-level control</p>
+                  <p className="text-xs text-gold font-semibold mt-2">Full services · District-level control</p>
                 </div>
                 {/* S.O */}
                 <div className="p-6 space-y-3">
                   <div className="flex items-center gap-2.5 mb-3">
-                    <span className="bg-indigo-100 text-indigo-700 text-sm font-bold px-3 py-1.5 rounded-full">S.O</span>
-                    <span className="text-base font-bold text-gray-800">Sub Post Office</span>
+                    <span className="bg-acc-deep text-acc text-sm font-bold px-3 py-1.5 rounded-full">S.O</span>
+                    <span className="text-base font-bold text-ink">Sub Post Office</span>
                   </div>
-                  <p className="text-sm text-gray-500 leading-relaxed">
+                  <p className="text-sm text-muted leading-relaxed">
                     Operates in towns and urban neighbourhoods under a Head Office. Primary interface for the public in populated areas. Provides nearly all services — savings accounts, Speed Post, and government facilities.
                   </p>
-                  <p className="text-xs text-indigo-600 font-semibold mt-2">Most urban PIN codes · Near-full services</p>
+                  <p className="text-xs text-acc font-semibold mt-2">Most urban PIN codes · Near-full services</p>
                 </div>
                 {/* B.O */}
                 <div className="p-6 space-y-3">
                   <div className="flex items-center gap-2.5 mb-3">
-                    <span className="bg-brand-100 text-brand-700 text-sm font-bold px-3 py-1.5 rounded-full">B.O</span>
-                    <span className="text-base font-bold text-gray-800">Branch Post Office</span>
+                    <span className="bg-mint/10 text-mint text-sm font-bold px-3 py-1.5 rounded-full">B.O</span>
+                    <span className="text-base font-bold text-ink">Branch Post Office</span>
                   </div>
-                  <p className="text-sm text-gray-500 leading-relaxed">
+                  <p className="text-sm text-muted leading-relaxed">
                     Most common in rural India — serves villages and remote areas under a designated Account Office. Offers letter delivery, basic savings schemes, money orders, and government benefit disbursements.
                   </p>
-                  <p className="text-xs text-brand-600 font-semibold mt-2">Village-level · Limited hours &amp; services</p>
+                  <p className="text-xs text-mint font-semibold mt-2">Village-level · Limited hours &amp; services</p>
                 </div>
               </div>
             </div>
 
             {/* About */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-2">
-                <Info className="w-4 h-4 text-indigo-500" />
-                <h2 className="font-bold text-gray-900 text-base">About PIN Code {pin}</h2>
+            <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+              <div className="px-6 py-5 border-b border-line flex items-center gap-2">
+                <Info className="w-4 h-4 text-acc" />
+                <h2 className="font-bold text-ink text-base">About PIN Code {pin}</h2>
               </div>
-              <div className="px-6 py-5 space-y-3 text-sm text-gray-600 leading-relaxed">
+              <div className="px-6 py-5 space-y-3 text-sm text-muted leading-relaxed">
                 <p>
-                  PIN code <strong className="text-gray-800 font-mono">{pin}</strong> is the Postal Index Number assigned to{' '}
-                  <strong className="text-gray-800">{mainName}</strong>
+                  PIN code <strong className="text-body font-mono">{pin}</strong> is the Postal Index Number assigned to{' '}
+                  <strong className="text-body">{mainName}</strong>
                   {district ? ` in ${distLabel.toUpperCase()} district` : ''}{state_name ? `, ${stateLabel}` : ''}.
-                  Administered under the <strong className="text-gray-800">{circle}</strong> Postal Circle — {zone.name} covering {zone.region}.
+                  Administered under the <strong className="text-body">{circle}</strong> Postal Circle — {zone.name} covering {zone.region}.
                 </p>
                 <p>
-                  The first digit (<strong className="text-gray-800 font-mono">{pin[0]}</strong>) identifies the postal zone;
-                  the first three digits (<strong className="text-gray-800 font-mono">{sortDist}</strong>) pinpoint the sorting district;
-                  the last three (<strong className="text-gray-800 font-mono">{delivCode}</strong>) identify the delivery post office.
+                  The first digit (<strong className="text-body font-mono">{pin[0]}</strong>) identifies the postal zone;
+                  the first three digits (<strong className="text-body font-mono">{sortDist}</strong>) pinpoint the sorting district;
+                  the last three (<strong className="text-body font-mono">{delivCode}</strong>) identify the delivery post office.
                 </p>
               </div>
             </div>
 
             {/* Bank Branches */}
             {bank_branches.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-6 py-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+                <div className="px-6 py-5 border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600">
+                    <div className="w-10 h-10 bg-acc-deep rounded-xl flex items-center justify-center text-acc">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <h2 className="font-bold text-gray-900 text-base">Banks in {pin}</h2>
-                      <p className="text-xs text-gray-400">{stats.branch_count} branches · {stats.bank_count} banks</p>
+                      <h2 className="font-bold text-ink text-base">Banks in {pin}</h2>
+                      <p className="text-xs text-faint">{stats.branch_count} branches · {stats.bank_count} banks</p>
                     </div>
                   </div>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted" />
                     <input
                       type="text"
                       value={bankFilter}
                       onChange={e => setBankFilter(e.target.value)}
                       placeholder="Filter banks…"
-                      className="pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-xs w-full sm:w-52 focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 outline-none transition-all"
+                      className="pl-9 pr-4 py-2 rounded-lg bg-bg-2 border border-line-2 text-xs text-ink w-full sm:w-52 focus:ring-2 focus:ring-acc/20 focus:border-acc outline-none transition-all"
                     />
                   </div>
                 </div>
                 {/* Mobile: accordion cards */}
-                <div className="sm:hidden divide-y divide-gray-100">
+                <div className="sm:hidden divide-y divide-line">
                   {visibleBanks.map((b: PinBranch) => (
                     <MobileBankRow key={b.ifsc} b={b} />
                   ))}
@@ -619,21 +623,21 @@ export default function PinCodePage() {
                 <div className="hidden sm:block overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="bg-[#f9f9ff] border-b border-gray-100 text-xs font-semibold text-gray-400">
+                      <tr className="bg-surface-2 border-b border-line text-xs font-semibold text-muted">
                         <th className="px-5 py-3 text-left">Bank Name</th>
                         <th className="px-5 py-3 text-left">Branch</th>
                         <th className="px-5 py-3 text-right">IFSC Code</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-line">
                       {visibleBanks.map((b: PinBranch) => (
-                        <tr key={b.ifsc} className="hover:bg-indigo-50/20 transition-colors">
-                          <td className="px-5 py-3.5 font-semibold text-indigo-700">{tc(b.bank_name)}</td>
-                          <td className="px-5 py-3.5 text-gray-600">{tc(b.branch_name)}</td>
+                        <tr key={b.ifsc} className="hover:bg-surface-2 transition-colors">
+                          <td className="px-5 py-3.5 font-semibold text-acc">{tc(b.bank_name)}</td>
+                          <td className="px-5 py-3.5 text-body">{tc(b.branch_name)}</td>
                           <td className="px-5 py-3.5 text-right">
                             <Link
                               to={`/ifsc/${b.ifsc}`}
-                              className="ifsc-mono text-xs font-bold text-indigo-600 hover:text-indigo-800 hover:underline transition-colors"
+                              className="ifsc-mono text-xs font-bold text-acc hover:text-ink hover:underline transition-colors"
                             >
                               {b.ifsc}
                             </Link>
@@ -644,10 +648,10 @@ export default function PinCodePage() {
                   </table>
                 </div>
                 {filteredBanks.length > 8 && (
-                  <div className="px-5 py-3.5 bg-[#f9f9ff] border-t border-gray-100 text-center">
+                  <div className="px-5 py-3.5 bg-surface-2 border-t border-line text-center">
                     <button
                       onClick={() => setShowAllBanks(v => !v)}
-                      className="text-indigo-700 font-bold text-sm hover:underline transition-all"
+                      className="text-acc font-bold text-sm hover:underline transition-all"
                     >
                       {showAllBanks ? 'Show less' : `View ${filteredBanks.length - 8} more banks`}
                     </button>
@@ -660,8 +664,8 @@ export default function PinCodePage() {
 
             {/* FAQ */}
             <section>
-              <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Hash className="w-5 h-5 text-indigo-500" />
+              <h2 className="text-lg font-bold text-ink mb-4 flex items-center gap-2">
+                <Hash className="w-5 h-5 text-acc" />
                 Frequently Asked Questions — PIN {pin}
               </h2>
               <div className="space-y-3">
@@ -672,11 +676,11 @@ export default function PinCodePage() {
             </section>
 
             {/* Back nav */}
-            <div className="flex items-center gap-4 text-sm pb-4 border-t border-gray-100 pt-4">
-              <Link to="/pin-codes" className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+            <div className="flex items-center gap-4 text-sm pb-4 border-t border-line pt-4">
+              <Link to="/pin-codes" className="inline-flex items-center gap-1.5 text-acc hover:text-ink font-medium transition-colors">
                 <ArrowLeft className="w-4 h-4" /> PIN Directory
               </Link>
-              <Link to="/ifsc-finder" className="text-gray-400 hover:text-gray-600 transition-colors">IFSC Finder →</Link>
+              <Link to="/ifsc-finder" className="text-faint hover:text-muted transition-colors">IFSC Finder →</Link>
             </div>
           </div>
 
@@ -684,10 +688,10 @@ export default function PinCodePage() {
           <aside className="md:col-span-4 space-y-5">
 
             {/* Location Profile */}
-            <div className="bg-indigo-700 text-white rounded-2xl p-6 shadow-xl shadow-indigo-500/20 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/30 text-ink rounded-2xl p-6 shadow-acc-glow relative overflow-hidden">
               <div className="relative z-10">
-                <h3 className="text-base font-bold mb-1">Location Profile</h3>
-                <p className="text-white/60 text-sm mb-5">{zone.name} · {zone.region}</p>
+                <h3 className="text-base font-bold mb-1 text-ink">Location Profile</h3>
+                <p className="text-muted text-sm mb-5">{zone.name} · {zone.region}</p>
                 <div className="space-y-4">
                   {[
                     { label: 'Postal Circle', val: circle },
@@ -695,41 +699,41 @@ export default function PinCodePage() {
                     ...(distLabel ? [{ label: 'District', val: distLabel }] : []),
                   ].map(({ label, val }) => (
                     <div key={label} className="flex items-start gap-3">
-                      <div className="bg-white/15 rounded-lg p-1.5 mt-0.5 shrink-0">
-                        <MapPin className="w-3.5 h-3.5" />
+                      <div className="bg-acc/15 rounded-lg p-1.5 mt-0.5 shrink-0">
+                        <MapPin className="w-3.5 h-3.5 text-acc" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-white/50 uppercase tracking-wider">{label}</p>
-                        <p className="font-semibold text-sm">{val}</p>
+                        <p className="text-xs font-semibold text-faint uppercase tracking-wider">{label}</p>
+                        <p className="font-semibold text-sm text-ink">{val}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
               <div className="absolute -bottom-6 -right-6 opacity-10">
-                <MapPin className="w-32 h-32" />
+                <MapPin className="w-32 h-32 text-acc" />
               </div>
             </div>
 
             {/* Quick Reference */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-5 py-4 border-b border-gray-100">
-                <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
-                  <Hash className="w-4 h-4 text-indigo-500" /> Quick Reference
+            <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+              <div className="px-5 py-4 border-b border-line">
+                <h3 className="font-bold text-ink text-sm flex items-center gap-2">
+                  <Hash className="w-4 h-4 text-acc" /> Quick Reference
                 </h3>
               </div>
               <table className="w-full text-sm">
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-line">
                   {[
-                    ['PIN Code',      <span className="font-mono font-bold text-indigo-700">{pin}</span>],
+                    ['PIN Code',      <span className="font-mono font-bold text-acc">{pin}</span>],
                     ['Zone',          `${zone.name}`],
                     ['Region',        zone.region],
                     ['Sort District', sortDist],
                     ['Delivery Code', delivCode],
                   ].map(([label, val]) => (
-                    <tr key={String(label)} className="hover:bg-indigo-50/20 transition-colors">
-                      <td className="px-5 py-2.5 text-gray-400 text-xs font-semibold uppercase tracking-wider w-36">{label}</td>
-                      <td className="px-5 py-2.5 text-gray-800 font-semibold text-sm">{val}</td>
+                    <tr key={String(label)} className="hover:bg-surface-2 transition-colors">
+                      <td className="px-5 py-2.5 text-faint text-xs font-semibold uppercase tracking-wider w-36">{label}</td>
+                      <td className="px-5 py-2.5 text-ink font-semibold text-sm">{val}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -738,8 +742,8 @@ export default function PinCodePage() {
 
             {/* Nearby PIN Codes */}
             {districtOffices.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+              <div className="bg-surface rounded-2xl border border-line p-5">
+                <h3 className="text-xs font-bold text-faint uppercase tracking-widest mb-4">
                   Nearby PIN Codes
                 </h3>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -747,10 +751,10 @@ export default function PinCodePage() {
                     <Link
                       key={o.pin_code}
                       to={`/pin/${o.pin_code}`}
-                      className="bg-[#f9f9ff] p-3 rounded-xl border border-indigo-50 hover:border-indigo-300 hover:bg-indigo-50 transition-all group text-center"
+                      className="bg-bg-2 p-3 rounded-xl border border-line hover:border-acc hover:bg-acc-deep transition-all group text-center"
                     >
-                      <p className="font-mono font-bold text-indigo-700 text-sm group-hover:text-indigo-900">{o.pin_code}</p>
-                      <p className="text-[10px] text-gray-400 truncate mt-0.5 leading-tight">{tc(o.office_name)}</p>
+                      <p className="font-mono font-bold text-acc text-sm">{o.pin_code}</p>
+                      <p className="text-[10px] text-faint truncate mt-0.5 leading-tight">{tc(o.office_name)}</p>
                     </Link>
                   ))}
                 </div>
@@ -758,15 +762,15 @@ export default function PinCodePage() {
             )}
 
             {/* IFSC cross-link */}
-            <div className="bg-gradient-to-br from-indigo-50 to-indigo-50 rounded-2xl p-5 border border-indigo-100">
+            <div className="bg-gradient-to-br from-acc-deep to-surface rounded-2xl p-5 border border-acc/25">
               <div className="flex items-center gap-2 mb-1.5">
-                <Building2 className="w-4 h-4 text-indigo-600" />
-                <h3 className="font-bold text-indigo-900 text-sm">Find IFSC codes near {pin}</h3>
+                <Building2 className="w-4 h-4 text-acc" />
+                <h3 className="font-bold text-ink text-sm">Find IFSC codes near {pin}</h3>
               </div>
-              <p className="text-sm text-indigo-700/60 mb-4">Search all bank branches by PIN code, city, or bank name.</p>
+              <p className="text-sm text-muted mb-4">Search all bank branches by PIN code, city, or bank name.</p>
               <Link
                 to="/ifsc-finder"
-                className="flex items-center justify-center gap-2 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors w-full"
+                className="flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors w-full shadow-acc-glow"
               >
                 <Search className="w-4 h-4" /> IFSC Finder
               </Link>

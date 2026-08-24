@@ -1,8 +1,9 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import { api } from '../utils/api';
-import { ArrowLeft, RefreshCw, TrendingUp, Info } from 'lucide-react';
+import { ArrowLeft, RefreshCw, TrendingUp, Info, ChevronRight } from 'lucide-react';
 
 const CITY_MAP: Record<string, { name: string; diff: number }> = {
   mumbai:    { name: 'Mumbai',    diff: 0 },
@@ -111,153 +112,166 @@ export default function GoldCityPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-gradient-to-br from-yellow-500 via-yellow-400 to-amber-500 text-white px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <Link to="/gold-rate-today" className="inline-flex items-center gap-1.5 text-yellow-100 hover:text-white text-sm mb-4 transition-colors">
-              <ArrowLeft className="w-4 h-4" /> All India Gold Rates
-            </Link>
-            <div className="flex items-start justify-between flex-wrap gap-4">
+      {/* ── Hero ── */}
+      <header className="py-8 md:py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="relative z-[2]">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+            <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 flex-wrap font-mono">
+              <Link to="/" className="hover:text-acc transition-colors">Home</Link>
+              <ChevronRight className="w-3 h-3" />
+              <Link to="/gold-rate-today" className="hover:text-acc transition-colors">Gold Rate Today</Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-acc font-semibold">{name}</span>
+            </nav>
+
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
-                <h1 className="text-3xl font-bold mb-1">Gold Rate Today in {name}</h1>
-                <p className="text-yellow-100 text-sm">{today}</p>
+                <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight mb-2">
+                  Gold Rate Today in {name}
+                </h1>
+                <p className="text-body text-sm">{today}</p>
               </div>
-              <div className="flex items-center gap-2 text-sm text-yellow-100">
-                {updatedAt && <span>Updated {updatedAt}</span>}
-                <button onClick={() => refetch()} className="p-1.5 rounded-lg hover:bg-white/20 transition-colors" title="Refresh">
+              <div className="flex items-center gap-3">
+                {updatedAt && <span className="text-xs text-faint">Updated {updatedAt}</span>}
+                <button onClick={() => refetch()}
+                  className="flex items-center justify-center p-2.5 rounded-xl border border-line bg-surface text-acc hover:bg-surface-2 transition-all active:scale-95"
+                  title="Refresh">
                   <RefreshCw className="w-4 h-4" />
                 </button>
               </div>
             </div>
+          </motion.div>
+            </div>
           </div>
         </div>
+      </header>
 
-        <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+      <div className="bg-bg max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-5">
 
-          {/* Price Table */}
-          {isLoading ? (
-            <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center text-gray-400">Loading live prices…</div>
-          ) : isError ? (
-            <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
-              <p className="text-gray-500 mb-3">Unable to load live prices</p>
-              <button onClick={() => refetch()} className="text-sm text-yellow-600 hover:underline flex items-center gap-1 mx-auto">
-                <RefreshCw className="w-4 h-4" /> Try again
-              </button>
+        {/* Price Table */}
+        {isLoading ? (
+          <div className="bg-surface rounded-2xl border border-line p-8 text-center text-faint">Loading live prices…</div>
+        ) : isError ? (
+          <div className="bg-surface rounded-2xl border border-line p-8 text-center">
+            <p className="text-muted mb-3">Unable to load live prices</p>
+            <button onClick={() => refetch()} className="text-sm text-acc hover:underline flex items-center gap-1 mx-auto">
+              <RefreshCw className="w-4 h-4" /> Try again
+            </button>
+          </div>
+        ) : (
+          <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+            <div className="px-5 py-4 border-b border-line flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-gold" />
+              <h2 className="font-bold text-ink">Gold Price in {name} Today</h2>
             </div>
-          ) : (
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-              <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-yellow-500" />
-                <h2 className="font-bold text-gray-900">Gold Price in {name} Today</h2>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-5 py-3 text-left font-semibold text-gray-600">Purity</th>
-                      <th className="px-5 py-3 text-right font-semibold text-gray-600">Per Gram</th>
-                      <th className="px-5 py-3 text-right font-semibold text-gray-600">Per 10 Grams</th>
-                      <th className="px-5 py-3 text-right font-semibold text-gray-600">Per Tola (11.66g)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {[
-                      { label: '24K (99.9% pure)', per10g: g24, badge: 'Investment' },
-                      { label: '22K (91.6% BIS 916)', per10g: g22, badge: 'Jewellery' },
-                      { label: '18K (75% pure)', per10g: g18, badge: '' },
-                      { label: '14K (58.5% pure)', per10g: g14, badge: '' },
-                    ].map(({ label, per10g, badge }) => (
-                      <tr key={label} className="hover:bg-gray-50">
-                        <td className="px-5 py-3.5 font-medium text-gray-800">
-                          {label}
-                          {badge && <span className="ml-2 text-xs bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded">{badge}</span>}
-                        </td>
-                        <td className="px-5 py-3.5 text-right font-mono text-gray-900">₹{fmt(Math.round(per10g / 10))}</td>
-                        <td className="px-5 py-3.5 text-right font-mono text-gray-900 font-semibold">₹{fmt(per10g)}</td>
-                        <td className="px-5 py-3.5 text-right font-mono text-gray-900">₹{fmt(Math.round(per10g * 1.16638))}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex items-start gap-2 text-xs text-gray-500">
-                <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                <span>Prices based on COMEX spot rate via IBJA benchmark. Actual jeweller price will be higher due to GST (3%) + making charges. 1 USD = ₹{fmt(usdInr)}.</span>
-              </div>
-            </div>
-          )}
-
-          {/* Silver */}
-          {data && (
-            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-              <div className="px-5 py-4 border-b border-gray-100">
-                <h2 className="font-bold text-gray-900">Silver Rate in {name} Today</h2>
-              </div>
+            <div className="overflow-x-auto">
               <table className="w-full text-sm">
-                <tbody className="divide-y divide-gray-100">
+                <thead>
+                  <tr className="bg-surface-2 border-b border-line text-xs font-semibold text-muted">
+                    <th className="px-5 py-3 text-left">Purity</th>
+                    <th className="px-5 py-3 text-right">Per Gram</th>
+                    <th className="px-5 py-3 text-right">Per 10 Grams</th>
+                    <th className="px-5 py-3 text-right">Per Tola (11.66g)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-line">
                   {[
-                    { label: 'Per Gram', value: data.silver.price_per_gram },
-                    { label: 'Per 10 Grams', value: data.silver.price_per_10g },
-                    { label: 'Per 100 Grams', value: data.silver.price_per_100g },
-                    { label: 'Per Kg', value: data.silver.price_per_kg },
-                  ].map(({ label, value }) => (
-                    <tr key={label} className="hover:bg-gray-50">
-                      <td className="px-5 py-3.5 text-gray-600">{label}</td>
-                      <td className="px-5 py-3.5 text-right font-mono font-semibold text-gray-900">₹{fmt(value)}</td>
+                    { label: '24K (99.9% pure)', per10g: g24, badge: 'Investment' },
+                    { label: '22K (91.6% BIS 916)', per10g: g22, badge: 'Jewellery' },
+                    { label: '18K (75% pure)', per10g: g18, badge: '' },
+                    { label: '14K (58.5% pure)', per10g: g14, badge: '' },
+                  ].map(({ label, per10g, badge }) => (
+                    <tr key={label} className="hover:bg-surface-2 transition-colors">
+                      <td className="px-5 py-3.5 font-medium text-ink">
+                        {label}
+                        {badge && <span className="ml-2 text-xs bg-gold/10 text-gold px-1.5 py-0.5 rounded">{badge}</span>}
+                      </td>
+                      <td className="px-5 py-3.5 text-right ifsc-mono text-ink">₹{fmt(Math.round(per10g / 10))}</td>
+                      <td className="px-5 py-3.5 text-right ifsc-mono text-ink font-semibold">₹{fmt(per10g)}</td>
+                      <td className="px-5 py-3.5 text-right ifsc-mono text-ink">₹{fmt(Math.round(per10g * 1.16638))}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          )}
-
-          {/* Other Cities */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-            <h2 className="font-bold text-gray-900 mb-4">Gold Rate Today in Other Cities</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-              {OTHER_CITIES.filter(c => c !== slug).map(c => (
-                <Link
-                  key={c}
-                  to={`/gold-rate-today/${c}`}
-                  className="flex flex-col items-center p-3 rounded-xl border border-gray-100 hover:border-yellow-300 hover:bg-yellow-50 transition-all text-center"
-                >
-                  <span className="font-medium text-gray-800 text-sm">{CITY_MAP[c].name}</span>
-                  {data && (
-                    <span className="text-xs text-gray-500 mt-0.5">
-                      ₹{fmt((data.cities[CITY_MAP[c].name]?.gold_24k_per_10g ?? data.gold.price_24k_per_10g))}/10g
-                    </span>
-                  )}
-                </Link>
-              ))}
+            <div className="px-5 py-3 bg-surface-2 border-t border-line flex items-start gap-2 text-xs text-faint">
+              <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+              <span>Prices based on COMEX spot rate via IBJA benchmark. Actual jeweller price will be higher due to GST (3%) + making charges. 1 USD = ₹{fmt(usdInr)}.</span>
             </div>
           </div>
+        )}
 
-          {/* Info */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm space-y-4">
-            <h2 className="font-bold text-gray-900">About Gold Rates in {name}</h2>
-            <div className="space-y-3 text-sm text-gray-600">
-              <div>
-                <p className="font-semibold text-gray-800 mb-1">How is the {name} gold rate calculated?</p>
-                <p>The gold rate in {name} is derived from the IBJA (Indian Bullion and Jewellers Association) benchmark, which is based on international COMEX/LBMA spot prices converted to INR. A city-specific differential is added to account for local state taxes and logistics. Mumbai is the base city; {name} prices reflect a local adjustment of approximately ₹{CITY_MAP[slug].diff}/10g.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800 mb-1">What is the actual buying price at jewellers in {name}?</p>
-                <p>Jewellers charge the IBJA rate plus GST at 3% on gold value, plus making charges (₹150–600/gram depending on design complexity). The total effective cost for 22K jewellery is typically 8–15% above the base rate shown here.</p>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800 mb-1">24K vs 22K gold in {name}</p>
-                <p>24K (99.9% pure) is investment-grade gold — used for sovereign gold bonds, digital gold, and bullion coins. 22K (BIS 916 hallmark) is jewellery-grade gold. Most jewellers in {name} sell 22K hallmarked jewellery as per BIS regulations.</p>
-              </div>
+        {/* Silver */}
+        {data && (
+          <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+            <div className="px-5 py-4 border-b border-line">
+              <h2 className="font-bold text-ink">Silver Rate in {name} Today</h2>
+            </div>
+            <table className="w-full text-sm">
+              <tbody className="divide-y divide-line">
+                {[
+                  { label: 'Per Gram', value: data.silver.price_per_gram },
+                  { label: 'Per 10 Grams', value: data.silver.price_per_10g },
+                  { label: 'Per 100 Grams', value: data.silver.price_per_100g },
+                  { label: 'Per Kg', value: data.silver.price_per_kg },
+                ].map(({ label, value }) => (
+                  <tr key={label} className="hover:bg-surface-2 transition-colors">
+                    <td className="px-5 py-3.5 text-muted">{label}</td>
+                    <td className="px-5 py-3.5 text-right ifsc-mono font-semibold text-ink">₹{fmt(value)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Other Cities */}
+        <div className="bg-surface rounded-2xl border border-line p-5">
+          <h2 className="font-bold text-ink mb-4">Gold Rate Today in Other Cities</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            {OTHER_CITIES.filter(c => c !== slug).map(c => (
+              <Link
+                key={c}
+                to={`/gold-rate-today/${c}`}
+                className="flex flex-col items-center p-3 rounded-xl border border-line hover:border-gold/40 hover:bg-gold/5 transition-all text-center bg-bg-2"
+              >
+                <span className="font-medium text-ink text-sm">{CITY_MAP[c].name}</span>
+                {data && (
+                  <span className="text-xs text-faint mt-0.5">
+                    ₹{fmt((data.cities[CITY_MAP[c].name]?.gold_24k_per_10g ?? data.gold.price_24k_per_10g))}/10g
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="bg-surface rounded-2xl border border-line p-5 space-y-4">
+          <h2 className="font-bold text-ink">About Gold Rates in {name}</h2>
+          <div className="space-y-3 text-sm text-muted">
+            <div>
+              <p className="font-semibold text-body mb-1">How is the {name} gold rate calculated?</p>
+              <p>The gold rate in {name} is derived from the IBJA (Indian Bullion and Jewellers Association) benchmark, which is based on international COMEX/LBMA spot prices converted to INR. A city-specific differential is added to account for local state taxes and logistics. Mumbai is the base city; {name} prices reflect a local adjustment of approximately ₹{CITY_MAP[slug].diff}/10g.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-body mb-1">What is the actual buying price at jewellers in {name}?</p>
+              <p>Jewellers charge the IBJA rate plus GST at 3% on gold value, plus making charges (₹150–600/gram depending on design complexity). The total effective cost for 22K jewellery is typically 8–15% above the base rate shown here.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-body mb-1">24K vs 22K gold in {name}</p>
+              <p>24K (99.9% pure) is investment-grade gold — used for sovereign gold bonds, digital gold, and bullion coins. 22K (BIS 916 hallmark) is jewellery-grade gold. Most jewellers in {name} sell 22K hallmarked jewellery as per BIS regulations.</p>
             </div>
           </div>
+        </div>
 
-          {/* Back link */}
-          <div className="text-center">
-            <Link to="/gold-rate-today" className="text-yellow-700 hover:text-yellow-900 text-sm font-medium hover:underline">
-              ← View all-India gold rates & more cities
-            </Link>
-          </div>
+        {/* Back link */}
+        <div className="flex items-center gap-4 text-sm pb-4 border-t border-line pt-4">
+          <Link to="/gold-rate-today" className="inline-flex items-center gap-1.5 text-acc hover:text-ink font-medium transition-colors">
+            <ArrowLeft className="w-4 h-4" /> All India Gold Rates
+          </Link>
         </div>
       </div>
     </>

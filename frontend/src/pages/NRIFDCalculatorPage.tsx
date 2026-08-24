@@ -110,21 +110,21 @@ export default function NRIFDCalculatorPage() {
         ...nre, effectiveRate: effRate(nre), taxable: false,
         repatriable: 'Fully repatriable', currency: 'INR',
         highlight: 'Tax-free interest',
-        bg: 'bg-green-50', border: 'border-green-200', textColor: 'text-green-700',
+        bg: 'bg-mint/10', border: 'border-mint/30', textColor: 'text-mint',
       },
       {
         type: 'NRO', label: 'NRO Fixed Deposit',
         ...nro, effectiveRate: effRate(nro), taxable: true,
         repatriable: 'Up to USD 1M/year', currency: 'INR',
         highlight: '31.2% TDS on interest',
-        bg: 'bg-amber-50', border: 'border-amber-200', textColor: 'text-amber-700',
+        bg: 'bg-gold/10', border: 'border-gold/30', textColor: 'text-gold',
       },
       {
         type: 'FCNR', label: `FCNR Fixed Deposit (${fcnrCurrency})`,
         ...fcnr, effectiveRate: effRate(fcnr), taxable: false,
         repatriable: 'Fully repatriable', currency: fcnrCurrency,
         highlight: 'No exchange rate risk',
-        bg: 'bg-blue-50', border: 'border-blue-200', textColor: 'text-blue-700',
+        bg: 'bg-cyan/10', border: 'border-cyan/30', textColor: 'text-cyan',
       },
     ];
   }, [principal, years, nreRate, nroRate, fcnrRate, fcnrCurrency]);
@@ -184,39 +184,40 @@ export default function NRIFDCalculatorPage() {
         icon={Landmark}
       />
 
+      <div className="bg-bg">
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Inputs */}
-        <div className="card p-5 mb-6">
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Principal Amount (₹)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Principal Amount (₹)</label>
               <input type="number" value={principal} onChange={e => setPrincipal(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Tenure (Years)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Tenure (Years)</label>
               <input type="number" min={1} max={10} value={years} onChange={e => setYears(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">NRE FD Rate (%)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">NRE FD Rate (%)</label>
               <input type="number" step={0.05} value={nreRate} onChange={e => setNreRate(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">NRO FD Rate (%)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">NRO FD Rate (%)</label>
               <input type="number" step={0.05} value={nroRate} onChange={e => setNroRate(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">FCNR Rate (%)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">FCNR Rate (%)</label>
               <input type="number" step={0.05} value={fcnrRate} onChange={e => setFcnrRate(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">FCNR Currency</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">FCNR Currency</label>
               <select value={fcnrCurrency} onChange={e => setFcnrCurrency(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-acc bg-surface">
                 {['USD', 'GBP', 'EUR', 'AUD', 'CAD', 'SGD', 'JPY'].map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
@@ -224,13 +225,13 @@ export default function NRIFDCalculatorPage() {
         </div>
 
         {/* Best pick banner */}
-        <div className="bg-brand-50 border border-brand-200 rounded-xl px-4 py-3 mb-5 flex items-center gap-3">
-          <div className="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-brand-700 text-sm font-bold">★</span>
+        <div className="bg-acc-deep border border-acc/30 rounded-xl px-4 py-3 mb-5 flex items-center gap-3">
+          <div className="w-8 h-8 bg-acc/20 rounded-full flex items-center justify-center flex-shrink-0">
+            <span className="text-acc text-sm font-bold">★</span>
           </div>
           <div>
-            <span className="text-sm font-bold text-brand-800">Best net return: {best.label}</span>
-            <span className="text-xs text-brand-600 ml-2">({fmt(best.netInterest)} net interest over {years} yr)</span>
+            <span className="text-sm font-bold text-ink">Best net return: {best.label}</span>
+            <span className="text-xs text-muted ml-2">({fmt(best.netInterest)} net interest over {years} yr)</span>
           </div>
         </div>
 
@@ -244,7 +245,7 @@ export default function NRIFDCalculatorPage() {
                   <div className={`text-xs mt-0.5 font-medium ${r.textColor} opacity-80`}>{r.highlight}</div>
                 </div>
                 {r.type === best.type && (
-                  <span className="text-[10px] font-bold bg-brand-600 text-white px-2 py-0.5 rounded-full">Best Return</span>
+                  <span className="text-[10px] font-bold bg-acc text-white px-2 py-0.5 rounded-full">Best Return</span>
                 )}
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -254,31 +255,31 @@ export default function NRIFDCalculatorPage() {
                   { label: 'Net Interest', value: fmt(r.netInterest) },
                   { label: 'Maturity Value', value: fmt(r.maturity) },
                 ].map(({ label, value }) => (
-                  <div key={label} className="bg-white/70 rounded-lg p-3">
-                    <div className="text-[10px] text-gray-500 mb-1">{label}</div>
+                  <div key={label} className="bg-surface/70 rounded-lg p-3">
+                    <div className="text-[10px] text-muted mb-1">{label}</div>
                     <div className={`text-sm font-bold ${r.textColor}`}>{value}</div>
                   </div>
                 ))}
               </div>
               <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
-                <span className="bg-white/80 px-2.5 py-1 rounded-full text-gray-600">Currency: {r.currency}</span>
-                <span className="bg-white/80 px-2.5 py-1 rounded-full text-gray-600">Repatriation: {r.repatriable}</span>
-                <span className="bg-white/80 px-2.5 py-1 rounded-full text-gray-600">Effective rate: {fmtPct(r.effectiveRate)}/yr</span>
+                <span className="bg-surface/80 px-2.5 py-1 rounded-full text-muted">Currency: {r.currency}</span>
+                <span className="bg-surface/80 px-2.5 py-1 rounded-full text-muted">Repatriation: {r.repatriable}</span>
+                <span className="bg-surface/80 px-2.5 py-1 rounded-full text-muted">Effective rate: {fmtPct(r.effectiveRate)}/yr</span>
               </div>
             </div>
           ))}
         </div>
 
         {/* Comparison table */}
-        <div className="card p-5 mb-6 overflow-x-auto">
-          <h2 className="text-sm font-bold text-gray-800 mb-3">Quick Comparison</h2>
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-6 overflow-x-auto">
+          <h2 className="text-sm font-bold text-ink mb-3">Quick Comparison</h2>
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="text-left pb-2 text-gray-500 font-semibold">Feature</th>
-                <th className="text-center pb-2 text-green-600 font-semibold">NRE</th>
-                <th className="text-center pb-2 text-amber-600 font-semibold">NRO</th>
-                <th className="text-center pb-2 text-blue-600 font-semibold">FCNR</th>
+              <tr className="border-b border-line">
+                <th className="text-left pb-2 text-muted font-semibold">Feature</th>
+                <th className="text-center pb-2 text-mint font-semibold">NRE</th>
+                <th className="text-center pb-2 text-gold font-semibold">NRO</th>
+                <th className="text-center pb-2 text-cyan font-semibold">FCNR</th>
               </tr>
             </thead>
             <tbody>
@@ -291,11 +292,11 @@ export default function NRIFDCalculatorPage() {
                 ['Joint with Resident?', 'No', 'Yes (as 2nd holder)', 'No'],
                 ['Tenure', '1yr+', '7 days+', '1–5 years'],
               ].map(([feature, nre, nro, fcnr]) => (
-                <tr key={feature} className="border-b border-gray-50">
-                  <td className="py-2 text-gray-700 font-medium">{feature}</td>
-                  <td className="py-2 text-center text-green-700">{nre}</td>
-                  <td className="py-2 text-center text-amber-700">{nro}</td>
-                  <td className="py-2 text-center text-blue-700">{fcnr}</td>
+                <tr key={feature} className="border-b border-line">
+                  <td className="py-2 text-body font-medium">{feature}</td>
+                  <td className="py-2 text-center text-mint">{nre}</td>
+                  <td className="py-2 text-center text-gold">{nro}</td>
+                  <td className="py-2 text-center text-cyan">{fcnr}</td>
                 </tr>
               ))}
             </tbody>
@@ -305,8 +306,8 @@ export default function NRIFDCalculatorPage() {
         {/* ── Article ── */}
         <article className="space-y-8 mb-8">
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">NRE, NRO and FCNR — how the three deposits actually differ</h2>
-            <div className="text-sm text-gray-600 space-y-3 leading-relaxed">
+            <h2 className="text-lg font-bold text-ink mb-3">NRE, NRO and FCNR — how the three deposits actually differ</h2>
+            <div className="text-sm text-muted space-y-3 leading-relaxed">
               <p>
                 The three NRI deposit types answer one question each. <strong>Where did the money come from?</strong> Foreign
                 earnings go into NRE or FCNR; income that arises in India (rent, dividends, pension, property sale proceeds)
@@ -334,27 +335,27 @@ export default function NRIFDCalculatorPage() {
           </section>
         </article>
 
-        <div className="flex gap-2.5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-xs text-blue-700 mb-8">
+        <div className="flex gap-2.5 bg-cyan/10 border border-cyan/30 rounded-xl p-4 text-xs text-cyan mb-8">
           <Info size={14} className="flex-shrink-0 mt-0.5" />
           <div>Interest rates change frequently. Check with your bank for current rates. FCNR maturity value is in foreign currency — actual INR value depends on exchange rate at maturity. NRO TDS can be lower under DTAA with a Tax Residency Certificate. Consult a CA for tax planning.</div>
         </div>
 
-        <h2 className="text-lg font-bold text-gray-900 mb-1">NRI FD FAQs</h2>
-        <p className="text-xs text-gray-400 mb-4">Tax, repatriation, DTAA, returning to India, and reporting rules</p>
+        <h2 className="text-lg font-bold text-ink mb-1">NRI FD FAQs</h2>
+        <p className="text-xs text-faint mb-4">Tax, repatriation, DTAA, returning to India, and reporting rules</p>
         <div className="space-y-2">
           {FAQS.map((faq, i) => (
-            <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+            <div key={i} className="border border-line rounded-xl overflow-hidden">
               <button
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-white hover:bg-gray-50 transition"
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-surface hover:bg-surface-2 transition"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
               >
-                <span className="flex-1 text-sm font-semibold text-gray-800">{faq.q}</span>
+                <span className="flex-1 text-sm font-semibold text-ink">{faq.q}</span>
                 {openFaq === i
-                  ? <ChevronUp size={15} className="text-gray-400 flex-shrink-0" />
-                  : <ChevronDown size={15} className="text-gray-400 flex-shrink-0" />}
+                  ? <ChevronUp size={15} className="text-faint flex-shrink-0" />
+                  : <ChevronDown size={15} className="text-faint flex-shrink-0" />}
               </button>
               {/* Always mounted so content stays in the DOM for search engines */}
-              <div className={`px-4 pb-4 pt-1 border-t border-gray-100 text-sm text-gray-600 leading-relaxed ${openFaq === i ? '' : 'hidden'}`}>
+              <div className={`px-4 pb-4 pt-1 border-t border-line text-sm text-muted leading-relaxed ${openFaq === i ? '' : 'hidden'}`}>
                 {faq.a}
               </div>
             </div>
@@ -363,7 +364,7 @@ export default function NRIFDCalculatorPage() {
 
         {/* ── Related tools ── */}
         <section className="mt-10">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">Related calculators</h2>
+          <h2 className="text-lg font-bold text-ink mb-3">Related calculators</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
               { path: '/calculators/rnor-status', label: 'RNOR Status Calculator', desc: 'Returning to India? Check how long your foreign income stays untaxed' },
@@ -371,16 +372,17 @@ export default function NRIFDCalculatorPage() {
               { path: '/calculators/nri-rental-income', label: 'NRI Rental Income Calculator', desc: 'Tax and TDS on rent from your Indian property' },
               { path: '/calculators/fd', label: 'FD Calculator', desc: 'Regular resident fixed deposit maturity calculator' },
             ].map(t => (
-              <Link key={t.path} to={t.path} className="card p-4 hover:shadow-md transition group">
+              <Link key={t.path} to={t.path} className="bg-surface border border-line rounded-2xl p-4 hover:border-acc transition group">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-gray-800 group-hover:text-brand-600 transition">{t.label}</span>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  <span className="text-sm font-semibold text-ink group-hover:text-acc transition">{t.label}</span>
+                  <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                 </div>
-                <p className="text-[11px] text-gray-400 mt-1">{t.desc}</p>
+                <p className="text-[11px] text-faint mt-1">{t.desc}</p>
               </Link>
             ))}
           </div>
         </section>
+      </div>
       </div>
     </>
   );

@@ -2,9 +2,10 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  RefreshCw, ArrowLeftRight, TrendingUp, ExternalLink,
-  ChevronDown, ChevronUp, Info, Globe,
+  RefreshCw, ArrowLeftRight, ExternalLink,
+  ChevronDown, ChevronUp, Info, ChevronRight,
 } from 'lucide-react';
 import { api } from '../utils/api';
 
@@ -75,16 +76,16 @@ const FAQS = [
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-gray-100 rounded-xl overflow-hidden">
+    <div className="border-b border-line last:border-0">
       <button onClick={() => setOpen(v => !v)} aria-expanded={open}
-        className="w-full flex justify-between items-center px-5 py-4 text-left text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors">
+        className="w-full flex justify-between items-center py-4 text-left text-sm font-semibold text-ink hover:text-acc transition-colors">
         <span>{q}</span>
         {open
-          ? <ChevronUp   className="w-4 h-4 text-brand-500 flex-shrink-0 ml-3" />
-          : <ChevronDown className="w-4 h-4 text-gray-400    flex-shrink-0 ml-3" />}
+          ? <ChevronUp   className="w-4 h-4 text-acc flex-shrink-0 ml-3" />
+          : <ChevronDown className="w-4 h-4 text-muted flex-shrink-0 ml-3" />}
       </button>
       {open && (
-        <div className="px-5 pb-5 pt-0 text-sm text-gray-500 leading-relaxed border-t border-gray-50">{a}</div>
+        <div className="pb-4 text-sm text-muted leading-relaxed">{a}</div>
       )}
     </div>
   );
@@ -96,11 +97,12 @@ function CurrencySelect({ value, onChange, rates, id }: {
   const available = ['INR', ...ORDERED.filter(c => rates[c])];
   return (
     <select id={id} value={value} onChange={e => onChange(e.target.value)}
-      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 text-sm font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer">
+      className="w-full bg-bg-2 border border-line-2 rounded-xl px-3 py-3 text-sm font-bold text-ink focus:ring-2 focus:ring-acc/20 focus:border-acc outline-none cursor-pointer">
       {available.map(c => {
         const m = CURRENCY_META[c];
+        const r = rates[c];
         // No flag emoji — doesn't render in <select> on Windows
-        return <option key={c} value={c}>{c} — {m?.name ?? c}</option>;
+        return <option key={c} value={c}>{c} — {m?.name ?? c}{r ? ` (₹${r.toFixed(2)})` : ''}</option>;
       })}
     </select>
   );
@@ -198,293 +200,260 @@ export default function CurrencyConverterPage() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
-
-        {/* ── Hero ─────────────────────────────────────────────────────────── */}
-        <div className="bg-gradient-to-br from-brand-800 via-brand-900 to-slate-900 text-white">
-          <div className="max-w-4xl mx-auto px-4 py-12">
-
-            {/* Breadcrumb */}
-            <nav className="flex items-center gap-1.5 text-brand-200 text-xs mb-5">
-              <Link to="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <span className="text-white font-medium">Currency Converter</span>
-            </nav>
-
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <Globe className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold leading-tight">Currency Converter</h1>
-                <p className="text-brand-200 mt-1 text-sm">Daily mid-market rates — free, no hidden markup</p>
-              </div>
+      {/* ── Hero ── */}
+      <header className="py-8 md:py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute top-[-160px] right-[-100px] w-[500px] h-[400px] rounded-full opacity-25 blur-[20px]"
+                   style={{ background: 'radial-gradient(50% 50% at 50% 50%, var(--acc-glow), transparent 70%)' }} />
             </div>
-            <p className="text-brand-100 text-base mb-8 max-w-2xl">
-              Convert Indian Rupee to USD, EUR, GBP, AED, SGD and 10+ more currencies at the real mid-market rate.
-              Free, no API key, daily updated rates — no hidden markup.
-            </p>
+            <div className="relative z-[2]">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
 
-            {/* ── Converter widget ──────────────────────────────────────── */}
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-              {isError && (
-                <div className="mb-4 px-4 py-3 bg-red-50 rounded-xl text-red-600 text-sm text-center">
-                  Failed to load rates.{' '}
-                  <button onClick={() => refetch()} className="underline font-semibold">Retry</button>
-                </div>
-              )}
+                {/* Breadcrumb */}
+                <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 font-mono">
+                  <Link to="/" className="hover:text-acc transition-colors">Home</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <span className="text-acc font-semibold">Currency Converter</span>
+                </nav>
 
-              <div className="grid grid-cols-1 gap-3">
-                {/* From — amount + currency stacked */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5 block">Amount</label>
-                    <input type="number" min={0} value={amount} onChange={e => setAmount(e.target.value)}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-2xl font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-400" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5 block">From Currency</label>
-                    <CurrencySelect value={from} onChange={setFrom} rates={rates} id="from-currency" />
-                  </div>
+                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-mint/10 text-mint border border-mint/30 mb-5">
+                  <ArrowLeftRight className="w-3.5 h-3.5" /> Real-time FX Converter (RBI Reference Benchmarks)
                 </div>
+                <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ink tracking-tight leading-[1.1] mb-3">
+                  Live Foreign Currency Exchange Rates to Indian Rupee (INR)
+                </h1>
+                <p className="text-body text-sm md:text-base leading-relaxed max-w-2xl">
+                  Calculate live conversion rates for {availableForTable.slice(0, 7).join(', ')} with an estimated bank spread and forex-card markup savings.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </header>
 
-                {/* Swap button centred */}
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 border-t border-gray-100" />
-                  <button onClick={() => { setFrom(to); setTo(from); }}
-                    className="flex items-center gap-2 px-4 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 text-sm font-semibold rounded-xl transition-colors border border-brand-100"
-                    title="Swap currencies">
-                    <ArrowLeftRight className="w-4 h-4" /> Swap
-                  </button>
-                  <div className="flex-1 border-t border-gray-100" />
-                </div>
+      {/* ── Body ─────────────────────────────────────────────────────────── */}
+      <div className="bg-bg max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
-                {/* To — result + currency stacked */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5 block">Converted To</label>
-                    <div className="w-full border-2 border-brand-200 bg-brand-50 rounded-xl px-4 py-3 min-h-[52px] flex items-center">
-                      {isLoading
-                        ? <span className="text-gray-400 text-sm font-normal">Loading…</span>
-                        : <span className="text-2xl font-extrabold text-brand-700 break-all">
-                            {CURRENCY_META[to]?.symbol ?? ''} {fmt(result)}
-                          </span>}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5 block">To Currency</label>
-                    <CurrencySelect value={to} onChange={setTo} rates={rates} id="to-currency" />
-                  </div>
-                </div>
+        {isError && (
+          <div className="px-4 py-3 bg-coral/10 rounded-xl text-coral text-sm text-center">
+            Failed to load rates.{' '}
+            <button onClick={() => refetch()} className="underline font-semibold">Retry</button>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+          {/* ── Converter widget ── */}
+          <div className="lg:col-span-5 space-y-5">
+            <div className="bg-surface rounded-2xl border border-line p-6">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="font-bold text-ink text-base">Instant Currency Converter</h2>
+                <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-mint/10 text-mint">Live RBI Spot</span>
               </div>
 
-              {/* Rate line */}
-              {!isLoading && !isNaN(unitRate) && (
-                <div className="mt-4 flex items-center justify-between flex-wrap gap-2 pt-4 border-t border-gray-100">
-                  <p className="text-sm text-gray-500">
-                    <span className="font-bold text-gray-800">1 {from}</span>
-                    {' = '}
-                    <span className="font-bold text-brand-600">
-                      {CURRENCY_META[to]?.symbol ?? ''} {fmt(unitRate, 4)}
-                    </span>
-                    {' '}<span className="text-gray-400">{to}</span>
-                    <span className="text-xs text-gray-400 ml-2">(mid-market rate)</span>
-                  </p>
-                  <div className="flex items-center gap-2">
-                    {updatedAt && <span className="text-xs text-gray-400">Updated {updatedAt}</span>}
-                    <button onClick={() => refetch()} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors" title="Refresh rates">
-                      <RefreshCw className="w-3.5 h-3.5 text-gray-400" />
-                    </button>
-                  </div>
-                </div>
-              )}
+              <label className="text-xs font-bold text-faint uppercase tracking-widest mb-1.5 block">Select Foreign Currency</label>
+              <CurrencySelect value={from} onChange={setFrom} rates={rates} id="from-currency" />
+
+              <div className="flex items-center justify-between mt-4 mb-1.5">
+                <label className="text-xs font-bold text-faint uppercase tracking-widest">Amount in {from}</label>
+                <button onClick={() => { setFrom(to); setTo(from); }}
+                  className="flex items-center gap-1 text-xs font-semibold text-acc hover:underline">
+                  <ArrowLeftRight className="w-3 h-3" /> Swap Direction
+                </button>
+              </div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-body font-bold">{CURRENCY_META[from]?.symbol}</span>
+                <input type="number" min={0} value={amount} onChange={e => setAmount(e.target.value)}
+                  className="w-full bg-bg-2 border border-line-2 rounded-xl pl-10 pr-4 py-3 text-xl font-bold text-ink focus:ring-2 focus:ring-acc/20 focus:border-acc outline-none" />
+              </div>
 
               {/* Quick amount chips */}
-              {!isNaN(unitRate) && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="text-xs text-gray-400 self-center">Quick:</span>
-                  {QUICK_AMOUNTS.slice(0, 5).map(n => (
-                    <button key={n} onClick={() => setAmount(String(n))}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors border ${amount === String(n)
-                        ? 'bg-brand-100 border-brand-300 text-brand-700'
-                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-brand-300'}`}>
-                      {n} {from}
-                    </button>
-                  ))}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {QUICK_AMOUNTS.slice(0, 5).map(n => (
+                  <button key={n} onClick={() => setAmount(String(n))}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors border ${amount === String(n)
+                      ? 'bg-acc-deep border-acc/40 text-acc'
+                      : 'bg-bg-2 border-line-2 text-muted hover:border-acc/30'}`}>
+                    {CURRENCY_META[from]?.symbol}{n.toLocaleString('en-IN')}
+                  </button>
+                ))}
+              </div>
+
+              {/* Result */}
+              <div className="mt-5 rounded-xl border border-mint/30 bg-mint/5 px-4 py-4">
+                {isLoading ? (
+                  <span className="text-faint text-sm">Loading…</span>
+                ) : (
+                  <>
+                    <p className="text-xs text-mint font-semibold">{fmt(parseFloat(amount) || 0, 0)} {from} equals</p>
+                    <p className="text-3xl font-extrabold text-mint mt-1 break-all">
+                      {CURRENCY_META[to]?.symbol ?? ''}{fmt(result)}
+                    </p>
+                    {!isNaN(unitRate) && (
+                      <p className="text-xs text-faint mt-1.5">
+                        1 {from} = {CURRENCY_META[to]?.symbol ?? ''}{fmt(unitRate, 2)} {to} (RBI Reference)
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {updatedAt && (
+                <div className="flex items-center justify-between mt-3">
+                  <span className="text-[11px] text-faint">Updated {updatedAt}</span>
+                  <button onClick={() => refetch()} className="p-1.5 hover:bg-surface-2 rounded-lg transition-colors" title="Refresh rates">
+                    <RefreshCw className="w-3.5 h-3.5 text-muted" />
+                  </button>
                 </div>
               )}
             </div>
-          </div>
-        </div>
 
-        {/* ── Body ─────────────────────────────────────────────────────────── */}
-        <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
-
-          {/* ── Quick reference table ──────────────────────────────────────── */}
-          {!isLoading && rates['USD'] && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="px-5 py-4 border-b border-gray-100">
-                <h2 className="font-bold text-gray-800 text-sm">
-                  Quick Reference — 1 {from} = ? {to === from ? 'INR' : to}
-                </h2>
-                <p className="text-xs text-gray-400 mt-0.5">Common amounts for quick reference</p>
+            {/* Zero forex markup tip */}
+            <div className="rounded-2xl border border-mint/25 bg-mint/5 p-5">
+              <div className="flex items-center gap-2 mb-1.5">
+                <Info className="w-4 h-4 text-mint" />
+                <h3 className="font-bold text-ink text-sm">Zero Forex Markup Tip</h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-gray-50 border-b border-gray-100 text-xs text-gray-400 uppercase tracking-wide">
-                      <th className="text-left px-5 py-3 font-semibold">Amount ({from})</th>
-                      <th className="text-right px-5 py-3 font-semibold">= {to === from ? 'INR' : to}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {QUICK_AMOUNTS.map(n => {
-                      const val = fromInr(to === from ? 'INR' : to, toInr(from, n));
-                      return (
-                        <tr key={n} className="hover:bg-gray-50">
-                          <td className="px-5 py-2.5 font-medium text-gray-700">
-                            {CURRENCY_META[from]?.symbol}{n.toLocaleString('en-IN')} {from}
-                          </td>
-                          <td className="px-5 py-2.5 text-right font-bold text-brand-600">
-                            {CURRENCY_META[to === from ? 'INR' : to]?.symbol}{fmt(val)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* ── All rates table ────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-brand-600" />
-                <h2 className="font-bold text-gray-800">INR Exchange Rates Today</h2>
-              </div>
-              {updatedAt && <span className="text-xs text-gray-400">Updated {updatedAt}</span>}
-            </div>
-
-            {isLoading ? (
-              <div className="p-10 text-center">
-                <div className="w-7 h-7 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto" />
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50 text-xs text-gray-400 uppercase tracking-wide">
-                      <th className="text-left px-5 py-3 font-semibold">Currency</th>
-                      <th className="text-right px-5 py-3 font-semibold">1 Unit → ₹ INR</th>
-                      <th className="text-right px-5 py-3 font-semibold">₹1 INR →</th>
-                      <th className="text-right px-5 py-3 font-semibold hidden md:table-cell">₹1,000 INR →</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {availableForTable.map(code => {
-                      const meta    = CURRENCY_META[code];
-                      const rate    = rates[code];    // INR per 1 foreign unit
-                      const inverse = 1 / rate;
-                      const hl      = code === from || code === to;
-                      return (
-                        <tr key={code}
-                          onClick={() => { setFrom(code); setTo('INR'); setAmount('1'); }}
-                          className={`cursor-pointer transition-colors hover:bg-brand-50 ${hl ? 'bg-brand-50' : ''}`}>
-                          <td className="px-5 py-3">
-                            <div className="flex items-center gap-3">
-                              <span className="text-xl">{meta?.flag}</span>
-                              <div>
-                                <div className="font-bold text-gray-800">{code}</div>
-                                <div className="text-xs text-gray-400">{meta?.name}</div>
-                              </div>
-                              {meta?.popular && (
-                                <span className="hidden sm:inline text-[10px] px-1.5 py-0.5 bg-brand-100 text-brand-600 font-bold rounded-full">Popular</span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-5 py-3 text-right font-bold text-gray-900">₹ {fmt(rate)}</td>
-                          <td className="px-5 py-3 text-right text-gray-600">{meta?.symbol}{fmt(inverse, 5)}</td>
-                          <td className="px-5 py-3 text-right text-gray-500 hidden md:table-cell">{meta?.symbol}{fmt(1000 * inverse, 2)}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
-          {/* ── Info + affiliate ───────────────────────────────────────────── */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
-                <Info className="w-4 h-4 text-brand-600" />
-                <h3 className="font-bold text-gray-800 text-sm">About These Rates</h3>
-              </div>
-              <ul className="text-xs text-gray-500 space-y-2 leading-relaxed">
-                <li className="flex gap-2"><span className="text-brand-500 font-bold flex-shrink-0">•</span><span>Mid-market rates via open-source currency data — updated daily</span></li>
-                <li className="flex gap-2"><span className="text-brand-500 font-bold flex-shrink-0">•</span><span>Banks add 1–4% above mid-market — actual rate varies by provider</span></li>
-                <li className="flex gap-2"><span className="text-brand-500 font-bold flex-shrink-0">•</span><span>RBI publishes official USD/INR reference at ~1:30 PM IST daily</span></li>
-                <li className="flex gap-2"><span className="text-brand-500 font-bold flex-shrink-0">•</span><span>LRS limit: USD 2,50,000 per year for resident Indians</span></li>
-                <li className="flex gap-2"><span className="text-brand-500 font-bold flex-shrink-0">•</span><span>TCS of 20% applies on remittances above ₹7 lakh/year (as of Oct 2023)</span></li>
-              </ul>
-            </div>
-
-            <div className="bg-gradient-to-br from-brand-50 to-blue-50 rounded-2xl p-6 border border-brand-100">
-              <h3 className="font-bold text-gray-800 mb-1 text-sm">Sending Money Abroad?</h3>
-              <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-                Banks charge 2–5% above mid-market. Online platforms offer rates closer to what you see here.
+              <p className="text-xs text-muted leading-relaxed">
+                Standard credit cards charge ~3.5% + GST forex markup. Zero-forex-markup cards (like IDFC FIRST WOW, Scapia, or Niyo Global) can save you real money on every international spend — compare options on our{' '}
+                <Link to="/credit-cards?category=Travel" className="text-mint font-semibold hover:underline">Travel Cards page →</Link>
               </p>
-              <div className="flex flex-col gap-2">
-                {[
-                  { name: 'Wise (TransferWise)', url: 'https://wise.com', desc: 'Best mid-market rates' },
-                  { name: 'Remitly',             url: 'https://www.remitly.com', desc: 'Fast INR delivery' },
-                ].map(p => (
-                  <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer sponsored"
-                    className="flex items-center justify-between px-4 py-2.5 bg-white rounded-xl border border-brand-100 hover:border-brand-300 transition-colors">
-                    <div>
-                      <div className="text-xs font-bold text-gray-800">{p.name}</div>
-                      <div className="text-[11px] text-gray-400">{p.desc}</div>
-                    </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                  </a>
-                ))}
+            </div>
+          </div>
+
+          {/* ── Rates table ── */}
+          <div className="lg:col-span-7">
+            <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+              <div className="px-5 py-4 border-b border-line flex items-center justify-between gap-2">
+                <div>
+                  <h2 className="font-bold text-ink text-base">Major Global Currencies vs Indian Rupee (INR)</h2>
+                  <p className="text-xs text-faint mt-0.5">RBI reference rate with estimated retail buy/sell spread</p>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-surface-2 text-faint shrink-0">Updated Daily</span>
+              </div>
+
+              {isLoading ? (
+                <div className="p-10 text-center">
+                  <div className="w-7 h-7 border-2 border-acc border-t-transparent rounded-full animate-spin mx-auto" />
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-line bg-surface-2 text-xs text-muted uppercase tracking-wide">
+                        <th className="text-left px-5 py-3 font-semibold">Currency</th>
+                        <th className="text-right px-4 py-3 font-semibold">Est. Bank Buy</th>
+                        <th className="text-right px-4 py-3 font-semibold">Est. Bank Sell</th>
+                        <th className="text-right px-5 py-3 font-semibold">RBI Reference</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-line">
+                      {availableForTable.map(code => {
+                        const meta = CURRENCY_META[code];
+                        const rate = rates[code]; // RBI/mid-market reference, INR per 1 foreign unit
+                        const bankBuy  = rate * 0.995;
+                        const bankSell = rate * 1.005;
+                        const hl = code === from;
+                        return (
+                          <tr key={code}
+                            onClick={() => setFrom(code)}
+                            className={`cursor-pointer transition-colors hover:bg-surface-2 ${hl ? 'bg-mint/5' : ''}`}>
+                            <td className="px-5 py-3">
+                              <div className="flex items-center gap-3">
+                                <span className="w-8 h-8 rounded-full bg-bg-2 border border-line flex items-center justify-center text-base shrink-0">{meta?.flag}</span>
+                                <div>
+                                  <div className="font-bold text-ink">{code}</div>
+                                  <div className="text-xs text-faint">{meta?.name}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-right font-mono text-body">₹{fmt(bankBuy)}</td>
+                            <td className="px-4 py-3 text-right font-mono text-body">₹{fmt(bankSell)}</td>
+                            <td className="px-5 py-3 text-right font-mono font-bold text-mint">₹{fmt(rate)}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <div className="px-5 py-3 border-t border-line text-[11px] text-faint">
+                Est. Bank Buy/Sell assumes a typical ±0.5% retail spread around the RBI reference rate — actual quotes vary by bank or transfer provider.
               </div>
             </div>
           </div>
+        </div>
 
-          {/* ── Related tools ──────────────────────────────────────────────── */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { to: '/swift-code-lookup', icon: '🌐', title: 'SWIFT Code Lookup', desc: 'Find SWIFT/BIC for international transfers' },
-              { to: '/gold-rate-today',   icon: '🥇', title: 'Gold Rate Today',   desc: 'Live 24K/22K gold price in India'         },
-              { to: '/calculators/emi',   icon: '📊', title: 'EMI Calculator',    desc: 'Calculate loan EMI instantly'             },
-            ].map(item => (
-              <Link key={item.to} to={item.to}
-                className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:border-brand-200 hover:shadow-md transition-all group">
-                <div className="text-2xl mb-2">{item.icon}</div>
-                <div className="font-semibold text-gray-800 text-sm group-hover:text-brand-600 transition-colors">{item.title}</div>
-                <div className="text-xs text-gray-400 mt-0.5">{item.desc}</div>
-              </Link>
-            ))}
+        {/* ── Info + affiliate ───────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-surface rounded-2xl p-6 border border-line">
+            <div className="flex items-center gap-2 mb-3">
+              <Info className="w-4 h-4 text-acc" />
+              <h3 className="font-bold text-ink text-sm">About These Rates</h3>
+            </div>
+            <ul className="text-xs text-muted space-y-2 leading-relaxed">
+              <li className="flex gap-2"><span className="text-acc font-bold flex-shrink-0">•</span><span>Mid-market rates via open-source currency data — updated daily</span></li>
+              <li className="flex gap-2"><span className="text-acc font-bold flex-shrink-0">•</span><span>Banks add 1–4% above mid-market — actual rate varies by provider</span></li>
+              <li className="flex gap-2"><span className="text-acc font-bold flex-shrink-0">•</span><span>RBI publishes official USD/INR reference at ~1:30 PM IST daily</span></li>
+              <li className="flex gap-2"><span className="text-acc font-bold flex-shrink-0">•</span><span>LRS limit: USD 2,50,000 per year for resident Indians</span></li>
+              <li className="flex gap-2"><span className="text-acc font-bold flex-shrink-0">•</span><span>TCS of 20% applies on remittances above ₹7 lakh/year (as of Oct 2023)</span></li>
+            </ul>
           </div>
 
-          {/* ── FAQ ─────────────────────────────────────────────────────────── */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
-            <div className="space-y-2">
-              {FAQS.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
+          <div className="bg-gradient-to-br from-acc-deep to-surface rounded-2xl p-6 border border-acc/30">
+            <h3 className="font-bold text-ink mb-1 text-sm">Sending Money Abroad?</h3>
+            <p className="text-xs text-muted mb-4 leading-relaxed">
+              Banks charge 2–5% above mid-market. Online platforms offer rates closer to what you see here.
+            </p>
+            <div className="flex flex-col gap-2">
+              {[
+                { name: 'Wise (TransferWise)', url: 'https://wise.com', desc: 'Best mid-market rates' },
+                { name: 'Remitly',             url: 'https://www.remitly.com', desc: 'Fast INR delivery' },
+              ].map(p => (
+                <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer sponsored"
+                  className="flex items-center justify-between px-4 py-2.5 bg-surface rounded-xl border border-acc/20 hover:border-acc/40 transition-colors">
+                  <div>
+                    <div className="text-xs font-bold text-ink">{p.name}</div>
+                    <div className="text-[11px] text-faint">{p.desc}</div>
+                  </div>
+                  <ExternalLink className="w-3.5 h-3.5 text-muted flex-shrink-0" />
+                </a>
+              ))}
             </div>
           </div>
-
-          {/* Disclaimer */}
-          <p className="text-xs text-gray-400 text-center pb-4">
-            {data?.disclaimer ?? 'Mid-market rates for reference only. Actual rates vary by provider.'}{' '}
-            <Link to="/swift-code-lookup" className="text-brand-600 hover:underline">Need a SWIFT code for your transfer? →</Link>
-          </p>
         </div>
+
+        {/* ── Related tools ──────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { to: '/swift-code-lookup', icon: '🌐', title: 'SWIFT Code Lookup', desc: 'Find SWIFT/BIC for international transfers' },
+            { to: '/gold-rate-today',   icon: '🥇', title: 'Gold Rate Today',   desc: 'Live 24K/22K gold price in India'         },
+            { to: '/calculators/emi',   icon: '📊', title: 'EMI Calculator',    desc: 'Calculate loan EMI instantly'             },
+          ].map(item => (
+            <Link key={item.to} to={item.to}
+              className="bg-surface rounded-2xl p-5 border border-line hover:border-acc/30 transition-all group">
+              <div className="text-2xl mb-2">{item.icon}</div>
+              <div className="font-semibold text-ink text-sm group-hover:text-acc transition-colors">{item.title}</div>
+              <div className="text-xs text-faint mt-0.5">{item.desc}</div>
+            </Link>
+          ))}
+        </div>
+
+        {/* ── FAQ ─────────────────────────────────────────────────────────── */}
+        <div>
+          <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
+          <div>
+            {FAQS.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
+          </div>
+        </div>
+
+        {/* Disclaimer */}
+        <p className="text-xs text-faint text-center pb-4">
+          {data?.disclaimer ?? 'Mid-market rates for reference only. Actual rates vary by provider.'}{' '}
+          <Link to="/swift-code-lookup" className="text-acc hover:underline">Need a SWIFT code for your transfer? →</Link>
+        </p>
       </div>
     </>
   );

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useLocation } from "react-router-dom";
+import { ArrowRight } from 'lucide-react';
 import CalculatorHero from '../components/CalculatorHero';
 
 
@@ -30,13 +31,6 @@ function fmtINR(n: number) {
   return '₹' + Math.round(n).toLocaleString('en-IN');
 }
 
-function fmtShort(n: number) {
-  if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + 'Cr';
-  if (n >= 100000)   return '₹' + (n / 100000).toFixed(1) + 'L';
-  if (n >= 1000)     return '₹' + (n / 1000).toFixed(0) + 'K';
-  return '₹' + Math.round(n);
-}
-
 function calcEMI(P: number, r: number, n: number): number {
   if (r === 0) return P / n;
   const rm = r / 12 / 100;
@@ -57,20 +51,20 @@ function DonutChart({ principal, interest }: { principal: number; interest: numb
   return (
     <svg width="100" height="100" viewBox="0 0 100 100">
       {/* Interest arc (background) */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#93c5fd" strokeWidth="14"
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--cyan)" strokeWidth="14"
         strokeDasharray={`${iDash} ${pDash}`}
         strokeDashoffset={-pDash}
         strokeLinecap="butt"
         style={{ transform: 'rotate(-90deg)', transformOrigin: '50px 50px' }}
       />
       {/* Principal arc */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="#4F46E5" strokeWidth="14"
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--acc)" strokeWidth="14"
         strokeDasharray={`${pDash} ${iDash}`}
         strokeDashoffset={0}
         strokeLinecap="butt"
         style={{ transform: 'rotate(-90deg)', transformOrigin: '50px 50px' }}
       />
-      <circle cx={cx} cy={cy} r={28} fill="white" />
+      <circle cx={cx} cy={cy} r={28} fill="var(--acc-deep)" />
     </svg>
   );
 }
@@ -126,22 +120,6 @@ export default function EMICalculatorPage({ defaultLoan = 'home' }: Props) {
       }
     }
     return rows;
-  };
-
-  // Bar chart data
-  const barData = () => {
-    let bal = amount;
-    return Array.from({ length: Math.ceil(n / 12) }, (_, idx) => {
-      let yp = 0, yi = 0;
-      const months = Math.min(12, n - idx * 12);
-      for (let m = 0; m < months; m++) {
-        const ia = bal * rate / 12 / 100;
-        const pa = Math.min(emi - ia, bal);
-        yi += ia; yp += pa;
-        bal = Math.max(bal - pa, 0);
-      }
-      return { year: idx + 1, pPct: Math.round((yp / (yp + yi)) * 100), yp, yi };
-    });
   };
 
   const getLoanProfile = () => {
@@ -208,7 +186,7 @@ const profile = getLoanProfile();
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      <div className="min-h-screen bg-bg">
 
         <CalculatorHero
           crumb="EMI"
@@ -221,7 +199,7 @@ const profile = getLoanProfile();
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
 
           {/* ── MAIN CALCULATOR CARD ── */}
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-[13px] border border-line border-l-4 border-l-acc p-6">
 
             {/* Loan type tabs */}
             <div className="flex gap-2 flex-wrap mb-6">
@@ -231,8 +209,8 @@ const profile = getLoanProfile();
                   onClick={() => setLoanType(t)}
                   className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
                     loanType === t
-                      ? 'bg-brand-600 border-brand-600 text-white'
-                      : 'border-slate-200 text-slate-500 hover:border-brand-300 hover:text-brand-600'
+                      ? 'bg-acc border-acc text-white'
+                      : 'border-line text-muted hover:border-acc hover:text-acc'
                   }`}
                 >
                   {loanLabels[t]}
@@ -247,10 +225,10 @@ const profile = getLoanProfile();
                 {/* Amount */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-slate-700">Loan Amount</span>
+                    <span className="text-sm font-semibold text-body">Loan Amount</span>
                     <div className="flex items-center gap-1">
                       <button type="button" onClick={() => setAmount(a => Math.max(d.min, a - d.step))}
-                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        className="w-7 h-7 rounded-md bg-acc-deep hover:bg-acc/20 text-acc font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
                         disabled={amount <= d.min}>−</button>
                       <input
                         type="text"
@@ -259,17 +237,17 @@ const profile = getLoanProfile();
                           const raw = Number(e.target.value.replace(/[^0-9]/g, ''));
                           if (!isNaN(raw)) setAmount(Math.min(Math.max(raw, d.min), d.max));
                         }}
-                        className="bg-brand-50 text-brand-700 text-sm font-bold px-2 py-1 rounded-lg w-28 text-center border border-transparent focus:border-brand-400 focus:outline-none"
+                        className="bg-bg-2 text-acc text-sm font-bold px-2 py-1 rounded-lg w-28 text-center border border-transparent focus:border-acc focus:outline-none"
                       />
                       <button type="button" onClick={() => setAmount(a => Math.min(d.max, a + d.step))}
-                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        className="w-7 h-7 rounded-md bg-acc-deep hover:bg-acc/20 text-acc font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
                         disabled={amount >= d.max}>+</button>
                     </div>
                   </div>
                   <input type="range" min={d.min} max={d.max} step={d.step} value={amount}
                     onChange={(e) => setAmount(Number(e.target.value))}
-                    className="w-full accent-brand-600 cursor-pointer" />
-                  <div className="flex justify-between text-xs text-slate-400 mt-1">
+                    className="w-full accent-acc cursor-pointer" />
+                  <div className="flex justify-between text-xs text-faint mt-1">
                     <span>{d.minL}</span><span>{d.maxL}</span>
                   </div>
                 </div>
@@ -277,10 +255,10 @@ const profile = getLoanProfile();
                 {/* Rate */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-slate-700">Rate of Interest (p.a.)</span>
+                    <span className="text-sm font-semibold text-body">Rate of Interest (p.a.)</span>
                     <div className="flex items-center gap-1">
                       <button type="button" onClick={() => setRate(r => Math.max(5, parseFloat((r - 0.1).toFixed(1))))}
-                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        className="w-7 h-7 rounded-md bg-acc-deep hover:bg-acc/20 text-acc font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
                         disabled={rate <= 5}>−</button>
                       <input
                         type="text"
@@ -289,17 +267,17 @@ const profile = getLoanProfile();
                           const raw = parseFloat(e.target.value.replace(/[^0-9.]/g, ''));
                           if (!isNaN(raw)) setRate(Math.min(Math.max(raw, 5), 24));
                         }}
-                        className="bg-brand-50 text-brand-700 text-sm font-bold px-2 py-1 rounded-lg w-20 text-center border border-transparent focus:border-brand-400 focus:outline-none cursor-text"
+                        className="bg-bg-2 text-acc text-sm font-bold px-2 py-1 rounded-lg w-20 text-center border border-transparent focus:border-acc focus:outline-none cursor-text"
                       />
                       <button type="button" onClick={() => setRate(r => Math.min(24, parseFloat((r + 0.1).toFixed(1))))}
-                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        className="w-7 h-7 rounded-md bg-acc-deep hover:bg-acc/20 text-acc font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
                         disabled={rate >= 24}>+</button>
                     </div>
                   </div>
                   <input type="range" min={5} max={24} step={0.1} value={rate}
                     onChange={(e) => setRate(Number(e.target.value))}
-                    className="w-full accent-brand-600 cursor-pointer" />
-                  <div className="flex justify-between text-xs text-slate-400 mt-1">
+                    className="w-full accent-acc cursor-pointer" />
+                  <div className="flex justify-between text-xs text-faint mt-1">
                     <span>5%</span><span>24%</span>
                   </div>
                 </div>
@@ -307,10 +285,10 @@ const profile = getLoanProfile();
                 {/* Tenure */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-slate-700">Loan Tenure</span>
+                    <span className="text-sm font-semibold text-body">Loan Tenure</span>
                     <div className="flex items-center gap-1">
                       <button type="button" onClick={() => setTenure(t => Math.max(1, t - 1))}
-                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        className="w-7 h-7 rounded-md bg-acc-deep hover:bg-acc/20 text-acc font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
                         disabled={tenure <= 1}>−</button>
                       <input
                         type="text"
@@ -319,146 +297,118 @@ const profile = getLoanProfile();
                           const raw = parseInt(e.target.value.replace(/[^0-9]/g, ''));
                           if (!isNaN(raw)) setTenure(Math.min(Math.max(raw, 1), d.maxT));
                         }}
-                        className="bg-brand-50 text-brand-700 text-sm font-bold px-2 py-1 rounded-lg w-20 text-center border border-transparent focus:border-brand-400 focus:outline-none cursor-text"
+                        className="bg-bg-2 text-acc text-sm font-bold px-2 py-1 rounded-lg w-20 text-center border border-transparent focus:border-acc focus:outline-none cursor-text"
                       />
                       <button type="button" onClick={() => setTenure(t => Math.min(d.maxT, t + 1))}
-                        className="w-7 h-7 rounded-md bg-brand-100 hover:bg-brand-200 text-brand-700 font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
+                        className="w-7 h-7 rounded-md bg-acc-deep hover:bg-acc/20 text-acc font-bold text-base flex items-center justify-center transition-colors active:scale-95 disabled:opacity-30"
                         disabled={tenure >= d.maxT}>+</button>
                     </div>
                   </div>
                   <input type="range" min={1} max={d.maxT} step={1} value={tenure}
                     onChange={(e) => setTenure(Number(e.target.value))}
-                    className="w-full accent-brand-600 cursor-pointer" />
-                  <div className="flex justify-between text-xs text-slate-400 mt-1">
+                    className="w-full accent-acc cursor-pointer" />
+                  <div className="flex justify-between text-xs text-faint mt-1">
                     <span>1 Yr</span><span>{d.maxT} Yr</span>
                   </div>
                 </div>
               </div>
 
               {/* RIGHT: Result panel */}
-              <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-lg p-5 text-white flex flex-col gap-4">
+              <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/25 rounded-[13px] p-5 text-ink flex flex-col gap-4">
                 <div>
-                  <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Monthly EMI</div>
-                  <div className="text-3xl font-bold tracking-tight">{fmtINR(emi)}</div>
+                  <div className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Monthly EMI</div>
+                  <div className="text-3xl font-bold tracking-tight text-ink">{fmtINR(emi)}</div>
                 </div>
 
-                <hr className="border-white/20" />
+                <hr className="border-line" />
 
                 <div className="flex items-center gap-4">
                   <DonutChart principal={amount} interest={interest} />
                   <div className="flex flex-col gap-2 text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-brand-300 flex-shrink-0"></span>
+                      <span className="w-3 h-3 rounded-full bg-acc flex-shrink-0"></span>
                       <div>
-                        <div className="text-xs opacity-70">Principal Amount</div>
-                        <div className="font-bold">{fmtINR(amount)}</div>
+                        <div className="text-xs text-muted">Principal Amount</div>
+                        <div className="font-bold text-ink">{fmtINR(amount)}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-brand-300 flex-shrink-0"></span>
+                      <span className="w-3 h-3 rounded-full bg-cyan flex-shrink-0"></span>
                       <div>
-                        <div className="text-xs opacity-70">Total Interest</div>
-                        <div className="font-bold">{fmtINR(interest)}</div>
+                        <div className="text-xs text-muted">Total Interest</div>
+                        <div className="font-bold text-ink">{fmtINR(interest)}</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-3 h-3 rounded-full bg-brand-200 flex-shrink-0"></span>
+                      <span className="w-3 h-3 rounded-full bg-line-2 flex-shrink-0"></span>
                       <div>
-                        <div className="text-xs opacity-70">Total Payable</div>
-                        <div className="font-bold">{fmtINR(total)}</div>
+                        <div className="text-xs text-muted">Total Payable</div>
+                        <div className="font-bold text-ink">{fmtINR(total)}</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <hr className="border-white/20" />
+                <hr className="border-line" />
                 <div className="flex justify-between text-sm">
-                  <span className="opacity-80">Interest constitutes</span>
-                  <span className="font-bold">{iPct}%</span>
+                  <span className="text-muted">Interest constitutes</span>
+                  <span className="font-bold text-ink">{iPct}%</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="opacity-80">Principal constitutes</span>
-                  <span className="font-bold">{100 - iPct}%</span>
+                  <span className="text-muted">Principal constitutes</span>
+                  <span className="font-bold text-ink">{100 - iPct}%</span>
                 </div>
-                <p className="text-brand-200 text-sm">
+                <p className="text-body text-sm">
                   🎯 Based on your profile, you are eligible for {profile === "low" ? "instant small loans" : profile === "medium" ? "low-interest personal loans" : "premium bank offers"}
                 </p>
                 <Link
                   to={`/loans?amount=${amount}&emi=${Math.round(emi)}&type=${loanType}`}
-                  className="bg-white text-brand-700 font-bold text-sm rounded-lg py-3 text-center block"
+                  className="bg-gradient-to-br from-acc to-acc-2 text-white font-bold text-sm rounded-lg py-3 text-center block shadow-acc-glow"
                 >
                   Check Best Loan Offers →
                 </Link>
               </div>
             </div>
 
-            {/* ── YEAR-WISE BAR CHART ── */}
-            <div className="mt-8">
-              <h2 className="text-lg font-bold text-slate-900 mb-3">Year-wise Payment Breakdown</h2>
-              <div className="flex gap-3 flex-wrap mb-4">
-                <span className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-brand-600"></span>Principal <strong className="ml-1">{fmtShort(amount)}</strong>
-                </span>
-                <span className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-brand-300"></span>Interest <strong className="ml-1">{fmtShort(interest)}</strong>
-                </span>
-                <span className="flex items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-brand-800"></span>Total <strong className="ml-1">{fmtShort(total)}</strong>
-                </span>
-              </div>
-              <div className="space-y-1.5">
-                {barData().map(({ year, pPct, yp, yi }) => (
-                  <div key={year} className="flex items-center gap-2 text-xs">
-                    <span className="w-8 text-right text-slate-400 flex-shrink-0">Y{year}</span>
-                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden flex">
-                      <div className="h-full bg-brand-600 rounded-l-full transition-all" style={{ width: `${pPct}%` }} />
-                      <div className="h-full bg-brand-300 transition-all"              style={{ width: `${100 - pPct}%` }} />
-                    </div>
-                    <span className="text-slate-400 min-w-[110px] text-right">{fmtShort(yp)} / {fmtShort(yi)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* ── AMORTIZATION TABLE ── */}
             <div className="mt-8">
-              <h2 className="text-lg font-bold text-slate-900 mb-3">Amortization Schedule</h2>
+              <h2 className="text-lg font-bold text-ink mb-3">Amortization Schedule</h2>
               <div className="flex gap-2 mb-4">
                 {(['monthly', 'yearly'] as const).map((v) => (
                   <button key={v} onClick={() => setAmortView(v)}
                     className={`px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
                       amortView === v
-                        ? 'bg-brand-600 text-white border-brand-600'
-                        : 'border-slate-200 text-slate-500 hover:border-brand-300 hover:text-brand-600'
+                        ? 'bg-acc text-white border-acc'
+                        : 'border-line text-muted hover:border-acc hover:text-acc'
                     }`}>
                     {v.charAt(0).toUpperCase() + v.slice(1)}
                   </button>
                 ))}
               </div>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Period</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">EMI</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Principal</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Interest</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Balance</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted">Period</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">EMI</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Principal</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Interest</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Balance</th>
                     </tr>
                   </thead>
                   <tbody>
                     {amortRows().map((row, i) => (
-                      <tr key={i} className="border-t border-slate-50 hover:bg-slate-50 transition-colors">
-                        <td className="px-4 py-3 font-medium text-slate-700">{row.period}</td>
-                        <td className="px-4 py-3 text-right text-slate-600">{fmtINR(row.emi)}</td>
-                        <td className="px-4 py-3 text-right text-brand-600 font-medium">{fmtINR(row.principal)}</td>
-                        <td className="px-4 py-3 text-right text-brand-500 font-medium">{fmtINR(row.interest)}</td>
-                        <td className="px-4 py-3 text-right text-slate-600">{fmtINR(row.balance)}</td>
+                      <tr key={i} className="border-t border-line hover:bg-surface-2 transition-colors">
+                        <td className="px-4 py-3 font-medium text-body">{row.period}</td>
+                        <td className="px-4 py-3 text-right text-body">{fmtINR(row.emi)}</td>
+                        <td className="px-4 py-3 text-right text-acc font-medium">{fmtINR(row.principal)}</td>
+                        <td className="px-4 py-3 text-right text-cyan font-medium">{fmtINR(row.interest)}</td>
+                        <td className="px-4 py-3 text-right text-body">{fmtINR(row.balance)}</td>
                       </tr>
                     ))}
                     {amortView === 'monthly' && n > 60 && (
                       <tr>
-                        <td colSpan={5} className="px-4 py-3 text-center text-xs text-slate-400">
+                        <td colSpan={5} className="px-4 py-3 text-center text-xs text-faint">
                           Showing 60 of {n} months — switch to Yearly view for full schedule
                         </td>
                       </tr>
@@ -470,16 +420,16 @@ const profile = getLoanProfile();
           </div>
 
           {/* ── WHAT IS EMI ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-3">What is EMI?</h2>
-            <p className="text-sm text-slate-600 leading-relaxed mb-4">
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-3">What is EMI?</h2>
+            <p className="text-sm text-muted leading-relaxed mb-4">
               EMI (Equated Monthly Instalment) is the fixed amount you pay your lender every month until the loan is fully repaid.
-              Each EMI has two parts — <strong className="text-slate-800">principal repayment</strong> and <strong className="text-slate-800">interest payment</strong>.
+              Each EMI has two parts — <strong className="text-body">principal repayment</strong> and <strong className="text-body">interest payment</strong>.
               Early EMIs are mostly interest; over time the principal component increases. This is the <em>reducing balance method</em> used by most Indian banks.
             </p>
-            <div className="bg-brand-50 border border-brand-100 rounded-lg p-4">
-              <p className="text-sm font-semibold text-brand-800 mb-3">EMI Formula</p>
-              <code className="block bg-white border border-brand-100 rounded-lg px-4 py-2 text-brand-700 font-mono text-sm mb-3">
+            <div className="bg-acc-deep border border-acc/20 rounded-lg p-4">
+              <p className="text-sm font-semibold text-ink mb-3">EMI Formula</p>
+              <code className="block bg-surface border border-acc/20 rounded-lg px-4 py-2 text-acc font-mono text-sm mb-3">
                 EMI = P × r × (1+r)ⁿ / [(1+r)ⁿ - 1]
               </code>
               <div className="grid grid-cols-2 gap-2">
@@ -490,8 +440,8 @@ const profile = getLoanProfile();
                   ['EMI', 'Equated Monthly Instalment'],
                 ].map(([k, v]) => (
                   <div key={k} className="flex gap-2 items-start text-xs">
-                    <span className="bg-brand-200 text-brand-800 px-2 py-0.5 rounded font-bold flex-shrink-0">{k}</span>
-                    <span className="text-brand-700">{v}</span>
+                    <span className="bg-acc/20 text-ink px-2 py-0.5 rounded font-bold flex-shrink-0">{k}</span>
+                    <span className="text-body">{v}</span>
                   </div>
                 ))}
               </div>
@@ -499,30 +449,30 @@ const profile = getLoanProfile();
           </div>
 
           {/* ── FACTORS ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Factors Affecting Your EMI</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Factors Affecting Your EMI</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 { icon: '💰', title: 'Loan Amount',    desc: 'Higher the principal, higher the EMI. Borrow only what you need — even ₹1L extra adds to your burden for years.' },
                 { icon: '📈', title: 'Interest Rate',  desc: 'A 0.5% rate difference significantly impacts total interest over long tenures. Always compare rates across lenders.' },
                 { icon: '📅', title: 'Loan Tenure',    desc: 'Longer tenure = lower EMI but more total interest. Shorter tenure = higher EMI but saves lakhs overall.' },
               ].map((f) => (
-                <div key={f.title} className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                <div key={f.title} className="bg-surface-2 rounded-lg p-4 border border-line">
                   <div className="text-2xl mb-2">{f.icon}</div>
-                  <div className="font-semibold text-sm text-slate-800 mb-1">{f.title}</div>
-                  <div className="text-xs text-slate-500 leading-relaxed">{f.desc}</div>
+                  <div className="font-semibold text-sm text-ink mb-1">{f.title}</div>
+                  <div className="text-xs text-muted leading-relaxed">{f.desc}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* ── LOAN COMPARISON TABLE ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Loan Type Comparison</h2>
-            <div className="overflow-x-auto rounded-lg border border-slate-100">
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Loan Type Comparison</h2>
+            <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
-                  <tr className="bg-brand-600 text-white">
+                  <tr className="bg-acc text-white sticky top-0">
                     <th className="text-left px-4 py-3 text-xs font-semibold">Loan Type</th>
                     <th className="text-center px-4 py-3 text-xs font-semibold">Typical Rate</th>
                     <th className="text-center px-4 py-3 text-xs font-semibold">Max Tenure</th>
@@ -538,18 +488,18 @@ const profile = getLoanProfile();
                     { type: 'Education Loan',  rate: '9%–15%',     badge: 'yellow', tenure: '15 years', amount: '₹1.5 Cr', rateType: 'Floating' },
                     { type: 'Business Loan',   rate: '11%–21%',    badge: 'red',    tenure: '10 years', amount: '₹50L',    rateType: 'Fixed'    },
                   ].map((row, i) => (
-                    <tr key={i} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
-                      <td className="px-4 py-3 font-medium text-slate-700">{row.type}</td>
+                    <tr key={i} className="border-t border-line hover:bg-surface-2 transition-colors">
+                      <td className="px-4 py-3 font-medium text-body">{row.type}</td>
                       <td className="px-4 py-3 text-center">
                         <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                          row.badge === 'green'  ? 'bg-brand-100 text-brand-700' :
-                          row.badge === 'red'    ? 'bg-brand-200 text-brand-800' :
-                                                   'bg-brand-50 text-brand-600'
+                          row.badge === 'green'  ? 'bg-mint/10 text-mint' :
+                          row.badge === 'red'    ? 'bg-coral/10 text-coral' :
+                                                   'bg-gold/10 text-gold'
                         }`}>{row.rate}</span>
                       </td>
-                      <td className="px-4 py-3 text-center text-slate-600">{row.tenure}</td>
-                      <td className="px-4 py-3 text-center text-slate-600">{row.amount}</td>
-                      <td className="px-4 py-3 text-center text-slate-600">{row.rateType}</td>
+                      <td className="px-4 py-3 text-center text-body">{row.tenure}</td>
+                      <td className="px-4 py-3 text-center text-body">{row.amount}</td>
+                      <td className="px-4 py-3 text-center text-body">{row.rateType}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -558,8 +508,8 @@ const profile = getLoanProfile();
           </div>
 
           {/* ── TIPS ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Tips to Reduce Your EMI Burden</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Tips to Reduce Your EMI Burden</h2>
             <div className="space-y-3">
               {[
                 ['Make a larger down payment',          'Reducing principal directly reduces EMI. A 20–30% down payment on a home loan saves you lakhs over the tenure.'],
@@ -569,12 +519,12 @@ const profile = getLoanProfile();
                 ['Consider a balance transfer',         'If your current rate is high, transfer to a lender offering better rates. Even 0.5% reduction helps over long tenure.'],
               ].map(([title, desc], i) => (
                 <div key={i} className="flex gap-3 text-sm items-start">
-                  <span className="bg-brand-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                  <span className="bg-acc text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                     {i + 1}
                   </span>
                   <div>
-                    <strong className="text-slate-800">{title}</strong>
-                    <span className="text-slate-500"> — {desc}</span>
+                    <strong className="text-body">{title}</strong>
+                    <span className="text-muted"> — {desc}</span>
                   </div>
                 </div>
               ))}
@@ -582,20 +532,20 @@ const profile = getLoanProfile();
           </div>
 
           {/* ── FAQ ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50 transition-colors"
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2 transition-colors"
                   >
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
                   {openFaq === i && (
-                    <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">
+                    <div className="px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line">
                       {faq.a}
                     </div>
                   )}
@@ -605,8 +555,29 @@ const profile = getLoanProfile();
           </div>
 
           {/* ── DISCLAIMER ── */}
-          <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 text-xs text-brand-700 leading-relaxed">
-            <strong>Disclaimer:</strong> This EMI calculator is for informational purposes only. RupeePedia does not guarantee accuracy for all lender-specific scenarios. Actual EMI, rates, and approval are subject to the lender's terms and your creditworthiness. Please consult your bank or financial advisor before making borrowing decisions.
+          <div className="bg-acc-deep border border-acc/20 rounded-lg p-4 text-xs text-body leading-relaxed">
+            <strong className="text-ink">Disclaimer:</strong> This EMI calculator is for informational purposes only. RupeePedia does not guarantee accuracy for all lender-specific scenarios. Actual EMI, rates, and approval are subject to the lender's terms and your creditworthiness. Please consult your bank or financial advisor before making borrowing decisions.
+          </div>
+
+          {/* ── RELATED CALCULATORS ── */}
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {[
+                { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Project SIP returns' },
+                { path: '/calculators/home-loan-eligibility', label: 'Loan Eligibility', desc: 'Max loan amount you qualify for' },
+                { path: '/calculators/income-tax', label: 'Income Tax Calculator', desc: 'Old vs new regime tax on your income' },
+                { path: '/calculators/home-prepayment', label: 'Prepayment Calculator', desc: 'See savings from part-prepayment' },
+              ].map(t => (
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
+                  </div>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
+                </Link>
+              ))}
+            </div>
           </div>
 
         </div>

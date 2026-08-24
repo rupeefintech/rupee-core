@@ -2,6 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Design tokens (design/DESIGN_HANDOFF.md) — dark is default, light via [data-theme="light"] */
+:root {
+  /* Tells the browser to render native form-control chrome (date picker icon, number
+     spinners, select dropdown popup) in dark UA theme — otherwise background-color alone
+     doesn't fully retheme these on some inputs, leaving them a jarring white box. */
+  color-scheme: dark;
+  --bg: #06110E; --bg-2: #081321; --surf: #0E1B2E; --surf-2: #132339; --raise: #1A2C46;
+  --line: #22314C; --line-2: #2E4062;
+  --ink: #EAF1FB; --body: #A9BAD6; --muted: #7185A6; --faint: #516187;
+  --acc: #818CF8; --acc-2: #6366F1; --acc-deep: #1E1B4B; --acc-glow: rgba(129, 140, 248, .45);
+  --cyan: #5FD0FF; --gold: #F5C451; --coral: #FF7A5C; --violet: #A98BFF; --mint: #34D399;
+
+  /* Space-separated RGB triplets of the colors above, for Tailwind's rgb(var(--x) / <alpha-value>)
+     opacity-modifier pattern (bg-acc/20 etc) — plain `var(--x)` hex strings don't reliably support
+     Tailwind's slash-opacity modifiers, this format does. Keep in sync with the hex values above. */
+  --bg-rgb: 6 17 14; --bg-2-rgb: 8 19 33; --surf-rgb: 14 27 46; --surf-2-rgb: 19 35 57; --raise-rgb: 26 44 70;
+  --line-rgb: 34 49 76; --line-2-rgb: 46 64 98;
+  --ink-rgb: 234 241 251; --body-rgb: 169 186 214; --muted-rgb: 113 133 166; --faint-rgb: 81 97 135;
+  --acc-rgb: 129 140 248; --acc-2-rgb: 99 102 241; --acc-deep-rgb: 30 27 75;
+  --cyan-rgb: 95 208 255; --gold-rgb: 245 196 81; --coral-rgb: 255 122 92; --violet-rgb: 169 139 255; --mint-rgb: 52 211 153;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F4F7FB; --bg-2: #FFFFFF; --surf: #FFFFFF; --surf-2: #F1F5FC; --raise: #E8F0FB;
+  --line: #E2E8F2; --line-2: #CFD9E8;
+  --ink: #0F1B30; --body: #3B4964; --muted: #5C6A85; --faint: #8492AC;
+  --acc: #4F46E5; --acc-2: #4338CA; --acc-deep: #EEF2FF; --acc-glow: rgba(79, 70, 229, .28);
+  --cyan: #0C93C9; --gold: #B7860B; --coral: #E5613F; --violet: #7C5CE6; --mint: #059669;
+
+  --bg-rgb: 244 247 251; --bg-2-rgb: 255 255 255; --surf-rgb: 255 255 255; --surf-2-rgb: 241 245 252; --raise-rgb: 232 240 251;
+  --line-rgb: 226 232 242; --line-2-rgb: 207 217 232;
+  --ink-rgb: 15 27 48; --body-rgb: 59 73 100; --muted-rgb: 92 106 133; --faint-rgb: 132 146 172;
+  --acc-rgb: 79 70 229; --acc-2-rgb: 67 56 202; --acc-deep-rgb: 238 242 255;
+  --cyan-rgb: 12 147 201; --gold-rgb: 183 134 11; --coral-rgb: 229 97 63; --violet-rgb: 124 92 230; --mint-rgb: 5 150 105;
+}
+
+/* Pins the token variables to the dark palette for one subtree, regardless of the page's
+   light/dark theme — for signature-dark sections (e.g. the homepage hero) that should never
+   flip light. Scoped override (not :root) so nested bg-surface/text-ink/etc. classes resolve dark. */
+.force-dark {
+  color-scheme: dark;
+  --bg: #06110E; --bg-2: #081321; --surf: #0E1B2E; --surf-2: #132339; --raise: #1A2C46;
+  --line: #22314C; --line-2: #2E4062;
+  --ink: #EAF1FB; --body: #A9BAD6; --muted: #7185A6; --faint: #516187;
+  --acc: #818CF8; --acc-2: #6366F1; --acc-deep: #1E1B4B; --acc-glow: rgba(129, 140, 248, .45);
+  --cyan: #5FD0FF; --gold: #F5C451; --coral: #FF7A5C; --violet: #A98BFF; --mint: #34D399;
+
+  --bg-rgb: 6 17 14; --bg-2-rgb: 8 19 33; --surf-rgb: 14 27 46; --surf-2-rgb: 19 35 57; --raise-rgb: 26 44 70;
+  --line-rgb: 34 49 76; --line-2-rgb: 46 64 98;
+  --ink-rgb: 234 241 251; --body-rgb: 169 186 214; --muted-rgb: 113 133 166; --faint-rgb: 81 97 135;
+  --acc-rgb: 129 140 248; --acc-2-rgb: 99 102 241; --acc-deep-rgb: 30 27 75;
+  --cyan-rgb: 95 208 255; --gold-rgb: 245 196 81; --coral-rgb: 255 122 92; --violet-rgb: 169 139 255; --mint-rgb: 52 211 153;
+}
+
 @layer base {
   * {
     box-sizing: border-box;
@@ -13,22 +67,29 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* NOTE: body/heading background+color intentionally stay hardcoded (not var(--bg)/var(--ink))
+     because most pages aren't migrated to the token system yet and assume a white/dark-text
+     baseline. Migrated components (Navbar, Footer, Home/IFSC finder/detail, ui/ primitives)
+     opt into tokens explicitly via bg-bg/text-ink/etc. classes instead. */
+  html, body {
+    background: rgb(var(--bg-rgb));
+  }
+
   body {
-    font-family: 'DM Sans', system-ui, sans-serif !important;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
     font-size: 16px;
     line-height: 1.65;
-    background: #ffffff;
-    color: #0f172a;
+    color: rgb(var(--ink-rgb));
     min-height: 100vh;
   }
 
   h1, h2, h3, h4 {
-    font-family: 'Space Grotesk', system-ui, sans-serif !important;
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
     letter-spacing: -0.025em;
     line-height: 1.15;
   }
 
-  /* Force DM Sans on all text — overrides any component-level font-family */
+  /* Force the system sans stack on all text — overrides any component-level font-family */
   p, span, a, li, td, th, label, input, select, textarea, button {
     font-family: inherit;
   }

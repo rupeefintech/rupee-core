@@ -142,7 +142,7 @@ export default function XIRRCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb="XIRR"
           title="XIRR"
@@ -152,15 +152,15 @@ export default function XIRRCalculatorPage() {
         />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-lg border border-line border-l-4 border-l-acc p-6">
 
             {/* Frequency selector */}
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-slate-700 mb-3">Investment Frequency</label>
+              <label className="block text-sm font-semibold text-body mb-3">Investment Frequency</label>
               <div className="flex gap-2 flex-wrap">
                 {FREQ_OPTIONS.map((f, i) => (
                   <button key={i} onClick={() => setFreq(i)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${freq === i ? 'bg-brand-600 border-brand-600 text-white' : 'border-slate-200 text-slate-600 hover:border-brand-300'}`}>
+                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${freq === i ? 'bg-acc border-acc text-white' : 'border-line text-muted hover:border-acc'}`}>
                     {f.label}
                   </button>
                 ))}
@@ -171,65 +171,65 @@ export default function XIRRCalculatorPage() {
               <div className="space-y-4">
                 {/* Start date */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Start Date</label>
+                  <label className="block text-sm font-semibold text-body mb-2">Start Date</label>
                   <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-brand-400" />
+                    className="w-full px-3 py-2.5 border border-line rounded-lg text-sm bg-bg-2 text-ink focus:outline-none focus:border-acc" />
                 </div>
 
                 {/* End / Maturity date */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Maturity Date</label>
+                  <label className="block text-sm font-semibold text-body mb-2">Maturity Date</label>
                   <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:border-brand-400" />
+                    className="w-full px-3 py-2.5 border border-line rounded-lg text-sm bg-bg-2 text-ink focus:outline-none focus:border-acc" />
                 </div>
 
                 {/* SIP amount */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Recurring Investment Amount</label>
+                  <label className="block text-sm font-semibold text-body mb-2">Recurring Investment Amount</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint font-bold text-sm">₹</span>
                     <input type="number" value={sipAmount} onChange={e => setSipAmount(e.target.value)}
                       placeholder="e.g. 10000"
-                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-slate-800 font-semibold focus:outline-none ${!P ? 'border-red-300 bg-red-50' : 'border-slate-200 focus:border-brand-400'}`} />
+                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-ink font-semibold focus:outline-none ${!P ? 'border-coral/50 bg-coral/10' : 'border-line bg-bg-2 focus:border-acc'}`} />
                   </div>
                 </div>
 
                 {/* Maturity value */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Total Maturity Amount</label>
+                  <label className="block text-sm font-semibold text-body mb-2">Total Maturity Amount</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint font-bold text-sm">₹</span>
                     <input type="number" value={maturity} onChange={e => setMaturity(e.target.value)}
                       placeholder="e.g. 500000"
-                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-slate-800 font-semibold focus:outline-none ${!MV ? 'border-red-300 bg-red-50' : 'border-slate-200 focus:border-brand-400'}`} />
+                      className={`w-full pl-7 pr-4 py-2.5 border rounded-lg text-sm text-ink font-semibold focus:outline-none ${!MV ? 'border-coral/50 bg-coral/10' : 'border-line bg-bg-2 focus:border-acc'}`} />
                   </div>
                 </div>
               </div>
 
               {/* Result */}
               <div className="flex flex-col gap-4">
-                <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-xl p-5 text-white">
-                  <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Your XIRR</div>
-                  <div className={`text-4xl font-bold tracking-tight ${!xirr ? 'opacity-30' : ''}`}>
+                <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/25 rounded-xl p-5 text-ink shadow-acc-glow">
+                  <div className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Your XIRR</div>
+                  <div className={`text-4xl font-bold tracking-tight text-ink ${!xirr ? 'opacity-30' : ''}`}>
                     {xirr !== null ? `${xirr.toFixed(2)}%` : '—'}
                   </div>
                   {xirr !== null && invested > 0 && (
                     <>
-                      <hr className="border-white/20 my-3" />
+                      <hr className="border-line my-3" />
                       <div className="space-y-2 text-sm">
-                        <div className="flex justify-between"><span className="opacity-80">No. of instalments</span><span className="font-bold">{numInstallments}</span></div>
-                        <div className="flex justify-between"><span className="opacity-80">Total invested</span><span className="font-bold">{fmtINR(invested)}</span></div>
-                        <div className="flex justify-between"><span className="opacity-80">Maturity value</span><span className="font-bold">{fmtINR(MV)}</span></div>
-                        <div className="flex justify-between"><span className="opacity-80">Total gain</span><span className={`font-bold ${gain >= 0 ? 'text-green-300' : 'text-red-300'}`}>{gain >= 0 ? '+' : ''}{fmtINR(gain)}</span></div>
+                        <div className="flex justify-between"><span className="text-muted">No. of instalments</span><span className="font-bold text-ink">{numInstallments}</span></div>
+                        <div className="flex justify-between"><span className="text-muted">Total invested</span><span className="font-bold text-ink">{fmtINR(invested)}</span></div>
+                        <div className="flex justify-between"><span className="text-muted">Maturity value</span><span className="font-bold text-ink">{fmtINR(MV)}</span></div>
+                        <div className="flex justify-between"><span className="text-muted">Total gain</span><span className={`font-bold ${gain >= 0 ? 'text-mint' : 'text-coral'}`}>{gain >= 0 ? '+' : ''}{fmtINR(gain)}</span></div>
                       </div>
                     </>
                   )}
                   {xirr === null && P > 0 && MV > 0 && (
-                    <p className="text-xs opacity-70 mt-3">Could not compute XIRR. Check that end date is after start date and maturity amount is valid.</p>
+                    <p className="text-xs text-muted mt-3">Could not compute XIRR. Check that end date is after start date and maturity amount is valid.</p>
                   )}
                 </div>
 
-                <div className="bg-brand-50 border border-brand-100 rounded-xl p-4 text-xs text-brand-700 leading-relaxed">
+                <div className="bg-acc-deep border border-acc/20 rounded-xl p-4 text-xs text-body leading-relaxed">
                   <strong>How it works:</strong> XIRR treats each {FREQ_OPTIONS[freq].label.toLowerCase()} instalment of {P ? fmtINR(P) : '₹—'} as a negative cash flow, and the maturity value as a positive cash flow. It then finds the annual discount rate that makes the NPV of all these flows equal to zero.
                 </div>
               </div>
@@ -237,9 +237,9 @@ export default function XIRRCalculatorPage() {
           </div>
 
           {/* Notes */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4">About XIRR</h2>
-            <div className="space-y-3 text-sm text-slate-600 leading-relaxed">
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-lg font-bold text-ink mb-4">About XIRR</h2>
+            <div className="space-y-3 text-sm text-muted leading-relaxed">
               <p>XIRR is the standard way to measure SIP returns. When you invest ₹10,000/month for 10 years, your first instalment was in the market for 10 years while the last was in the market for just 1 month. XIRR correctly weights each instalment by its time invested.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                 {[
@@ -248,10 +248,10 @@ export default function XIRRCalculatorPage() {
                   { icon: '📊', title: 'Industry standard', desc: 'All mutual fund statements in India show XIRR as the return metric for SIPs.' },
                   { icon: '🧮', title: 'Iterative calculation', desc: 'Cannot be solved directly — requires numerical iteration (Newton-Raphson method).' },
                 ].map(item => (
-                  <div key={item.title} className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+                  <div key={item.title} className="bg-surface-2 rounded-lg p-3 border border-line">
                     <div className="text-base mb-1">{item.icon}</div>
-                    <div className="font-semibold text-xs text-slate-700 mb-0.5">{item.title}</div>
-                    <div className="text-xs text-slate-500">{item.desc}</div>
+                    <div className="font-semibold text-xs text-body mb-0.5">{item.title}</div>
+                    <div className="text-xs text-muted">{item.desc}</div>
                   </div>
                 ))}
               </div>
@@ -259,10 +259,10 @@ export default function XIRRCalculatorPage() {
           </div>
 
           {/* ── Article (always in DOM for SEO) ── */}
-          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+          <article className="bg-surface rounded-lg border border-line p-6 space-y-8">
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">Why XIRR is the only honest return for SIPs</h2>
-              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <h2 className="text-xl font-bold text-ink mb-3">Why XIRR is the only honest return for SIPs</h2>
+              <div className="text-sm text-muted space-y-3 leading-relaxed">
                 <p>
                   Point-to-point returns lie about SIPs. If you invested ₹10,000 monthly for 3 years and your ₹3.6 lakh
                   became ₹4.5 lakh, the naive "25% gain" ignores that only your first instalment worked for 3 full
@@ -286,15 +286,15 @@ export default function XIRRCalculatorPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">Calculate XIRR in Excel or Google Sheets</h2>
-              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <h2 className="text-xl font-bold text-ink mb-3">Calculate XIRR in Excel or Google Sheets</h2>
+              <div className="text-sm text-muted space-y-3 leading-relaxed">
                 <p>Two columns — dates and cash flows. Investments negative, money received positive, current value as the last positive row:</p>
-                <div className="overflow-x-auto rounded-lg border border-slate-100">
+                <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                   <table className="w-full text-xs border-collapse font-mono">
                     <thead>
-                      <tr className="bg-slate-50">
-                        <th className="text-left px-4 py-2 font-semibold text-slate-500">A (Date)</th>
-                        <th className="text-right px-4 py-2 font-semibold text-slate-500">B (Cash flow)</th>
+                      <tr className="bg-surface-2 sticky top-0">
+                        <th className="text-left px-4 py-2 font-semibold text-muted">A (Date)</th>
+                        <th className="text-right px-4 py-2 font-semibold text-muted">B (Cash flow)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -305,27 +305,27 @@ export default function XIRRCalculatorPage() {
                         ['…', '…'],
                         ['01-07-2026', '+3,95,000'],
                       ].map(([d, c]) => (
-                        <tr key={d + c} className="border-t border-slate-50">
-                          <td className="px-4 py-1.5 text-slate-600">{d}</td>
-                          <td className={`px-4 py-1.5 text-right ${c.startsWith('+') ? 'text-green-600' : 'text-slate-600'}`}>{c}</td>
+                        <tr key={d + c} className="border-t border-line">
+                          <td className="px-4 py-1.5 text-muted">{d}</td>
+                          <td className={`px-4 py-1.5 text-right ${c.startsWith('+') ? 'text-mint' : 'text-muted'}`}>{c}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-                <p>Then <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs">=XIRR(B:B, A:A)</code> returns the annualised rate. Google Sheets uses the identical function. If it errors, check that there is at least one negative and one positive flow and dates are real date values, not text.</p>
+                <p>Then <code className="bg-surface-2 px-1.5 py-0.5 rounded text-xs">=XIRR(B:B, A:A)</code> returns the annualised rate. Google Sheets uses the identical function. If it errors, check that there is at least one negative and one positive flow and dates are real date values, not text.</p>
               </div>
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">Which return metric when?</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-xl font-bold text-ink mb-3">Which return metric when?</h2>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Situation</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Right metric</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Why</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Situation</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Right metric</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Why</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -336,10 +336,10 @@ export default function XIRRCalculatorPage() {
                       ['Comparing two funds', 'CAGR / rolling returns', 'Measures the fund, independent of your timing'],
                       ['Your actual portfolio result', 'XIRR', 'Measures your money, including your timing'],
                     ].map(([s, m, w]) => (
-                      <tr key={s} className="border-t border-slate-50">
-                        <td className="px-4 py-2.5 font-semibold text-slate-700">{s}</td>
-                        <td className="px-4 py-2.5 font-bold text-brand-600">{m}</td>
-                        <td className="px-4 py-2.5 text-slate-500">{w}</td>
+                      <tr key={s} className="border-t border-line">
+                        <td className="px-4 py-2.5 font-semibold text-body">{s}</td>
+                        <td className="px-4 py-2.5 font-bold text-acc">{m}</td>
+                        <td className="px-4 py-2.5 text-muted">{w}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -349,26 +349,26 @@ export default function XIRRCalculatorPage() {
           </article>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
                   {/* Always mounted so content stays in the DOM for search engines */}
-                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
+                  <div className={`px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Related tools */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
                 { path: '/calculators/cagr', label: 'CAGR Calculator', desc: 'Annualised return for lumpsum investments' },
@@ -376,12 +376,12 @@ export default function XIRRCalculatorPage() {
                 { path: '/calculators/step-up-sip', label: 'Step-Up SIP Calculator', desc: 'SIP with annual increases' },
                 { path: '/calculators/mutual-fund', label: 'Mutual Fund Calculator', desc: 'Lumpsum + SIP combined projection' },
               ].map(t => (
-                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
-                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
                 </Link>
               ))}
             </div>

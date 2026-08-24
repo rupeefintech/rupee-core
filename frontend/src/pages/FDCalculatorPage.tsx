@@ -23,14 +23,14 @@ const CONFIG: Record<FDType, {
   minYears: number; maxYears: number; defaultYears: number;
   color: 'blue'; accent: string;
 }> = {
-  fd:  { title: 'FD Calculator',  desc: 'Calculate your Fixed Deposit maturity amount and interest earned.',          isMonthly: false, minAmt: 1000, maxAmt: 10000000, defaultAmt: 100000, minRate: 3, maxRate: 9.5, defaultRate: 7.0, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-brand-700 to-brand-900'  },
-  rd:  { title: 'RD Calculator',  desc: 'Calculate your Recurring Deposit maturity amount with monthly deposits.',    isMonthly: true,  minAmt: 100,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 3, maxRate: 8.5, defaultRate: 6.5, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-brand-700 to-brand-900'  },
-  ppf: { title: 'PPF Calculator', desc: 'Calculate Public Provident Fund maturity with current 7.1% interest rate.', isMonthly: true,  minAmt: 500,  maxAmt: 12500,    defaultAmt: 5000,   minRate: 7, maxRate: 8,   defaultRate: 7.1, minYears: 15, maxYears: 15, defaultYears: 15, color: 'blue', accent: 'from-brand-700 to-brand-900'  },
-  nps: { title: 'NPS Calculator', desc: 'Estimate your NPS pension corpus and monthly pension at retirement.',        isMonthly: true,  minAmt: 500,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 8, maxRate: 14,  defaultRate: 10,  minYears: 10, maxYears: 40, defaultYears: 20, color: 'blue', accent: 'from-brand-700 to-brand-900'  },
+  fd:  { title: 'FD Calculator',  desc: 'Calculate your Fixed Deposit maturity amount and interest earned.',          isMonthly: false, minAmt: 1000, maxAmt: 10000000, defaultAmt: 100000, minRate: 3, maxRate: 9.5, defaultRate: 7.0, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-acc-deep to-surface'  },
+  rd:  { title: 'RD Calculator',  desc: 'Calculate your Recurring Deposit maturity amount with monthly deposits.',    isMonthly: true,  minAmt: 100,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 3, maxRate: 8.5, defaultRate: 6.5, minYears: 1,  maxYears: 10, defaultYears: 3,  color: 'blue', accent: 'from-acc-deep to-surface'  },
+  ppf: { title: 'PPF Calculator', desc: 'Calculate Public Provident Fund maturity with current 7.1% interest rate.', isMonthly: true,  minAmt: 500,  maxAmt: 12500,    defaultAmt: 5000,   minRate: 7, maxRate: 8,   defaultRate: 7.1, minYears: 15, maxYears: 15, defaultYears: 15, color: 'blue', accent: 'from-acc-deep to-surface'  },
+  nps: { title: 'NPS Calculator', desc: 'Estimate your NPS pension corpus and monthly pension at retirement.',        isMonthly: true,  minAmt: 500,  maxAmt: 100000,   defaultAmt: 5000,   minRate: 8, maxRate: 14,  defaultRate: 10,  minYears: 10, maxYears: 40, defaultYears: 20, color: 'blue', accent: 'from-acc-deep to-surface'  },
 };
 
 const borderMap: Record<string, string> = {
-  blue: 'border-brand-600',
+  blue: 'border-acc',
 };
 
 export default function FDCalculatorPage({ type = 'fd' }: Props) {
@@ -121,7 +121,7 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb={type.toUpperCase()}
           title={type.toUpperCase()}
@@ -132,7 +132,7 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
         />
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-          <div className={`bg-white rounded-lg shadow-lg border-l-4 ${borderMap[cfg.color]} p-6`}>
+          <div className={`bg-surface rounded-[13px] border border-line border-l-4 ${borderMap[cfg.color]} p-6`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
               {/* LEFT: Sliders using SliderInput */}
@@ -167,35 +167,35 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
               </div>
 
               {/* RIGHT: Result panel */}
-              <div className={`bg-gradient-to-br ${cfg.accent} rounded-lg p-5 text-white flex flex-col gap-4`}>
+              <div className={`bg-gradient-to-br ${cfg.accent} border border-acc/25 rounded-[13px] p-5 text-ink flex flex-col gap-4`}>
                 <div>
-                  <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Maturity Amount</div>
-                  <div className="text-3xl font-bold tracking-tight">{fmtShort(maturity)}</div>
+                  <div className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Maturity Amount</div>
+                  <div className="text-3xl font-bold tracking-tight text-ink">{fmtShort(maturity)}</div>
                 </div>
-                <hr className="border-white/20" />
+                <hr className="border-line" />
                 <div className="flex flex-col gap-3 text-sm">
-                  <div className="flex justify-between"><span className="opacity-80">{cfg.isMonthly ? 'Total Deposited' : 'Principal'}</span><span className="font-bold">{fmtINR(invested)}</span></div>
-                  <div className="flex justify-between"><span className="opacity-80">Total Interest</span><span className="font-bold">{fmtINR(interest)}</span></div>
-                  <div className="flex justify-between"><span className="opacity-80">Interest earned</span><span className="font-bold">{gainsPct}% of invested</span></div>
+                  <div className="flex justify-between"><span className="text-muted">{cfg.isMonthly ? 'Total Deposited' : 'Principal'}</span><span className="font-bold text-ink">{fmtINR(invested)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">Total Interest</span><span className="font-bold text-ink">{fmtINR(interest)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">Interest earned</span><span className="font-bold text-ink">{gainsPct}% of invested</span></div>
                 </div>
-                <hr className="border-white/20" />
+                <hr className="border-line" />
                 <div>
-                  <div className="text-xs opacity-70 mb-2">Principal vs Interest</div>
-                  <div className="h-3 bg-white/20 rounded-full overflow-hidden flex">
-                    <div className="h-full bg-white/60 rounded-l-full" style={{ width: `${Math.round((invested / maturity) * 100)}%` }} />
-                    <div className="h-full bg-white" style={{ width: `${Math.round((interest / maturity) * 100)}%` }} />
+                  <div className="text-xs text-muted mb-2">Principal vs Interest</div>
+                  <div className="h-3 bg-surface-2 rounded-full overflow-hidden flex">
+                    <div className="h-full bg-acc/60 rounded-l-full" style={{ width: `${Math.round((invested / maturity) * 100)}%` }} />
+                    <div className="h-full bg-acc" style={{ width: `${Math.round((interest / maturity) * 100)}%` }} />
                   </div>
-                  <div className="flex justify-between text-xs mt-1 opacity-70">
+                  <div className="flex justify-between text-xs mt-1 text-muted">
                     <span>Principal {Math.round((invested / maturity) * 100)}%</span>
                     <span>Interest {Math.round((interest / maturity) * 100)}%</span>
                   </div>
                 </div>
                 {type === 'nps' && (
                   <>
-                    <hr className="border-white/20" />
-                    <div className="text-xs opacity-70">At retirement (40% annuity @ 6%)</div>
-                    <div className="flex justify-between text-sm"><span className="opacity-80">Lump sum (60%)</span><span className="font-bold">{fmtShort(maturity * 0.6)}</span></div>
-                    <div className="flex justify-between text-sm"><span className="opacity-80">Monthly pension (est.)</span><span className="font-bold">{fmtINR((maturity * 0.4 * 0.06) / 12)}</span></div>
+                    <hr className="border-line" />
+                    <div className="text-xs text-muted">At retirement (40% annuity @ 6%)</div>
+                    <div className="flex justify-between text-sm"><span className="text-muted">Lump sum (60%)</span><span className="font-bold text-ink">{fmtShort(maturity * 0.6)}</span></div>
+                    <div className="flex justify-between text-sm"><span className="text-muted">Monthly pension (est.)</span><span className="font-bold text-ink">{fmtINR((maturity * 0.4 * 0.06) / 12)}</span></div>
                   </>
                 )}
               </div>
@@ -203,36 +203,36 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
           </div>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs[type].map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50 transition-colors">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2 transition-colors">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
-                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">{faq.a}</div>}
+                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line">{faq.a}</div>}
                 </div>
               ))}
             </div>
           </div>
 
           {/* ── HOW IT WORKS ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-3">
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-3">
               {type === 'fd' ? 'How Fixed Deposit Works' : type === 'rd' ? 'How Recurring Deposit Works' : type === 'ppf' ? 'About Public Provident Fund (PPF)' : 'About National Pension System (NPS)'}
             </h2>
             {type === 'fd' && (
               <>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                  A Fixed Deposit locks your money with a bank for a chosen tenure at a fixed interest rate. Indian banks compound FD interest <strong className="text-slate-800">quarterly</strong>, meaning your interest earns interest every 3 months. The longer the tenure and higher the rate, the greater the compounding benefit.
+                <p className="text-sm text-muted leading-relaxed mb-4">
+                  A Fixed Deposit locks your money with a bank for a chosen tenure at a fixed interest rate. Indian banks compound FD interest <strong className="text-body">quarterly</strong>, meaning your interest earns interest every 3 months. The longer the tenure and higher the rate, the greater the compounding benefit.
                 </p>
-                <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 mb-4">
-                  <p className="text-sm font-semibold text-brand-800 mb-2">FD Maturity Formula (Quarterly Compounding)</p>
-                  <code className="block bg-white rounded px-3 py-2 text-brand-700 font-mono text-sm mb-2">M = P × (1 + r/4)^(4×t)</code>
-                  <div className="grid grid-cols-2 gap-1 text-xs text-brand-700">
+                <div className="bg-acc-deep border border-acc/20 rounded-lg p-4 mb-4">
+                  <p className="text-sm font-semibold text-ink mb-2">FD Maturity Formula (Quarterly Compounding)</p>
+                  <code className="block bg-surface rounded px-3 py-2 text-acc font-mono text-sm mb-2">M = P × (1 + r/4)^(4×t)</code>
+                  <div className="grid grid-cols-2 gap-1 text-xs text-body">
                     <span><strong>P</strong> = Principal amount</span>
                     <span><strong>r</strong> = Annual interest rate</span>
                     <span><strong>t</strong> = Tenure in years</span>
@@ -242,14 +242,14 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
               </>
             )}
             {type === 'rd' && (
-              <p className="text-sm text-slate-600 leading-relaxed mb-4">
+              <p className="text-sm text-muted leading-relaxed mb-4">
                 A Recurring Deposit accepts a fixed monthly instalment and earns compound interest, typically compounded quarterly. Unlike FD where you invest once, RD builds the habit of regular saving. At maturity you receive all your instalments plus accumulated interest in a lump sum.
               </p>
             )}
             {type === 'ppf' && (
               <>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                  PPF is a government-backed long-term savings scheme with <strong className="text-slate-800">EEE (Exempt-Exempt-Exempt) tax status</strong> — contributions get 80C deduction, interest accrues tax-free, and the maturity amount is fully tax-free. The current rate is 7.1% p.a., compounded annually.
+                <p className="text-sm text-muted leading-relaxed mb-4">
+                  PPF is a government-backed long-term savings scheme with <strong className="text-body">EEE (Exempt-Exempt-Exempt) tax status</strong> — contributions get 80C deduction, interest accrues tax-free, and the maturity amount is fully tax-free. The current rate is 7.1% p.a., compounded annually.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {[
@@ -257,10 +257,10 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                     { icon: '💰', title: 'Contribution', desc: '₹500 min to ₹1.5L max per year. Can invest in lump sum or 12 instalments.' },
                     { icon: '🔒', title: 'Lock-in', desc: '15 years minimum. Partial withdrawal allowed from Year 7. Extendable in 5-year blocks.' },
                   ].map(f => (
-                    <div key={f.title} className="bg-brand-50 rounded-lg p-3 border border-brand-100">
+                    <div key={f.title} className="bg-acc-deep rounded-lg p-3 border border-acc/20">
                       <div className="text-xl mb-1">{f.icon}</div>
-                      <div className="font-semibold text-xs text-brand-800 mb-1">{f.title}</div>
-                      <div className="text-xs text-brand-700">{f.desc}</div>
+                      <div className="font-semibold text-xs text-ink mb-1">{f.title}</div>
+                      <div className="text-xs text-body">{f.desc}</div>
                     </div>
                   ))}
                 </div>
@@ -268,7 +268,7 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
             )}
             {type === 'nps' && (
               <>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                <p className="text-sm text-muted leading-relaxed mb-4">
                   NPS is a government pension scheme where you invest during working years and receive a corpus at retirement (age 60). You must use 40% to buy an annuity (monthly pension) and can withdraw 60% as tax-free lump sum. NPS offers up to ₹2L in tax deductions — ₹1.5L under 80C + extra ₹50,000 under 80CCD(1B).
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -276,10 +276,10 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                     { title: 'Asset Classes', items: ['E (Equity) — up to 75%', 'C (Corporate Bonds)', 'G (Government Securities)', 'A (Alternate Assets)'] },
                     { title: 'Tax Benefits', items: ['80C deduction up to ₹1.5L', '80CCD(1B) extra ₹50,000', 'Employer contribution deductible up to 10% of salary', '60% lump sum at maturity is tax-free'] },
                   ].map(col => (
-                    <div key={col.title} className="bg-brand-50 rounded-lg p-4 border border-brand-100">
-                      <div className="font-semibold text-sm text-brand-800 mb-2">{col.title}</div>
+                    <div key={col.title} className="bg-acc-deep rounded-lg p-4 border border-acc/20">
+                      <div className="font-semibold text-sm text-ink mb-2">{col.title}</div>
                       <ul className="space-y-1">
-                        {col.items.map(item => <li key={item} className="text-xs text-brand-700 flex gap-2"><span className="flex-shrink-0">•</span>{item}</li>)}
+                        {col.items.map(item => <li key={item} className="text-xs text-body flex gap-2"><span className="flex-shrink-0">•</span>{item}</li>)}
                       </ul>
                     </div>
                   ))}
@@ -289,17 +289,17 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
           </div>
 
           {/* ── FD / RD / PPF / NPS COMPARISON ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">FD vs RD vs PPF vs NPS — Quick Comparison</h2>
-            <div className="overflow-x-auto rounded-lg border border-slate-100">
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">FD vs RD vs PPF vs NPS — Quick Comparison</h2>
+            <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
-                  <tr className="bg-brand-600 text-white">
+                  <tr className="bg-acc text-white sticky top-0">
                     <th className="text-left px-4 py-3 text-xs font-semibold">Feature</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'fd' ? 'bg-brand-700' : ''}`}>FD</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'rd' ? 'bg-brand-700' : ''}`}>RD</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'ppf' ? 'bg-brand-700' : ''}`}>PPF</th>
-                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'nps' ? 'bg-brand-700' : ''}`}>NPS</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'fd' ? 'bg-acc-deep' : ''}`}>FD</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'rd' ? 'bg-acc-deep' : ''}`}>RD</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'ppf' ? 'bg-acc-deep' : ''}`}>PPF</th>
+                    <th className={`text-center px-4 py-3 text-xs font-semibold ${type === 'nps' ? 'bg-acc-deep' : ''}`}>NPS</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -311,12 +311,12 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                     ['80C Deduction', 'Only 5yr tax FD', 'No', 'Yes (₹1.5L)', 'Yes + extra ₹50K'],
                     ['Min Investment', '₹1,000', '₹100/month', '₹500/year', '₹500/month'],
                   ].map(([feature, fd, rd, ppf, nps], i) => (
-                    <tr key={i} className="border-t border-slate-50 hover:bg-slate-50">
-                      <td className="px-4 py-3 font-medium text-slate-700">{feature}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'fd' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{fd}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'rd' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{rd}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'ppf' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{ppf}</td>
-                      <td className={`px-4 py-3 text-center text-slate-600 ${type === 'nps' ? 'font-bold text-brand-700 bg-brand-50' : ''}`}>{nps}</td>
+                    <tr key={i} className="border-t border-line hover:bg-surface-2">
+                      <td className="px-4 py-3 font-medium text-body">{feature}</td>
+                      <td className={`px-4 py-3 text-center text-muted ${type === 'fd' ? 'font-bold text-acc bg-acc-deep' : ''}`}>{fd}</td>
+                      <td className={`px-4 py-3 text-center text-muted ${type === 'rd' ? 'font-bold text-acc bg-acc-deep' : ''}`}>{rd}</td>
+                      <td className={`px-4 py-3 text-center text-muted ${type === 'ppf' ? 'font-bold text-acc bg-acc-deep' : ''}`}>{ppf}</td>
+                      <td className={`px-4 py-3 text-center text-muted ${type === 'nps' ? 'font-bold text-acc bg-acc-deep' : ''}`}>{nps}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -325,8 +325,8 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
           </div>
 
           {/* ── Related tools ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-base font-bold text-slate-900 mb-4">Find Actual Bank Rates</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-base font-bold text-ink mb-4">Find Actual Bank Rates</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
                 { to: '/fd-rates',      emoji: '📈', title: 'Compare FD Rates 2026',       desc: 'Live rates from 46+ banks — up to 9.5% p.a. Senior citizen rates included.' },
@@ -334,19 +334,19 @@ export default function FDCalculatorPage({ type = 'fd' }: Props) {
                 { to: '/calculators/rd', emoji: '🔄', title: 'Recurring Deposit Calculator', desc: 'Calculate RD maturity with monthly deposits.' },
               ].map(item => (
                 <Link key={item.to} to={item.to}
-                  className="flex items-start gap-3 p-4 bg-slate-50 border border-slate-100 rounded-xl hover:border-brand-200 hover:bg-brand-50 transition-all group">
+                  className="flex items-start gap-3 p-4 bg-surface-2 border border-line rounded-xl hover:border-acc hover:bg-acc-deep transition-all group">
                   <span className="text-xl flex-shrink-0">{item.emoji}</span>
                   <div>
-                    <div className="font-semibold text-slate-800 text-sm group-hover:text-brand-700 transition-colors">{item.title}</div>
-                    <div className="text-xs text-slate-400 mt-0.5 leading-snug">{item.desc}</div>
+                    <div className="font-semibold text-body text-sm group-hover:text-acc transition-colors">{item.title}</div>
+                    <div className="text-xs text-faint mt-0.5 leading-snug">{item.desc}</div>
                   </div>
                 </Link>
               ))}
             </div>
           </div>
 
-          <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 text-xs text-brand-700 leading-relaxed">
-            <strong>Disclaimer:</strong> Calculations are indicative. Actual returns may vary based on compounding frequency, premature withdrawal penalties, and changes in interest rates. Consult your bank or financial advisor.
+          <div className="bg-acc-deep border border-acc/20 rounded-lg p-4 text-xs text-body leading-relaxed">
+            <strong className="text-ink">Disclaimer:</strong> Calculations are indicative. Actual returns may vary based on compounding frequency, premature withdrawal penalties, and changes in interest rates. Consult your bank or financial advisor.
           </div>
         </div>
       </div>

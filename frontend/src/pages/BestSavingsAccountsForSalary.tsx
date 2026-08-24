@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ChevronDown, PiggyBank, Check, Star } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronRight, ChevronDown, PiggyBank, Check, Star } from 'lucide-react';
 
 interface SalaryAccount {
   rank: number;
@@ -154,6 +155,34 @@ const FAQS = [
   },
 ];
 
+function FAQItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-line last:border-0">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full text-left py-4 flex items-start justify-between gap-3 group"
+      >
+        <span className="text-sm font-semibold text-ink leading-snug group-hover:text-acc transition-colors">{q}</span>
+        <ChevronDown className={`w-4 h-4 text-muted flex-shrink-0 mt-0.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <p className="text-sm text-muted leading-relaxed pb-4">{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function BestSavingsAccountsForSalary() {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -208,203 +237,191 @@ export default function BestSavingsAccountsForSalary() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
+      {/* ── Hero ── */}
+      <header className="py-8 md:py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="relative z-[2]">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+                <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 flex-wrap font-mono">
+                  <Link to="/"               className="hover:text-acc transition-colors">Home</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <Link to="/savings-rates"  className="hover:text-acc transition-colors">Savings Rates</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <span className="text-acc font-semibold">Best for Salary</span>
+                </nav>
 
-        {/* Hero */}
-        <div className="bg-gradient-to-br from-brand-800 via-brand-900 to-slate-900 text-white">
-          <div className="max-w-5xl mx-auto px-4 py-12">
-            <nav className="flex items-center gap-1.5 text-brand-300 text-xs mb-5">
-              <Link to="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <Link to="/savings-rates" className="hover:text-white transition-colors">Savings Rates</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <span className="text-white font-medium">Best for Salary</span>
-            </nav>
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <PiggyBank className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold">Best Savings Accounts for Salary</h1>
-                <p className="text-brand-200 mt-1 text-sm">India 2026 — zero balance, interest rates, and perks ranked</p>
-              </div>
-            </div>
-            <p className="text-brand-200 text-base max-w-2xl">
-              All salary accounts are zero-balance — the real differences are in interest rate, app quality, and perks. Here's the full ranking.
-            </p>
-
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-3 mt-6">
-              {[
-                { label: 'Banks compared', value: '6' },
-                { label: 'Best savings rate', value: '7% (IDFC)' },
-                { label: 'Min Balance', value: 'Zero (all)' },
-              ].map(s => (
-                <div key={s.label} className="bg-white/10 rounded-xl px-4 py-2.5">
-                  <div className="font-bold text-white text-lg">{s.value}</div>
-                  <div className="text-brand-300 text-xs">{s.label}</div>
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 bg-acc-deep rounded-2xl flex items-center justify-center flex-shrink-0 text-acc">
+                    <PiggyBank className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">Best Savings Accounts for Salary</h1>
+                    <p className="text-muted mt-1 text-sm">India 2026 — zero balance, interest rates, and perks ranked</p>
+                  </div>
                 </div>
-              ))}
+                <p className="text-body text-base max-w-2xl">
+                  All salary accounts are zero-balance — the real differences are in interest rate, app quality, and perks. Here's the full ranking.
+                </p>
+
+                {/* Quick stats */}
+                <div className="flex flex-wrap gap-3 mt-6">
+                  {[
+                    { label: 'Banks compared', value: '6' },
+                    { label: 'Best savings rate', value: '7% (IDFC)' },
+                    { label: 'Min Balance', value: 'Zero (all)' },
+                  ].map(s => (
+                    <div key={s.label} className="bg-surface border border-line rounded-xl px-4 py-2.5">
+                      <div className="font-bold text-ink text-lg">{s.value}</div>
+                      <div className="text-faint text-xs">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
+      </header>
 
-        <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+      <div className="bg-bg max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
-          {/* Quick comparison table */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100">
-              <h2 className="font-bold text-gray-900">Quick Comparison</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gray-50 text-xs text-gray-400 uppercase tracking-wide">
-                    <th className="text-left px-5 py-2.5 font-semibold">Bank</th>
-                    <th className="text-center px-4 py-2.5 font-semibold">Savings Rate</th>
-                    <th className="text-center px-4 py-2.5 font-semibold">Min Balance</th>
-                    <th className="text-left px-4 py-2.5 font-semibold hidden sm:table-cell">Best For</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {SALARY_ACCOUNTS.map(acc => (
-                    <tr key={acc.bank} className="hover:bg-gray-50">
-                      <td className="px-5 py-3">
-                        <div className="flex items-center gap-2.5">
-                          {acc.logoUrl
-                            ? <img src={acc.logoUrl} alt={acc.bank} className="w-7 h-7 object-contain rounded" />
-                            : <div className="w-7 h-7 bg-brand-100 rounded flex items-center justify-center text-brand-700 font-bold text-xs">{acc.bank[0]}</div>}
-                          <div>
-                            <div className="font-semibold text-gray-900 text-xs">{acc.bank}</div>
-                            {acc.badge && <div className="text-[10px] text-brand-600 font-semibold">{acc.badge}</div>}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-center font-bold text-emerald-700 text-xs">{acc.savingsRate}</td>
-                      <td className="px-4 py-3 text-center text-xs text-gray-600">{acc.minBalance}</td>
-                      <td className="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">{acc.bestFor}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        {/* Quick comparison table */}
+        <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+          <div className="px-5 py-4 border-b border-line">
+            <h2 className="font-bold text-ink">Quick Comparison</h2>
           </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-surface-2 text-xs text-muted font-semibold">
+                  <th className="text-left px-5 py-2.5">Bank</th>
+                  <th className="text-center px-4 py-2.5">Savings Rate</th>
+                  <th className="text-center px-4 py-2.5">Min Balance</th>
+                  <th className="text-left px-4 py-2.5 hidden sm:table-cell">Best For</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {SALARY_ACCOUNTS.map(acc => (
+                  <tr key={acc.bank} className="hover:bg-surface-2 transition-colors">
+                    <td className="px-5 py-3">
+                      <div className="flex items-center gap-2.5">
+                        {acc.logoUrl
+                          ? <img src={acc.logoUrl} alt={acc.bank} className="w-7 h-7 object-contain rounded" />
+                          : <div className="w-7 h-7 bg-acc-deep rounded flex items-center justify-center text-acc font-bold text-xs">{acc.bank[0]}</div>}
+                        <div>
+                          <div className="font-semibold text-ink text-xs">{acc.bank}</div>
+                          {acc.badge && <div className="text-[10px] text-acc font-semibold">{acc.badge}</div>}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center font-bold text-mint text-xs">{acc.savingsRate}</td>
+                    <td className="px-4 py-3 text-center text-xs text-body">{acc.minBalance}</td>
+                    <td className="px-4 py-3 text-xs text-muted hidden sm:table-cell">{acc.bestFor}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-          {/* Detailed cards */}
-          <div className="space-y-4">
-            {SALARY_ACCOUNTS.map(acc => (
-              <div key={acc.bank} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-brand-50 text-brand-700 font-extrabold text-sm border border-brand-200">
-                    {acc.rank}
+        {/* Detailed cards */}
+        <div className="space-y-4">
+          {SALARY_ACCOUNTS.map(acc => (
+            <div key={acc.bank} className="bg-surface rounded-2xl border border-line p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-acc-deep text-acc font-extrabold text-sm border border-acc/20">
+                  {acc.rank}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 flex-wrap mb-1">
+                    {acc.logoUrl && (
+                      <img src={acc.logoUrl} alt={acc.bank} className="w-8 h-8 object-contain rounded border border-line" />
+                    )}
+                    <div className="font-bold text-ink">{acc.bank}</div>
+                    {acc.badge && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 bg-acc-deep text-acc rounded-full border border-acc/20">{acc.badge}</span>
+                    )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 flex-wrap mb-1">
-                      {acc.logoUrl && (
-                        <img src={acc.logoUrl} alt={acc.bank} className="w-8 h-8 object-contain rounded border border-gray-100" />
-                      )}
-                      <div className="font-bold text-gray-900">{acc.bank}</div>
-                      {acc.badge && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full border border-brand-200">{acc.badge}</span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600 mb-4">{acc.highlight}</p>
+                  <p className="text-sm text-muted mb-4">{acc.highlight}</p>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 text-xs">
-                      <div className="bg-gray-50 rounded-xl p-3">
-                        <div className="text-gray-400 mb-0.5">Savings Rate</div>
-                        <div className="font-bold text-emerald-700">{acc.savingsRate}</div>
-                      </div>
-                      <div className="bg-gray-50 rounded-xl p-3">
-                        <div className="text-gray-400 mb-0.5">Min Balance</div>
-                        <div className="font-bold text-gray-800">{acc.minBalance}</div>
-                      </div>
-                      <div className="bg-gray-50 rounded-xl p-3">
-                        <div className="text-gray-400 mb-0.5">Bank Type</div>
-                        <div className="font-bold text-gray-800">{acc.type}</div>
-                      </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4 text-xs">
+                    <div className="bg-surface-2 rounded-xl p-3">
+                      <div className="text-faint mb-0.5">Savings Rate</div>
+                      <div className="font-bold text-mint">{acc.savingsRate}</div>
                     </div>
+                    <div className="bg-surface-2 rounded-xl p-3">
+                      <div className="text-faint mb-0.5">Min Balance</div>
+                      <div className="font-bold text-ink">{acc.minBalance}</div>
+                    </div>
+                    <div className="bg-surface-2 rounded-xl p-3">
+                      <div className="text-faint mb-0.5">Bank Type</div>
+                      <div className="font-bold text-ink">{acc.type}</div>
+                    </div>
+                  </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Pros</div>
-                        <ul className="space-y-1">
-                          {acc.pros.map(p => (
-                            <li key={p} className="flex items-start gap-1.5 text-xs text-gray-600">
-                              <Check className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" /> {p}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Cons</div>
-                        <ul className="space-y-1">
-                          {acc.cons.map(c => (
-                            <li key={c} className="flex items-start gap-1.5 text-xs text-gray-500">
-                              <span className="w-3.5 h-3.5 flex-shrink-0 text-orange-400 mt-0.5">–</span> {c}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <div className="text-[10px] font-bold text-faint uppercase tracking-wide mb-1.5">Pros</div>
+                      <ul className="space-y-1">
+                        {acc.pros.map(p => (
+                          <li key={p} className="flex items-start gap-1.5 text-xs text-body">
+                            <Check className="w-3.5 h-3.5 text-mint flex-shrink-0 mt-0.5" /> {p}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-faint uppercase tracking-wide mb-1.5">Cons</div>
+                      <ul className="space-y-1">
+                        {acc.cons.map(c => (
+                          <li key={c} className="flex items-start gap-1.5 text-xs text-muted">
+                            <span className="w-3.5 h-3.5 flex-shrink-0 text-gold mt-0.5">–</span> {c}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
 
-                    <div className="mt-4 flex items-center gap-2">
-                      <Star className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                      <span className="text-xs text-gray-500"><span className="font-semibold">Best for:</span> {acc.bestFor}</span>
-                    </div>
+                  <div className="mt-4 flex items-center gap-2">
+                    <Star className="w-3.5 h-3.5 text-gold flex-shrink-0" />
+                    <span className="text-xs text-muted"><span className="font-semibold text-body">Best for:</span> {acc.bestFor}</span>
                   </div>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+
+        {/* FAQ */}
+        <div className="bg-surface rounded-2xl border border-line p-5">
+          <h2 className="text-lg font-bold text-ink mb-1">Frequently Asked Questions</h2>
+          <div>
+            {FAQS.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
+          </div>
+        </div>
+
+        {/* Related */}
+        <div>
+          <h2 className="text-sm font-bold text-faint uppercase tracking-widest mb-3">Related</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { to: '/compare/savings/sbi-vs-hdfc', label: 'SBI vs HDFC Savings Account', desc: 'Full feature-by-feature comparison' },
+              { to: '/savings-rates',                label: 'All Savings Account Rates',   desc: 'Compare 40+ banks — up to 9% p.a.' },
+              { to: '/fd-rates',                    label: 'Best FD Rates 2026',           desc: 'Higher returns with fixed tenure — up to 9.5%' },
+            ].map(item => (
+              <Link key={item.to} to={item.to}
+                className="bg-surface rounded-xl p-4 border border-line hover:border-acc transition-all group flex flex-col gap-1">
+                <div className="font-semibold text-ink text-sm group-hover:text-acc transition-colors">{item.label}</div>
+                <div className="text-[11px] text-faint">{item.desc}</div>
+              </Link>
             ))}
           </div>
-
-          {/* FAQ */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
-            <div className="space-y-2">
-              {FAQS.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
-            </div>
-          </div>
-
-          {/* Related */}
-          <div>
-            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Related</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { to: '/compare/savings/sbi-vs-hdfc', label: 'SBI vs HDFC Savings Account', desc: 'Full feature-by-feature comparison' },
-                { to: '/savings-rates',                label: 'All Savings Account Rates',   desc: 'Compare 40+ banks — up to 9% p.a.' },
-                { to: '/fd-rates',                    label: 'Best FD Rates 2026',           desc: 'Higher returns with fixed tenure — up to 9.5%' },
-              ].map(item => (
-                <Link key={item.to} to={item.to}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group flex flex-col gap-1">
-                  <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
-                  <div className="text-[11px] text-gray-400">{item.desc}</div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          <p className="text-xs text-gray-400 text-center pb-4">
-            Interest rates and features as of June 2026. Salary account features vary by employer arrangement — verify with your HR and the bank before opening.
-          </p>
         </div>
+
+        <p className="text-xs text-faint text-center pb-4">
+          Interest rates and features as of June 2026. Salary account features vary by employer arrangement — verify with your HR and the bank before opening.
+        </p>
       </div>
     </>
-  );
-}
-
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border border-gray-100 rounded-xl overflow-hidden">
-      <button onClick={() => setOpen(v => !v)} aria-expanded={open}
-        className="w-full flex justify-between items-center px-5 py-4 text-left text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors">
-        <span>{q}</span>
-        <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 ml-3 transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div className="px-5 pb-5 pt-0 text-sm text-gray-500 leading-relaxed border-t border-gray-50">{a}</div>
-      )}
-    </div>
   );
 }

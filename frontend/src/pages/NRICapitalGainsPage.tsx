@@ -193,17 +193,18 @@ export default function NRICapitalGainsPage() {
         icon={TrendingUp}
       />
 
+      <div className="bg-bg">
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Asset type */}
-        <div className="card p-5 mb-5">
-          <div className="text-xs font-semibold text-gray-600 mb-2">Asset Type</div>
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-5">
+          <div className="text-xs font-semibold text-muted mb-2">Asset Type</div>
           <div className="flex gap-2">
             {(['property', 'equity'] as const).map(t => (
               <button
                 key={t}
                 onClick={() => setAssetType(t)}
                 className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition border ${
-                  assetType === t ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                  assetType === t ? 'bg-acc text-white border-acc' : 'bg-surface text-muted border-line hover:bg-surface-2'
                 }`}
               >
                 {t === 'property' ? '🏠 Property' : '📈 Equity / Mutual Funds'}
@@ -213,43 +214,43 @@ export default function NRICapitalGainsPage() {
         </div>
 
         {/* Inputs */}
-        <div className="card p-5 mb-6">
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Purchase Price (₹)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Purchase Price (₹)</label>
               <input type="number" value={purchasePrice} onChange={e => setPurchasePrice(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Sale Price (₹)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Sale Price (₹)</label>
               <input type="number" value={salePrice} onChange={e => setSalePrice(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Year of Purchase (FY start)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Year of Purchase (FY start)</label>
               <select value={purchaseYear} onChange={e => setPurchaseYear(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-acc bg-surface">
                 {years.map(y => <option key={y} value={y}>FY {y}–{y+1}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Year of Sale (FY start)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Year of Sale (FY start)</label>
               <select value={saleYear} onChange={e => setSaleYear(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white">
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-acc bg-surface">
                 {years.map(y => <option key={y} value={y}>FY {y}–{y+1}</option>)}
               </select>
             </div>
             {assetType === 'property' && (
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Improvement / Renovation Cost (₹)</label>
+                <label className="block text-xs font-semibold text-muted mb-1.5">Improvement / Renovation Cost (₹)</label>
                 <input type="number" value={improvementCost} onChange={e => setImprovementCost(Number(e.target.value))}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                  className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
               </div>
             )}
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Transfer Expenses (brokerage, registration, etc.)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Transfer Expenses (brokerage, registration, etc.)</label>
               <input type="number" value={transferExpenses} onChange={e => setTransferExpenses(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
           </div>
         </div>
@@ -258,15 +259,15 @@ export default function NRICapitalGainsPage() {
         {saleYear > purchaseYear ? (
           <>
             {/* Status banner */}
-            <div className={`rounded-xl border p-4 mb-5 flex items-center gap-3 ${result.isLTCG ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'}`}>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${result.isLTCG ? 'bg-green-100' : 'bg-amber-100'}`}>
-                <span className={`text-lg font-bold ${result.isLTCG ? 'text-green-700' : 'text-amber-700'}`}>{result.isLTCG ? 'L' : 'S'}</span>
+            <div className={`rounded-xl border p-4 mb-5 flex items-center gap-3 ${result.isLTCG ? 'bg-mint/10 border-mint/30' : 'bg-gold/10 border-gold/30'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${result.isLTCG ? 'bg-mint/20' : 'bg-gold/20'}`}>
+                <span className={`text-lg font-bold ${result.isLTCG ? 'text-mint' : 'text-gold'}`}>{result.isLTCG ? 'L' : 'S'}</span>
               </div>
               <div>
-                <div className={`font-bold text-sm ${result.isLTCG ? 'text-green-800' : 'text-amber-800'}`}>
+                <div className={`font-bold text-sm ${result.isLTCG ? 'text-mint' : 'text-gold'}`}>
                   {result.isLTCG ? 'Long-Term Capital Gain' : 'Short-Term Capital Gain'}
                 </div>
-                <div className={`text-xs ${result.isLTCG ? 'text-green-700' : 'text-amber-700'}`}>
+                <div className={`text-xs ${result.isLTCG ? 'text-mint' : 'text-gold'}`}>
                   Held for ~{result.holdingMonths} months · Tax rate: {result.rateLabel} + surcharge + cess
                 </div>
               </div>
@@ -286,21 +287,21 @@ export default function NRICapitalGainsPage() {
                 { label: 'Total Tax', value: fmt(result.totalTax), sub: `Effective ${result.effectiveRate.toFixed(1)}%` },
                 { label: 'Net Proceeds', value: fmt(result.netProceeds), sub: 'sale price minus total tax' },
               ].map(({ label, value, sub }) => (
-                <div key={label} className="bg-gray-50 border border-gray-100 rounded-xl p-3">
-                  <div className="text-[10px] text-gray-400 mb-1">{label}</div>
-                  <div className="text-base font-bold text-gray-800">{value}</div>
-                  <div className="text-[10px] text-gray-400 mt-0.5">{sub}</div>
+                <div key={label} className="bg-surface-2 border border-line rounded-xl p-3">
+                  <div className="text-[10px] text-faint mb-1">{label}</div>
+                  <div className="text-base font-bold text-ink">{value}</div>
+                  <div className="text-[10px] text-faint mt-0.5">{sub}</div>
                 </div>
               ))}
             </div>
 
             {/* TDS note */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+            <div className="bg-gold/10 border border-gold/30 rounded-xl p-4 mb-6">
               <div className="flex gap-2.5">
-                <AlertCircle size={14} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                <AlertCircle size={14} className="text-gold flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="text-xs font-bold text-amber-800 mb-1">TDS Buyer Must Deduct (Section 195)</div>
-                  <div className="text-xs text-amber-700">
+                  <div className="text-xs font-bold text-gold mb-1">TDS Buyer Must Deduct (Section 195)</div>
+                  <div className="text-xs text-gold">
                     Estimated TDS: <strong>{fmt(result.tdsAmount)}</strong>
                     {assetType === 'property'
                       ? ' — deducted on the FULL sale price (not just the gain) unless you obtain a lower-deduction certificate (Form 13) from the tax department. The buyer needs a TAN, deposits via challan 281 and files Form 27Q. Excess TDS is refunded after you file your ITR.'
@@ -311,7 +312,7 @@ export default function NRICapitalGainsPage() {
             </div>
           </>
         ) : (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-700">
+          <div className="bg-coral/10 border border-coral/30 rounded-xl p-4 mb-6 text-sm text-coral">
             Sale year must be after purchase year.
           </div>
         )}
@@ -319,8 +320,8 @@ export default function NRICapitalGainsPage() {
         {/* ── Article ── */}
         <article className="space-y-8 mb-8">
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">NRI capital gains after the July 2024 budget</h2>
-            <div className="text-sm text-gray-600 space-y-3 leading-relaxed">
+            <h2 className="text-lg font-bold text-ink mb-3">NRI capital gains after the July 2024 budget</h2>
+            <div className="text-sm text-muted space-y-3 leading-relaxed">
               <p>
                 The Finance (No. 2) Act 2024 rewrote capital gains from 23 July 2024, and NRIs got the strict version of
                 the new rules. Long-term gains on <strong>every</strong> asset are now taxed at <strong>12.5%</strong> — but where
@@ -347,16 +348,16 @@ export default function NRICapitalGainsPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">NRI capital gains rates at a glance (from 23 July 2024)</h2>
-            <div className="card p-0 overflow-hidden">
+            <h2 className="text-lg font-bold text-ink mb-3">NRI capital gains rates at a glance (from 23 July 2024)</h2>
+            <div className="bg-surface border border-line rounded-2xl p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs border-collapse">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="text-left px-3 py-2.5 font-semibold text-gray-500">Asset</th>
-                      <th className="text-left px-3 py-2.5 font-semibold text-gray-500">Long-term after</th>
-                      <th className="text-left px-3 py-2.5 font-semibold text-gray-500">LTCG rate</th>
-                      <th className="text-left px-3 py-2.5 font-semibold text-gray-500">STCG rate</th>
+                    <tr className="bg-surface-2">
+                      <th className="text-left px-3 py-2.5 font-semibold text-muted">Asset</th>
+                      <th className="text-left px-3 py-2.5 font-semibold text-muted">Long-term after</th>
+                      <th className="text-left px-3 py-2.5 font-semibold text-muted">LTCG rate</th>
+                      <th className="text-left px-3 py-2.5 font-semibold text-muted">STCG rate</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -367,42 +368,42 @@ export default function NRICapitalGainsPage() {
                       ['Unlisted shares', '24 months', '12.5%', 'Slab rates'],
                       ['Gold, other assets', '24 months', '12.5%', 'Slab rates'],
                     ].map(([asset, lt, ltcg, stcg]) => (
-                      <tr key={asset} className="border-t border-gray-50">
-                        <td className="px-3 py-2.5 font-medium text-gray-700">{asset}</td>
-                        <td className="px-3 py-2.5 text-gray-600">{lt}</td>
-                        <td className="px-3 py-2.5 text-gray-600">{ltcg}</td>
-                        <td className="px-3 py-2.5 text-gray-600">{stcg}</td>
+                      <tr key={asset} className="border-t border-line">
+                        <td className="px-3 py-2.5 font-medium text-body">{asset}</td>
+                        <td className="px-3 py-2.5 text-muted">{lt}</td>
+                        <td className="px-3 py-2.5 text-muted">{ltcg}</td>
+                        <td className="px-3 py-2.5 text-muted">{stcg}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">Add surcharge (10–25%, capped at 15% for LTCG and listed-equity STCG) and 4% cess on the tax in all cases.</p>
+            <p className="text-xs text-faint mt-2">Add surcharge (10–25%, capped at 15% for LTCG and listed-equity STCG) and 4% cess on the tax in all cases.</p>
           </section>
         </article>
 
-        <div className="flex gap-2.5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-xs text-blue-700 mb-8">
+        <div className="flex gap-2.5 bg-cyan/10 border border-cyan/30 rounded-xl p-4 text-xs text-cyan mb-8">
           <Info size={14} className="flex-shrink-0 mt-0.5" />
           <div>This calculator applies the post-23-July-2024 regime and assumes the gain is your only Indian income (surcharge is computed on the gain alone). Property STCG is approximated at the 30% top slab. Section 54/54EC/54F exemptions and DTAA relief are not modelled. Consult a CA for filing.</div>
         </div>
 
-        <h2 className="text-lg font-bold text-gray-900 mb-1">NRI capital gains FAQs</h2>
-        <p className="text-xs text-gray-400 mb-4">Rates, TDS, exemptions, repatriation and filing</p>
+        <h2 className="text-lg font-bold text-ink mb-1">NRI capital gains FAQs</h2>
+        <p className="text-xs text-faint mb-4">Rates, TDS, exemptions, repatriation and filing</p>
         <div className="space-y-2">
           {FAQS.map((faq, i) => (
-            <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+            <div key={i} className="border border-line rounded-xl overflow-hidden">
               <button
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-white hover:bg-gray-50 transition"
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-surface hover:bg-surface-2 transition"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
               >
-                <span className="flex-1 text-sm font-semibold text-gray-800">{faq.q}</span>
+                <span className="flex-1 text-sm font-semibold text-ink">{faq.q}</span>
                 {openFaq === i
-                  ? <ChevronUp size={15} className="text-gray-400 flex-shrink-0" />
-                  : <ChevronDown size={15} className="text-gray-400 flex-shrink-0" />}
+                  ? <ChevronUp size={15} className="text-faint flex-shrink-0" />
+                  : <ChevronDown size={15} className="text-faint flex-shrink-0" />}
               </button>
               {/* Always mounted so content stays in the DOM for search engines */}
-              <div className={`px-4 pb-4 pt-1 border-t border-gray-100 text-sm text-gray-600 leading-relaxed ${openFaq === i ? '' : 'hidden'}`}>
+              <div className={`px-4 pb-4 pt-1 border-t border-line text-sm text-muted leading-relaxed ${openFaq === i ? '' : 'hidden'}`}>
                 {faq.a}
               </div>
             </div>
@@ -411,7 +412,7 @@ export default function NRICapitalGainsPage() {
 
         {/* ── Related tools ── */}
         <section className="mt-10">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">Related calculators</h2>
+          <h2 className="text-lg font-bold text-ink mb-3">Related calculators</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
               { path: '/calculators/nri-rental-income', label: 'NRI Rental Income Calculator', desc: 'Tax and TDS on rent from your Indian property' },
@@ -419,16 +420,17 @@ export default function NRICapitalGainsPage() {
               { path: '/calculators/rnor-status', label: 'RNOR Status Calculator', desc: 'Returning to India? Check your transitional tax status' },
               { path: '/calculators/income-tax', label: 'Income Tax Calculator', desc: 'Slab tax on your other Indian income' },
             ].map(t => (
-              <Link key={t.path} to={t.path} className="card p-4 hover:shadow-md transition group">
+              <Link key={t.path} to={t.path} className="bg-surface border border-line rounded-2xl p-4 hover:border-acc transition group">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-gray-800 group-hover:text-brand-600 transition">{t.label}</span>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  <span className="text-sm font-semibold text-ink group-hover:text-acc transition">{t.label}</span>
+                  <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                 </div>
-                <p className="text-[11px] text-gray-400 mt-1">{t.desc}</p>
+                <p className="text-[11px] text-faint mt-1">{t.desc}</p>
               </Link>
             ))}
           </div>
         </section>
+      </div>
       </div>
     </>
   );

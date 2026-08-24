@@ -1,10 +1,11 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Search, SlidersHorizontal, X, CreditCard, TrendingUp, Building2, Award, GitCompareArrows, CheckCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { Search, SlidersHorizontal, X, CreditCard, Award, GitCompareArrows, CheckCircle, ChevronRight } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { apiClient  } from "../utils/api";
 
-/* â"€â"€â"€ Types â"€â"€â"€ */
+/* ─── Types ─── */
 interface CardItem {
   id: number;
   name: string;
@@ -40,13 +41,13 @@ interface FilterOption {
   cardCount: number;
 }
 
-/* â"€â"€â"€ Constants â"€â"€â"€ */
+/* ─── Constants ─── */
 const NETWORK_COLORS: Record<string, string> = {
-  Visa: "bg-brand-100 text-brand-700 border-brand-200",
-  Mastercard: "bg-orange-100 text-orange-700 border-orange-200",
-  RuPay: "bg-green-100 text-green-700 border-green-200",
-  Amex: "bg-brand-100 text-brand-700 border-brand-200",
-  Diners: "bg-purple-100 text-purple-700 border-purple-200",
+  Visa: "bg-acc-deep text-acc border-acc/30",
+  Mastercard: "bg-gold/10 text-gold border-gold/30",
+  RuPay: "bg-mint/10 text-mint border-mint/30",
+  Amex: "bg-acc-deep text-acc border-acc/30",
+  Diners: "bg-violet-500/10 text-violet border-violet/30",
 };
 
 const CARD_GRADIENTS: Record<string, string> = {
@@ -69,12 +70,7 @@ function formatINR(amount: number): string {
   return "₹" + amount.toLocaleString("en-IN");
 }
 
-function formatNumber(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
-}
-
-/* â"€â"€â"€ Main Page â"€â"€â"€ */
+/* ─── Main Page ─── */
 const CreditCards: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState<CardItem[]>([]);
@@ -86,26 +82,18 @@ const CreditCards: React.FC = () => {
   // Compare selection
   const [compareIds, setCompareIds] = useState<number[]>([]);
 
-  // Filters â€" seed category from URL ?category=
+  // Filters — seed category from URL ?category=
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [bank, setBank] = useState(searchParams.get("bank") || "");
-  const [feeMax, setFeeMax] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
-  const [showFilters, setShowFilters] = useState(!!(searchParams.get("category") || searchParams.get("bank")));
+  const [sortBy, setSortBy] = useState("rating");
 
   // Sync category + bank from URL when navigating via links
   useEffect(() => {
     const urlCat = searchParams.get("category") || "";
     const urlBank = searchParams.get("bank") || "";
-    if (urlCat !== category) {
-      setCategory(urlCat);
-      if (urlCat) setShowFilters(true);
-    }
-    if (urlBank !== bank) {
-      setBank(urlBank);
-      if (urlBank) setShowFilters(true);
-    }
+    if (urlCat !== category) setCategory(urlCat);
+    if (urlBank !== bank) setBank(urlBank);
   }, [searchParams]);
 
   // Load stats + filter options once
@@ -135,7 +123,6 @@ const CreditCards: React.FC = () => {
       params.set("limit", "100");
       if (search) params.set("search", search);
       if (bank) params.set("bank", bank);
-      if (feeMax) params.set("annualFeeMax", feeMax);
       if (sortBy) params.set("sortBy", sortBy);
 
       apiClient.get(`/products?${params.toString()}`)
@@ -145,7 +132,7 @@ const CreditCards: React.FC = () => {
     }, search ? 300 : 0);
 
     return () => clearTimeout(timer);
-  }, [search, bank, feeMax, sortBy]);
+  }, [search, bank, sortBy]);
 
   // Compare helpers
   const toggleCompare = (id: number) => {
@@ -154,7 +141,7 @@ const CreditCards: React.FC = () => {
     );
   };
 
-  // Client-side category filter (offer.category) â€" case-insensitive
+  // Client-side category filter (offer.category) — case-insensitive
   const filteredCards = category
     ? cards.filter((c) => c.offer?.category?.toLowerCase() === category.toLowerCase())
     : cards;
@@ -162,7 +149,6 @@ const CreditCards: React.FC = () => {
   const activeFilters = [
     category && { label: category, clear: () => setCategory("") },
     bank && { label: bank, clear: () => setBank("") },
-    feeMax && { label: `Fee \u2264 ₹${feeMax}`, clear: () => setFeeMax("") },
   ].filter(Boolean) as { label: string; clear: () => void }[];
 
   return (
@@ -230,131 +216,129 @@ const CreditCards: React.FC = () => {
           ]
         })}</script>
       </Helmet>
-      <div className="bg-gradient-to-br from-brand-900 via-brand-800 to-brand-900 relative overflow-hidden">
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='1'%3E%3Cpath d='M0 0h1v40H0zm39 0h1v40h-1zM0 0h40v1H0zm0 39h40v1H0z'/%3E%3C/g%3E%3C/svg%3E\")" }} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 relative z-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 font-display">
-            Credit Cards in India
-          </h1>
-          <p className="text-brand-300 text-sm md:text-base">
-            Compare {stats?.totalCards ?? cards.length}+ credit cards from top banks
-          </p>
 
-          {/* Search */}
-          <div className="mt-6 relative max-w-xl">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-300" />
+      {/* ── Hero ── */}
+      <header className="py-8 md:py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="force-dark relative overflow-hidden rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute top-[-160px] right-[-100px] w-[500px] h-[400px] rounded-full opacity-25 blur-[20px]"
+                   style={{ background: 'radial-gradient(50% 50% at 50% 50%, var(--acc-glow), transparent 70%)' }} />
+            </div>
+            <div className="relative z-[2]">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+                <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 flex-wrap font-mono">
+                  <Link to="/" className="hover:text-acc transition-colors">Home</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <span className="text-acc font-semibold">Credit Cards</span>
+                </nav>
+
+                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-mint/10 text-mint border border-mint/30 mb-5">
+                  <CreditCard className="w-3.5 h-3.5" /> {stats?.totalCards ?? cards.length}+ Top Indian Credit Cards (Verified 2026 Edition)
+                </div>
+
+                <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ink tracking-tight leading-[1.1] mb-4">
+                  Find the Best <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Credit Card &amp; Cashback</span> Deals
+                </h1>
+                <p className="text-body text-sm md:text-base leading-relaxed max-w-2xl mb-6">
+                  Compare Lifetime Free (LTF) cards, unlimited online cashback, domestic &amp; international airport lounge passes, and RuPay UPI credit cards.
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  <a href="#grid" className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px transition-all">
+                    <Award className="w-4 h-4" /> Browse Top Picks
+                  </a>
+                  <Link to="/credit-cards/reward-optimizer" className="inline-flex items-center gap-2 bg-bg-2 border border-line-2 text-ink text-sm font-semibold px-5 py-3 rounded-xl hover:border-gold/50 transition-all">
+                    <SlidersHorizontal className="w-4 h-4 text-gold" /> Reward Spending Optimizer
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div id="grid" className="bg-bg max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 scroll-mt-24">
+        {/* ─── Search + Bank + Sort ─── */}
+        <div className="flex flex-col md:flex-row gap-3 mb-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-faint" />
             <input
               type="search"
-              placeholder="Search by card name or bank..."
+              placeholder="Search by card name, bank, lounge access, or cashback perk…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-brand-300 text-sm focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface border border-line-2 text-ink placeholder:text-faint text-sm focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc transition-all"
             />
           </div>
-
-          {/* Stats row */}
-          {stats && (
-            <div className="flex flex-wrap gap-6 mt-8">
-              <StatPill icon={<CreditCard size={14} />} label="Cards" value={String(stats.totalCards)} />
-              <StatPill icon={<Building2 size={14} />} label="Banks" value={String(stats.totalBanks)} />
-              <StatPill icon={<Award size={14} />} label="Free Cards" value={String(stats.freeCards)} />
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* â"€â"€â"€ Filter Bar â"€â"€â"€ */}
-        <div className="sticky top-16 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 mb-6 flex flex-wrap items-center gap-3">
-          <button
-            className={`flex items-center gap-2 px-3 py-1.5 text-sm border rounded-lg transition ${
-              showFilters ? "border-brand-500 bg-brand-50 text-brand-700" : "border-gray-200 bg-white text-gray-600 hover:border-brand-300"
-            }`}
-            onClick={() => setShowFilters(!showFilters)}
+          <select
+            value={bank}
+            onChange={(e) => setBank(e.target.value)}
+            className="text-sm border border-line-2 rounded-xl px-3.5 py-3 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc transition-all"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            Filters
-            {activeFilters.length > 0 && (
-              <span className="bg-brand-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
-                {activeFilters.length}
-              </span>
-            )}
-          </button>
-
+            <option value="">All Banks</option>
+            {bankOptions.map((b) => (
+              <option key={b.id} value={b.name}>{b.name} ({b.cardCount})</option>
+            ))}
+          </select>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white focus:outline-none focus:border-brand-400 text-gray-700"
+            className="text-sm border border-line-2 rounded-xl px-3.5 py-3 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc transition-all"
           >
-            <option value="annualFee">Sort: Lowest Fee</option>
-            <option value="newest">Sort: Newest</option>
+            <option value="rating">Top Rated</option>
+            <option value="annualFee">Lowest Fee</option>
+            <option value="newest">Newest</option>
           </select>
+        </div>
 
-          {activeFilters.map((f) => (
+        {/* ─── Category pills ─── */}
+        <div className="flex gap-2 overflow-x-auto pb-1 mb-6 scrollbar-thin">
+          <button
+            onClick={() => setCategory("")}
+            className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all whitespace-nowrap ${
+              !category
+                ? "bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow"
+                : "bg-surface text-muted border-line hover:border-acc/40"
+            }`}
+          >
+            All
+          </button>
+          {categories.map((c) => (
             <button
-              key={f.label}
-              onClick={f.clear}
-              className="flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-full border border-brand-200 hover:bg-brand-100 transition font-medium"
+              key={c.id}
+              onClick={() => setCategory(category === c.name ? "" : c.name)}
+              className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all whitespace-nowrap ${
+                category === c.name
+                  ? "bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow"
+                  : "bg-surface text-muted border-line hover:border-acc/40"
+              }`}
             >
-              {f.label}
-              <X className="w-3 h-3" />
+              {c.name}
             </button>
           ))}
         </div>
 
-        {/* â"€â"€â"€ Filter Panel â"€â"€â"€ */}
-        {showFilters && (
-          <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6 grid grid-cols-1 sm:grid-cols-3 gap-5 shadow-sm">
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Category</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:border-brand-400"
+        {activeFilters.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-6 -mt-2">
+            {activeFilters.map((f) => (
+              <button
+                key={f.label}
+                onClick={f.clear}
+                className="flex items-center gap-1 bg-acc-deep text-acc text-xs px-2.5 py-1 rounded-full border border-acc/30 hover:bg-acc/20 transition-all font-semibold"
               >
-                <option value="">All Categories</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.name}>{c.name} ({c.cardCount})</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Bank</label>
-              <select
-                value={bank}
-                onChange={(e) => setBank(e.target.value)}
-                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:border-brand-400"
-              >
-                <option value="">All Banks</option>
-                {bankOptions.map((b) => (
-                  <option key={b.id} value={b.name}>{b.name} ({b.cardCount})</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Max Annual Fee</label>
-              <select
-                value={feeMax}
-                onChange={(e) => setFeeMax(e.target.value)}
-                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 focus:outline-none focus:border-brand-400"
-              >
-                <option value="">Any Fee</option>
-                <option value="0">Free (₹0)</option>
-                <option value="500">Up to ₹500</option>
-                <option value="1500">Up to ₹1,500</option>
-                <option value="5000">Up to ₹5,000</option>
-                <option value="10000">Up to ₹10,000</option>
-              </select>
-            </div>
+                {f.label}
+                <X className="w-3 h-3" />
+              </button>
+            ))}
           </div>
         )}
 
-        {/* â"€â"€â"€ Loading Skeleton â"€â"€â"€ */}
+        {/* ─── Loading Skeleton ─── */}
         {loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-xl border border-gray-200 bg-white p-4 space-y-3">
+              <div key={i} className="rounded-2xl border border-line bg-surface p-4 space-y-3">
                 <div className="aspect-[1.586/1] rounded-xl skeleton w-full" />
                 <div className="h-4 w-3/4 skeleton" />
                 <div className="h-3 w-1/2 skeleton" />
@@ -364,34 +348,38 @@ const CreditCards: React.FC = () => {
           </div>
         )}
 
-        {/* â"€â"€â"€ Empty State â"€â"€â"€ */}
+        {/* ─── Empty State ─── */}
         {!loading && filteredCards.length === 0 && (
           <div className="text-center py-16">
-            <Search className="w-12 h-12 mx-auto mb-4 text-gray-200" />
-            <h3 className="font-semibold text-gray-700 mb-1">No cards found</h3>
-            <p className="text-sm text-gray-500">Try adjusting your filters or search term</p>
+            <Search className="w-12 h-12 mx-auto mb-4 text-faint" />
+            <h3 className="font-semibold text-ink mb-1">No cards found</h3>
+            <p className="text-sm text-muted">Try adjusting your filters or search term</p>
           </div>
         )}
 
-        {/* â"€â"€â"€ Card Grid â"€â"€â"€ */}
+        {/* ─── Card Grid ─── */}
         {!loading && filteredCards.length > 0 && (
           <>
-            <p className="text-sm text-gray-500 mb-4">{filteredCards.length} cards found</p>
+            <p className="text-sm text-muted mb-4">{filteredCards.length} cards found</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredCards.map((card) => {
                 const isSelected = compareIds.includes(card.id);
                 return (
                   <div
                     key={card.id}
-                    className={`rounded-xl border bg-white hover:shadow-md transition-all group ${
-                      isSelected ? "border-brand-400 ring-2 ring-brand-100" : "border-gray-200 hover:border-brand-200"
+                    className={`rounded-2xl border bg-surface transition-all group ${
+                      isSelected
+                        ? "border-acc ring-2 ring-acc/20"
+                        : card.isFeatured
+                        ? "border-gold/60 ring-1 ring-gold/25 shadow-[0_0_24px_-8px_rgba(245,196,81,0.35)] hover:border-gold"
+                        : "border-line hover:border-acc"
                     }`}
                   >
                     <Link to={`/credit-cards/${card.slug}`} className="block p-4 pb-0">
                       {/* Card visual */}
                       <div className="mb-4">
                         {card.cardImageUrl && card.cardImageUrl.trim().toLowerCase().endsWith(".png") ? (
-                          <div className="aspect-[1.586/1] rounded-xl overflow-hidden bg-gray-100">
+                          <div className="aspect-[1.586/1] rounded-xl overflow-hidden bg-surface-2">
                             <img
                               src={card.cardImageUrl.trim()}
                               alt={card.name}
@@ -408,41 +396,50 @@ const CreditCards: React.FC = () => {
                         )}
                       </div>
 
+                      {/* Bank + Best Pick badge */}
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-[10px] text-faint uppercase tracking-wider font-semibold">{card.bank.name}</p>
+                        {card.isFeatured && (
+                          <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-gold/15 text-gold shrink-0">
+                            🔥 Best Pick
+                          </span>
+                        )}
+                      </div>
+
                       {/* Name + Network badge */}
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <h3 className="font-semibold text-sm text-brand-900 leading-snug group-hover:text-brand-600 transition line-clamp-2">
-                            {card.name}
-                          </h3>
-                          <p className="text-xs text-gray-500 mt-0.5">{card.bank.name}</p>
-                        </div>
+                      <div className="flex items-start justify-between gap-2 mt-1">
+                        <h3 className="font-semibold text-sm text-ink leading-snug group-hover:text-acc transition-colors line-clamp-2">
+                          {card.name}
+                        </h3>
                         {card.network && (
-                          <span className={`text-[10px] shrink-0 font-medium px-2 py-0.5 rounded-full border ${NETWORK_COLORS[card.network] ?? "bg-gray-100 text-gray-600 border-gray-200"}`}>
+                          <span className={`text-[10px] shrink-0 font-medium px-2 py-0.5 rounded-full border ${NETWORK_COLORS[card.network] ?? "bg-surface-2 text-muted border-line"}`}>
                             {card.network}
                           </span>
                         )}
                       </div>
 
                       {/* Fee + Reward row */}
-                      <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-gray-100">
+                      <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-line">
                         <div>
-                          <span className="text-[10px] text-gray-400 block uppercase tracking-wider">Annual Fee</span>
-                          <span className="text-xs font-semibold text-brand-900">{formatINR(card.annualFee)}</span>
+                          <span className="text-[10px] text-faint block uppercase tracking-wider">Annual Fee</span>
+                          <span className="text-xs font-semibold text-ink">{formatINR(card.annualFee)}</span>
                         </div>
                         <div>
-                          <span className="text-[10px] text-gray-400 block uppercase tracking-wider">Joining Fee</span>
-                          <span className="text-xs font-semibold text-brand-900">{formatINR(card.joiningFee)}</span>
+                          <span className="text-[10px] text-faint block uppercase tracking-wider">Joining Fee</span>
+                          <span className="text-xs font-semibold text-ink">{formatINR(card.joiningFee)}</span>
                         </div>
                         <div>
-                          <span className="text-[10px] text-gray-400 block uppercase tracking-wider">Rewards</span>
-                          <span className="text-xs font-semibold text-brand-900 truncate block capitalize">{card.rewardType || "\u2014"}</span>
+                          <span className="text-[10px] text-faint block uppercase tracking-wider">Reward Rate</span>
+                          <span className="text-xs font-semibold text-mint truncate block">
+                            {card.offer?.rewardRate ? `${card.offer.rewardRate}%` : (card.rewardType ? <span className="text-ink capitalize">{card.rewardType}</span> : "—")}
+                          </span>
                         </div>
                       </div>
 
                       {/* Top offer / benefit */}
                       {card.offer && (
-                        <div className="mt-2 bg-brand-50 rounded-lg px-3 py-2">
-                          <p className="text-xs text-brand-700 font-medium leading-snug line-clamp-1">
+                        <div className="mt-2 bg-acc-deep rounded-lg px-3 py-2">
+                          <p className="text-xs text-acc font-medium leading-snug line-clamp-1">
                             {card.offer.title}
                           </p>
                         </div>
@@ -452,14 +449,11 @@ const CreditCards: React.FC = () => {
                       <div className="mt-3 flex items-center justify-between gap-1">
                         <div className="flex items-center gap-1">
                           {card.isPopular && (
-                            <span className="text-[10px] bg-amber-100 text-amber-700 rounded-full px-2 py-0.5 font-medium">Popular</span>
-                          )}
-                          {card.isFeatured && (
-                            <span className="text-[10px] bg-gold-400/20 text-gold-600 rounded-full px-2 py-0.5 font-medium">Featured</span>
+                            <span className="text-[10px] bg-mint/10 text-mint rounded-full px-2 py-0.5 font-medium">Popular</span>
                           )}
                         </div>
                         {card.updatedAt && (
-                          <span className="text-[10px] text-gray-400 shrink-0">
+                          <span className="text-[10px] text-faint shrink-0">
                             Verified {new Date(card.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                           </span>
                         )}
@@ -467,13 +461,13 @@ const CreditCards: React.FC = () => {
                     </Link>
 
                     {/* Action row: Compare + Apply */}
-                    <div className="px-4 py-3 flex items-center justify-between border-t border-gray-100 mt-3">
+                    <div className="px-4 py-3 flex items-center justify-between border-t border-line mt-3">
                       <button
                         onClick={(e) => { e.preventDefault(); toggleCompare(card.id); }}
-                        className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg transition ${
+                        className={`flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-all ${
                           isSelected
-                            ? "bg-brand-100 text-brand-700 border border-brand-300"
-                            : "text-gray-500 hover:text-brand-600 hover:bg-brand-50 border border-transparent"
+                            ? "bg-acc-deep text-acc border border-acc/30"
+                            : "text-muted hover:text-acc hover:bg-acc-deep border border-transparent"
                         }`}
                       >
                         {isSelected ? <CheckCircle size={13} /> : <GitCompareArrows size={13} />}
@@ -485,7 +479,7 @@ const CreditCards: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer sponsored"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-semibold px-3 py-1.5 bg-brand-800 hover:bg-brand-900 text-white rounded-lg transition"
+                          className="text-xs font-semibold px-3 py-1.5 bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-lg shadow-acc-glow transition-all"
                         >
                           Apply Now →
                         </a>
@@ -493,7 +487,7 @@ const CreditCards: React.FC = () => {
                         <Link
                           to={`/credit-cards/${card.slug}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-semibold px-3 py-1.5 bg-brand-800 hover:bg-brand-900 text-white rounded-lg transition"
+                          className="text-xs font-semibold px-3 py-1.5 bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-lg shadow-acc-glow transition-all"
                         >
                           View Details →
                         </Link>
@@ -506,22 +500,22 @@ const CreditCards: React.FC = () => {
           </>
         )}
 
-        {/* â"€â"€â"€ Guide Section â"€â"€â"€ */}
-        <div className="mt-16 bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-8 border border-brand-100">
-          <h2 className="text-2xl font-bold text-brand-900 mb-5 font-display">
+        {/* ─── Guide Section ─── */}
+        <div className="mt-16 bg-gradient-to-br from-acc-deep to-surface rounded-2xl p-8 border border-acc/20">
+          <h2 className="text-2xl font-bold text-ink mb-5 font-display">
             How to Choose the Right Credit Card?
           </h2>
-          <div className="grid md:grid-cols-3 gap-6 text-sm text-gray-600">
-            <div className="bg-white rounded-xl p-5 border border-brand-100">
-              <h3 className="font-semibold text-brand-800 mb-2">For Online Shoppers</h3>
+          <div className="grid md:grid-cols-3 gap-6 text-sm text-muted">
+            <div className="bg-surface rounded-xl p-5 border border-line">
+              <h3 className="font-semibold text-ink mb-2">For Online Shoppers</h3>
               <p>Look for cashback cards offering 5%+ back on Amazon, Flipkart, and Swiggy. Cards like HDFC Millennia and ICICI Amazon Pay excel here.</p>
             </div>
-            <div className="bg-white rounded-xl p-5 border border-brand-100">
-              <h3 className="font-semibold text-brand-800 mb-2">For Travellers</h3>
+            <div className="bg-surface rounded-xl p-5 border border-line">
+              <h3 className="font-semibold text-ink mb-2">For Travellers</h3>
               <p>Choose travel cards with lounge access, air miles, and forex markup waivers. Axis Magnus and HDFC Regalia are top picks.</p>
             </div>
-            <div className="bg-white rounded-xl p-5 border border-brand-100">
-              <h3 className="font-semibold text-brand-800 mb-2">For First-Timers</h3>
+            <div className="bg-surface rounded-xl p-5 border border-line">
+              <h3 className="font-semibold text-ink mb-2">For First-Timers</h3>
               <p>Start with a lifetime-free card with low requirements. Kotak 811 and ICICI Coral are great entry points with no annual fee.</p>
             </div>
           </div>
@@ -530,7 +524,7 @@ const CreditCards: React.FC = () => {
 
       {/* Popular Comparisons */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Popular Card Comparisons</h2>
+        <h2 className="text-sm font-bold text-faint uppercase tracking-widest mb-3">Popular Card Comparisons</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             { to: '/credit-cards/compare/sbi-cashback-vs-hdfc-millennia',   label: 'SBI Cashback vs HDFC Millennia',   desc: 'Best cashback cards head-to-head'     },
@@ -538,35 +532,35 @@ const CreditCards: React.FC = () => {
             { to: '/credit-cards/compare/axis-ace-vs-sbi-cashback',         label: 'Axis ACE vs SBI Cashback',         desc: 'Google Pay bills vs all online spends' },
           ].map(item => (
             <Link key={item.to} to={item.to}
-              className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group flex flex-col gap-1.5">
+              className="bg-surface rounded-xl p-4 border border-line hover:border-acc transition-all group flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full border border-brand-200">Compare</span>
-                <GitCompareArrows size={14} className="text-gray-300 group-hover:text-brand-500 transition-colors" />
+                <span className="text-[10px] font-bold px-2 py-0.5 bg-acc-deep text-acc rounded-full border border-acc/30">Compare</span>
+                <GitCompareArrows size={14} className="text-faint group-hover:text-acc transition-colors" />
               </div>
-              <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
-              <div className="text-[11px] text-gray-400 leading-tight">{item.desc}</div>
+              <div className="font-semibold text-ink text-sm group-hover:text-acc transition-colors">{item.label}</div>
+              <div className="text-[11px] text-faint leading-tight">{item.desc}</div>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* â"€â"€â"€ Floating Compare Bar â"€â"€â"€ */}
+      {/* ─── Floating Compare Bar ─── */}
       {compareIds.length > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-200 shadow-2xl shadow-black/10">
+        <div className="fixed bottom-0 inset-x-0 z-50 bg-surface border-t border-line shadow-2xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
-              <GitCompareArrows size={18} className="text-brand-600 shrink-0" />
-              <span className="text-sm font-medium text-brand-900">
+              <GitCompareArrows size={18} className="text-acc shrink-0" />
+              <span className="text-sm font-medium text-ink">
                 {compareIds.length} card{compareIds.length > 1 ? "s" : ""} selected
               </span>
-              <span className="text-xs text-gray-400">(max 3)</span>
+              <span className="text-xs text-faint">(max 3)</span>
               <div className="hidden sm:flex items-center gap-2 ml-2">
                 {compareIds.map((id) => {
                   const c = cards.find((x) => x.id === id);
                   return c ? (
-                    <span key={id} className="flex items-center gap-1 bg-brand-50 text-brand-700 text-xs px-2 py-1 rounded-full border border-brand-200">
-                      {c.name.length > 20 ? c.name.slice(0, 20) + "â€¦" : c.name}
-                      <button onClick={() => toggleCompare(id)} className="hover:text-red-500 ml-0.5">
+                    <span key={id} className="flex items-center gap-1 bg-acc-deep text-acc text-xs px-2 py-1 rounded-full border border-acc/30">
+                      {c.name.length > 20 ? c.name.slice(0, 20) + "…" : c.name}
+                      <button onClick={() => toggleCompare(id)} className="hover:text-coral ml-0.5">
                         <X size={11} />
                       </button>
                     </span>
@@ -577,17 +571,17 @@ const CreditCards: React.FC = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCompareIds([])}
-                className="text-xs text-gray-500 hover:text-gray-700 px-3 py-2 transition"
+                className="text-xs text-muted hover:text-ink px-3 py-2 transition-colors"
               >
                 Clear
               </button>
               <Link
                 to={compareIds.length >= 2 ? `/credit-cards/compare?ids=${compareIds.join(",")}` : "#"}
                 onClick={(e) => { if (compareIds.length < 2) e.preventDefault(); }}
-                className={`flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-sm ${
+                className={`flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all ${
                   compareIds.length >= 2
-                    ? "bg-brand-700 hover:bg-brand-800 text-white"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    ? "bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg"
+                    : "bg-surface-2 text-faint cursor-not-allowed border border-line"
                 }`}
               >
                 <GitCompareArrows size={14} />
@@ -601,20 +595,7 @@ const CreditCards: React.FC = () => {
   );
 };
 
-/* â"€â"€â"€ Stat Pill (hero) â"€â"€â"€ */
-function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return (
-    <div className="flex items-center gap-2 bg-white/10 backdrop-blur rounded-lg px-3.5 py-2 border border-white/10">
-      <span className="text-gold-400">{icon}</span>
-      <div>
-        <span className="text-white text-sm font-bold">{value}</span>
-        <span className="text-brand-300 text-xs ml-1.5">{label}</span>
-      </div>
-    </div>
-  );
-}
-
-/* â"€â"€â"€ Card Placeholder Visual â"€â"€â"€ */
+/* ─── Card Placeholder Visual ─── */
 function CardPlaceholder({
   bank,
   name,
@@ -626,7 +607,7 @@ function CardPlaceholder({
   network: string | null;
   logo: string | null;
 }) {
-  const gradient = CARD_GRADIENTS[bank] || "from-brand-800 to-brand-700";
+  const gradient = CARD_GRADIENTS[bank] || "from-acc-deep to-acc/40";
 
   return (
     <div className={`aspect-[1.586/1] rounded-xl bg-gradient-to-br ${gradient} p-4 flex flex-col justify-between text-white relative overflow-hidden`}>
@@ -658,4 +639,3 @@ function CardPlaceholder({
 
 
 export default CreditCards;
-

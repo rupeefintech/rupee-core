@@ -91,7 +91,7 @@ export default function GSTCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb="GST"
           title="GST"
@@ -101,13 +101,13 @@ export default function GSTCalculatorPage() {
         />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-lg border border-line border-l-4 border-l-acc p-6">
 
             {/* Mode toggle */}
             <div className="flex gap-2 mb-6">
               {(['exclusive', 'inclusive'] as const).map(m => (
                 <button key={m} onClick={() => setMode(m)}
-                  className={`px-5 py-2 rounded-full text-sm font-medium border transition-all ${mode === m ? 'bg-brand-600 border-brand-600 text-white' : 'border-slate-200 text-slate-500 hover:border-brand-300'}`}>
+                  className={`px-5 py-2 rounded-full text-sm font-medium border transition-all ${mode === m ? 'bg-acc border-acc text-white' : 'border-line text-muted hover:border-acc'}`}>
                   {m === 'exclusive' ? 'Add GST' : 'Remove GST'}
                 </button>
               ))}
@@ -117,79 +117,79 @@ export default function GSTCalculatorPage() {
               <div className="space-y-6">
                 {/* Amount */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  <label className="block text-sm font-semibold text-body mb-2">
                     {mode === 'exclusive' ? 'Enter Amount (excl. GST)' : 'Enter Amount (incl. GST)'}
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint font-bold">₹</span>
                     <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value))}
-                      className="w-full pl-8 pr-4 py-3 border border-slate-200 rounded-lg text-slate-800 font-semibold focus:outline-none focus:border-brand-400 text-lg" />
+                      className="w-full pl-8 pr-4 py-3 border border-line rounded-lg text-ink font-semibold focus:outline-none focus:border-acc text-lg bg-bg-2" />
                   </div>
                 </div>
 
                 {/* GST Rate */}
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-3">Select GST Rate</label>
+                  <label className="block text-sm font-semibold text-body mb-3">Select GST Rate</label>
                   <div className="grid grid-cols-6 gap-2">
                     {GST_RATES.map(r => {
                       const legacy = !CURRENT_RATES.includes(r);
                       return (
                         <button key={r} onClick={() => setGstRate(r)}
-                          className={`py-2.5 rounded-lg text-sm font-bold border transition-all ${gstRate === r ? 'bg-brand-600 border-brand-600 text-white' : legacy ? 'border-slate-100 text-slate-300 hover:border-brand-200 hover:text-brand-400' : 'border-slate-200 text-slate-600 hover:border-brand-300 hover:text-brand-600'}`}>
+                          className={`py-2.5 rounded-lg text-sm font-bold border transition-all ${gstRate === r ? 'bg-acc border-acc text-white' : legacy ? 'border-line text-faint hover:border-acc/40 hover:text-acc/60' : 'border-line text-muted hover:border-acc hover:text-acc'}`}>
                           {r}%
                         </button>
                       );
                     })}
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-2">Current slabs: 5% &amp; 18% (main), 40% (demerit), 3% (gold). 12% &amp; 28% kept for older invoices.</p>
+                  <p className="text-[11px] text-faint mt-2">Current slabs: 5% &amp; 18% (main), 40% (demerit), 3% (gold). 12% &amp; 28% kept for older invoices.</p>
                 </div>
               </div>
 
               {/* Result */}
-              <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-lg p-5 text-white flex flex-col gap-3">
+              <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/25 rounded-lg p-5 text-ink flex flex-col gap-3 shadow-acc-glow">
                 <div>
-                  <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Total Amount</div>
-                  <div className="text-3xl font-bold tracking-tight">{fmtINR(totalAmount)}</div>
+                  <div className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Total Amount</div>
+                  <div className="text-3xl font-bold tracking-tight text-ink">{fmtINR(totalAmount)}</div>
                 </div>
-                <hr className="border-white/20" />
+                <hr className="border-line" />
                 <div className="flex flex-col gap-2 text-sm">
-                  <div className="flex justify-between"><span className="opacity-80">Base Amount</span><span className="font-bold">{fmtINR(baseAmount)}</span></div>
-                  <div className="flex justify-between"><span className="opacity-80">GST ({gstRate}%)</span><span className="font-bold">{fmtINR(gstAmount)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">Base Amount</span><span className="font-bold text-ink">{fmtINR(baseAmount)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">GST ({gstRate}%)</span><span className="font-bold text-ink">{fmtINR(gstAmount)}</span></div>
                 </div>
-                <hr className="border-white/20" />
-                <div className="bg-white/10 rounded-lg p-3 space-y-2 text-sm">
-                  <div className="text-xs opacity-70 font-semibold uppercase tracking-wide mb-2">GST Breakdown</div>
-                  <div className="flex justify-between"><span className="opacity-80">CGST ({gstRate/2}%)</span><span className="font-bold">{fmtINR(cgst)}</span></div>
-                  <div className="flex justify-between"><span className="opacity-80">SGST ({gstRate/2}%)</span><span className="font-bold">{fmtINR(sgst)}</span></div>
-                  <div className="text-xs opacity-60 mt-1">For inter-state: IGST = {fmtINR(gstAmount)}</div>
+                <hr className="border-line" />
+                <div className="bg-surface-2 rounded-lg p-3 space-y-2 text-sm">
+                  <div className="text-xs text-muted font-semibold uppercase tracking-wide mb-2">GST Breakdown</div>
+                  <div className="flex justify-between"><span className="text-muted">CGST ({gstRate/2}%)</span><span className="font-bold text-ink">{fmtINR(cgst)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">SGST ({gstRate/2}%)</span><span className="font-bold text-ink">{fmtINR(sgst)}</span></div>
+                  <div className="text-xs text-faint mt-1">For inter-state: IGST = {fmtINR(gstAmount)}</div>
                 </div>
               </div>
             </div>
 
             {/* All slabs comparison */}
             <div className="mt-8">
-              <h2 className="text-base font-bold text-slate-900 mb-3">GST for All Slabs on {fmtINR(baseAmount)}</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-base font-bold text-ink mb-3">GST for All Slabs on {fmtINR(baseAmount)}</h2>
+              <div className="overflow-x-auto rounded-lg border border-line">
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">GST Rate</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">GST Amount</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">CGST</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">SGST</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Total</th>
+                    <tr className="bg-surface-2">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted">GST Rate</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">GST Amount</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">CGST</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">SGST</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {GST_RATES.map(r => {
                       const g = baseAmount * r / 100;
                       return (
-                        <tr key={r} className={`border-t border-slate-50 hover:bg-slate-50 ${r === gstRate ? 'bg-brand-50' : ''}`}>
-                          <td className="px-4 py-3 font-bold text-brand-600">{r}%</td>
-                          <td className="px-4 py-3 text-right text-slate-600">{fmtINR(g)}</td>
-                          <td className="px-4 py-3 text-right text-slate-500">{fmtINR(g/2)}</td>
-                          <td className="px-4 py-3 text-right text-slate-500">{fmtINR(g/2)}</td>
-                          <td className="px-4 py-3 text-right font-bold text-slate-800">{fmtINR(baseAmount + g)}</td>
+                        <tr key={r} className={`border-t border-line hover:bg-surface-2 ${r === gstRate ? 'bg-acc-deep' : ''}`}>
+                          <td className="px-4 py-3 font-bold text-acc">{r}%</td>
+                          <td className="px-4 py-3 text-right text-muted">{fmtINR(g)}</td>
+                          <td className="px-4 py-3 text-right text-faint">{fmtINR(g/2)}</td>
+                          <td className="px-4 py-3 text-right text-faint">{fmtINR(g/2)}</td>
+                          <td className="px-4 py-3 text-right font-bold text-ink">{fmtINR(baseAmount + g)}</td>
                         </tr>
                       );
                     })}
@@ -200,48 +200,48 @@ export default function GSTCalculatorPage() {
           </div>
 
           {/* ── Article (always in DOM for SEO) ── */}
-          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+          <article className="bg-surface rounded-lg border border-line p-6 space-y-8">
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">What is GST and how is it calculated?</h2>
-              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <h2 className="text-xl font-bold text-ink mb-3">What is GST and how is it calculated?</h2>
+              <div className="text-sm text-muted space-y-3 leading-relaxed">
                 <p>
-                  <strong>GST (Goods and Services Tax)</strong> is India's single indirect tax on the supply of goods and
+                  <strong className="text-body">GST (Goods and Services Tax)</strong> is India's single indirect tax on the supply of goods and
                   services, in force since July 2017. Every invoice charges GST at the rate applicable to the product or
-                  service, and the tax splits into <strong>CGST + SGST</strong> for sales within a state or <strong>IGST</strong> for
+                  service, and the tax splits into <strong className="text-body">CGST + SGST</strong> for sales within a state or <strong className="text-body">IGST</strong> for
                   inter-state sales — the buyer pays the same total either way.
                 </p>
                 <p>
-                  Since the <strong>September 2025 rate rationalisation ("GST 2.0")</strong>, India effectively has a two-rate
-                  structure: <strong>5%</strong> for merit and daily-use goods and <strong>18%</strong> as the standard rate, with a
-                  <strong> 40% demerit rate</strong> for sin and super-luxury items and a special <strong>3%</strong> rate for gold and
+                  Since the <strong className="text-body">September 2025 rate rationalisation ("GST 2.0")</strong>, India effectively has a two-rate
+                  structure: <strong className="text-body">5%</strong> for merit and daily-use goods and <strong className="text-body">18%</strong> as the standard rate, with a
+                  <strong className="text-body"> 40% demerit rate</strong> for sin and super-luxury items and a special <strong className="text-body">3%</strong> rate for gold and
                   silver. The old 12% and 28% slabs were largely folded into 5% and 18% — this calculator keeps them
                   available for older invoices.
                 </p>
                 <p>The two formulas this calculator applies:</p>
                 <div className="grid sm:grid-cols-2 gap-3">
-                  <div className="border border-slate-100 rounded-lg p-3">
-                    <div className="text-xs font-bold text-slate-800 mb-1">Add GST (exclusive price)</div>
+                  <div className="border border-line rounded-lg p-3">
+                    <div className="text-xs font-bold text-ink mb-1">Add GST (exclusive price)</div>
                     <p className="text-xs">GST = Base × Rate ÷ 100<br />Total = Base + GST</p>
-                    <p className="text-[11px] text-slate-400 mt-1.5">₹10,000 at 18% → GST ₹1,800 → total ₹11,800</p>
+                    <p className="text-[11px] text-faint mt-1.5">₹10,000 at 18% → GST ₹1,800 → total ₹11,800</p>
                   </div>
-                  <div className="border border-slate-100 rounded-lg p-3">
-                    <div className="text-xs font-bold text-slate-800 mb-1">Remove GST (inclusive price / MRP)</div>
+                  <div className="border border-line rounded-lg p-3">
+                    <div className="text-xs font-bold text-ink mb-1">Remove GST (inclusive price / MRP)</div>
                     <p className="text-xs">Base = Price × 100 ÷ (100 + Rate)<br />GST = Price − Base</p>
-                    <p className="text-[11px] text-slate-400 mt-1.5">₹11,800 at 18% → base ₹10,000, GST ₹1,800</p>
+                    <p className="text-[11px] text-faint mt-1.5">₹11,800 at 18% → base ₹10,000, GST ₹1,800</p>
                   </div>
                 </div>
               </div>
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">GST slabs after the 2025 reform — what falls where</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-xl font-bold text-ink mb-3">GST slabs after the 2025 reform — what falls where</h2>
+              <div className="overflow-x-auto rounded-lg border border-line">
                 <table className="w-full text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Rate</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Category</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Typical items</th>
+                    <tr className="bg-surface-2">
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Rate</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Category</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Typical items</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -252,33 +252,33 @@ export default function GSTCalculatorPage() {
                       ['18%', 'Standard rate', 'Most services, electronics, ACs, TVs, refrigerators, cement, small cars, two-wheelers ≤350cc, telecom, banking, software'],
                       ['40%', 'Demerit / luxury', 'Pan masala, aerated & caffeinated drinks, luxury cars, motorcycles >350cc, yachts, private aircraft, betting & online money gaming'],
                     ].map(([rate, cat, items]) => (
-                      <tr key={rate} className="border-t border-slate-50 align-top">
-                        <td className="px-4 py-2.5 font-bold text-brand-600 whitespace-nowrap">{rate}</td>
-                        <td className="px-4 py-2.5 font-semibold text-slate-700 whitespace-nowrap">{cat}</td>
-                        <td className="px-4 py-2.5 text-slate-500">{items}</td>
+                      <tr key={rate} className="border-t border-line align-top">
+                        <td className="px-4 py-2.5 font-bold text-acc whitespace-nowrap">{rate}</td>
+                        <td className="px-4 py-2.5 font-semibold text-body whitespace-nowrap">{cat}</td>
+                        <td className="px-4 py-2.5 text-muted">{items}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="text-[11px] text-slate-400 mt-2">
+              <p className="text-[11px] text-faint mt-2">
                 Petrol, diesel, ATF and alcohol remain outside GST. Tobacco products temporarily continue at 28% + compensation cess.
                 Item classifications can change with GST Council notifications — verify current rates on cbic-gst.gov.in for filings.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">GST calculation examples</h2>
-              <div className="space-y-2 text-sm text-slate-600">
+              <h2 className="text-xl font-bold text-ink mb-3">GST calculation examples</h2>
+              <div className="space-y-2 text-sm text-muted">
                 {[
                   ['Restaurant bill (5%)', 'Food total ₹2,000 → GST ₹100 (CGST ₹50 + SGST ₹50) → bill ₹2,100.'],
                   ['Laptop purchase (18%)', 'Listed price ₹59,000 inclusive → base = 59,000 ÷ 1.18 = ₹50,000, GST = ₹9,000 (₹4,500 CGST + ₹4,500 SGST).'],
                   ['Gold chain (3% + 5% making)', '₹1,00,000 gold value → ₹3,000 GST; ₹10,000 making charges → ₹500 GST. Total tax ₹3,500.'],
                   ['Inter-state B2B supply (18%)', '₹1,00,000 goods from Maharashtra to Karnataka → IGST ₹18,000 charged in full; buyer claims it as input tax credit.'],
                 ].map(([t, d]) => (
-                  <div key={t} className="border border-slate-100 rounded-lg p-3">
-                    <div className="text-xs font-bold text-slate-800">{t}</div>
-                    <p className="text-xs text-slate-500 mt-0.5">{d}</p>
+                  <div key={t} className="border border-line rounded-lg p-3">
+                    <div className="text-xs font-bold text-ink">{t}</div>
+                    <p className="text-xs text-muted mt-0.5">{d}</p>
                   </div>
                 ))}
               </div>
@@ -286,26 +286,26 @@ export default function GSTCalculatorPage() {
           </article>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
                   {/* Always mounted so content stays in the DOM for search engines */}
-                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
+                  <div className={`px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Related tools */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
                 { path: '/calculators/income-tax', label: 'Income Tax Calculator', desc: 'Old vs new regime tax on your income' },
@@ -313,12 +313,12 @@ export default function GSTCalculatorPage() {
                 { path: '/calculators/emi', label: 'EMI Calculator', desc: 'Loan EMI, interest and amortisation' },
                 { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Mutual fund SIP growth projection' },
               ].map(t => (
-                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
-                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
                 </Link>
               ))}
             </div>

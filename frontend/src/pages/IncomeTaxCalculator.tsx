@@ -194,30 +194,38 @@ export default function TaxCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-[#F8FAFC]">
+      <div className="min-h-screen bg-bg">
         {/* CLEANER HERO */}
-        <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-12 px-4">
-          <div className="max-w-6xl mx-auto">
-            <nav className="flex items-center gap-2 text-brand-200 text-xs uppercase tracking-wider mb-6">
-              <Link to="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronRight className="w-3 h-3 text-brand-300" />
-              <Link to="/calculators" className="hover:text-white transition-colors">Calculators</Link>
-              <ChevronRight className="w-3 h-3 text-brand-300" />
-              <span className="text-white font-medium">Income Tax</span>
-            </nav>
+        <header className="py-8 md:py-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-120px] right-[-80px] w-[380px] h-[380px] rounded-full opacity-25 blur-[30px]"
+                     style={{ background: 'radial-gradient(50% 50% at 50% 50%, var(--acc-glow), transparent 70%)' }} />
+              </div>
+              <div className="relative z-[2]">
+                <nav className="flex items-center gap-2 text-muted text-xs uppercase tracking-wider mb-6">
+                  <Link to="/" className="hover:text-ink transition-colors">Home</Link>
+                  <ChevronRight className="w-3 h-3 text-muted" />
+                  <Link to="/calculators" className="hover:text-ink transition-colors">Calculators</Link>
+                  <ChevronRight className="w-3 h-3 text-muted" />
+                  <span className="text-ink font-medium">Income Tax</span>
+                </nav>
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-              <div>
-                <h1 className="text-4xl font-extrabold flex items-center gap-3">
-                  <Calculator className="text-brand-200 w-10 h-10" /> Tax <span className="text-brand-200">Calculator</span>
-                </h1>
-                <p className="text-brand-100 mt-3 text-lg max-w-md border-l-2 border-brand-300/30 pl-4">
-                  Assessment Year 2026-27 comparison engine.
-                </p>
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                  <div>
+                    <h1 className="text-ink text-4xl font-extrabold flex items-center gap-3">
+                      <Calculator className="text-ink w-10 h-10" /> Tax <span className="text-ink">Calculator</span>
+                    </h1>
+                    <p className="text-muted mt-3 text-lg max-w-md border-l-2 border-line pl-4">
+                      Assessment Year 2026-27 comparison engine.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </header>
 
         <div className="max-w-6xl mx-auto px-4 -mt-8 pb-20">
           <div className="grid lg:grid-cols-12 gap-8">
@@ -225,19 +233,19 @@ export default function TaxCalculatorPage() {
             {/* INPUT SECTION */}
             <div className="lg:col-span-7 space-y-6">
               <Card>
-                <div className="flex items-center gap-2 mb-6 border-b pb-4">
-                  <div className="p-2 bg-brand-50 rounded-lg">
-                    <IndianRupee className="w-5 h-5 text-brand-600" />
+                <div className="flex items-center gap-2 mb-6 border-b border-line pb-4">
+                  <div className="p-2 bg-acc-deep rounded-lg">
+                    <IndianRupee className="w-5 h-5 text-acc" />
                   </div>
-                  <h3 className="font-bold text-slate-800">Earnings & Investment</h3>
+                  <h3 className="font-bold text-ink">Earnings & Investment</h3>
                 </div>
                 
                 <Input label="Total Annual Income" value={income} onChange={setIncome} />
                 
-                <div className="mt-8 pt-6 border-t border-dashed">
+                <div className="mt-8 pt-6 border-t border-dashed border-line">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold text-slate-700">Deductions (Old Regime)</h3>
-                    <span className="text-[10px] bg-slate-100 px-2 py-1 rounded uppercase font-bold text-slate-500">Optional</span>
+                    <h3 className="text-sm font-bold text-body">Deductions (Old Regime)</h3>
+                    <span className="text-[10px] bg-surface-2 px-2 py-1 rounded uppercase font-bold text-muted">Optional</span>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -246,9 +254,9 @@ export default function TaxCalculatorPage() {
                     <Input label="HRA Exemption" value={hra} onChange={setHra} />
                     <Input label="Home Loan Interest (24b)" value={homeLoan} onChange={setHomeLoan} />
                     <Input label="NPS (80CCD 1B)" value={nps} onChange={setNps} />
-                    <div className="flex items-center gap-2 px-3 py-2 bg-brand-50/50 rounded-xl border border-brand-100">
-                      <Info className="w-4 h-4 text-brand-500" />
-                      <p className="text-xs text-brand-700">₹75,000 Std. Deduction applied automatically.</p>
+                    <div className="flex items-center gap-2 px-3 py-2 bg-acc-deep rounded-xl border border-acc/20">
+                      <Info className="w-4 h-4 text-acc" />
+                      <p className="text-xs text-acc">₹75,000 Std. Deduction applied automatically.</p>
                     </div>
                   </div>
                 </div>
@@ -258,37 +266,37 @@ export default function TaxCalculatorPage() {
             {/* RESULTS SECTION */}
             <div className="lg:col-span-5 space-y-6">
               {/* SAVINGS CARD */}
-              <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white p-8 rounded-3xl shadow-xl shadow-brand-500/20 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-acc-deep to-surface text-ink p-8 rounded-3xl shadow-acc-glow relative overflow-hidden">
                 <TrendingDown className="absolute -right-4 -bottom-4 w-32 h-32 opacity-10" />
                 <div className="relative z-10">
-                  <h2 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-1">Recommended Regime</h2>
+                  <h2 className="text-sm font-bold uppercase tracking-widest text-muted mb-1">Recommended Regime</h2>
                   <p className="text-3xl font-black mb-4">{result.better}</p>
-                  <div className="bg-white/20 backdrop-blur-md rounded-2xl p-4 inline-block border border-white/30">
-                    <span className="text-sm block opacity-90">Total Annual Savings</span>
+                  <div className="bg-acc/10 backdrop-blur-md rounded-2xl p-4 inline-block border border-acc/25">
+                    <span className="text-sm block text-muted">Total Annual Savings</span>
                     <span className="text-2xl font-bold">{fmt(result.savings)}</span>
                   </div>
                 </div>
               </div>
 
               <Card>
-                <h3 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-brand-600 rounded-full"></span>
+                <h3 className="font-bold text-ink mb-6 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-acc rounded-full"></span>
                   Comparison Summary
                 </h3>
                 
                 <div className="space-y-4">
-                   <div className="p-4 bg-slate-50 rounded-2xl space-y-3">
+                   <div className="p-4 bg-surface-2 rounded-2xl space-y-3">
                       <Row label="Taxable (Old)" value={result.taxableOld} />
                       <Row label="Taxable (New)" value={result.taxableNew} />
                    </div>
                    
                    <div className="px-4 py-2 space-y-3">
-                      <Row label="Old Regime Tax" value={result.oldTax} isEmphasis color="text-slate-700" />
-                      <Row label="New Regime Tax" value={result.newTax} isEmphasis color="text-brand-600" />
+                      <Row label="Old Regime Tax" value={result.oldTax} isEmphasis color="text-body" />
+                      <Row label="New Regime Tax" value={result.newTax} isEmphasis color="text-acc" />
                    </div>
                 </div>
 
-                <p className="mt-6 text-[11px] text-slate-400 leading-relaxed">
+                <p className="mt-6 text-[11px] text-faint leading-relaxed">
                   Includes ₹75,000 / ₹50,000 standard deduction, Section 87A rebate with marginal relief, and 4% cess.
                   Surcharge (income above ₹50 lakh), capital gains and business income are not modelled.
                 </p>
@@ -304,24 +312,24 @@ export default function TaxCalculatorPage() {
               { title: "Old Regime Slabs — FY 2025-26", slabs: OLD_SLABS, note: "Opt-in regime. Higher rates, but 80C, HRA, home loan interest, 80D and NPS deductions are allowed. Rebate makes taxable income up to ₹5 lakh tax-free." },
             ].map(t => (
               <Card key={t.title}>
-                <h2 className="font-bold text-slate-800 mb-4">{t.title}</h2>
+                <h2 className="font-bold text-ink mb-4">{t.title}</h2>
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="text-left text-xs text-slate-400 uppercase tracking-wide">
+                    <tr className="text-left text-xs text-faint uppercase tracking-wide">
                       <th className="pb-2">Taxable income</th>
                       <th className="pb-2 text-right">Rate</th>
                     </tr>
                   </thead>
                   <tbody>
                     {t.slabs.map(([range, rate]) => (
-                      <tr key={range} className="border-t border-slate-100">
-                        <td className="py-2 text-slate-600">{range}</td>
-                        <td className="py-2 text-right font-bold text-brand-600">{rate}</td>
+                      <tr key={range} className="border-t border-line">
+                        <td className="py-2 text-body">{range}</td>
+                        <td className="py-2 text-right font-bold text-acc">{rate}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <p className="text-[11px] text-slate-400 mt-3">{t.note}</p>
+                <p className="text-[11px] text-faint mt-3">{t.note}</p>
               </Card>
             ))}
           </div>
@@ -331,8 +339,8 @@ export default function TaxCalculatorPage() {
             <Card>
               <article className="space-y-6">
                 <section>
-                  <h2 className="font-bold text-slate-800 text-lg mb-3">Old vs new regime — how to actually decide</h2>
-                  <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+                  <h2 className="font-bold text-ink text-lg mb-3">Old vs new regime — how to actually decide</h2>
+                  <div className="text-sm text-muted space-y-3 leading-relaxed">
                     <p>
                       Since FY 2023-24 the <strong>new regime is the default</strong>: lower slab rates, a ₹75,000 standard
                       deduction, and a Section 87A rebate that makes taxable income up to <strong>₹12 lakh completely
@@ -356,20 +364,20 @@ export default function TaxCalculatorPage() {
                 </section>
 
                 <section>
-                  <h2 className="font-bold text-slate-800 text-lg mb-3">Three quick examples (FY 2025-26, salaried)</h2>
+                  <h2 className="font-bold text-ink text-lg mb-3">Three quick examples (FY 2025-26, salaried)</h2>
                   <div className="grid md:grid-cols-3 gap-3">
                     {[
                       { t: "₹10 lakh salary", d: "New regime: taxable ₹9.25L after standard deduction → 87A rebate applies → tax ₹0. Old regime can't beat zero. New regime wins." },
                       { t: "₹16 lakh salary, ₹3.3L deductions", d: "New regime: taxable ₹15.25L → ~₹1.13L tax after cess. Old regime with 80C ₹1.5L + 80D ₹25k + HRA ₹1.05L + std ₹50k: taxable ₹12.7L → ~₹2.01L. New regime wins by ~₹88k." },
                       { t: "₹24 lakh salary, ₹8.5L deductions", d: "Big HRA ₹4L + home loan ₹2L + 80C ₹1.5L + NPS ₹50k + 80D ₹25k + std ₹50k: old taxable ₹15.5L → ~₹2.89L. New regime: taxable ₹23.25L → ~₹2.93L. Old regime wins — barely." },
                     ].map(ex => (
-                      <div key={ex.t} className="border border-slate-100 rounded-2xl p-4">
-                        <div className="text-xs font-bold text-slate-800 mb-1">{ex.t}</div>
-                        <p className="text-xs text-slate-500 leading-relaxed">{ex.d}</p>
+                      <div key={ex.t} className="border border-line rounded-2xl p-4">
+                        <div className="text-xs font-bold text-ink mb-1">{ex.t}</div>
+                        <p className="text-xs text-muted leading-relaxed">{ex.d}</p>
                       </div>
                     ))}
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-3">Figures rounded, cess included, surcharge excluded. Your exact numbers may differ — use the calculator above.</p>
+                  <p className="text-[11px] text-faint mt-3">Figures rounded, cess included, surcharge excluded. Your exact numbers may differ — use the calculator above.</p>
                 </section>
               </article>
             </Card>
@@ -378,19 +386,19 @@ export default function TaxCalculatorPage() {
           {/* ── FAQ ── */}
           <div className="mt-10">
             <Card>
-              <h2 className="font-bold text-slate-800 text-lg mb-4">Income tax FAQs — FY 2025-26</h2>
+              <h2 className="font-bold text-ink text-lg mb-4">Income tax FAQs — FY 2025-26</h2>
               <div className="space-y-2">
                 {FAQS.map((faq, i) => (
-                  <div key={i} className="border border-slate-100 rounded-2xl overflow-hidden">
+                  <div key={i} className="border border-line rounded-2xl overflow-hidden">
                     <button
                       onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                      className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                      className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-ink hover:bg-surface-2"
                     >
                       <span>{faq.q}</span>
-                      <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`}>▼</span>
+                      <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`}>▼</span>
                     </button>
                     {/* Always mounted so content stays in the DOM for search engines */}
-                    <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? "" : "hidden"}`}>
+                    <div className={`px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line ${openFaq === i ? "" : "hidden"}`}>
                       {faq.a}
                     </div>
                   </div>
@@ -402,7 +410,7 @@ export default function TaxCalculatorPage() {
           {/* ── Related tools ── */}
           <div className="mt-10">
             <Card>
-              <h2 className="font-bold text-slate-800 text-lg mb-4">Related calculators</h2>
+              <h2 className="font-bold text-ink text-lg mb-4">Related calculators</h2>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
                   { path: "/calculators/hra-calculator", label: "HRA Calculator", desc: "Work out the HRA exemption to enter above" },
@@ -410,12 +418,12 @@ export default function TaxCalculatorPage() {
                   { path: "/calculators/nps", label: "NPS Calculator", desc: "Retirement corpus from NPS contributions" },
                   { path: "/calculators/ppf", label: "PPF Calculator", desc: "80C favourite — tax-free PPF growth" },
                 ].map(t => (
-                  <Link key={t.path} to={t.path} className="border border-slate-100 rounded-2xl p-4 hover:shadow-md transition group">
+                  <Link key={t.path} to={t.path} className="border border-line rounded-2xl p-4 hover:border-acc transition group">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
-                      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                      <span className="text-sm font-semibold text-ink group-hover:text-acc transition">{t.label}</span>
+                      <ChevronRight className="w-4 h-4 text-faint group-hover:text-acc transition flex-shrink-0" />
                     </div>
-                    <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                    <p className="text-[11px] text-faint mt-1">{t.desc}</p>
                   </Link>
                 ))}
               </div>
@@ -430,33 +438,33 @@ export default function TaxCalculatorPage() {
 // ── REFINED UI COMPONENTS ──────────────────────────
 
 function Card({ children }: any) {
-  return <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/60">{children}</div>;
+  return <div className="bg-surface rounded-3xl p-8 border border-line">{children}</div>;
 }
 
 function Input({ label, value, onChange, placeholder }: any) {
   return (
     <div className="group">
-      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block group-focus-within:text-brand-600 transition-colors">
+      <label className="text-[11px] font-bold text-faint uppercase tracking-wider mb-1.5 block group-focus-within:text-acc transition-colors">
         {label}
       </label>
       <div className="relative">
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">₹</span>
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-faint font-medium">₹</span>
         <input
           type="number"
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full pl-8 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all font-semibold text-slate-700"
+          className="w-full pl-8 pr-4 py-3 bg-surface-2 border border-line rounded-2xl focus:bg-surface focus:border-acc focus:ring-4 focus:ring-acc/10 outline-none transition-all font-semibold text-body"
         />
       </div>
     </div>
   );
 }
 
-function Row({ label, value, isEmphasis, color = "text-slate-600" }: any) {
+function Row({ label, value, isEmphasis, color = "text-muted" }: any) {
   return (
     <div className={`flex justify-between items-center ${isEmphasis ? "py-1" : "py-0"}`}>
-      <span className={`text-xs font-medium uppercase tracking-wide ${isEmphasis ? "text-slate-500" : "text-slate-400"}`}>{label}</span>
+      <span className={`text-xs font-medium uppercase tracking-wide ${isEmphasis ? "text-muted" : "text-faint"}`}>{label}</span>
       <span className={`font-bold ${isEmphasis ? "text-xl" : "text-sm"} ${color}`}>
         {fmt(value)}
       </span>

@@ -111,23 +111,23 @@ function computeStatusForFY(
 
 function CondRow({ met, label, desc, value }: { met: boolean; label: string; desc: string; value: string }) {
   return (
-    <div className={`flex items-start gap-2.5 px-3 py-2.5 rounded-lg border ${met ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-100'}`}>
+    <div className={`flex items-start gap-2.5 px-3 py-2.5 rounded-lg border ${met ? 'bg-mint/10 border-mint/30' : 'bg-surface-2 border-line'}`}>
       {met
-        ? <CheckCircle size={14} className="text-green-500 flex-shrink-0 mt-0.5" />
-        : <AlertCircle size={14} className="text-gray-300 flex-shrink-0 mt-0.5" />}
+        ? <CheckCircle size={14} className="text-mint flex-shrink-0 mt-0.5" />
+        : <AlertCircle size={14} className="text-faint flex-shrink-0 mt-0.5" />}
       <div className="flex-1 min-w-0">
-        <div className={`font-semibold text-xs ${met ? 'text-green-700' : 'text-gray-500'}`}>{label}</div>
-        <div className="text-[11px] text-gray-500 mt-0.5">{desc}</div>
+        <div className={`font-semibold text-xs ${met ? 'text-mint' : 'text-muted'}`}>{label}</div>
+        <div className="text-[11px] text-muted mt-0.5">{desc}</div>
       </div>
-      <div className={`text-xs font-bold flex-shrink-0 ml-2 ${met ? 'text-green-700' : 'text-gray-400'}`}>{value}</div>
+      <div className={`text-xs font-bold flex-shrink-0 ml-2 ${met ? 'text-mint' : 'text-faint'}`}>{value}</div>
     </div>
   );
 }
 
 const STATUS_COLORS = {
-  NRI:  { badge: 'bg-red-50 border-red-200',    text: 'text-red-700',    dot: 'bg-red-500',    light: 'bg-red-100 text-red-700'   },
-  RNOR: { badge: 'bg-amber-50 border-amber-200', text: 'text-amber-700',  dot: 'bg-amber-500',  light: 'bg-amber-100 text-amber-700' },
-  ROR:  { badge: 'bg-green-50 border-green-200', text: 'text-green-700',  dot: 'bg-green-500',  light: 'bg-green-100 text-green-700' },
+  NRI:  { badge: 'bg-coral/10 border-coral/30',    text: 'text-coral',    dot: 'bg-coral',    light: 'bg-coral/20 text-coral'   },
+  RNOR: { badge: 'bg-gold/10 border-gold/30', text: 'text-gold',  dot: 'bg-gold',  light: 'bg-gold/20 text-gold' },
+  ROR:  { badge: 'bg-mint/10 border-mint/30', text: 'text-mint',  dot: 'bg-mint',  light: 'bg-mint/20 text-mint' },
 };
 
 function FYRow({ data, expanded, onToggle }: { data: FYStatus; expanded: boolean; onToggle: () => void }) {
@@ -156,14 +156,14 @@ function FYRow({ data, expanded, onToggle }: { data: FYStatus; expanded: boolean
         {/* FY label */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm font-bold text-ink">
               FY {data.fy}–{data.fy + 1}
             </span>
             {isCurrent && (
-              <span className="text-[10px] font-semibold bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded-full">current</span>
+              <span className="text-[10px] font-semibold bg-acc-deep text-acc px-1.5 py-0.5 rounded-full">current</span>
             )}
             {data.projected && (
-              <span className="text-[10px] font-semibold bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">projected</span>
+              <span className="text-[10px] font-semibold bg-surface-2 text-muted px-1.5 py-0.5 rounded-full">projected</span>
             )}
           </div>
           <div className={`text-[11px] mt-0.5 ${sc.text}`}>{reason}</div>
@@ -172,13 +172,13 @@ function FYRow({ data, expanded, onToggle }: { data: FYStatus; expanded: boolean
         {/* Status badge */}
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${sc.light}`}>{data.status}</span>
-          {expanded ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+          {expanded ? <ChevronUp size={14} className="text-faint" /> : <ChevronDown size={14} className="text-faint" />}
         </div>
       </button>
 
       {expanded && (
-        <div className="border-t border-dashed border-current/10 px-4 py-4 bg-white/60">
-          <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Step 1 — Resident Test (FY {data.fy}–{data.fy + 1})</div>
+        <div className="border-t border-dashed border-current/10 px-4 py-4 bg-surface/60">
+          <div className="text-[10px] font-bold text-faint uppercase tracking-widest mb-2">Step 1 — Resident Test (FY {data.fy}–{data.fy + 1})</div>
           <div className="space-y-2 mb-4">
             <CondRow
               met={data.bc1}
@@ -192,7 +192,7 @@ function FYRow({ data, expanded, onToggle }: { data: FYStatus; expanded: boolean
               desc={`≥ ${data.bc2Threshold} days this FY  AND  ≥ 365 days in preceding 4 FYs`}
               value={`${data.currentFYDays} + ${data.prev4Days} prev 4`}
             />
-            <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${data.isResident ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+            <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${data.isResident ? 'bg-mint/10 text-mint' : 'bg-coral/10 text-coral'}`}>
               {data.isResident ? <CheckCircle size={13} /> : <AlertCircle size={13} />}
               {data.isResident ? 'RESIDENT — met at least one basic condition' : 'NON-RESIDENT — neither basic condition met → NRI'}
             </div>
@@ -200,7 +200,7 @@ function FYRow({ data, expanded, onToggle }: { data: FYStatus; expanded: boolean
 
           {data.isResident && (
             <>
-              <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Step 2 — RNOR Test</div>
+              <div className="text-[10px] font-bold text-faint uppercase tracking-widest mb-2">Step 2 — RNOR Test</div>
               <div className="space-y-2">
                 <CondRow
                   met={data.rnorC1}
@@ -214,7 +214,7 @@ function FYRow({ data, expanded, onToggle }: { data: FYStatus; expanded: boolean
                   desc="≤ 729 total days in India across 7 preceding FYs"
                   value={`${data.prev7Days}/729 days`}
                 />
-                <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${data.rnorC1 || data.rnorC2 ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700'}`}>
+                <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold ${data.rnorC1 || data.rnorC2 ? 'bg-gold/10 text-gold' : 'bg-mint/10 text-mint'}`}>
                   {data.rnorC1 || data.rnorC2 ? <CheckCircle size={13} /> : <AlertCircle size={13} />}
                   {data.rnorC1 || data.rnorC2 ? 'RNOR — at least one RNOR condition met' : 'ROR — neither RNOR condition met → fully resident'}
                 </div>
@@ -225,9 +225,9 @@ function FYRow({ data, expanded, onToggle }: { data: FYStatus; expanded: boolean
           {/* Tax implication */}
           <div className={`mt-3 text-[11px] leading-relaxed px-3 py-2 rounded-lg ${sc.badge}`}>
             <span className={`font-semibold ${sc.text}`}>Tax impact: </span>
-            {data.status === 'NRI' && <span className="text-gray-600">Not a tax resident. Indian-sourced income only is taxable in India. Foreign income exempt.</span>}
-            {data.status === 'RNOR' && <span className="text-gray-600">Foreign income earned/received outside India is not taxable in India. Only Indian-sourced income + foreign income controlled from India is taxable.</span>}
-            {data.status === 'ROR' && <span className="text-gray-600">Full global tax resident. All worldwide income — Indian and foreign — is taxable in India.</span>}
+            {data.status === 'NRI' && <span className="text-muted">Not a tax resident. Indian-sourced income only is taxable in India. Foreign income exempt.</span>}
+            {data.status === 'RNOR' && <span className="text-muted">Foreign income earned/received outside India is not taxable in India. Only Indian-sourced income + foreign income controlled from India is taxable.</span>}
+            {data.status === 'ROR' && <span className="text-muted">Full global tax resident. All worldwide income — Indian and foreign — is taxable in India.</span>}
           </div>
         </div>
       )}
@@ -338,27 +338,28 @@ export default function RNORCalculatorPage() {
         icon={Globe}
       />
 
+      <div className="bg-bg">
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <p className="text-sm text-gray-500">
-            Check whether you are <strong className="text-gray-700">NRI</strong>, <strong className="text-gray-700">RNOR</strong> or <strong className="text-gray-700">Resident (ROR)</strong> under
+          <p className="text-sm text-muted">
+            Check whether you are <strong className="text-body">NRI</strong>, <strong className="text-body">RNOR</strong> or <strong className="text-body">Resident (ROR)</strong> under
             Section 6 of the Income Tax Act. Enter your India stay dates to see your residential status for every financial year — and exactly how many years RNOR applies.
           </p>
         </div>
 
         {/* Settings */}
-        <div className="card p-5 mb-5">
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-5">
           <label className="flex items-start gap-2.5 cursor-pointer">
             <input
               type="checkbox"
               checked={isEmployeeAbroad}
               onChange={e => setIsEmployeeAbroad(e.target.checked)}
-              className="w-4 h-4 mt-0.5 accent-brand-600 flex-shrink-0"
+              className="w-4 h-4 mt-0.5 accent-acc flex-shrink-0"
             />
             <div>
-              <span className="text-sm font-medium text-gray-800">Indian citizen going abroad for employment / ship crew</span>
-              <p className="text-[11px] text-gray-400 mt-0.5">
+              <span className="text-sm font-medium text-ink">Indian citizen going abroad for employment / ship crew</span>
+              <p className="text-[11px] text-faint mt-0.5">
                 Tick this if you left India for a job abroad or as a ship crew member.
                 Raises Basic Condition 2 threshold from 60 → 182 days, making it harder to qualify as resident via BC2.
               </p>
@@ -367,15 +368,15 @@ export default function RNORCalculatorPage() {
         </div>
 
         {/* Stay Periods */}
-        <div className="card p-5 mb-6">
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-sm font-bold text-gray-800">India Stay Periods</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Add every stretch you were physically present in India (any year)</p>
+              <h2 className="text-sm font-bold text-ink">India Stay Periods</h2>
+              <p className="text-xs text-faint mt-0.5">Add every stretch you were physically present in India (any year)</p>
             </div>
             <button
               onClick={addPeriod}
-              className="flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg transition"
+              className="flex items-center gap-1.5 text-xs font-semibold text-acc hover:text-acc bg-acc-deep hover:bg-acc/20 px-3 py-1.5 rounded-lg transition"
             >
               <Plus size={14} />
               Add Period
@@ -390,39 +391,39 @@ export default function RNORCalculatorPage() {
                 ? Math.floor((new Date(effectiveEnd).getTime() - new Date(p.startDate).getTime()) / 86_400_000) + 1
                 : null;
               return (
-                <div key={p.id} className={`p-3 rounded-lg border ${p.ongoing ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-transparent'}`}>
+                <div key={p.id} className={`p-3 rounded-lg border ${p.ongoing ? 'bg-mint/10 border-mint/30' : 'bg-surface-2 border-transparent'}`}>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs text-gray-400 w-5 text-center font-medium flex-shrink-0">{idx + 1}</span>
+                    <span className="text-xs text-faint w-5 text-center font-medium flex-shrink-0">{idx + 1}</span>
                     <div className="flex-1 flex flex-col sm:flex-row gap-2">
                       <div className="flex-1">
-                        <label className="block text-[10px] font-semibold text-gray-500 mb-1">Arrival in India</label>
+                        <label className="block text-[10px] font-semibold text-muted mb-1">Arrival in India</label>
                         <input
                           type="date"
                           value={p.startDate}
                           onChange={e => updatePeriod(p.id, 'startDate', e.target.value)}
-                          className="w-full border border-gray-200 rounded-md px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white"
+                          className="w-full border border-line rounded-md px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-acc bg-surface"
                         />
                       </div>
                       <div className="flex-1">
-                        <label className="block text-[10px] font-semibold text-gray-500 mb-1">Departure from India</label>
+                        <label className="block text-[10px] font-semibold text-muted mb-1">Departure from India</label>
                         <input
                           type="date"
                           value={p.endDate}
                           disabled={p.ongoing}
                           onChange={e => updatePeriod(p.id, 'endDate', e.target.value)}
-                          className="w-full border border-gray-200 rounded-md px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="w-full border border-line rounded-md px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-acc bg-surface disabled:opacity-40 disabled:cursor-not-allowed"
                         />
                       </div>
                       {days !== null && (
                         <div className="sm:self-end pb-0.5 flex-shrink-0">
-                          <div className={`text-[11px] font-bold px-2.5 py-1.5 rounded-md text-center whitespace-nowrap ${p.ongoing ? 'bg-green-100 border border-green-300 text-green-700' : 'bg-brand-50 border border-brand-100 text-brand-600'}`}>
+                          <div className={`text-[11px] font-bold px-2.5 py-1.5 rounded-md text-center whitespace-nowrap ${p.ongoing ? 'bg-mint/20 border border-mint/40 text-mint' : 'bg-acc-deep border border-acc/20 text-acc'}`}>
                             {days} days{p.ongoing ? ' so far' : ''}
                           </div>
                         </div>
                       )}
                     </div>
                     {periods.length > 1 && (
-                      <button onClick={() => removePeriod(p.id)} className="text-gray-300 hover:text-red-400 transition p-1 rounded flex-shrink-0">
+                      <button onClick={() => removePeriod(p.id)} className="text-faint hover:text-coral transition p-1 rounded flex-shrink-0">
                         <Trash2 size={15} />
                       </button>
                     )}
@@ -435,9 +436,9 @@ export default function RNORCalculatorPage() {
                           type="checkbox"
                           checked={p.ongoing}
                           onChange={() => toggleOngoing(p.id)}
-                          className="w-3.5 h-3.5 accent-green-600"
+                          className="w-3.5 h-3.5 accent-mint"
                         />
-                        <span className={`text-[11px] font-medium ${p.ongoing ? 'text-green-700' : 'text-gray-400'}`}>
+                        <span className={`text-[11px] font-medium ${p.ongoing ? 'text-mint' : 'text-faint'}`}>
                           Still in India — days counted through today ({TODAY})
                         </span>
                       </label>
@@ -453,44 +454,44 @@ export default function RNORCalculatorPage() {
         {hasData && (
           <>
             {rnorYears.length > 0 ? (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-5">
+              <div className="bg-gold/10 border border-gold/30 rounded-xl p-5 mb-5">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Globe size={20} className="text-amber-600" />
+                  <div className="w-10 h-10 bg-gold/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Globe size={20} className="text-gold" />
                   </div>
                   <div>
-                    <div className="text-xl font-bold text-amber-800">
+                    <div className="text-xl font-bold text-gold">
                       RNOR for {rnorYears.length} {rnorYears.length === 1 ? 'year' : 'years'}
                     </div>
-                    <div className="text-sm text-amber-700">
+                    <div className="text-sm text-gold">
                       FY {rnorYears[0].fy}–{rnorYears[0].fy + 1}
                       {rnorYears.length > 1 && ` to FY ${rnorYears[rnorYears.length - 1].fy}–${rnorYears[rnorYears.length - 1].fy + 1}`}
                     </div>
                   </div>
                   <div className="ml-auto flex flex-wrap gap-1.5 justify-end">
                     {rnorYears.map(r => (
-                      <span key={r.fy} className="text-xs font-bold bg-amber-200 text-amber-800 px-2 py-0.5 rounded-full whitespace-nowrap">
+                      <span key={r.fy} className="text-xs font-bold bg-gold/30 text-gold px-2 py-0.5 rounded-full whitespace-nowrap">
                         {r.fy}–{r.fy + 1}{r.projected ? '*' : ''}
                       </span>
                     ))}
                   </div>
                 </div>
-                <p className="text-xs text-amber-700 mt-2 leading-relaxed">
+                <p className="text-xs text-gold mt-2 leading-relaxed">
                   During RNOR years, foreign income earned and received outside India is <strong>not taxable in India</strong>.
                   Only India-sourced income and foreign income controlled/set up from India is taxable.
                   {rnorYears.some(r => r.projected) && ' Years marked * are projections assuming you stay in India.'}
                 </p>
               </div>
             ) : (
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-5 text-sm text-gray-600">
+              <div className="bg-surface-2 border border-line rounded-xl p-4 mb-5 text-sm text-muted">
                 No RNOR eligibility found in the scanned range. Check your stay data or you may already be ROR.
               </div>
             )}
 
             {/* Year-by-year timeline */}
             <div className="mb-5">
-              <h2 className="text-sm font-bold text-gray-800 mb-3">Year-by-Year Status</h2>
-              <p className="text-xs text-gray-400 mb-3">
+              <h2 className="text-sm font-bold text-ink mb-3">Year-by-Year Status</h2>
+              <p className="text-xs text-faint mb-3">
                 Tap any row for detailed step-by-step analysis. Future years are projected assuming full-year India residence.
               </p>
               <div className="space-y-2">
@@ -507,15 +508,15 @@ export default function RNORCalculatorPage() {
 
             {/* Days summary grid */}
             {firstResidentFY !== null && (
-              <div className="card p-5 mb-5">
-                <h3 className="text-sm font-bold text-gray-800 mb-3">India Stay Summary (from entered data)</h3>
+              <div className="bg-surface border border-line rounded-2xl p-5 mb-5">
+                <h3 className="text-sm font-bold text-ink mb-3">India Stay Summary (from entered data)</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr className="border-b border-gray-100">
-                        <th className="text-left pb-2 text-gray-500 font-semibold">Financial Year</th>
-                        <th className="text-right pb-2 text-gray-500 font-semibold">Actual Days</th>
-                        <th className="text-right pb-2 text-gray-500 font-semibold">Status</th>
+                      <tr className="border-b border-line">
+                        <th className="text-left pb-2 text-muted font-semibold">Financial Year</th>
+                        <th className="text-right pb-2 text-muted font-semibold">Actual Days</th>
+                        <th className="text-right pb-2 text-muted font-semibold">Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -525,9 +526,9 @@ export default function RNORCalculatorPage() {
                           const actualDays = totalDaysInFY(periods, s.fy);
                           const sc = STATUS_COLORS[s.status];
                           return (
-                            <tr key={s.fy} className="border-b border-gray-50">
-                              <td className="py-2 text-gray-700 font-medium">FY {s.fy}–{s.fy + 1}</td>
-                              <td className="py-2 text-right text-gray-700">{actualDays}</td>
+                            <tr key={s.fy} className="border-b border-line">
+                              <td className="py-2 text-body font-medium">FY {s.fy}–{s.fy + 1}</td>
+                              <td className="py-2 text-right text-body">{actualDays}</td>
                               <td className="py-2 text-right">
                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${sc.light}`}>{s.status}</span>
                               </td>
@@ -541,7 +542,7 @@ export default function RNORCalculatorPage() {
             )}
 
             {/* Disclaimer */}
-            <div className="flex gap-2.5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-xs text-blue-700">
+            <div className="flex gap-2.5 bg-cyan/10 border border-cyan/30 rounded-xl p-4 text-xs text-cyan">
               <Info size={14} className="flex-shrink-0 mt-0.5" />
               <div>
                 <strong>Note:</strong> NRI status for preceding years uses a simplified check (≥182 days = Resident).
@@ -554,7 +555,7 @@ export default function RNORCalculatorPage() {
         )}
 
         {!hasData && (
-          <div className="text-center py-12 text-gray-400">
+          <div className="text-center py-12 text-faint">
             <Globe size={32} className="mx-auto mb-3 opacity-30" />
             <p className="text-sm">Add your India stay dates above to see your RNOR eligibility</p>
           </div>
@@ -569,6 +570,7 @@ export default function RNORCalculatorPage() {
         {/* ── Related tools ── */}
         <RelatedNRITools />
       </div>
+      </div>
     </>
   );
 }
@@ -580,28 +582,28 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'What are the three residential statuses under Indian income tax?',
     schemaText: 'Under Section 6 of the Income Tax Act, every individual is either NRI (Non-Resident — only Indian income taxable), RNOR (Resident but Not Ordinarily Resident — Indian income taxable, foreign income generally exempt), or ROR (Resident and Ordinarily Resident — worldwide income taxable in India). Status is determined fresh for each financial year based on days of physical presence in India.',
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>Under <strong>Section 6 of the Income Tax Act</strong>, every individual is classified into one of three statuses for each financial year:</p>
         <div className="grid gap-2 mt-2">
-          <div className="flex gap-2.5 p-3 bg-red-50 rounded-lg">
-            <span className="text-xs font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-full h-fit whitespace-nowrap">NRI</span>
+          <div className="flex gap-2.5 p-3 bg-coral/10 rounded-lg">
+            <span className="text-xs font-bold text-coral bg-coral/20 px-2 py-0.5 rounded-full h-fit whitespace-nowrap">NRI</span>
             <div>
-              <div className="font-semibold text-red-800 text-xs">Non-Resident Indian</div>
-              <div className="text-xs text-gray-600 mt-0.5">Doesn't meet the basic resident conditions. Only income earned/received in India is taxable here.</div>
+              <div className="font-semibold text-coral text-xs">Non-Resident Indian</div>
+              <div className="text-xs text-muted mt-0.5">Doesn't meet the basic resident conditions. Only income earned/received in India is taxable here.</div>
             </div>
           </div>
-          <div className="flex gap-2.5 p-3 bg-amber-50 rounded-lg">
-            <span className="text-xs font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full h-fit whitespace-nowrap">RNOR</span>
+          <div className="flex gap-2.5 p-3 bg-gold/10 rounded-lg">
+            <span className="text-xs font-bold text-gold bg-gold/20 px-2 py-0.5 rounded-full h-fit whitespace-nowrap">RNOR</span>
             <div>
-              <div className="font-semibold text-amber-800 text-xs">Resident but Not Ordinarily Resident</div>
-              <div className="text-xs text-gray-600 mt-0.5">Meets the resident test but qualifies for the RNOR exception. Foreign income earned/received outside India is generally not taxable.</div>
+              <div className="font-semibold text-gold text-xs">Resident but Not Ordinarily Resident</div>
+              <div className="text-xs text-muted mt-0.5">Meets the resident test but qualifies for the RNOR exception. Foreign income earned/received outside India is generally not taxable.</div>
             </div>
           </div>
-          <div className="flex gap-2.5 p-3 bg-green-50 rounded-lg">
-            <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full h-fit whitespace-nowrap">ROR</span>
+          <div className="flex gap-2.5 p-3 bg-mint/10 rounded-lg">
+            <span className="text-xs font-bold text-mint bg-mint/20 px-2 py-0.5 rounded-full h-fit whitespace-nowrap">ROR</span>
             <div>
-              <div className="font-semibold text-green-800 text-xs">Resident and Ordinarily Resident</div>
-              <div className="text-xs text-gray-600 mt-0.5">Full resident. All worldwide income — Indian and foreign — is taxable in India.</div>
+              <div className="font-semibold text-mint text-xs">Resident and Ordinarily Resident</div>
+              <div className="text-xs text-muted mt-0.5">Full resident. All worldwide income — Indian and foreign — is taxable in India.</div>
             </div>
           </div>
         </div>
@@ -612,22 +614,22 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'How is Resident status determined? (Step 1)',
     schemaText: 'You are a Resident for a financial year if you were in India for 182 days or more during that year (Basic Condition 1), OR for 60 days or more in that year plus 365 days or more across the 4 preceding financial years (Basic Condition 2). For Indian citizens leaving for employment abroad or as ship crew, the 60-day threshold rises to 182 days. If neither condition is met, you are NRI.',
     a: (
-      <div className="text-sm text-gray-600 space-y-3">
+      <div className="text-sm text-muted space-y-3">
         <p>You are a <strong>Resident</strong> for a financial year if you satisfy <strong>either</strong> of these two conditions:</p>
         <div className="space-y-2">
-          <div className="border border-gray-200 rounded-lg p-3">
-            <div className="font-semibold text-gray-800 text-xs mb-1">Basic Condition 1 (BC1)</div>
+          <div className="border border-line rounded-lg p-3">
+            <div className="font-semibold text-ink text-xs mb-1">Basic Condition 1 (BC1)</div>
             <p className="text-xs">Present in India for <strong>182 days or more</strong> during the financial year (April 1 – March 31).</p>
           </div>
-          <div className="border border-gray-200 rounded-lg p-3">
-            <div className="font-semibold text-gray-800 text-xs mb-1">Basic Condition 2 (BC2)</div>
+          <div className="border border-line rounded-lg p-3">
+            <div className="font-semibold text-ink text-xs mb-1">Basic Condition 2 (BC2)</div>
             <p className="text-xs">Present in India for <strong>60 days or more</strong> during the current FY <em>AND</em> <strong>365 days or more</strong> across the 4 preceding financial years combined.</p>
-            <p className="text-xs text-amber-700 mt-1.5 bg-amber-50 px-2 py-1 rounded">
+            <p className="text-xs text-gold mt-1.5 bg-gold/10 px-2 py-1 rounded">
               <strong>Exception:</strong> If you are an Indian citizen going abroad for employment, or a crew member of an Indian ship, the 60-day threshold in BC2 is raised to <strong>182 days</strong> — making it much harder to qualify as resident via BC2 alone.
             </p>
           </div>
         </div>
-        <p className="text-xs text-gray-500">If <strong>neither</strong> condition is met → you are <strong>NRI</strong> and the RNOR test doesn't apply.</p>
+        <p className="text-xs text-muted">If <strong>neither</strong> condition is met → you are <strong>NRI</strong> and the RNOR test doesn't apply.</p>
       </div>
     ),
   },
@@ -635,21 +637,21 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'How is RNOR status determined? (Step 2)',
     schemaText: 'If you qualify as Resident, you are RNOR if you were a Non-Resident in India in 9 or more of the 10 preceding financial years, OR you were present in India for 729 days or less across the 7 preceding financial years. If neither RNOR condition is met, you are ROR and your worldwide income becomes taxable in India.',
     a: (
-      <div className="text-sm text-gray-600 space-y-3">
+      <div className="text-sm text-muted space-y-3">
         <p>If you are a Resident (met BC1 or BC2), you are <strong>RNOR</strong> if you satisfy <strong>either</strong> of these:</p>
         <div className="space-y-2">
-          <div className="border border-amber-200 bg-amber-50/50 rounded-lg p-3">
-            <div className="font-semibold text-amber-800 text-xs mb-1">RNOR Condition 1</div>
+          <div className="border border-gold/30 bg-gold/10 rounded-lg p-3">
+            <div className="font-semibold text-gold text-xs mb-1">RNOR Condition 1</div>
             <p className="text-xs">You were a <strong>Non-Resident in India in 9 or more of the 10 immediately preceding financial years.</strong></p>
-            <p className="text-xs text-gray-500 mt-1">Example: returning NRI who was abroad for 10+ years easily satisfies this in their first 2 years back.</p>
+            <p className="text-xs text-muted mt-1">Example: returning NRI who was abroad for 10+ years easily satisfies this in their first 2 years back.</p>
           </div>
-          <div className="border border-amber-200 bg-amber-50/50 rounded-lg p-3">
-            <div className="font-semibold text-amber-800 text-xs mb-1">RNOR Condition 2</div>
+          <div className="border border-gold/30 bg-gold/10 rounded-lg p-3">
+            <div className="font-semibold text-gold text-xs mb-1">RNOR Condition 2</div>
             <p className="text-xs">You were present in India for <strong>729 days or less</strong> across the <strong>7 immediately preceding financial years</strong> combined.</p>
-            <p className="text-xs text-gray-500 mt-1">Example: 729 ÷ 7 ≈ 104 days/year on average. NRIs who visited India briefly each year often satisfy this.</p>
+            <p className="text-xs text-muted mt-1">Example: 729 ÷ 7 ≈ 104 days/year on average. NRIs who visited India briefly each year often satisfy this.</p>
           </div>
         </div>
-        <p className="text-xs text-gray-500">If <strong>neither</strong> RNOR condition is met → you are <strong>ROR</strong> (full global tax resident).</p>
+        <p className="text-xs text-muted">If <strong>neither</strong> RNOR condition is met → you are <strong>ROR</strong> (full global tax resident).</p>
       </div>
     ),
   },
@@ -657,14 +659,14 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'How many years does RNOR status typically last?',
     schemaText: 'For a long-term NRI returning to India after 10 or more years abroad, RNOR status typically lasts 2 to 3 financial years. It ends when you no longer satisfy either RNOR condition — once you have been resident in India long enough that you were not NRI in 9 of the past 10 years and your India days in the past 7 years exceed 729, you become ROR.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>For a typical long-term NRI returning to India after 10+ years abroad, RNOR status lasts <strong>2–3 years</strong>. Here's why it ends:</p>
         <ul className="space-y-1.5 text-xs list-none">
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>RNOR C1 fades:</strong> Each year you're resident in India reduces your NRI count in the preceding 10 FYs. Once below 9, C1 fails.</span></li>
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>RNOR C2 fades:</strong> Your India days in the preceding 7 FYs accumulate. Once they cross 729 total, C2 fails.</span></li>
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>When both fail</strong>, you become ROR — typically in your 3rd or 4th year back.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>RNOR C1 fades:</strong> Each year you're resident in India reduces your NRI count in the preceding 10 FYs. Once below 9, C1 fails.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>RNOR C2 fades:</strong> Your India days in the preceding 7 FYs accumulate. Once they cross 729 total, C2 fails.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>When both fail</strong>, you become ROR — typically in your 3rd or 4th year back.</span></li>
         </ul>
-        <p className="text-xs bg-blue-50 text-blue-700 px-3 py-2 rounded-lg mt-2">
+        <p className="text-xs bg-cyan/10 text-cyan px-3 py-2 rounded-lg mt-2">
           This calculator projects forward year-by-year using your actual India stay data to show exactly when you transition from RNOR → ROR.
         </p>
       </div>
@@ -674,10 +676,10 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'How does this calculator count "days in India"?',
     schemaText: 'The calculator counts every calendar day you were physically present in India, including both the arrival day and the departure day. Arriving May 1 and departing May 10 counts as 10 days. There is no partial-day rule — any day you set foot in India counts as one full day.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>The calculator counts <strong>each calendar day you were present in India</strong>, including both arrival and departure day. For example, arriving on May 1 and departing on May 10 = <strong>10 days</strong>.</p>
-        <p className="text-xs text-gray-500">This follows the general interpretation under the Income Tax Act. There is no partial-day rule — each day you set foot in India counts as one full day.</p>
-        <div className="text-xs bg-amber-50 border border-amber-100 px-3 py-2 rounded-lg">
+        <p className="text-xs text-muted">This follows the general interpretation under the Income Tax Act. There is no partial-day rule — each day you set foot in India counts as one full day.</p>
+        <div className="text-xs bg-gold/10 border border-gold/30 px-3 py-2 rounded-lg">
           <strong>Tip:</strong> For the current ongoing year, use the "Still in India" toggle. The calculator counts days from your arrival through today and projects the full year forward.
         </div>
       </div>
@@ -687,7 +689,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'What is a Financial Year and when does it run?',
     schemaText: 'In India the Financial Year runs from April 1 to March 31 of the following calendar year. Residential status is determined separately for each FY. A stay that spans two FYs is split at the March 31 / April 1 boundary and days are attributed to the correct year.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>In India, the Financial Year (FY) runs from <strong>April 1 to March 31</strong> of the following calendar year.</p>
         <div className="text-xs space-y-1 mt-2">
           <div className="flex gap-2"><span className="font-semibold w-24 flex-shrink-0">FY 2023-24:</span><span>April 1, 2023 → March 31, 2024</span></div>
@@ -695,7 +697,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
           <div className="flex gap-2"><span className="font-semibold w-24 flex-shrink-0">FY 2025-26:</span><span>April 1, 2025 → March 31, 2026</span></div>
           <div className="flex gap-2"><span className="font-semibold w-24 flex-shrink-0">FY 2026-27:</span><span>April 1, 2026 → March 31, 2027</span></div>
         </div>
-        <p className="text-xs text-gray-500 mt-2">Residential status is determined separately for each FY. A stay that spans two FYs (e.g., Jan–May) is automatically split and attributed to the correct years by this calculator.</p>
+        <p className="text-xs text-muted mt-2">Residential status is determined separately for each FY. A stay that spans two FYs (e.g., Jan–May) is automatically split and attributed to the correct years by this calculator.</p>
       </div>
     ),
   },
@@ -703,16 +705,16 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'How does this calculator work internally?',
     schemaText: 'The calculator splits each stay period at financial-year boundaries, counts days per FY, applies the Section 6 resident tests (182 days, or 60 days plus 365 in the preceding 4 years), then applies both RNOR conditions (NRI in 9 of 10 preceding years, or 729 days or fewer in the preceding 7 years). Current and future years with no data are projected assuming full-year presence in India, so you can see when RNOR ends and ROR begins.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>Here's what happens when you enter your stay dates:</p>
         <ol className="text-xs space-y-2 list-none">
-          <li className="flex gap-2"><span className="font-bold text-brand-600 flex-shrink-0">1.</span><span><strong>Split by FY:</strong> Each stay period is split at FY boundaries (March 31 / April 1) and days are attributed to the correct financial year.</span></li>
-          <li className="flex gap-2"><span className="font-bold text-brand-600 flex-shrink-0">2.</span><span><strong>Resident test:</strong> For each FY, BC1 (≥182 days) and BC2 (≥60 days + 365 in prev 4) are checked against your actual data.</span></li>
-          <li className="flex gap-2"><span className="font-bold text-brand-600 flex-shrink-0">3.</span><span><strong>RNOR test:</strong> If resident, both RNOR conditions are checked using days from preceding FYs.</span></li>
-          <li className="flex gap-2"><span className="font-bold text-brand-600 flex-shrink-0">4.</span><span><strong>Projection:</strong> For current and future FYs with no data, the calculator assumes you stay in India for the full year (365 days). These are marked with * and shown as "projected".</span></li>
-          <li className="flex gap-2"><span className="font-bold text-brand-600 flex-shrink-0">5.</span><span><strong>Multi-year scan:</strong> The calculator scans from your earliest entered date through 6 future years to show your complete RNOR window.</span></li>
+          <li className="flex gap-2"><span className="font-bold text-acc flex-shrink-0">1.</span><span><strong>Split by FY:</strong> Each stay period is split at FY boundaries (March 31 / April 1) and days are attributed to the correct financial year.</span></li>
+          <li className="flex gap-2"><span className="font-bold text-acc flex-shrink-0">2.</span><span><strong>Resident test:</strong> For each FY, BC1 (≥182 days) and BC2 (≥60 days + 365 in prev 4) are checked against your actual data.</span></li>
+          <li className="flex gap-2"><span className="font-bold text-acc flex-shrink-0">3.</span><span><strong>RNOR test:</strong> If resident, both RNOR conditions are checked using days from preceding FYs.</span></li>
+          <li className="flex gap-2"><span className="font-bold text-acc flex-shrink-0">4.</span><span><strong>Projection:</strong> For current and future FYs with no data, the calculator assumes you stay in India for the full year (365 days). These are marked with * and shown as "projected".</span></li>
+          <li className="flex gap-2"><span className="font-bold text-acc flex-shrink-0">5.</span><span><strong>Multi-year scan:</strong> The calculator scans from your earliest entered date through 6 future years to show your complete RNOR window.</span></li>
         </ol>
-        <p className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg mt-2">
+        <p className="text-xs text-gold bg-gold/10 px-3 py-2 rounded-lg mt-2">
           <strong>Simplification note:</strong> NRI status for preceding years uses a simplified check — if days in a FY are below 182, that FY is treated as NRI. The full nested BC2 recursion across all historical years is not computed. This may slightly overcount NRI years but rarely affects the RNOR outcome.
         </p>
       </div>
@@ -722,7 +724,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Can an RNOR keep NRE and FCNR accounts?',
     schemaText: 'Once you return to India for good, FEMA requires you to redesignate your NRE account as a resident account (or transfer the balance to an RFC account) — NRE interest loses its tax exemption from that point. FCNR deposits are different: you can hold them until maturity, and FCNR interest remains tax-exempt as long as you are RNOR. Interest on an RFC (Resident Foreign Currency) account is also exempt while you hold RNOR status.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p><strong>NRE account:</strong> Under FEMA, once you return to India permanently you must redesignate your NRE account as a resident savings account or move the balance to an <strong>RFC (Resident Foreign Currency) account</strong>. NRE interest stops being tax-exempt from the date of return — RNOR status does not preserve it, because the Section 10(4)(ii) exemption depends on FEMA non-resident status.</p>
         <p><strong>FCNR deposit:</strong> Can be held until maturity even after returning. Interest stays <strong>tax-free as long as you are RNOR</strong> — one of the biggest RNOR benefits.</p>
         <p><strong>RFC account:</strong> Interest is exempt from tax while you qualify as RNOR. Once you become ROR, RFC interest becomes taxable.</p>
@@ -733,12 +735,12 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Is foreign salary or pension taxable for an RNOR?',
     schemaText: 'Foreign salary or pension earned and received outside India is not taxable in India for an RNOR. However, if the salary is for services rendered in India, or is received directly into an Indian bank account, it becomes taxable in India regardless of residential status. Foreign pension received abroad for past services abroad stays outside Indian tax during RNOR years.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>Foreign salary or pension <strong>earned and received outside India</strong> is not taxable in India while you are RNOR.</p>
         <p>Two traps to watch:</p>
         <ul className="text-xs space-y-1.5 list-none">
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>Services rendered in India:</strong> salary for work physically performed in India is Indian-sourced income and taxable — even if paid by a foreign employer into a foreign account.</span></li>
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>Received in India first:</strong> if the salary or pension is credited directly to an Indian bank account, it counts as income received in India and becomes taxable for any status.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>Services rendered in India:</strong> salary for work physically performed in India is Indian-sourced income and taxable — even if paid by a foreign employer into a foreign account.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>Received in India first:</strong> if the salary or pension is credited directly to an Indian bank account, it counts as income received in India and becomes taxable for any status.</span></li>
         </ul>
       </div>
     ),
@@ -747,11 +749,11 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Are foreign ESOPs and RSUs taxable for an RNOR?',
     schemaText: 'For an RNOR, capital gains from selling foreign shares, ESOPs or RSUs held abroad — where sale proceeds are received outside India — are not taxable in India. The perquisite (salary) portion of ESOPs is taxable in India only to the extent it relates to employment services rendered in India. Gains realised after you become ROR are fully taxable in India.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>Two components, treated differently:</p>
         <ul className="text-xs space-y-1.5 list-none">
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>Perquisite (vesting) value:</strong> taxed as salary in proportion to services rendered in India. RSUs vesting for work done entirely abroad are outside Indian tax for an RNOR.</span></li>
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>Capital gains on sale:</strong> gains on foreign shares sold while RNOR, with proceeds received abroad, are <strong>not taxable in India</strong>. This makes the RNOR window the ideal time to sell appreciated foreign stock before ROR status kicks in.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>Perquisite (vesting) value:</strong> taxed as salary in proportion to services rendered in India. RSUs vesting for work done entirely abroad are outside Indian tax for an RNOR.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>Capital gains on sale:</strong> gains on foreign shares sold while RNOR, with proceeds received abroad, are <strong>not taxable in India</strong>. This makes the RNOR window the ideal time to sell appreciated foreign stock before ROR status kicks in.</span></li>
         </ul>
       </div>
     ),
@@ -760,19 +762,19 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'What is the 120-day rule and "deemed resident" status?',
     schemaText: 'Since FY 2020-21, an Indian citizen or Person of Indian Origin visiting India, with India-sourced income above ₹15 lakh, becomes resident with just 120 days in India (plus 365 days in the preceding 4 years) instead of 182 — but is automatically classified as RNOR. Separately, an Indian citizen with India-sourced income above ₹15 lakh who is not liable to tax in any other country is a "deemed resident" under Section 6(1A), also classified as RNOR. This calculator does not model income, so check these rules separately if they may apply to you.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>Two special rules added by the Finance Act 2020 (from FY 2020-21), both tied to <strong>India-sourced income above ₹15 lakh</strong>:</p>
         <div className="space-y-2">
-          <div className="border border-gray-200 rounded-lg p-3">
-            <div className="font-semibold text-gray-800 text-xs mb-1">120-day rule</div>
+          <div className="border border-line rounded-lg p-3">
+            <div className="font-semibold text-ink text-xs mb-1">120-day rule</div>
             <p className="text-xs">An Indian citizen or PIO <em>visiting India</em> with India-sourced income &gt; ₹15 lakh becomes <strong>resident at just 120 days</strong> (+ 365 days in preceding 4 FYs) instead of 182 — but is automatically treated as <strong>RNOR</strong>, not ROR.</p>
           </div>
-          <div className="border border-gray-200 rounded-lg p-3">
-            <div className="font-semibold text-gray-800 text-xs mb-1">Deemed resident — Section 6(1A)</div>
+          <div className="border border-line rounded-lg p-3">
+            <div className="font-semibold text-ink text-xs mb-1">Deemed resident — Section 6(1A)</div>
             <p className="text-xs">An Indian citizen with India-sourced income &gt; ₹15 lakh who is <strong>not liable to tax in any other country</strong> (e.g., living in a zero-tax jurisdiction like UAE without tax residency elsewhere) is deemed a resident of India — but again classified as <strong>RNOR</strong>, so foreign income stays out of Indian tax.</p>
           </div>
         </div>
-        <p className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">This calculator works from stay dates only and does not know your income, so it cannot apply these two income-linked rules. If your Indian income exceeds ₹15 lakh, factor them in separately.</p>
+        <p className="text-xs text-gold bg-gold/10 px-3 py-2 rounded-lg">This calculator works from stay dates only and does not know your income, so it cannot apply these two income-linked rules. If your Indian income exceeds ₹15 lakh, factor them in separately.</p>
       </div>
     ),
   },
@@ -780,9 +782,9 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Do RNORs have to report foreign assets in their ITR (Schedule FA)?',
     schemaText: 'No. Schedule FA (Foreign Assets) disclosure in the income tax return applies only to individuals who are Resident and Ordinarily Resident (ROR). NRIs and RNORs are exempt from disclosing foreign bank accounts, foreign shares and overseas property in Schedule FA. Once you become ROR, full foreign asset disclosure becomes mandatory under the Black Money Act.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p><strong>No.</strong> Schedule FA (Foreign Assets) in the ITR applies only to <strong>ROR</strong> taxpayers. As an RNOR you do not have to disclose foreign bank accounts, foreign stocks, overseas retirement accounts (401(k), etc.) or foreign property.</p>
-        <p className="text-xs text-gray-500">This matters: once you turn ROR, non-disclosure of foreign assets carries severe penalties under the Black Money Act. Use your RNOR years to organise records for the disclosures that will follow.</p>
+        <p className="text-xs text-muted">This matters: once you turn ROR, non-disclosure of foreign assets carries severe penalties under the Black Money Act. Use your RNOR years to organise records for the disclosures that will follow.</p>
       </div>
     ),
   },
@@ -790,9 +792,9 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Which ITR form should an RNOR file?',
     schemaText: 'An RNOR typically files ITR-2 (or ITR-3 if there is business or professional income). ITR-1 is not available to RNORs. In the ITR, you select "Resident but Not Ordinarily Resident" as the residential status. Only India-taxable income needs to be reported; exempt foreign income does not have to be offered to tax, and Schedule FA does not apply.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>Usually <strong>ITR-2</strong> — ITR-1 (Sahaj) is only for ordinarily resident individuals. If you have business or professional income, use <strong>ITR-3</strong>.</p>
-        <p className="text-xs text-gray-500">In the form, choose residential status "Resident but Not Ordinarily Resident". Report India-taxable income only; foreign income that is exempt for RNOR does not need to be offered to tax, and Schedule FA is not required.</p>
+        <p className="text-xs text-muted">In the form, choose residential status "Resident but Not Ordinarily Resident". Report India-taxable income only; foreign income that is exempt for RNOR does not need to be offered to tax, and Schedule FA is not required.</p>
       </div>
     ),
   },
@@ -800,9 +802,9 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Can an RNOR invest in Indian mutual funds and stocks?',
     schemaText: 'Yes. An RNOR is a resident under FEMA once back in India, so they can invest in Indian mutual funds, stocks and other securities as a regular resident investor — including funds that restrict NRI investors from the US or Canada. Gains from Indian investments are taxable in India for RNORs like any resident, since they are India-sourced income.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p><strong>Yes, freely.</strong> After returning, you are a resident under FEMA, so you invest as a normal resident — complete fresh KYC with your Indian address, convert NRE/NRO holdings to resident folios and demat accounts.</p>
-        <p className="text-xs text-gray-500">A practical bonus: AMCs that refuse US/Canada-based NRIs accept you once you are a resident. Note that gains from Indian mutual funds and stocks are India-sourced, so they are fully taxable even during RNOR years.</p>
+        <p className="text-xs text-muted">A practical bonus: AMCs that refuse US/Canada-based NRIs accept you once you are a resident. Note that gains from Indian mutual funds and stocks are India-sourced, so they are fully taxable even during RNOR years.</p>
       </div>
     ),
   },
@@ -810,9 +812,9 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Is RNOR status automatic, or do I need to apply for it?',
     schemaText: 'RNOR status is automatic — there is no application, registration or approval. Your residential status is self-determined each financial year from your days of presence in India under Section 6, and you simply declare it in your income tax return. Keep passport immigration stamps and travel records as evidence in case of scrutiny.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p><strong>Automatic.</strong> There is no application or approval process. You determine your status yourself each FY from your India-stay days under Section 6, and declare it in your ITR.</p>
-        <p className="text-xs text-gray-500">Keep evidence: passport immigration stamps, boarding passes, and a day-count worksheet (this calculator's year-by-year table is a good starting point). The tax department can ask you to substantiate the day counts in scrutiny.</p>
+        <p className="text-xs text-muted">Keep evidence: passport immigration stamps, boarding passes, and a day-count worksheet (this calculator's year-by-year table is a good starting point). The tax department can ask you to substantiate the day counts in scrutiny.</p>
       </div>
     ),
   },
@@ -820,11 +822,11 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     q: 'Does DTAA still matter for an RNOR?',
     schemaText: 'Yes, in specific cases. Even as an RNOR, income that IS taxable in India (Indian income, or foreign income from a business controlled from India) may also be taxed in the source country — a Double Taxation Avoidance Agreement decides which country taxes it and provides credit for tax paid abroad. DTAA tie-breaker rules also matter if both India and another country treat you as tax resident in the same year.',
     a: (
-      <div className="text-sm text-gray-600 space-y-2">
+      <div className="text-sm text-muted space-y-2">
         <p>Yes, in two situations:</p>
         <ul className="text-xs space-y-1.5 list-none">
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>Doubly-taxed income:</strong> income taxable in India (e.g., Indian rent while the other country also taxes worldwide income) — the DTAA allocates taxing rights and gives foreign tax credit.</span></li>
-          <li className="flex gap-2"><span className="text-amber-500 mt-0.5">▸</span><span><strong>Dual residency year:</strong> in the year of return you may be tax resident in both countries. The DTAA tie-breaker (permanent home → centre of vital interests → habitual abode → nationality) decides which country treats you as resident for treaty purposes.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>Doubly-taxed income:</strong> income taxable in India (e.g., Indian rent while the other country also taxes worldwide income) — the DTAA allocates taxing rights and gives foreign tax credit.</span></li>
+          <li className="flex gap-2"><span className="text-gold mt-0.5">▸</span><span><strong>Dual residency year:</strong> in the year of return you may be tax resident in both countries. The DTAA tie-breaker (permanent home → centre of vital interests → habitual abode → nationality) decides which country treats you as resident for treaty purposes.</span></li>
         </ul>
       </div>
     ),
@@ -836,22 +838,22 @@ function RNORFaq() {
 
   return (
     <div className="mt-10">
-      <h2 className="text-lg font-bold text-gray-900 mb-1">How it works & FAQs</h2>
-      <p className="text-xs text-gray-400 mb-4">Everything you need to know about RNOR status and how this calculator determines it</p>
+      <h2 className="text-lg font-bold text-ink mb-1">How it works & FAQs</h2>
+      <p className="text-xs text-faint mb-4">Everything you need to know about RNOR status and how this calculator determines it</p>
       <div className="space-y-2">
         {FAQS.map((faq, i) => (
-          <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+          <div key={i} className="border border-line rounded-xl overflow-hidden">
             <button
-              className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-white hover:bg-gray-50 transition"
+              className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-surface hover:bg-surface-2 transition"
               onClick={() => setOpen(open === i ? null : i)}
             >
-              <span className="flex-1 text-sm font-semibold text-gray-800">{faq.q}</span>
+              <span className="flex-1 text-sm font-semibold text-ink">{faq.q}</span>
               {open === i
-                ? <ChevronUp size={15} className="text-gray-400 flex-shrink-0" />
-                : <ChevronDown size={15} className="text-gray-400 flex-shrink-0" />}
+                ? <ChevronUp size={15} className="text-faint flex-shrink-0" />
+                : <ChevronDown size={15} className="text-faint flex-shrink-0" />}
             </button>
             {/* Always mounted so content stays in the DOM for search engines */}
-            <div className={`px-4 pb-4 pt-1 border-t border-gray-100 bg-white ${open === i ? '' : 'hidden'}`}>
+            <div className={`px-4 pb-4 pt-1 border-t border-line bg-surface ${open === i ? '' : 'hidden'}`}>
               {faq.a}
             </div>
           </div>
@@ -864,7 +866,7 @@ function RNORFaq() {
 // ── Editorial content (always rendered — primary indexable content) ───────────
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-lg font-bold text-gray-900 mb-3">{children}</h2>;
+  return <h2 className="text-lg font-bold text-ink mb-3">{children}</h2>;
 }
 
 const TAX_ROWS: [string, string, string, string][] = [
@@ -920,7 +922,7 @@ function RNORArticle() {
       {/* What is RNOR */}
       <section>
         <SectionTitle>What is RNOR status?</SectionTitle>
-        <div className="text-sm text-gray-600 space-y-3 leading-relaxed">
+        <div className="text-sm text-muted space-y-3 leading-relaxed">
           <p>
             <strong>RNOR (Resident but Not Ordinarily Resident)</strong> is a transitional residential status under
             Section 6 of the Income Tax Act, 1961. It sits between NRI and full resident (ROR), and it exists for one
@@ -952,31 +954,31 @@ function RNORArticle() {
       {/* Comparison table */}
       <section>
         <SectionTitle>NRI vs RNOR vs ROR — what is taxable in India</SectionTitle>
-        <div className="card p-0 overflow-hidden">
+        <div className="bg-surface border border-line rounded-2xl p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs border-collapse">
               <thead>
-                <tr className="bg-gray-50">
-                  <th className="text-left px-3 py-2.5 border-b border-gray-200 font-semibold text-gray-700">Income type</th>
-                  <th className="text-center px-3 py-2.5 border-b border-gray-200 font-semibold text-red-600">NRI</th>
-                  <th className="text-center px-3 py-2.5 border-b border-gray-200 font-semibold text-amber-600">RNOR</th>
-                  <th className="text-center px-3 py-2.5 border-b border-gray-200 font-semibold text-green-600">ROR</th>
+                <tr className="bg-surface-2">
+                  <th className="text-left px-3 py-2.5 border-b border-line font-semibold text-body">Income type</th>
+                  <th className="text-center px-3 py-2.5 border-b border-line font-semibold text-coral">NRI</th>
+                  <th className="text-center px-3 py-2.5 border-b border-line font-semibold text-gold">RNOR</th>
+                  <th className="text-center px-3 py-2.5 border-b border-line font-semibold text-mint">ROR</th>
                 </tr>
               </thead>
               <tbody>
                 {TAX_ROWS.map(([type, nri, rnor, ror]) => (
-                  <tr key={type} className="border-b border-gray-100 last:border-0">
-                    <td className="px-3 py-2 text-gray-700">{type}</td>
-                    <td className={`px-3 py-2 text-center font-medium ${taxable(nri) ? 'text-red-600' : 'text-gray-400'}`}>{taxable(nri) ? '✓ ' : '✗ '}{nri}</td>
-                    <td className={`px-3 py-2 text-center font-medium ${taxable(rnor) ? 'text-red-600' : 'text-gray-400'}`}>{taxable(rnor) ? '✓ ' : '✗ '}{rnor}</td>
-                    <td className={`px-3 py-2 text-center font-medium ${taxable(ror) ? 'text-red-600' : 'text-gray-400'}`}>{taxable(ror) ? '✓ ' : '✗ '}{ror}</td>
+                  <tr key={type} className="border-b border-line last:border-0">
+                    <td className="px-3 py-2 text-body">{type}</td>
+                    <td className={`px-3 py-2 text-center font-medium ${taxable(nri) ? 'text-coral' : 'text-faint'}`}>{taxable(nri) ? '✓ ' : '✗ '}{nri}</td>
+                    <td className={`px-3 py-2 text-center font-medium ${taxable(rnor) ? 'text-coral' : 'text-faint'}`}>{taxable(rnor) ? '✓ ' : '✗ '}{rnor}</td>
+                    <td className={`px-3 py-2 text-center font-medium ${taxable(ror) ? 'text-coral' : 'text-faint'}`}>{taxable(ror) ? '✓ ' : '✗ '}{ror}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </div>
-        <p className="text-[11px] text-gray-400 mt-2">
+        <p className="text-[11px] text-faint mt-2">
           "Foreign" means earned and first received outside India. Money remitted to India after being received abroad is a transfer of your own funds, not fresh income — remittance itself is not taxed.
         </p>
       </section>
@@ -984,25 +986,25 @@ function RNORArticle() {
       {/* Decision flow */}
       <section>
         <SectionTitle>How residential status is decided — the flow</SectionTitle>
-        <div className="card p-5 text-sm">
+        <div className="bg-surface border border-line rounded-2xl p-5 text-sm">
           <ol className="space-y-0">
             {[
-              { step: '1', title: 'In India ≥ 182 days this FY?', yes: 'Resident → go to step 3', no: 'go to step 2', color: 'bg-brand-500', note: null as string | null },
-              { step: '2', title: 'In India ≥ 60 days this FY AND ≥ 365 days in preceding 4 FYs?', yes: 'Resident → go to step 3', no: 'NRI — test ends', color: 'bg-brand-500', note: 'The 60-day limb becomes 182 days if you left India for employment abroad or as ship crew, and 120 days for visiting Indian citizens/PIOs with India-sourced income above ₹15 lakh.' },
-              { step: '3', title: 'NRI in ≥ 9 of the 10 preceding FYs?', yes: 'RNOR', no: 'go to step 4', color: 'bg-amber-500', note: null },
-              { step: '4', title: '≤ 729 days in India across the 7 preceding FYs?', yes: 'RNOR', no: 'ROR — worldwide income taxable', color: 'bg-amber-500', note: null },
+              { step: '1', title: 'In India ≥ 182 days this FY?', yes: 'Resident → go to step 3', no: 'go to step 2', color: 'bg-acc', note: null as string | null },
+              { step: '2', title: 'In India ≥ 60 days this FY AND ≥ 365 days in preceding 4 FYs?', yes: 'Resident → go to step 3', no: 'NRI — test ends', color: 'bg-acc', note: 'The 60-day limb becomes 182 days if you left India for employment abroad or as ship crew, and 120 days for visiting Indian citizens/PIOs with India-sourced income above ₹15 lakh.' },
+              { step: '3', title: 'NRI in ≥ 9 of the 10 preceding FYs?', yes: 'RNOR', no: 'go to step 4', color: 'bg-gold', note: null },
+              { step: '4', title: '≤ 729 days in India across the 7 preceding FYs?', yes: 'RNOR', no: 'ROR — worldwide income taxable', color: 'bg-gold', note: null },
             ].map(s => (
               <li key={s.step} className="flex gap-3 pb-4 last:pb-0">
                 <div className="flex flex-col items-center flex-shrink-0">
                   <span className={`w-6 h-6 rounded-full ${s.color} text-white text-xs font-bold flex items-center justify-center`}>{s.step}</span>
-                  <span className="w-px flex-1 bg-gray-200 mt-1" />
+                  <span className="w-px flex-1 bg-line mt-1" />
                 </div>
                 <div className="min-w-0 pt-0.5">
-                  <div className="font-semibold text-gray-800 text-xs">{s.title}</div>
-                  <div className="text-[11px] text-gray-500 mt-1">
-                    <span className="text-green-600 font-semibold">Yes</span> → {s.yes} &nbsp;·&nbsp; <span className="text-red-500 font-semibold">No</span> → {s.no}
+                  <div className="font-semibold text-ink text-xs">{s.title}</div>
+                  <div className="text-[11px] text-muted mt-1">
+                    <span className="text-mint font-semibold">Yes</span> → {s.yes} &nbsp;·&nbsp; <span className="text-coral font-semibold">No</span> → {s.no}
                   </div>
-                  {s.note && <div className="text-[11px] text-amber-700 bg-amber-50 rounded-md px-2 py-1 mt-1.5">{s.note}</div>}
+                  {s.note && <div className="text-[11px] text-gold bg-gold/10 rounded-md px-2 py-1 mt-1.5">{s.note}</div>}
                 </div>
               </li>
             ))}
@@ -1019,11 +1021,11 @@ function RNORArticle() {
             return (
               <div key={ex.title} className={`rounded-xl border p-4 ${sc.badge}`}>
                 <div className="flex items-start justify-between gap-3 mb-1.5">
-                  <h3 className="text-sm font-bold text-gray-900">{ex.title}</h3>
+                  <h3 className="text-sm font-bold text-ink">{ex.title}</h3>
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${sc.light}`}>{ex.result}</span>
                 </div>
-                <p className="text-xs text-gray-600 mb-1.5">{ex.facts}</p>
-                <p className="text-[11px] text-gray-500 leading-relaxed"><strong className={sc.text}>Why:</strong> {ex.why}</p>
+                <p className="text-xs text-muted mb-1.5">{ex.facts}</p>
+                <p className="text-[11px] text-muted leading-relaxed"><strong className={sc.text}>Why:</strong> {ex.why}</p>
               </div>
             );
           })}
@@ -1042,13 +1044,13 @@ function RNORArticle() {
             { h: 'No Schedule FA disclosure yet', p: 'RNORs do not report foreign assets in the ITR. Use these years to document foreign accounts, brokerage holdings and retirement plans so ROR-year disclosures are painless.' },
             { h: 'Restructure overseas retirement accounts', p: '401(k), IRA and similar withdrawals or rollovers are best planned during RNOR years — once you are ROR, accruals and withdrawals can face Indian tax with messy foreign tax credit claims.' },
           ].map(b => (
-            <div key={b.h} className="card p-4">
-              <h3 className="text-xs font-bold text-gray-800 mb-1">{b.h}</h3>
-              <p className="text-[11px] text-gray-500 leading-relaxed">{b.p}</p>
+            <div key={b.h} className="bg-surface border border-line rounded-2xl p-4">
+              <h3 className="text-xs font-bold text-ink mb-1">{b.h}</h3>
+              <p className="text-[11px] text-muted leading-relaxed">{b.p}</p>
             </div>
           ))}
         </div>
-        <p className="text-[11px] text-gray-400 mt-3">
+        <p className="text-[11px] text-faint mt-3">
           Rules summarised for individuals under the Income Tax Act, 1961 (as amended by Finance Act 2020). Individual facts vary — confirm with a Chartered Accountant before acting.
         </p>
       </section>
@@ -1067,15 +1069,15 @@ function RelatedNRITools() {
   ];
   return (
     <section className="mt-10">
-      <h2 className="text-lg font-bold text-gray-900 mb-3">Related NRI calculators</h2>
+      <h2 className="text-lg font-bold text-ink mb-3">Related NRI calculators</h2>
       <div className="grid sm:grid-cols-2 gap-3">
         {tools.map(t => (
-          <Link key={t.path} to={t.path} className="card p-4 hover:shadow-md transition group">
+          <Link key={t.path} to={t.path} className="bg-surface border border-line rounded-2xl p-4 hover:border-acc transition group">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-sm font-semibold text-gray-800 group-hover:text-brand-600 transition">{t.label}</span>
-              <ArrowRight size={14} className="text-gray-300 group-hover:text-brand-500 transition flex-shrink-0" />
+              <span className="text-sm font-semibold text-ink group-hover:text-acc transition">{t.label}</span>
+              <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
             </div>
-            <p className="text-[11px] text-gray-400 mt-1">{t.desc}</p>
+            <p className="text-[11px] text-faint mt-1">{t.desc}</p>
           </Link>
         ))}
       </div>

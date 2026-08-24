@@ -1,6 +1,8 @@
 // File: frontend/src/pages/SIPCalculatorPage.tsx
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import SliderInput from '../components/SliderInput';
 import CalculatorHero from '../components/CalculatorHero';
 
@@ -71,9 +73,9 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
   ];
 
   const ResultRow = ({ label, value, bold }: { label: string; value: string; bold?: boolean }) => (
-    <div className={`flex justify-between py-2 ${bold ? 'border-t border-slate-200 mt-1 pt-3' : ''}`}>
-      <span className="text-sm text-slate-500">{label}</span>
-      <span className={`text-sm ${bold ? 'font-bold text-slate-900 text-base' : 'font-semibold text-slate-700'}`}>{value}</span>
+    <div className={`flex justify-between py-2 ${bold ? 'border-t border-line mt-1 pt-3' : ''}`}>
+      <span className="text-sm text-muted">{label}</span>
+      <span className={`text-sm ${bold ? 'font-bold text-ink text-base' : 'font-semibold text-body'}`}>{value}</span>
     </div>
   );
 
@@ -83,12 +85,12 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
     return (
       <>
         <div className="mt-4 h-10 rounded-xl overflow-hidden flex text-white text-sm font-bold">
-          <div className="flex items-center justify-center bg-brand-400" style={{ width: `${iPct}%` }}>{iPct}%</div>
-          <div className="flex items-center justify-center bg-brand-600 flex-1">{100 - iPct}%</div>
+          <div className="flex items-center justify-center bg-acc/60" style={{ width: `${iPct}%` }}>{iPct}%</div>
+          <div className="flex items-center justify-center bg-acc flex-1">{100 - iPct}%</div>
         </div>
-        <div className="flex justify-between text-xs text-slate-400 mt-1">
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-brand-400 inline-block"></span>Invested</span>
-          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-brand-600 inline-block"></span>Est. Returns</span>
+        <div className="flex justify-between text-xs text-faint mt-1">
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-acc/60 inline-block"></span>Invested</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-acc inline-block"></span>Est. Returns</span>
         </div>
       </>
     );
@@ -136,7 +138,7 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb="SIP"
           title={meta.h1}
@@ -144,13 +146,13 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
         />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-[13px] border border-line border-l-4 border-l-acc p-6">
 
             {/* Tabs */}
-            <div className="flex gap-1 bg-slate-100 p-1 rounded-xl mb-6 w-fit">
+            <div className="flex gap-1 bg-surface-2 p-1 rounded-xl mb-6 w-fit">
               {tabs.map(t => (
                 <button key={t.key} onClick={() => setTab(t.key)}
-                  className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${tab === t.key ? 'bg-brand-600 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
+                  className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${tab === t.key ? 'bg-acc text-white' : 'text-muted hover:text-body'}`}>
                   {t.label}
                 </button>
               ))}
@@ -165,13 +167,13 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
                   <SliderInput label="Time period"                value={sipYears}   min={1}     max={40}      step={1}    display={`${sipYears} Yr`}    onChange={setSipYears}   color="blue" isZero={sipYears === 0} />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <div className="bg-slate-50 rounded-xl p-5 space-y-1">
+                  <div className="bg-surface-2 rounded-xl p-5 space-y-1">
                     <ResultRow label="Invested amount" value={fmtINR(sipInvested)} />
                     <ResultRow label="Est. returns"    value={fmtINR(sipGains)} />
                     <ResultRow label="Total value"     value={fmtShort(sipCorpus)} bold />
                     <ProgressBar invested={sipInvested} total={sipCorpus} />
                   </div>
-                  <button className="mt-4 bg-brand-600 text-white font-bold text-sm rounded-xl py-3 hover:bg-brand-700 transition-colors">
+                  <button className="mt-4 bg-acc text-white font-bold text-sm rounded-xl py-3 hover:opacity-90 transition-colors">
                     Start SIP Investment →
                   </button>
                 </div>
@@ -187,13 +189,13 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
                   <SliderInput label="Time period"                value={lsYears}  min={1}     max={40}       step={1}    display={`${lsYears} Yr`}   onChange={setLsYears}  color="blue" isZero={lsYears === 0} />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <div className="bg-slate-50 rounded-xl p-5 space-y-1">
+                  <div className="bg-surface-2 rounded-xl p-5 space-y-1">
                     <ResultRow label="Invested amount" value={fmtINR(lsAmount)} />
                     <ResultRow label="Est. returns"    value={fmtINR(lsGains)} />
                     <ResultRow label="Total value"     value={fmtShort(lsCorpus)} bold />
                     <ProgressBar invested={lsAmount} total={lsCorpus} />
                   </div>
-                  <button className="mt-4 bg-brand-600 text-white font-bold text-sm rounded-xl py-3 hover:bg-brand-700 transition-colors">
+                  <button className="mt-4 bg-acc text-white font-bold text-sm rounded-xl py-3 hover:opacity-90 transition-colors">
                     Invest Lumpsum →
                   </button>
                 </div>
@@ -209,16 +211,16 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
                   <SliderInput label="Time period"                value={goalYears}  min={1}      max={40}        step={1}     display={`${goalYears} Yr`}     onChange={setGoalYears}  color="blue" isZero={goalYears === 0} />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <div className="bg-slate-50 rounded-xl p-5 space-y-1">
+                  <div className="bg-surface-2 rounded-xl p-5 space-y-1">
                     <ResultRow label="Monthly SIP needed" value={fmtINR(goalSIP)}                    bold />
                     <ResultRow label="Total invested"     value={fmtINR(goalInvested)} />
                     <ResultRow label="Est. returns"       value={fmtINR(Math.max(goalAmount - goalInvested, 0))} />
                     <ResultRow label="Target corpus"      value={fmtShort(goalAmount)} />
                     {goalSIP > 0 && (
-                      <div className="mt-4 bg-brand-50 border border-brand-100 rounded-xl p-3 text-center">
-                        <div className="text-xs text-brand-700 mb-1">You need to invest</div>
-                        <div className="text-2xl font-bold text-brand-700">{fmtINR(goalSIP)}<span className="text-sm font-normal">/month</span></div>
-                        <div className="text-xs text-slate-400 mt-1">to reach {fmtShort(goalAmount)} in {goalYears} years</div>
+                      <div className="mt-4 bg-acc-deep border border-acc/25 rounded-xl p-3 text-center">
+                        <div className="text-xs text-acc mb-1">You need to invest</div>
+                        <div className="text-2xl font-bold text-acc">{fmtINR(goalSIP)}<span className="text-sm font-normal">/month</span></div>
+                        <div className="text-xs text-faint mt-1">to reach {fmtShort(goalAmount)} in {goalYears} years</div>
                       </div>
                     )}
                   </div>
@@ -228,36 +230,36 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
           </div>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
-                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">{faq.a}</div>}
+                  {openFaq === i && <div className="px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line">{faq.a}</div>}
                 </div>
               ))}
             </div>
           </div>
 
           {/* ── HOW IT WORKS ── */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-3">
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-3">
               {tab === 'sip' ? 'How SIP Works' : tab === 'lumpsum' ? 'How Lumpsum Investment Works' : 'How Goal SIP Works'}
             </h2>
             {tab === 'sip' && (
               <>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                  SIP invests a fixed amount every month in a mutual fund. It harnesses <strong className="text-slate-800">rupee cost averaging</strong> — you buy more units when the market is down and fewer when it is up, lowering your average cost over time. Combined with compounding, small monthly amounts grow into significant wealth.
+                <p className="text-sm text-muted leading-relaxed mb-4">
+                  SIP invests a fixed amount every month in a mutual fund. It harnesses <strong className="text-body">rupee cost averaging</strong> — you buy more units when the market is down and fewer when it is up, lowering your average cost over time. Combined with compounding, small monthly amounts grow into significant wealth.
                 </p>
-                <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 mb-5">
-                  <p className="text-sm font-semibold text-brand-800 mb-2">SIP Formula</p>
-                  <code className="block bg-white rounded px-3 py-2 text-brand-700 font-mono text-sm mb-2">M = P × [(1+r)ⁿ − 1] / r × (1+r)</code>
-                  <div className="grid grid-cols-2 gap-1 text-xs text-brand-700">
+                <div className="bg-acc-deep border border-acc/20 rounded-lg p-4 mb-5">
+                  <p className="text-sm font-semibold text-ink mb-2">SIP Formula</p>
+                  <code className="block bg-surface rounded px-3 py-2 text-acc font-mono text-sm mb-2">M = P × [(1+r)ⁿ − 1] / r × (1+r)</code>
+                  <div className="grid grid-cols-2 gap-1 text-xs text-body">
                     <span><strong>P</strong> = Monthly SIP amount</span>
                     <span><strong>r</strong> = Monthly rate (annual ÷ 12 ÷ 100)</span>
                     <span><strong>n</strong> = Total months</span>
@@ -270,10 +272,10 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
                     { icon: '📉', title: 'Rupee cost averaging', desc: 'Market dips work in your favour. When NAV falls, your SIP buys more units at lower prices, bringing down your average purchase cost automatically.' },
                     { icon: '🔁', title: 'Power of compounding', desc: '₹10,000/month at 12% for 20 years: you invest ₹24L but receive ₹99L — the extra ₹75L comes purely from returns compounding on returns.' },
                   ].map(f => (
-                    <div key={f.title} className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                    <div key={f.title} className="bg-surface-2 rounded-lg p-4 border border-line">
                       <div className="text-2xl mb-2">{f.icon}</div>
-                      <div className="font-semibold text-sm text-slate-800 mb-1">{f.title}</div>
-                      <div className="text-xs text-slate-500 leading-relaxed">{f.desc}</div>
+                      <div className="font-semibold text-sm text-ink mb-1">{f.title}</div>
+                      <div className="text-xs text-muted leading-relaxed">{f.desc}</div>
                     </div>
                   ))}
                 </div>
@@ -281,19 +283,19 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
             )}
             {tab === 'lumpsum' && (
               <>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                  A lumpsum investment deploys your entire amount at once and grows using <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono">M = P × (1 + r)ⁿ</code>. It works best when markets are trading below historical averages — you lock in a low entry cost and benefit from the entire subsequent rally.
+                <p className="text-sm text-muted leading-relaxed mb-4">
+                  A lumpsum investment deploys your entire amount at once and grows using <code className="bg-surface-2 px-1.5 py-0.5 rounded text-xs font-mono">M = P × (1 + r)ⁿ</code>. It works best when markets are trading below historical averages — you lock in a low entry cost and benefit from the entire subsequent rally.
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
                     { title: 'Choose Lumpsum when...', items: ['Markets are at a multi-year low', 'You have a large idle corpus', 'Investment horizon is 3+ years', 'Investing in debt or hybrid funds'] },
                     { title: 'Choose SIP when...', items: ['You invest monthly from salary', 'Markets are at all-time highs', 'Investment horizon is 7–10+ years', 'You prefer autopilot, stress-free investing'] },
                   ].map(col => (
-                    <div key={col.title} className="bg-slate-50 rounded-lg p-4 border border-slate-100">
-                      <div className="font-semibold text-sm text-slate-800 mb-2">{col.title}</div>
+                    <div key={col.title} className="bg-surface-2 rounded-lg p-4 border border-line">
+                      <div className="font-semibold text-sm text-ink mb-2">{col.title}</div>
                       <ul className="space-y-1.5">
                         {col.items.map(item => (
-                          <li key={item} className="text-xs text-slate-600 flex gap-2 items-start"><span className="text-brand-500 flex-shrink-0 mt-0.5">✓</span>{item}</li>
+                          <li key={item} className="text-xs text-muted flex gap-2 items-start"><span className="text-acc flex-shrink-0 mt-0.5">✓</span>{item}</li>
                         ))}
                       </ul>
                     </div>
@@ -303,13 +305,13 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
             )}
             {tab === 'goal' && (
               <>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                <p className="text-sm text-muted leading-relaxed mb-4">
                   Goal SIP reverses the formula — instead of "what do I get if I invest X?", it answers "what must I invest to reach Y?". It makes abstract financial goals concrete and actionable by giving you a precise monthly number to target.
                 </p>
-                <div className="overflow-x-auto rounded-lg border border-slate-100">
+                <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                   <table className="w-full text-sm border-collapse">
                     <thead>
-                      <tr className="bg-brand-600 text-white">
+                      <tr className="bg-acc text-white sticky top-0">
                         <th className="text-left px-4 py-3 text-xs font-semibold">Financial Goal</th>
                         <th className="text-center px-4 py-3 text-xs font-semibold">Target</th>
                         <th className="text-center px-4 py-3 text-xs font-semibold">Horizon</th>
@@ -324,11 +326,11 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
                         ['Home Down Payment', '₹30L', '10 yrs', '₹13,607/mo'],
                         ['Car Purchase', '₹10L', '5 yrs', '₹12,244/mo'],
                       ].map(([goal, target, horizon, sip], i) => (
-                        <tr key={i} className="border-t border-slate-50 hover:bg-slate-50">
-                          <td className="px-4 py-3 font-medium text-slate-700">{goal}</td>
-                          <td className="px-4 py-3 text-center text-slate-600">{target}</td>
-                          <td className="px-4 py-3 text-center text-slate-600">{horizon}</td>
-                          <td className="px-4 py-3 text-right font-bold text-brand-600">{sip}</td>
+                        <tr key={i} className="border-t border-line hover:bg-surface-2">
+                          <td className="px-4 py-3 font-medium text-body">{goal}</td>
+                          <td className="px-4 py-3 text-center text-muted">{target}</td>
+                          <td className="px-4 py-3 text-center text-muted">{horizon}</td>
+                          <td className="px-4 py-3 text-right font-bold text-acc">{sip}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -340,13 +342,13 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
 
           {/* ── SIP RETURNS AT DIFFERENT RATES ── */}
           {tab === 'sip' && sipMonthly > 0 && sipYears > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-bold text-slate-900 mb-1">SIP Returns at Different Rates</h2>
-              <p className="text-xs text-slate-400 mb-4">₹{sipMonthly.toLocaleString('en-IN')}/month for {sipYears} year{sipYears !== 1 ? 's' : ''} at various expected return rates.</p>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+            <div className="bg-surface rounded-[13px] border border-line p-6">
+              <h2 className="text-xl font-bold text-ink mb-1">SIP Returns at Different Rates</h2>
+              <p className="text-xs text-faint mb-4">₹{sipMonthly.toLocaleString('en-IN')}/month for {sipYears} year{sipYears !== 1 ? 's' : ''} at various expected return rates.</p>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="bg-brand-600 text-white">
+                    <tr className="bg-acc text-white sticky top-0">
                       <th className="text-left px-4 py-3 text-xs font-semibold">Expected Return</th>
                       <th className="text-right px-4 py-3 text-xs font-semibold">Total Invested</th>
                       <th className="text-right px-4 py-3 text-xs font-semibold">Est. Gains</th>
@@ -360,14 +362,14 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
                       const corpus = sipMonthly * ((Math.pow(1 + rm, n) - 1) / rm) * (1 + rm);
                       const inv = sipMonthly * n;
                       return (
-                        <tr key={r} className={`border-t border-slate-50 hover:bg-slate-50 ${r === sipRate ? 'bg-brand-50' : ''}`}>
+                        <tr key={r} className={`border-t border-line hover:bg-surface-2 ${r === sipRate ? 'bg-acc-deep' : ''}`}>
                           <td className="px-4 py-3">
-                            <span className={`font-bold ${r === sipRate ? 'text-brand-700' : 'text-slate-700'}`}>{r}%</span>
-                            {r === sipRate && <span className="ml-2 text-xs bg-brand-100 text-brand-700 px-1.5 py-0.5 rounded">selected</span>}
+                            <span className={`font-bold ${r === sipRate ? 'text-acc' : 'text-body'}`}>{r}%</span>
+                            {r === sipRate && <span className="ml-2 text-xs bg-acc/20 text-acc px-1.5 py-0.5 rounded">selected</span>}
                           </td>
-                          <td className="px-4 py-3 text-right text-slate-500">{fmtShort(inv)}</td>
-                          <td className="px-4 py-3 text-right text-slate-600">+{fmtShort(corpus - inv)}</td>
-                          <td className="px-4 py-3 text-right font-bold text-slate-800">{fmtShort(corpus)}</td>
+                          <td className="px-4 py-3 text-right text-muted">{fmtShort(inv)}</td>
+                          <td className="px-4 py-3 text-right text-body">+{fmtShort(corpus - inv)}</td>
+                          <td className="px-4 py-3 text-right font-bold text-ink">{fmtShort(corpus)}</td>
                         </tr>
                       );
                     })}
@@ -379,8 +381,8 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
 
           {/* ── TIPS ── */}
           {tab === 'sip' && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">Tips to Maximize SIP Returns</h2>
+            <div className="bg-surface rounded-[13px] border border-line p-6">
+              <h2 className="text-xl font-bold text-ink mb-4">Tips to Maximize SIP Returns</h2>
               <div className="space-y-3">
                 {[
                   ['Start as early as possible', 'Time in the market beats timing the market. Starting at 25 vs 35 can 3× your retirement corpus — even with the same monthly SIP amount throughout.'],
@@ -390,16 +392,37 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
                   ['Stay invested for at least 10 years', 'Over any 10-year period in Indian equity markets, the probability of loss is near zero. The longer you stay, the more powerful compounding becomes.'],
                 ].map(([title, desc], i) => (
                   <div key={i} className="flex gap-3 text-sm items-start">
-                    <span className="bg-brand-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
-                    <div><strong className="text-slate-800">{title}</strong><span className="text-slate-500"> — {desc}</span></div>
+                    <span className="bg-acc text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">{i + 1}</span>
+                    <div><strong className="text-body">{title}</strong><span className="text-muted"> — {desc}</span></div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 text-xs text-brand-700 leading-relaxed">
-            <strong>Disclaimer:</strong> Returns shown are estimated based on assumed rate. Actual mutual fund returns vary with market conditions. Past performance does not guarantee future results. Consult a SEBI-registered advisor before investing.
+          <div className="bg-acc-deep border border-acc/20 rounded-lg p-4 text-xs text-body leading-relaxed">
+            <strong className="text-ink">Disclaimer:</strong> Returns shown are estimated based on assumed rate. Actual mutual fund returns vary with market conditions. Past performance does not guarantee future results. Consult a SEBI-registered advisor before investing.
+          </div>
+
+          {/* ── RELATED CALCULATORS ── */}
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {[
+                { path: '/calculators/step-up-sip', label: 'Step-Up SIP', desc: 'SIP with annual step-ups' },
+                { path: '/calculators/swp', label: 'SWP Calculator', desc: 'Plan systematic withdrawals' },
+                { path: '/calculators/cagr', label: 'CAGR Calculator', desc: 'Compound annual growth rate' },
+                { path: '/calculators/fd', label: 'FD Calculator', desc: 'Fixed deposit maturity value' },
+              ].map(t => (
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
+                  </div>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>

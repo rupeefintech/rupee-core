@@ -1,39 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { api } from "../utils/api";
+import { Link, useNavigate } from "react-router-dom";
+import { Card } from "../components/ui/Card";
+import { SearchTabs, type SearchTab } from "../components/ui/SearchTabs";
 import {
-  Calculator, Search, CreditCard, Landmark, TrendingUp, Banknote,
-  PiggyBank, Receipt, IndianRupee, Building2, ShieldCheck,
-  BookOpen, ChevronRight, ArrowRight, Home,
-  Wallet, Users, MapPin,
+  Landmark, ArrowRight, MapPin, Building,
 } from "lucide-react";
 
-const featuredCalcs = [
-  { name: "EMI Calculator",    desc: "Calculate home, car & personal loan EMI with full amortization schedule", link: "/calculators/emi",              icon: Calculator,   color: "bg-brand-700" },
-  { name: "SIP Calculator",    desc: "Project SIP returns, plan lumpsum investments & goal-based SIP",          link: "/calculators/sip",              icon: TrendingUp,   color: "bg-emerald-600" },
-  { name: "Income Tax",        desc: "Compare Old vs New regime tax liability for FY 2025-26",                  link: "/calculators/income-tax",       icon: IndianRupee,  color: "bg-rose-600" },
+const SEARCH_TABS: SearchTab[] = [
+  { key: 'ifsc', label: 'IFSC Code', icon: <Building className="w-full h-full" />, placeholder: 'Enter IFSC code, e.g. HDFC0000001', examples: ['HDFC0000001', 'SBIN0000691', 'ICIC0000011'] },
+  { key: 'pin', label: 'PIN Code', icon: <MapPin className="w-full h-full" />, placeholder: 'Enter PIN code, e.g. 110001', examples: ['110001', '400001', '560001'] },
+  { key: 'bank', label: 'Search by bank', icon: <Landmark className="w-full h-full" />, placeholder: 'Search bank, e.g. HDFC Bank', examples: ['HDFC Bank', 'Axis Bank', 'Kotak Mahindra'] },
 ];
-const moreCalcs = [
-  { name: "FD / RD / PPF",     desc: "Fixed deposit & recurring deposit maturity",  link: "/calculators/fd",               icon: PiggyBank,    color: "bg-cyan-600" },
-  { name: "Salary Calculator", desc: "CTC to in-hand with full tax breakdown",       link: "/calculators/salary-calculator", icon: Banknote,    color: "bg-indigo-500" },
-  { name: "GST Calculator",    desc: "GST-inclusive & exclusive for all slabs",      link: "/calculators/gst",              icon: Receipt,      color: "bg-orange-500" },
-  { name: "HRA Calculator",    desc: "HRA tax exemption — metro & non-metro",        link: "/calculators/hra-calculator",   icon: Home,         color: "bg-teal-600" },
-  { name: "SWP Calculator",    desc: "Systematic withdrawal — corpus survival",      link: "/calculators/swp",              icon: Wallet,       color: "bg-pink-500" },
-  { name: "Loan Eligibility",  desc: "Max home/personal loan you qualify for",       link: "/calculators/home-loan-eligibility", icon: ShieldCheck, color: "bg-lime-600" },
+
+const TOOLS = [
+  {
+    to: '/ifsc-finder', feat: true, emoji: '🏦', iconCls: 'bg-acc-deep text-acc',
+    ctaCls: 'text-acc', hoverBorderCls: 'hover:border-acc/50',
+    title: 'IFSC Code Finder',
+    desc: "Search 1.78L branches by code, or drill bank → state → district → branch. NEFT/RTGS/IMPS/UPI status included.",
+    cta: 'Find a branch →',
+  },
+  {
+    to: '/pin-codes', feat: true, emoji: '📍', iconCls: 'bg-cyan/10 text-cyan',
+    ctaCls: 'text-cyan', hoverBorderCls: 'hover:border-cyan/50',
+    title: 'PIN Code Search',
+    desc: "Every Indian postal code — find PIN by area, or area, post office & district by PIN.",
+    cta: 'Search PIN codes →',
+  },
+  {
+    to: '/calculators', feat: false, emoji: '🧮', iconCls: 'bg-violet-500/10 text-violet',
+    ctaCls: 'text-violet', hoverBorderCls: 'hover:border-violet/50',
+    title: 'EMI & SIP Calculators',
+    desc: 'Home/car/personal EMI, SIP, tax, FD, salary — 30+ tools with instant charts.',
+    cta: 'Open calculators →',
+  },
+  {
+    to: '/credit-cards', feat: false, emoji: '💳', iconCls: 'bg-coral/10 text-coral',
+    ctaCls: 'text-coral', hoverBorderCls: 'hover:border-coral/50',
+    title: 'Compare Credit Cards',
+    desc: '50+ cards side by side — cashback, travel, rewards, lifetime-free. Apply in a tap.',
+    cta: 'Compare cards →',
+  },
+  {
+    to: '/savings-rates', feat: false, emoji: '🏦', iconCls: 'bg-mint/10 text-mint',
+    ctaCls: 'text-mint', hoverBorderCls: 'hover:border-mint/50',
+    title: 'Savings & FD Rates',
+    desc: 'Compare interest across banks & NBFCs — up to 9.5% p.a., senior rates, all tenures.',
+    cta: 'Compare rates →',
+  },
+  {
+    to: '/gold-rate-today', feat: false, emoji: '🪙', iconCls: 'bg-gold/10 text-gold',
+    ctaCls: 'text-gold', hoverBorderCls: 'hover:border-gold/50',
+    title: 'Live Gold Rate',
+    desc: "Today's 22K & 24K gold price across Indian cities, plus hallmark & purity guides.",
+    cta: 'Check gold rate →',
+  },
 ];
 
 export default function HomePage() {
-  const { data: blogsData, isLoading: blogsLoading } = useQuery({
-    queryKey: ['home-blogs'],
-    queryFn: () => api.getBlogs({ limit: 3 }),
-    staleTime: 5 * 60 * 1000,
-  });
-  const latestBlogs = blogsData?.blogs ?? [];
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('ifsc');
+  const [query, setQuery] = useState('');
+
+  const handleSearch = () => {
+    const v = query.trim();
+    if (!v) { navigate(activeTab === 'pin' ? '/pin-codes' : '/ifsc-finder'); return; }
+    if (activeTab === 'ifsc') navigate(`/ifsc/${v.toUpperCase()}`);
+    else if (activeTab === 'pin') navigate(`/pin/${v}`);
+    else navigate('/ifsc-finder');
+  };
 
   return (
-    <div className="bg-white">
+    <div className="bg-bg">
       <Helmet>
         <title>RupeePedia — IFSC Codes, Credit Cards, EMI &amp; SIP Calculators India</title>
         <meta name="description" content="Find IFSC codes for 178,000+ bank branches, compare credit cards, use free EMI/SIP/FD/tax calculators, and read money guides. India's most comprehensive financial toolkit." />
@@ -61,364 +100,81 @@ export default function HomePage() {
       </Helmet>
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 py-16 md:py-20">
-        {/* Decorative blobs */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-brand-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='1'%3E%3Cpath d='M0 0h1v40H0zm39 0h1v40h-1zM0 0h40v1H0zm0 39h40v1H0z'/%3E%3C/g%3E%3C/svg%3E\")" }} />
-        </div>
-
-        <div className="max-w-5xl mx-auto text-center px-4 relative z-10">
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
-            <span className="w-1.5 h-1.5 bg-accent-400 rounded-full animate-pulse" />
-            <span className="text-xs font-medium text-white/80">India's most comprehensive financial toolkit</span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight tracking-tight">
-            IFSC Code Finder, EMI Calculators<br className="hidden md:block" /> &amp; Credit Card Comparison India
-          </h1>
-
-          <p className="text-brand-200 mb-8 text-lg max-w-2xl mx-auto">
-            1,78,000+ bank branch IFSC codes · Free EMI, SIP &amp; tax calculators · Compare credit cards · Live gold rates. 100% free.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
-            <Link
-              to="/ifsc-finder"
-              className="inline-flex items-center gap-2 bg-white text-brand-800 font-semibold text-sm px-6 py-3.5 rounded-xl shadow-lg shadow-black/10 hover:bg-brand-50 transition-all hover:-translate-y-0.5"
-            >
-              <Search size={16} />
-              Find IFSC Code
-            </Link>
-            <Link
-              to="/calculators"
-              className="inline-flex items-center gap-2 bg-white/15 backdrop-blur border border-white/25 text-white font-semibold text-sm px-6 py-3.5 rounded-xl hover:bg-white/20 transition-all hover:-translate-y-0.5"
-            >
-              <Calculator size={16} />
-              Explore Calculators
-            </Link>
-          </div>
-
-          {/* Quick links */}
-          <div className="flex flex-wrap justify-center gap-2 mb-10">
-            {[
-              { label: 'EMI Calculator', to: '/calculators/emi' },
-              { label: 'Income Tax',     to: '/calculators/income-tax' },
-              { label: 'SIP Calculator', to: '/calculators/sip' },
-              { label: 'Credit Cards',   to: '/credit-cards' },
-              { label: 'FD Calculator',  to: '/calculators/fd' },
-            ].map(item => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="text-[11px] font-medium px-3 py-1 rounded-full bg-white/10 text-white/80 border border-white/15 hover:bg-white/20 hover:text-white transition-all"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          {/* Stats row */}
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-            {[
-              { value: '1,78,000+', label: 'Bank Branches',    icon: MapPin },
-              { value: '1,350+',    label: 'Banks Covered',    icon: Building2 },
-              { value: '50+',       label: 'Credit Cards',     icon: CreditCard },
-              { value: '15+',       label: 'Financial Tools',  icon: Calculator },
-            ].map((stat) => (
-              <div key={stat.label} className="flex items-center gap-2.5">
-                <div className="w-9 h-9 bg-white/10 rounded-lg flex items-center justify-center">
-                  <stat.icon size={16} className="text-accent-400" />
-                </div>
-                <div className="text-left">
-                  <p className="text-white font-bold text-sm">{stat.value}</p>
-                  <p className="text-brand-300 text-[11px]">{stat.label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURES — 4-tile row, white cards, colored left border ── */}
-      <section className="py-14 bg-gray-50/60">
-        <div className="max-w-6xl mx-auto px-4">
-          <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-2">What we offer</p>
-          <h2 className="text-3xl font-black text-gray-900 mb-9 tracking-tight">Everything banking, in one place</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-            {/* IFSC */}
-            <Link
-              to="/ifsc-finder"
-              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-brand-600 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-brand-700 p-6"
-            >
-              <div className="w-11 h-11 bg-brand-50 rounded-xl flex items-center justify-center mb-4">
-                <Landmark size={20} className="text-brand-600" />
-              </div>
-              <h3 className="text-base font-bold text-gray-900 mb-2">IFSC & Bank Search</h3>
-              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
-                Find any IFSC code across 1,350+ banks. Verify NEFT, RTGS, IMPS & UPI status instantly.
-              </p>
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {['178k Branches', 'MICR Codes', 'RBI Verified'].map(t => (
-                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-brand-50 text-brand-700">{t}</span>
-                ))}
-              </div>
-              <span className="text-sm font-semibold text-brand-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
-                Search Branches <ArrowRight size={13} />
-              </span>
-            </Link>
-
-            {/* Credit Cards */}
-            <Link
-              to="/credit-cards"
-              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-amber-500 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-amber-600 p-6"
-            >
-              <div className="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
-                <CreditCard size={20} className="text-amber-600" />
-              </div>
-              <h3 className="text-base font-bold text-gray-900 mb-2">Credit Cards</h3>
-              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
-                Compare cashback, rewards & annual fees side by side. Find your perfect card from 50+ options.
-              </p>
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {['Cashback', 'Travel', 'Rewards', 'Lifetime Free'].map(t => (
-                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">{t}</span>
-                ))}
-              </div>
-              <span className="text-sm font-semibold text-amber-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
-                Compare Cards <ArrowRight size={13} />
-              </span>
-            </Link>
-
-            {/* Savings Rates */}
-            <Link
-              to="/savings-rates"
-              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-emerald-500 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-emerald-600 p-6"
-            >
-              <div className="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
-                <PiggyBank size={20} className="text-emerald-600" />
-              </div>
-              <h3 className="text-base font-bold text-gray-900 mb-2">Savings Account Rates</h3>
-              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
-                Compare savings interest rates across all banks — zero balance, balance-tier, digital accounts. Up to 9% p.a.
-              </p>
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {['Zero Balance', 'Up to 9% p.a.', 'Digital Banks'].map(t => (
-                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">{t}</span>
-                ))}
-              </div>
-              <span className="text-sm font-semibold text-emerald-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
-                Compare Rates <ArrowRight size={13} />
-              </span>
-            </Link>
-
-            {/* FD Rates */}
-            <Link
-              to="/fd-rates"
-              className="group bg-white rounded-2xl border border-gray-100 border-l-4 border-l-violet-500 shadow-sm flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg hover:border-l-violet-600 p-6"
-            >
-              <div className="w-11 h-11 bg-violet-50 rounded-xl flex items-center justify-center mb-4">
-                <TrendingUp size={20} className="text-violet-600" />
-              </div>
-              <h3 className="text-base font-bold text-gray-900 mb-2">FD Rates</h3>
-              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-5">
-                Compare fixed deposit rates across banks and NBFCs. Highest FD rates with senior citizen benefits.
-              </p>
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {['Up to 9.5% p.a.', 'Senior Rates', 'All Tenures'].map(t => (
-                  <span key={t} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-violet-50 text-violet-700">{t}</span>
-                ))}
-              </div>
-              <span className="text-sm font-semibold text-violet-600 flex items-center gap-1.5 group-hover:gap-3 transition-all mt-auto">
-                Compare FD Rates <ArrowRight size={13} />
-              </span>
-            </Link>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── CALCULATORS ── */}
-      <section className="py-14 bg-gray-50 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-4">
-          {/* Header */}
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1.5">Free Financial Tools</p>
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight">30+ Calculators for every money decision</h2>
-              <p className="text-sm text-gray-400 mt-1">All calculations run in your browser — data never leaves your device</p>
+      <header className="py-8 md:py-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="force-dark relative overflow-hidden rounded-3xl border border-line bg-surface py-10 md:py-12">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute top-[-180px] left-1/2 -translate-x-1/2 w-[900px] h-[640px] rounded-full opacity-30 blur-[20px]"
+                   style={{ background: 'radial-gradient(50% 50% at 50% 50%, var(--acc-glow), transparent 70%)' }} />
+              <div className="absolute top-[120px] right-[-120px] w-[420px] h-[420px] rounded-full opacity-[.16] blur-[30px]"
+                   style={{ background: 'radial-gradient(50% 50% at 50% 50%, rgba(95,208,255,.4), transparent 70%)' }} />
             </div>
-            <Link to="/calculators" className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 transition bg-white border border-gray-200 rounded-lg px-3 py-2 hover:border-brand-300">
-              View all 30+ <ChevronRight size={14} />
-            </Link>
-          </div>
 
-          {/* Featured 3 — larger cards */}
-          <div className="grid sm:grid-cols-3 gap-4 mb-4">
-            {featuredCalcs.map((tool) => (
-              <Link
-                key={tool.link}
-                to={tool.link}
-                className="group relative rounded-2xl p-5 bg-white border-[1.5px] border-gray-100 hover:border-brand-200 hover:shadow-lg hover:-translate-y-0.5 transition-all overflow-hidden"
-              >
-                <div className={`w-12 h-12 ${tool.color} rounded-2xl flex items-center justify-center mb-4 shadow-sm group-hover:scale-105 transition-transform`}>
-                  <tool.icon size={22} className="text-white" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1 group-hover:text-brand-600 transition">{tool.name}</h3>
-                <p className="text-sm text-gray-400 leading-snug">{tool.desc}</p>
-                <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-brand-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                  Open calculator <ArrowRight size={12} />
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* Secondary 6 — compact list */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-5">
-            {moreCalcs.map((tool) => (
-              <Link
-                key={tool.link}
-                to={tool.link}
-                className="group flex items-center gap-3 p-3.5 rounded-xl bg-white border-[1.5px] border-gray-100 hover:border-brand-200 hover:shadow-sm hover:-translate-y-px transition-all"
-              >
-                <div className={`w-9 h-9 ${tool.color} rounded-lg flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
-                  <tool.icon size={17} className="text-white" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-sm text-gray-900 group-hover:text-brand-600 transition leading-tight">{tool.name}</h3>
-                  <p className="text-xs text-gray-400 mt-0.5 truncate">{tool.desc}</p>
-                </div>
-                <ArrowRight size={14} className="text-gray-200 group-hover:text-brand-400 group-hover:translate-x-0.5 transition-all shrink-0" />
-              </Link>
-            ))}
-          </div>
-
-          {/* CTA row */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-gray-100 rounded-2xl px-5 py-4">
-            <div>
-              <p className="font-semibold text-gray-900 text-sm">Need a different calculator?</p>
-              <p className="text-xs text-gray-400 mt-0.5">XIRR, CAGR, SWP, NPS, Capital Gains, NRI FD and 20+ more</p>
-            </div>
-            <Link to="/calculators" className="inline-flex items-center gap-2 bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">
-              Browse all calculators <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TRUST ── */}
-      <section className="py-14 bg-white border-t border-gray-50">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="text-center max-w-md mx-auto mb-10">
-            <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-2">Why Rupeepedia</p>
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Trusted by thousands of Indians every month</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            {[
-              {
-                icon: ShieldCheck, title: 'RBI Verified Data',
-                desc: 'All IFSC codes sourced from RBI\'s official database, updated fortnightly to reflect branch changes.',
-                bg: 'bg-brand-50', border: 'border-brand-100', ic: 'text-brand-600',
-              },
-              {
-                icon: TrendingUp, title: 'Always Current',
-                desc: 'Financial data, rates & card offers refreshed regularly. No stale information, ever.',
-                bg: 'bg-amber-50', border: 'border-amber-100', ic: 'text-amber-600',
-              },
-              {
-                icon: Users, title: '100% Free to Use',
-                desc: 'Every tool, comparison and guide is completely free. No login, no paywalls — always free.',
-                bg: 'bg-emerald-50', border: 'border-emerald-100', ic: 'text-emerald-600',
-              },
-            ].map((item) => (
-              <div key={item.title} className={`p-6 rounded-2xl ${item.bg} border ${item.border} text-center`}>
-                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm mx-auto mb-4">
-                  <item.icon size={22} className={item.ic} />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+            <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 relative z-[2]">
+              <div className="inline-flex items-center gap-2 bg-bg-2 border border-line-2 rounded-full pl-3 pr-4 py-1.5 mb-6">
+                <span className="w-2 h-2 bg-acc rounded-full animate-pulse" />
+                <span className="text-[.8rem] font-semibold text-ink">India's Most Comprehensive Financial Encyclopedia &amp; Directory</span>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── LEARNING HUB ── */}
-      <section className="py-12 bg-white border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="mb-6">
-            <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1">Free Guides</p>
-            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Learn the Basics</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {[
-              { label: 'What is IFSC Code?',        desc: 'Full form, format & how to use it',           to: '/what-is-ifsc-code',      color: 'border-brand-100 hover:border-brand-300' },
-              { label: 'IFSC Code vs MICR Code',    desc: 'Key differences explained with examples',     to: '/ifsc-vs-micr',           color: 'border-brand-100 hover:border-brand-300' },
-              { label: 'How to Find IFSC Code',     desc: '5 easy ways — passbook, app, online',         to: '/how-to-find-ifsc-code',  color: 'border-brand-100 hover:border-brand-300' },
-              { label: 'PIN Code Guide India',      desc: 'Structure, zones & how to search',            to: '/pin-code-india',         color: 'border-indigo-100 hover:border-indigo-300' },
-              { label: 'Gold Hallmark Guide',       desc: '916, 750, 585 purity marks explained',        to: '/gold-hallmark-guide',    color: 'border-yellow-100 hover:border-yellow-300' },
-              { label: 'Why Gold Prices Change',    desc: '8 key factors driving daily gold rate moves', to: '/why-gold-prices-change', color: 'border-yellow-100 hover:border-yellow-300' },
-            ].map(({ label, desc, to, color }) => (
-              <Link key={to} to={to}
-                className={`flex items-start gap-3 p-4 rounded-xl border bg-gray-50 hover:bg-white hover:shadow-sm transition-all ${color}`}>
-                <ArrowRight size={16} className="text-brand-500 mt-0.5 shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-800 text-sm">{label}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+              <h1 className="font-display text-4xl md:text-6xl font-bold text-ink leading-[1.08] tracking-tight">
+                Banking Codes, <span className="bg-gradient-to-r from-acc to-cyan bg-clip-text text-transparent">Pincodes</span> &amp;<br className="hidden md:block" /><span className="bg-gradient-to-r from-cyan to-acc bg-clip-text text-transparent">Financial Tools</span>
+              </h1>
 
-      {/* ── GUIDES ── */}
-      <section className="py-12 bg-[#F8F7FF] border-t border-brand-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="text-xs font-bold text-brand-600 uppercase tracking-widest mb-1">Guides</p>
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight">Stay financially informed</h2>
-            </div>
-            <Link to="/money-guides" className="hidden sm:flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700 transition">
-              All guides <ChevronRight size={14} />
-            </Link>
-          </div>
+              <p className="text-body mb-2 mt-5 text-lg max-w-2xl mx-auto">
+                Instant RBI-verified IFSC lookup, 19,300+ India Post PIN codes, 30+ free financial calculators, and credit card comparisons with live offers.
+              </p>
 
-          <div className="grid md:grid-cols-3 gap-4">
-            {blogsLoading
-              ? Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="bg-white border-[1.5px] border-gray-100 rounded-2xl p-5 animate-pulse">
-                    <div className="h-2.5 w-24 bg-gray-100 rounded mb-3" />
-                    <div className="h-4 w-3/4 bg-gray-100 rounded mb-2" />
-                    <div className="h-3 w-full bg-gray-100 rounded mb-1" />
-                    <div className="h-3 w-2/3 bg-gray-100 rounded" />
-                  </div>
-                ))
-              : latestBlogs.map(blog => (
-                  <Link
-                    key={blog.slug}
-                    to={`/money-guides/${blog.slug}`}
-                    className="group bg-white border-[1.5px] border-gray-100 rounded-2xl p-5 hover:border-brand-100 hover:shadow-md transition-all"
-                  >
-                    <p className="text-[10px] font-bold text-brand-600 uppercase tracking-widest mb-2">
-                      {blog.category} · {new Date(blog.publishedAt).getFullYear()}
-                    </p>
-                    <div className="flex items-start gap-2 mb-1.5">
-                      <BookOpen size={15} className="text-brand-400 mt-0.5 shrink-0" />
-                      <h3 className="font-bold text-gray-900 text-sm group-hover:text-brand-600 transition leading-snug">{blog.title}</h3>
-                    </div>
-                    <p className="text-xs text-gray-400 leading-relaxed line-clamp-2">{blog.description}</p>
+              <SearchTabs
+                tabs={SEARCH_TABS}
+                activeKey={activeTab}
+                onTabChange={(k) => { setActiveTab(k); setQuery(''); }}
+                value={query}
+                onValueChange={setQuery}
+                onSubmit={handleSearch}
+              />
+
+              <div className="flex items-center justify-center flex-wrap gap-2 mt-6 text-xs">
+                <span className="text-faint font-medium mr-1">Quick Jump:</span>
+                {[
+                  { label: 'Bank IFSC',        to: '/ifsc-finder' },
+                  { label: 'Pincodes',         to: '/pin-codes' },
+                  { label: 'Home Loan EMI',    to: '/calculators/home-loan-emi' },
+                  { label: 'SIP Planner',      to: '/calculators/sip' },
+                  { label: 'Lifetime Free Cards', to: '/credit-cards?category=Lifetime Free' },
+                ].map(item => (
+                  <Link key={item.to} to={item.to}
+                    className="px-3 py-1.5 rounded-lg bg-bg-2 border border-line-2 text-body font-medium hover:border-acc/40 hover:text-ink transition-colors">
+                    {item.label}
                   </Link>
-                ))
-            }
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ── TOOLS ── */}
+      <section className="py-14 bg-bg-2 border-t border-line">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <p className="font-mono text-xs font-bold text-acc uppercase tracking-widest mb-2 text-center">Everything money, one place</p>
+          <h2 className="font-display text-3xl font-bold text-ink mb-2 tracking-tight text-center">Built for the way India banks</h2>
+          <p className="text-muted max-w-xl mx-auto text-center">Start with a lookup, stay for the tools. Each one is fast, free, and works right in your browser.</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+            {TOOLS.map((tool) => (
+              <Link key={tool.to} to={tool.to}>
+                <Card hover feat={tool.feat} className={`h-full flex flex-col ${tool.hoverBorderCls}`}>
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 text-[1.25rem] ${tool.iconCls}`}>
+                    {tool.emoji}
+                  </div>
+                  <h3 className="text-[1.1rem] font-semibold text-ink mb-1.5">{tool.title}</h3>
+                  <p className="text-[.9rem] text-muted leading-relaxed flex-1 mb-3.5">{tool.desc}</p>
+                  <span className={`text-[.85rem] font-semibold font-mono flex items-center gap-1.5 ${tool.ctaCls}`}>
+                    {tool.cta}
+                  </span>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

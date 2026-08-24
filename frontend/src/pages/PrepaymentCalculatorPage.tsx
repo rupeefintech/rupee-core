@@ -115,7 +115,7 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb="Prepayment"
           title={`${isHome ? 'Home' : 'Personal'} Loan Prepayment`}
@@ -126,7 +126,7 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
         />
 
         <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-[13px] border border-line border-l-4 border-l-acc p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <SliderInput
@@ -170,39 +170,39 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                 />
               </div>
 
-              <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-lg p-5 text-white flex flex-col gap-3">
+              <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/25 rounded-[13px] p-5 text-ink flex flex-col gap-3">
                 <div>
-                  <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">Interest Saved</div>
-                  <div className="text-3xl font-bold tracking-tight text-green-300">{fmtShort(Math.max(intSaved, 0))}</div>
+                  <div className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">Interest Saved</div>
+                  <div className="text-3xl font-bold tracking-tight text-mint">{fmtShort(Math.max(intSaved, 0))}</div>
                 </div>
-                <hr className="border-white/20" />
+                <hr className="border-line" />
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-white/10 rounded-lg p-3">
-                    <div className="text-xs opacity-70 mb-1">Months Saved</div>
-                    <div className="text-2xl font-bold">{Math.max(monthsSaved, 0)}</div>
-                    <div className="text-xs opacity-60">{Math.floor(Math.max(monthsSaved, 0) / 12)}y {Math.max(monthsSaved, 0) % 12}m early</div>
+                  <div className="bg-surface-2 rounded-lg p-3">
+                    <div className="text-xs text-muted mb-1">Months Saved</div>
+                    <div className="text-2xl font-bold text-ink">{Math.max(monthsSaved, 0)}</div>
+                    <div className="text-xs text-faint">{Math.floor(Math.max(monthsSaved, 0) / 12)}y {Math.max(monthsSaved, 0) % 12}m early</div>
                   </div>
-                  <div className="bg-white/10 rounded-lg p-3">
-                    <div className="text-xs opacity-70 mb-1">New Closure</div>
-                    <div className="text-lg font-bold">{Math.floor(newTotalMonths / 12)}y {newTotalMonths % 12}m</div>
-                    <div className="text-xs opacity-60">vs {tenure}y 0m original</div>
+                  <div className="bg-surface-2 rounded-lg p-3">
+                    <div className="text-xs text-muted mb-1">New Closure</div>
+                    <div className="text-lg font-bold text-ink">{Math.floor(newTotalMonths / 12)}y {newTotalMonths % 12}m</div>
+                    <div className="text-xs text-faint">vs {tenure}y 0m original</div>
                   </div>
                 </div>
-                <hr className="border-white/20" />
+                <hr className="border-line" />
                 <div className="flex flex-col gap-2 text-sm">
-                  <div className="flex justify-between"><span className="opacity-80">Original Interest</span><span className="font-bold">{fmtShort(origInt)}</span></div>
-                  <div className="flex justify-between"><span className="opacity-80">New Interest</span><span className="font-bold text-green-300">{fmtShort(Math.max(newInt, 0))}</span></div>
-                  <div className="flex justify-between"><span className="opacity-80">Monthly EMI</span><span className="font-bold">{fmtINR(origEMI)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">Original Interest</span><span className="font-bold text-ink">{fmtShort(origInt)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">New Interest</span><span className="font-bold text-mint">{fmtShort(Math.max(newInt, 0))}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">Monthly EMI</span><span className="font-bold text-ink">{fmtINR(origEMI)}</span></div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* ── Article (always in DOM for SEO) ── */}
-          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+          <article className="bg-surface rounded-[13px] border border-line p-6 space-y-8">
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">Why prepaying early saves so much interest</h2>
-              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <h2 className="text-xl font-bold text-ink mb-3">Why prepaying early saves so much interest</h2>
+              <div className="text-sm text-muted space-y-3 leading-relaxed">
                 <p>
                   Loan EMIs are <strong>interest-heavy at the start</strong>. Interest each month is charged on the entire
                   outstanding balance, so early in a {isHome ? '20-year home loan' : '5-year personal loan'} most of your EMI
@@ -226,14 +226,14 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">Reduce tenure vs reduce EMI</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-xl font-bold text-ink mb-3">Reduce tenure vs reduce EMI</h2>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">After prepayment…</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Reduce tenure (recommended)</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Reduce EMI</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">After prepayment…</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Reduce tenure (recommended)</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Reduce EMI</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -243,10 +243,10 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                       ['Loan closes', 'Years earlier', 'On original date'],
                       ['Best for', 'Anyone who can afford the current EMI', 'Genuinely strained monthly budgets'],
                     ].map(([f, a, b]) => (
-                      <tr key={f} className="border-t border-slate-50">
-                        <td className="px-4 py-2.5 font-semibold text-slate-700">{f}</td>
-                        <td className="px-4 py-2.5 text-green-700">{a}</td>
-                        <td className="px-4 py-2.5 text-slate-600">{b}</td>
+                      <tr key={f} className="border-t border-line">
+                        <td className="px-4 py-2.5 font-semibold text-body">{f}</td>
+                        <td className="px-4 py-2.5 text-mint">{a}</td>
+                        <td className="px-4 py-2.5 text-muted">{b}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -255,8 +255,8 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">Checklist before you prepay</h2>
-              <ul className="text-sm text-slate-600 space-y-2">
+              <h2 className="text-xl font-bold text-ink mb-3">Checklist before you prepay</h2>
+              <ul className="text-sm text-muted space-y-2">
                 {[
                   ['Emergency fund intact?', 'Keep 6 months of expenses liquid. Prepayment is irreversible — the bank won\'t give the money back if you lose your job next month.'],
                   ['Costlier debt first', 'Credit card balances (36–42%) and personal loans (12–18%) always come before a home loan (8–9%).'],
@@ -265,8 +265,8 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                   ['Tell the bank: reduce tenure', 'If you don\'t specify, some lenders reduce the EMI instead, which quietly costs you most of the benefit.'],
                 ].map(([t, d]) => (
                   <li key={t} className="flex gap-2.5">
-                    <span className="text-brand-500 font-bold flex-shrink-0">✓</span>
-                    <span><strong className="text-slate-800">{t}</strong> {d}</span>
+                    <span className="text-acc font-bold flex-shrink-0">✓</span>
+                    <span><strong className="text-body">{t}</strong> {d}</span>
                   </li>
                 ))}
               </ul>
@@ -274,26 +274,26 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
           </article>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
                   {/* Always mounted so content stays in the DOM for search engines */}
-                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
+                  <div className={`px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Related tools */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {(isHome ? [
                 { path: '/calculators/home-loan-emi', label: 'Home Loan EMI Calculator', desc: 'EMI, interest and amortisation schedule' },
@@ -306,12 +306,12 @@ export default function PrepaymentCalculatorPage({ type = 'home' }: Props) {
                 { path: '/calculators/home-prepayment', label: 'Home Loan Prepayment', desc: 'Same analysis for home loans' },
                 { path: '/calculators/emi', label: 'EMI Calculator', desc: 'Generic loan EMI calculator' },
               ]).map(t => (
-                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
-                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
                 </Link>
               ))}
             </div>

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Calendar, MapPin, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import AdUnit, { AD_SLOTS } from '../components/AdUnit';
 import { ALL_STATES, HOLIDAY_DATA, HOLIDAYS_2025, HOLIDAYS_2026 } from '../data/bankHolidays';
@@ -29,20 +30,24 @@ function formatDisplay(iso: string) {
 
 function TypeBadge({ type }: { type: HolidayType }) {
   return type === 'national'
-    ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 whitespace-nowrap">National</span>
-    : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 whitespace-nowrap">Regional</span>;
+    ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint/10 text-mint whitespace-nowrap">National</span>
+    : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan/10 text-cyan whitespace-nowrap">Regional</span>;
 }
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-slate-100 rounded-lg overflow-hidden">
+    <div className="border-b border-line last:border-0 sm:border-0 sm:bg-surface sm:rounded-xl sm:border sm:border-line sm:overflow-hidden">
       <button onClick={() => setOpen(v => !v)}
-        className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
-        <span>{q}</span>
-        {open ? <ChevronUp className="w-4 h-4 text-slate-400 shrink-0 ml-3" /> : <ChevronDown className="w-4 h-4 text-slate-400 shrink-0 ml-3" />}
+        className="w-full flex items-center justify-between py-4 sm:px-5 text-left hover:text-acc sm:hover:bg-surface-2 transition-colors">
+        <span className="font-semibold text-ink text-sm pr-4">{q}</span>
+        {open ? <ChevronUp className="w-4 h-4 text-acc shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted shrink-0" />}
       </button>
-      {open && <div className="px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50">{a}</div>}
+      {open && (
+        <div className="pb-4 sm:px-5 text-sm text-muted leading-relaxed sm:border-t sm:border-line sm:pt-3">
+          {a}
+        </div>
+      )}
     </div>
   );
 }
@@ -168,42 +173,50 @@ export default function BankHolidayPage() {
       </Helmet>
 
       {/* Hero */}
-      <div className="bg-gradient-to-br from-brand-700 to-brand-900 text-white py-10 px-4 text-center">
-        <div className="inline-flex items-center gap-2 bg-white/10 text-white/80 text-xs font-bold px-3 py-1.5 rounded-full mb-4 uppercase tracking-wider">
-          <Calendar className="w-3.5 h-3.5" /> RBI Holiday Calendar
+      <header className="py-8 md:py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10 text-center">
+            <div className="relative z-[2]">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+                <div className="inline-flex items-center gap-2 bg-acc-deep text-acc text-xs font-bold px-3 py-1.5 rounded-full mb-4 uppercase tracking-wider">
+                  <Calendar className="w-3.5 h-3.5" /> RBI Holiday Calendar
+                </div>
+                <h1 className="font-display text-2xl md:text-3xl font-bold text-ink mb-2">Bank Holidays {year} — India</h1>
+                <p className="text-body text-sm max-w-lg mx-auto">
+                  Complete state-wise bank holiday list as per RBI NI Act circular. {filtered.length} holidays for {state === 'All India' ? 'all states' : state}.
+                </p>
+              </motion.div>
+            </div>
+          </div>
         </div>
-        <h1 className="text-2xl md:text-3xl font-bold mb-2">Bank Holidays {year} — India</h1>
-        <p className="text-brand-100 text-sm max-w-lg mx-auto">
-          Complete state-wise bank holiday list as per RBI NI Act circular. {filtered.length} holidays for {state === 'All India' ? 'all states' : state}.
-        </p>
-      </div>
+      </header>
 
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="bg-bg max-w-5xl mx-auto px-4 py-8">
         {/* Year + State filter bar */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 mb-6 space-y-4">
+        <div className="bg-surface rounded-2xl border border-line p-4 mb-6 space-y-4">
           {/* Year tabs */}
           <div className="flex gap-2">
             {[2025, 2026].map(y => (
               <button key={y} onClick={() => setYear(y)}
-                className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${year === y ? 'bg-brand-700 text-white shadow' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${year === y ? 'bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow' : 'bg-surface-2 text-muted hover:bg-surface hover:text-body'}`}>
                 {y}
               </button>
             ))}
             {year === 2026 && (
-              <span className="ml-auto self-center text-[11px] text-amber-600 font-semibold bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg">
+              <span className="ml-auto self-center text-[11px] text-gold font-semibold bg-gold/10 border border-gold/30 px-2 py-1 rounded-lg">
                 2026 dates are indicative — verify with official RBI circular
               </span>
             )}
           </div>
           {/* State filter dropdown */}
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">
+            <label className="flex items-center gap-1.5 text-xs font-bold text-faint uppercase tracking-wider shrink-0">
               <MapPin className="w-3.5 h-3.5" /> State
             </label>
             <select
               value={state}
               onChange={e => setState(e.target.value)}
-              className="flex-1 max-w-xs text-sm font-semibold text-slate-700 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 cursor-pointer"
+              className="flex-1 max-w-xs text-sm font-semibold text-ink bg-bg-2 border border-line-2 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc cursor-pointer"
             >
               {STATE_FILTERS.map(s => (
                 <option key={s} value={s}>{s}</option>
@@ -212,7 +225,7 @@ export default function BankHolidayPage() {
             {state !== 'All India' && (
               <button
                 onClick={() => setState('All India')}
-                className="text-xs text-slate-400 hover:text-slate-600 underline"
+                className="text-xs text-faint hover:text-muted underline"
               >
                 Clear
               </button>
@@ -221,11 +234,11 @@ export default function BankHolidayPage() {
         </div>
 
         {/* 2nd & 4th Saturday callout */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-4 flex items-start gap-3">
-          <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-          <p className="text-sm text-amber-800">
-            <span className="font-bold">2nd and 4th Saturdays</span> — all bank branches are closed every 2nd and 4th Saturday of the month (RBI rule since 2015). 1st, 3rd, and 5th Saturdays are working days.
-            <span className="font-bold"> April 1</span> (annual bank closing day) is also a non-working day.
+        <div className="bg-gold/10 border border-gold/30 rounded-xl px-4 py-3 mb-4 flex items-start gap-3">
+          <Info className="w-4 h-4 text-gold shrink-0 mt-0.5" />
+          <p className="text-sm text-body">
+            <span className="font-bold text-gold">2nd and 4th Saturdays</span> — all bank branches are closed every 2nd and 4th Saturday of the month (RBI rule since 2015). 1st, 3rd, and 5th Saturdays are working days.
+            <span className="font-bold text-gold"> April 1</span> (annual bank closing day) is also a non-working day.
           </p>
         </div>
 
@@ -236,9 +249,9 @@ export default function BankHolidayPage() {
             { label: 'National Holidays', value: nationalCount   },
             { label: 'Regional Holidays', value: regionalCount   },
           ].map(({ label, value }) => (
-            <div key={label} className="bg-white rounded-xl border border-slate-100 shadow-sm p-4 text-center">
-              <p className="text-2xl font-extrabold text-brand-700">{value}</p>
-              <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">{label}</p>
+            <div key={label} className="bg-surface rounded-2xl border border-line p-4 text-center">
+              <p className="text-2xl font-extrabold text-ink">{value}</p>
+              <p className="text-xs text-faint font-semibold uppercase tracking-wider mt-0.5">{label}</p>
             </div>
           ))}
         </div>
@@ -251,43 +264,43 @@ export default function BankHolidayPage() {
               .map(([monthNum, monthHolidays]) => {
                 const isPast = new Date(year, Number(monthNum) - 1, 28) < today;
                 return (
-                  <div key={monthNum} className={`bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden ${isPast ? 'opacity-60' : ''}`}>
-                    <div className="bg-slate-50 border-b border-slate-100 px-5 py-3 flex items-center justify-between">
-                      <h2 className="font-bold text-slate-700 text-sm">{MONTHS[Number(monthNum) - 1]} {year}</h2>
-                      <span className="text-xs text-slate-400">{monthHolidays.length} holiday{monthHolidays.length > 1 ? 's' : ''}</span>
+                  <div key={monthNum} className={`bg-surface rounded-2xl border border-line overflow-hidden ${isPast ? 'opacity-60' : ''}`}>
+                    <div className="bg-surface-2 border-b border-line px-5 py-3 flex items-center justify-between">
+                      <h2 className="font-bold text-body text-sm">{MONTHS[Number(monthNum) - 1]} {year}</h2>
+                      <span className="text-xs text-faint">{monthHolidays.length} holiday{monthHolidays.length > 1 ? 's' : ''}</span>
                     </div>
-                    <div className="divide-y divide-slate-50">
+                    <div className="divide-y divide-line">
                       {monthHolidays.map(h => {
                         const { dayName, day } = formatDisplay(h.date);
                         const isToday    = h.date === todayISO;
                         const isUpcoming = h.date === upcoming?.date;
                         return (
                           <div key={h.date}
-                            className={`px-5 py-3.5 flex items-start gap-4 ${isUpcoming ? 'bg-brand-50 border-l-2 border-brand-500' : 'hover:bg-slate-50'} transition-colors`}>
+                            className={`px-5 py-3.5 flex items-start gap-4 ${isUpcoming ? 'bg-acc-deep border-l-2 border-acc' : 'hover:bg-surface-2'} transition-colors`}>
                             {/* Date block */}
-                            <div className={`text-center w-12 shrink-0 rounded-lg py-1.5 ${isToday ? 'bg-brand-700 text-white' : 'bg-slate-100 text-slate-700'}`}>
+                            <div className={`text-center w-12 shrink-0 rounded-lg py-1.5 ${isToday ? 'bg-acc text-white' : 'bg-surface-2 text-body'}`}>
                               <p className="text-[10px] font-semibold uppercase">{dayName}</p>
                               <p className="text-lg font-extrabold leading-none">{day}</p>
                             </div>
                             {/* Holiday info */}
                             <div className="flex-1 min-w-0">
                               <div className="flex flex-wrap items-center gap-2 mb-1">
-                                <p className="font-semibold text-slate-800 text-sm">{h.name}</p>
+                                <p className="font-semibold text-ink text-sm">{h.name}</p>
                                 {isUpcoming && (
-                                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-100 text-brand-700">
+                                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-acc-deep text-acc">
                                     {daysUntil === 0 ? 'Today' : daysUntil === 1 ? 'Tomorrow' : `In ${daysUntil} days`}
                                   </span>
                                 )}
                               </div>
                               <div className="flex flex-wrap items-center gap-2">
                                 <TypeBadge type={h.type} />
-                                <span className="text-[11px] text-slate-400">
+                                <span className="text-[11px] text-faint">
                                   {h.states.includes(ALL_STATES) ? 'All States' : h.states.slice(0, 3).join(', ') + (h.states.length > 3 ? ` +${h.states.length - 3} more` : '')}
                                 </span>
                                 {h.note && (
                                   <button
                                     onClick={() => setOpenNote(openNote === h.date ? null : h.date)}
-                                    className="inline-flex items-center gap-1 text-[11px] text-amber-600 hover:text-amber-700"
+                                    className="inline-flex items-center gap-1 text-[11px] text-gold hover:text-gold/80"
                                   >
                                     <Info className="w-3 h-3" />
                                     Note
@@ -295,7 +308,7 @@ export default function BankHolidayPage() {
                                 )}
                               </div>
                               {openNote === h.date && h.note && (
-                                <p className="mt-2 text-[11px] text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 leading-relaxed">{h.note}</p>
+                                <p className="mt-2 text-[11px] text-body bg-gold/10 border border-gold/30 rounded-lg px-3 py-2 leading-relaxed">{h.note}</p>
                               )}
                             </div>
                           </div>
@@ -307,66 +320,68 @@ export default function BankHolidayPage() {
               })}
 
             {filtered.length === 0 && (
-              <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-10 text-center text-slate-400 text-sm">
+              <div className="bg-surface rounded-2xl border border-line p-10 text-center text-faint text-sm">
                 No holidays found for {state} in {year}.
               </div>
             )}
 
             {/* FAQ */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-              <h2 className="text-lg font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
-              <div className="space-y-2">
+            <section>
+              <h2 className="text-lg font-bold text-ink mb-4">Frequently Asked Questions</h2>
+              <div className="space-y-3">
                 {faqs.map((f, i) => <FAQItem key={i} q={f.q} a={f.a} />)}
               </div>
-            </div>
+            </section>
           </div>
 
           {/* Sidebar */}
           <aside className="md:col-span-4 space-y-5">
             {/* Upcoming holiday */}
             {upcoming && (
-              <div className="bg-brand-700 text-white rounded-xl p-5 shadow-lg shadow-brand-500/20">
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-200 mb-3">Next Bank Holiday</p>
-                <div className="flex items-start gap-3">
-                  <div className="bg-white/15 rounded-xl p-3 text-center min-w-[52px]">
-                    <p className="text-[10px] font-semibold uppercase text-brand-200">{formatDisplay(upcoming.date).monthName.slice(0, 3)}</p>
-                    <p className="text-2xl font-extrabold leading-none">{formatDisplay(upcoming.date).day}</p>
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm leading-snug">{upcoming.name}</p>
-                    <p className="text-brand-200 text-xs mt-1">
-                      {daysUntil === 0 ? 'Today!' : daysUntil === 1 ? 'Tomorrow' : `${daysUntil} days away`}
-                    </p>
-                    <TypeBadge type={upcoming.type} />
+              <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/30 text-ink rounded-2xl p-6 shadow-acc-glow relative overflow-hidden">
+                <div className="relative z-10">
+                  <p className="text-xs font-bold uppercase tracking-widest text-faint mb-3">Next Bank Holiday</p>
+                  <div className="flex items-start gap-3">
+                    <div className="bg-acc/15 rounded-xl p-3 text-center min-w-[52px]">
+                      <p className="text-[10px] font-semibold uppercase text-acc">{formatDisplay(upcoming.date).monthName.slice(0, 3)}</p>
+                      <p className="text-2xl font-extrabold leading-none text-ink">{formatDisplay(upcoming.date).day}</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm leading-snug text-ink">{upcoming.name}</p>
+                      <p className="text-muted text-xs mt-1">
+                        {daysUntil === 0 ? 'Today!' : daysUntil === 1 ? 'Tomorrow' : `${daysUntil} days away`}
+                      </p>
+                      <TypeBadge type={upcoming.type} />
+                    </div>
                   </div>
                 </div>
               </div>
             )}
 
             {/* Legend */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Holiday Types</p>
+            <div className="bg-surface rounded-2xl border border-line p-4">
+              <p className="text-xs font-bold uppercase tracking-widest text-faint mb-3">Holiday Types</p>
               <div className="space-y-2.5">
                 <div className="flex items-start gap-3">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 whitespace-nowrap mt-0.5">National</span>
-                  <p className="text-xs text-slate-500">Mandated by Central Government — all banks closed across India.</p>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mint/10 text-mint whitespace-nowrap mt-0.5">National</span>
+                  <p className="text-xs text-muted">Mandated by Central Government — all banks closed across India.</p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 whitespace-nowrap mt-0.5">Regional</span>
-                  <p className="text-xs text-slate-500">State or UT holiday — bank branches in observing states are closed.</p>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan/10 text-cyan whitespace-nowrap mt-0.5">Regional</span>
+                  <p className="text-xs text-muted">State or UT holiday — bank branches in observing states are closed.</p>
                 </div>
               </div>
             </div>
 
             {/* FD Calculator CTA */}
-            <div className="bg-gradient-to-br from-slate-50 to-brand-50 rounded-xl border border-brand-100 p-5">
-              <h3 className="font-bold text-slate-800 text-sm mb-1">Plan around holidays</h3>
-              <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+            <div className="bg-gradient-to-br from-acc-deep to-surface rounded-2xl p-5 border border-acc/25">
+              <h3 className="font-bold text-ink text-sm mb-1">Plan around holidays</h3>
+              <p className="text-xs text-muted mb-4 leading-relaxed">
                 FD maturity on a bank holiday? Calculate your returns and choose an optimal tenure.
               </p>
               <Link
                 to="/calculators/fd"
-                className="flex items-center justify-center gap-2 bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors w-full"
+                className="flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all w-full"
               >
                 <Calendar className="w-3.5 h-3.5" /> FD Calculator →
               </Link>
@@ -376,16 +391,16 @@ export default function BankHolidayPage() {
             <AdUnit slot={AD_SLOTS.HOLIDAY_MID} />
 
             {/* IFSC cross-link */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 text-center">
-              <p className="text-xs text-slate-400 mb-3">Need a bank's IFSC code?</p>
+            <div className="bg-surface rounded-2xl border border-line p-4 text-center">
+              <p className="text-xs text-faint mb-3">Need a bank's IFSC code?</p>
               <Link to="/ifsc-finder"
-                className="text-xs font-bold text-brand-700 hover:underline">
+                className="text-xs font-bold text-acc hover:underline">
                 IFSC Code Finder →
               </Link>
             </div>
 
             {/* Disclaimer */}
-            <p className="text-[11px] text-slate-400 leading-relaxed px-1">
+            <p className="text-[11px] text-faint leading-relaxed px-1">
               Holiday dates are compiled from RBI circulars and official state government notifications. Dates marked as approximate should be verified with the official RBI circular for {year}.
             </p>
           </aside>

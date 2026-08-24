@@ -14,6 +14,7 @@ import CreditCards from "./pages/CreditCards";
 import CreditCardDetail from "./pages/CreditCardDetail";
 import CreditCardCompare from "./pages/CreditCardCompare";
 import CreditCardCompareByPair from "./pages/CreditCardCompareByPair";
+import CardRewardOptimizerPage from "./pages/CardRewardOptimizerPage";
 import BankAccounts from "./pages/BankAccounts";
 import SalaryCalculatorPage from "./pages/SalaryCalculatorPage";
 import HRACalculatorPage from "./pages/HRACalculatorPage";
@@ -140,7 +141,7 @@ function AdminRoutes() {
 
 function PublicLayout() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-bg">
       <ScrollToTop />
       <Navbar />
       <ChatWidget />
@@ -192,6 +193,7 @@ function PublicLayout() {
             <Route path="/credit-cards" element={<CreditCards />} />
             <Route path="/credit-cards/compare" element={<CreditCardCompare />} />
             <Route path="/credit-cards/compare/:pair" element={<CreditCardCompareByPair />} />
+            <Route path="/credit-cards/reward-optimizer" element={<CardRewardOptimizerPage />} />
             <Route path="/credit-cards/:slug" element={<CreditCardDetail />} />
 
             {/* Calculator Index (no sidebar) */}

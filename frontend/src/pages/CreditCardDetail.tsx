@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink, CreditCard, Check, ChevronRight } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { apiClient } from "../utils/api";
@@ -96,18 +97,18 @@ export default function CreditCardDetail() {
 
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-20 flex justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-brand-600 border-t-transparent rounded-full" />
+      <div className="bg-bg min-h-screen max-w-5xl mx-auto px-4 py-20 flex justify-center">
+        <div className="animate-spin h-8 w-8 border-4 border-acc border-t-transparent rounded-full" />
       </div>
     );
   }
 
   if (error || !card) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <CreditCard size={48} className="mx-auto text-gray-300 mb-4" />
-        <p className="text-gray-500 text-lg">{error || "Card not found."}</p>
-        <Link to="/credit-cards" className="mt-4 inline-block text-brand-600 hover:underline text-sm">
+      <div className="bg-bg min-h-screen max-w-5xl mx-auto px-4 py-20 text-center">
+        <CreditCard size={48} className="mx-auto text-faint mb-4" />
+        <p className="text-muted text-lg">{error || "Card not found."}</p>
+        <Link to="/credit-cards" className="mt-4 inline-block text-acc hover:text-ink text-sm">
           Back to all cards
         </Link>
       </div>
@@ -136,22 +137,23 @@ export default function CreditCardDetail() {
         })}</script>
       </Helmet>
 
-      {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-2 text-xs text-gray-500">
-          <Link to="/credit-cards" className="hover:text-brand-600 transition">Credit Cards</Link>
-          <ChevronRight size={12} />
-          <span className="text-brand-900 font-medium truncate">{card.name}</span>
-        </div>
-      </div>
-
       {/* ─── Hero Card Section ─── */}
-      <div className={`bg-gradient-to-br ${gradient} relative overflow-hidden`}>
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-white/[0.03]" />
-        <div className="absolute -left-10 -bottom-10 w-48 h-48 rounded-full bg-white/[0.03]" />
+      <header className="py-8 md:py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className={`relative overflow-hidden rounded-3xl border border-line bg-gradient-to-br ${gradient}`}>
+            <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+            <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-white/[0.03] pointer-events-none" />
+            <div className="absolute -left-10 -bottom-10 w-48 h-48 rounded-full bg-white/[0.03] pointer-events-none" />
 
-        <div className="max-w-5xl mx-auto px-4 py-10 md:py-14 relative z-10">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14 relative z-10">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+          <nav className="flex items-center gap-1.5 text-xs text-white/60 mb-6 flex-wrap font-mono">
+            <Link to="/" className="hover:text-white transition-colors">Home</Link>
+            <ChevronRight className="w-3 h-3" />
+            <Link to="/credit-cards" className="hover:text-white transition-colors">Credit Cards</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-white font-semibold truncate">{card.name}</span>
+          </nav>
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Card visual */}
             <div className="w-full md:w-80 shrink-0">
@@ -187,7 +189,7 @@ export default function CreditCardDetail() {
             <div className="flex-1 text-white">
               <div className="flex items-start gap-3 flex-wrap">
                 {card.isFeatured && (
-                  <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-gold-500/20 text-gold-400 border border-gold-500/30">Featured</span>
+                  <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-gold/20 text-gold border border-gold/30">Featured</span>
                 )}
                 {card.isPopular && (
                   <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/10 text-white/80 border border-white/20">Popular</span>
@@ -235,7 +237,7 @@ export default function CreditCardDetail() {
                     href={card.applyUrl}
                     target="_blank"
                     rel="noopener noreferrer sponsored"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gold-500 hover:bg-gold-600 text-brand-900 rounded-xl font-semibold transition text-sm shadow-lg shadow-gold-500/20"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gold hover:opacity-90 text-bg rounded-xl font-semibold transition-all text-sm shadow-lg shadow-gold/20"
                   >
                     Apply Now
                     <ExternalLink size={14} />
@@ -245,7 +247,7 @@ export default function CreditCardDetail() {
                     href={`https://www.google.com/search?q=${encodeURIComponent(card.name + " " + card.bank.name + " apply online")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gold-500 hover:bg-gold-600 text-brand-900 rounded-xl font-semibold transition text-sm shadow-lg shadow-gold-500/20"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gold hover:opacity-90 text-bg rounded-xl font-semibold transition-all text-sm shadow-lg shadow-gold/20"
                   >
                     Apply on Bank Site
                     <ExternalLink size={14} />
@@ -253,18 +255,21 @@ export default function CreditCardDetail() {
                 )}
                 <Link
                   to={`/credit-cards`}
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl font-medium transition text-sm"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl font-medium transition-all text-sm"
                 >
                   Compare Cards
                 </Link>
               </div>
             </div>
           </div>
+              </motion.div>
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* ─── Content ─── */}
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="bg-bg max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid md:grid-cols-3 gap-6">
           {/* Left: Offers + Features */}
           <div className="md:col-span-2 space-y-6">
@@ -275,19 +280,19 @@ export default function CreditCardDetail() {
 
             {/* About Card */}
             {card.aboutCard && (
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h2 className="text-lg font-bold text-brand-900 mb-3 font-display">About This Card</h2>
-                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{card.aboutCard}</p>
+              <div className="bg-surface rounded-2xl border border-line p-6">
+                <h2 className="text-lg font-bold text-ink mb-3 font-display">About This Card</h2>
+                <p className="text-sm text-muted leading-relaxed whitespace-pre-wrap">{card.aboutCard}</p>
               </div>
             )}
 
             {/* Features */}
             {card.features.length > 0 && (
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h2 className="text-lg font-bold text-brand-900 mb-4 font-display">Features</h2>
+              <div className="bg-surface rounded-2xl border border-line p-6">
+                <h2 className="text-lg font-bold text-ink mb-4 font-display">Features</h2>
                 <div className="flex flex-wrap gap-2">
                   {card.features.map((f) => (
-                    <span key={f} className="px-3 py-1.5 bg-brand-50 text-brand-700 rounded-full text-sm font-medium border border-brand-100">
+                    <span key={f} className="px-3 py-1.5 bg-acc-deep text-acc rounded-full text-sm font-medium border border-acc/30">
                       {f}
                     </span>
                   ))}
@@ -298,21 +303,21 @@ export default function CreditCardDetail() {
 
           {/* Right: Details sidebar */}
           <div className="space-y-6">
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="text-sm font-bold text-brand-900 mb-4 uppercase tracking-wider">Card Details</h3>
+            <div className="bg-surface rounded-2xl border border-line p-6">
+              <h3 className="text-sm font-bold text-ink mb-4 uppercase tracking-wider">Card Details</h3>
               <div className="space-y-0">
                 <DetailRow label="Annual Fee" value={formatFee(card.details.annualFee)} />
                 {card.details.annualFeeWaiver && (
-                  <div className="pb-2.5 border-b border-gray-100 -mt-1.5">
-                    <p className="text-[10px] text-emerald-600 flex items-center gap-1">
+                  <div className="pb-2.5 border-b border-line -mt-1.5">
+                    <p className="text-[10px] text-mint flex items-center gap-1">
                       <span>✓</span>{card.details.annualFeeWaiver}
                     </p>
                   </div>
                 )}
                 <DetailRow label="Joining Fee" value={formatFee(card.details.joiningFee)} />
                 {card.details.joiningFeeWaiver && (
-                  <div className="pb-2.5 border-b border-gray-100 -mt-1.5">
-                    <p className="text-[10px] text-emerald-600 flex items-center gap-1">
+                  <div className="pb-2.5 border-b border-line -mt-1.5">
+                    <p className="text-[10px] text-mint flex items-center gap-1">
                       <span>✓</span>{card.details.joiningFeeWaiver}
                     </p>
                   </div>
@@ -341,8 +346,8 @@ export default function CreditCardDetail() {
 
             {/* Fee Structure */}
             {(card.details.forexMarkup || card.details.apr || card.details.atmCashFee || card.details.latePaymentFee) && (
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-sm font-bold text-brand-900 mb-4 uppercase tracking-wider">Fee Structure</h3>
+              <div className="bg-surface rounded-2xl border border-line p-6">
+                <h3 className="text-sm font-bold text-ink mb-4 uppercase tracking-wider">Fee Structure</h3>
                 <div className="space-y-0">
                   {card.details.forexMarkup != null && <DetailRow label="Forex Markup" value={`${card.details.forexMarkup}%`} />}
                   {card.details.apr && <DetailRow label="APR / Finance Charge" value={card.details.apr} />}
@@ -358,9 +363,9 @@ export default function CreditCardDetail() {
             )}
 
             {/* Eligibility CTA */}
-            <div className="bg-gradient-to-br from-brand-50 to-brand-100 rounded-xl border border-brand-100 p-6">
-              <h3 className="text-sm font-bold text-brand-900 mb-2 uppercase tracking-wider">Check Eligibility</h3>
-              <p className="text-xs text-gray-500 mb-3">
+            <div className="bg-gradient-to-br from-acc-deep to-surface rounded-2xl border border-acc/25 p-6">
+              <h3 className="text-sm font-bold text-ink mb-2 uppercase tracking-wider">Check Eligibility</h3>
+              <p className="text-xs text-muted mb-3">
                 {card.details.minIncome
                   ? `Minimum income requirement: \u20B9${card.details.minIncome.toLocaleString("en-IN")}/year`
                   : "Check if you qualify for this card"}
@@ -369,7 +374,7 @@ export default function CreditCardDetail() {
                 href={card.applyUrl || `https://www.google.com/search?q=${encodeURIComponent(card.name + " " + card.bank.name + " eligibility")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white bg-brand-700 hover:bg-brand-800 rounded-xl transition shadow-sm"
+                className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg rounded-xl shadow-acc-glow transition-all"
               >
                 Check on {card.bank.name}
                 <ExternalLink size={13} />
@@ -377,19 +382,19 @@ export default function CreditCardDetail() {
             </div>
 
             {/* Bank card */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h3 className="text-sm font-bold text-brand-900 mb-3 uppercase tracking-wider">Issuing Bank</h3>
+            <div className="bg-surface rounded-2xl border border-line p-6">
+              <h3 className="text-sm font-bold text-ink mb-3 uppercase tracking-wider">Issuing Bank</h3>
               <div className="flex items-center gap-3">
                 {card.bank.logo ? (
-                  <img src={card.bank.logo} alt={card.bank.name} className="h-10 w-10 rounded-lg object-contain border border-gray-200 p-1" />
+                  <img src={card.bank.logo} alt={card.bank.name} className="h-10 w-10 rounded-lg object-contain border border-line p-1" />
                 ) : (
-                  <div className="h-10 w-10 bg-brand-100 rounded-lg flex items-center justify-center text-brand-700 font-bold text-sm">
+                  <div className="h-10 w-10 bg-acc-deep rounded-lg flex items-center justify-center text-acc font-bold text-sm">
                     {card.bank.name.charAt(0)}
                   </div>
                 )}
                 <div>
-                  <p className="text-sm font-semibold text-brand-900">{card.bank.name}</p>
-                  <Link to={`/bank/${card.bank.slug}`} className="text-xs text-brand-600 hover:underline">
+                  <p className="text-sm font-semibold text-ink">{card.bank.name}</p>
+                  <Link to={`/bank/${card.bank.slug}`} className="text-xs text-acc hover:text-ink transition-colors">
                     View all branches &rarr;
                   </Link>
                 </div>
@@ -399,7 +404,7 @@ export default function CreditCardDetail() {
             {/* Back to all cards */}
             <Link
               to="/credit-cards"
-              className="flex items-center justify-center gap-2 w-full py-3 text-sm font-medium text-brand-700 bg-brand-50 rounded-xl border border-brand-100 hover:bg-brand-100 transition"
+              className="flex items-center justify-center gap-2 w-full py-3 text-sm font-medium text-acc bg-acc-deep rounded-xl border border-acc/25 hover:bg-acc/20 transition-all"
             >
               <ArrowLeft size={14} />
               Browse All Cards
@@ -420,28 +425,28 @@ function LatePaymentFeeBlock({ value }: { value: string }) {
 
   if (!slabs) {
     return (
-      <div className="py-2.5 border-b border-gray-100 last:border-0">
-        <span className="text-xs text-gray-500 block mb-0.5">Late Payment Fee</span>
-        <span className="text-xs font-semibold text-brand-900">{value}</span>
+      <div className="py-2.5 border-b border-line last:border-0">
+        <span className="text-xs text-faint block mb-0.5">Late Payment Fee</span>
+        <span className="text-xs font-semibold text-ink">{value}</span>
       </div>
     );
   }
   return (
-    <div className="py-2.5 border-b border-gray-100 last:border-0">
-      <span className="text-xs text-gray-500 block mb-2">Late Payment Fee</span>
-      <div className="rounded-lg overflow-hidden border border-gray-100">
+    <div className="py-2.5 border-b border-line last:border-0">
+      <span className="text-xs text-faint block mb-2">Late Payment Fee</span>
+      <div className="rounded-lg overflow-hidden border border-line">
         <table className="w-full text-[11px]">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="text-left px-2.5 py-1.5 font-semibold text-gray-500">Amount Due</th>
-              <th className="text-right px-2.5 py-1.5 font-semibold text-gray-500">Fee</th>
+            <tr className="bg-surface-2">
+              <th className="text-left px-2.5 py-1.5 font-semibold text-faint">Amount Due</th>
+              <th className="text-right px-2.5 py-1.5 font-semibold text-faint">Fee</th>
             </tr>
           </thead>
           <tbody>
             {slabs.map((s, i) => (
-              <tr key={i} className="border-t border-gray-100">
-                <td className="px-2.5 py-1.5 text-gray-700">{s.label}</td>
-                <td className="px-2.5 py-1.5 text-right font-semibold text-gray-900">
+              <tr key={i} className="border-t border-line">
+                <td className="px-2.5 py-1.5 text-body">{s.label}</td>
+                <td className="px-2.5 py-1.5 text-right font-semibold text-ink">
                   {s.fee === 0 ? 'NIL' : '₹' + s.fee.toLocaleString('en-IN')}
                 </td>
               </tr>
@@ -455,9 +460,9 @@ function LatePaymentFeeBlock({ value }: { value: string }) {
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
-      <span className="text-xs text-gray-500">{label}</span>
-      <span className="text-xs font-semibold text-brand-900 capitalize">{value}</span>
+    <div className="flex items-center justify-between py-2.5 border-b border-line last:border-0">
+      <span className="text-xs text-faint">{label}</span>
+      <span className="text-xs font-semibold text-ink capitalize">{value}</span>
     </div>
   );
 }
@@ -468,7 +473,7 @@ const CATEGORY_CONFIG: Record<string, { emoji: string; color: string; bg: string
   cashback:      { emoji: '💰', color: 'text-green-700',  bg: 'bg-green-50',   border: 'border-green-200'  },
   travel:        { emoji: '✈️', color: 'text-sky-700',    bg: 'bg-sky-50',     border: 'border-sky-200'    },
   dining:        { emoji: '🍽️', color: 'text-orange-700', bg: 'bg-orange-50',  border: 'border-orange-200' },
-  lounge:        { emoji: '🛋️', color: 'text-indigo-700', bg: 'bg-indigo-50',  border: 'border-indigo-200' },
+  lounge:        { emoji: '🛋️', color: 'text-purple-700', bg: 'bg-purple-50',  border: 'border-purple-200' },
   fuel:          { emoji: '⛽', color: 'text-yellow-700', bg: 'bg-yellow-50',  border: 'border-yellow-200' },
   entertainment: { emoji: '🎬', color: 'text-pink-700',   bg: 'bg-pink-50',    border: 'border-pink-200'   },
   welcome:       { emoji: '🎁', color: 'text-rose-700',   bg: 'bg-rose-50',    border: 'border-rose-200'   },
@@ -478,7 +483,7 @@ const CATEGORY_CONFIG: Record<string, { emoji: string; color: string; bg: string
   milestone:     { emoji: '🏆', color: 'text-yellow-800', bg: 'bg-yellow-50',  border: 'border-yellow-300' },
 };
 
-const DEFAULT_CAT = { emoji: '✨', color: 'text-brand-700', bg: 'bg-brand-50', border: 'border-brand-200' };
+const DEFAULT_CAT = { emoji: '✨', color: 'text-acc', bg: 'bg-acc-deep', border: 'border-acc/30' };
 
 function getCatConfig(category: string | null) {
   if (!category) return DEFAULT_CAT;
@@ -491,8 +496,8 @@ function BenefitsSection({ offers }: { offers: Offer[] }) {
   const [expanded, setExpanded] = React.useState<number | null>(null);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
-      <h2 className="text-lg font-bold text-brand-900 mb-5 font-display">Benefits & Offers</h2>
+    <div className="bg-surface rounded-2xl border border-line p-6">
+      <h2 className="text-lg font-bold text-ink mb-5 font-display">Benefits & Offers</h2>
 
       {/* Category highlight cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
@@ -509,7 +514,7 @@ function BenefitsSection({ offers }: { offers: Offer[] }) {
               <div className={`text-xs font-bold uppercase tracking-wide mb-1 ${cfg.color}`}>
                 {offer.category || 'Benefit'}
               </div>
-              <div className="text-sm font-semibold text-gray-800 leading-snug line-clamp-2">
+              <div className="text-sm font-semibold text-ink leading-snug line-clamp-2">
                 {offer.title.length > 60 ? offer.title.slice(0, 58) + '…' : offer.title}
               </div>
               <div className={`mt-2 text-[10px] font-medium ${cfg.color} flex items-center gap-0.5`}>
@@ -531,27 +536,27 @@ function BenefitsSection({ offers }: { offers: Offer[] }) {
               <span className="text-3xl leading-none">{cfg.emoji}</span>
               <div>
                 <div className={`text-[11px] font-bold uppercase tracking-widest mb-0.5 ${cfg.color}`}>{o.category || 'Benefit'}</div>
-                <h3 className="text-base font-bold text-gray-900 leading-snug">{o.title}</h3>
+                <h3 className="text-base font-bold text-ink leading-snug">{o.title}</h3>
               </div>
             </div>
             {/* Panel body */}
-            <div className="bg-white px-5 py-4">
+            <div className="bg-surface px-5 py-4">
               {o.description && (
                 o.description.includes('\n')
                   ? <OfferDescription text={o.description} />
-                  : <p className="text-sm text-gray-700">{o.description}</p>
+                  : <p className="text-sm text-body">{o.description}</p>
               )}
               {(o.rewardRate || o.rewardCap) && (
                 <div className={`flex gap-6 mt-4 pt-3 border-t ${cfg.border}`}>
                   {o.rewardRate && (
                     <div>
-                      <span className="text-[10px] text-gray-500 block uppercase tracking-wide">Reward Rate</span>
+                      <span className="text-[10px] text-faint block uppercase tracking-wide">Reward Rate</span>
                       <span className={`text-lg font-black ${cfg.color}`}>{o.rewardRate}%</span>
                     </div>
                   )}
                   {o.rewardCap && (
                     <div>
-                      <span className="text-[10px] text-gray-500 block uppercase tracking-wide">Monthly Cap</span>
+                      <span className="text-[10px] text-faint block uppercase tracking-wide">Monthly Cap</span>
                       <span className={`text-lg font-black ${cfg.color}`}>₹{o.rewardCap?.toLocaleString('en-IN')}</span>
                     </div>
                   )}
@@ -568,7 +573,7 @@ function BenefitsSection({ offers }: { offers: Offer[] }) {
 function renderInline(text: string): React.ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*|_[^_]+_)/).map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**'))
-      return <strong key={i} className="font-bold text-gray-900">{part.slice(2, -2)}</strong>;
+      return <strong key={i} className="font-bold text-ink">{part.slice(2, -2)}</strong>;
     if (part.startsWith('_') && part.endsWith('_'))
       return <em key={i}>{part.slice(1, -1)}</em>;
     return part;
@@ -607,8 +612,8 @@ function OfferDescription({ text }: { text: string }) {
 
         if (isHeader) {
           return (
-            <div key={i} className="mt-5 mb-2 first:mt-0 pb-1.5 border-b-2 border-brand-100">
-              <p className="text-[15px] font-extrabold text-gray-900 leading-snug">
+            <div key={i} className="mt-5 mb-2 first:mt-0 pb-1.5 border-b-2 border-acc/20">
+              <p className="text-[15px] font-extrabold text-ink leading-snug">
                 {trimmed.replace(/\*|_/g, '')}
               </p>
             </div>
@@ -616,23 +621,23 @@ function OfferDescription({ text }: { text: string }) {
         }
         if (numberMatch) {
           return (
-            <div key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed mb-1">
-              <span className="text-brand-600 shrink-0 font-bold min-w-[20px] mt-px">{numberMatch[1]}.</span>
+            <div key={i} className="flex items-start gap-2 text-sm text-body leading-relaxed mb-1">
+              <span className="text-acc shrink-0 font-bold min-w-[20px] mt-px">{numberMatch[1]}.</span>
               <span>{renderInline(numberMatch[2])}</span>
             </div>
           );
         }
         if (bulletMatch) {
           return (
-            <div key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed mb-1">
-              <span className="text-brand-500 shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-400 block" />
+            <div key={i} className="flex items-start gap-2 text-sm text-body leading-relaxed mb-1">
+              <span className="text-acc shrink-0 mt-1.5 w-1.5 h-1.5 rounded-full bg-acc block" />
               <span>{renderInline(bulletMatch[1])}</span>
             </div>
           );
         }
         return (
-          <div key={i} className="flex items-start gap-2 text-sm text-gray-700 leading-relaxed mb-1">
-            <span className="text-brand-300 shrink-0 mt-0.5 font-bold text-xs">›</span>
+          <div key={i} className="flex items-start gap-2 text-sm text-body leading-relaxed mb-1">
+            <span className="text-faint shrink-0 mt-0.5 font-bold text-xs">›</span>
             <span>{renderInline(trimmed)}</span>
           </div>
         );

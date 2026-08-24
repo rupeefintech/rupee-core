@@ -108,7 +108,7 @@ export default function SWPCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb="SWP"
           title="SWP"
@@ -118,7 +118,7 @@ export default function SWPCalculatorPage() {
         />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-[13px] border border-line border-l-4 border-l-acc p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <SliderInput label="Total investment"           value={investment} min={10000} max={10000000} step={10000} display={fmtINR(investment)} onChange={setInvestment} parseInput={(raw: string) => Number(raw.replace(/[^0-9]/g, ''))} color="blue" />
@@ -128,31 +128,31 @@ export default function SWPCalculatorPage() {
               </div>
 
               <div className="flex flex-col justify-center">
-                <div className="bg-slate-50 rounded-xl p-5 space-y-2">
+                <div className="bg-surface-2 rounded-xl p-5 space-y-2">
                   <div className="flex justify-between py-1.5">
-                    <span className="text-sm text-slate-500">Total investment</span>
-                    <span className="text-sm font-semibold text-slate-700">{fmtINR(investment)}</span>
+                    <span className="text-sm text-muted">Total investment</span>
+                    <span className="text-sm font-semibold text-body">{fmtINR(investment)}</span>
                   </div>
                   <div className="flex justify-between py-1.5">
-                    <span className="text-sm text-slate-500">Total withdrawal</span>
-                    <span className="text-sm font-semibold text-slate-700">{fmtINR(totalWithdrawn)}</span>
+                    <span className="text-sm text-muted">Total withdrawal</span>
+                    <span className="text-sm font-semibold text-body">{fmtINR(totalWithdrawn)}</span>
                   </div>
-                  <div className="flex justify-between py-1.5 border-t border-slate-200 mt-1 pt-3">
-                    <span className="text-sm text-slate-500">Final value</span>
-                    <span className="text-base font-bold text-slate-900">{fmtShort(finalValue)}</span>
+                  <div className="flex justify-between py-1.5 border-t border-line mt-1 pt-3">
+                    <span className="text-sm text-muted">Final value</span>
+                    <span className="text-base font-bold text-ink">{fmtShort(finalValue)}</span>
                   </div>
                   {finalValue <= 0 && (
-                    <div className="bg-red-50 border border-red-100 rounded-lg p-3 text-xs text-red-600 mt-2">
+                    <div className="bg-coral/10 border border-coral/30 rounded-lg p-3 text-xs text-coral mt-2">
                       ⚠ Corpus exhausted before {years} years. Reduce withdrawal or increase investment.
                     </div>
                   )}
                   {finalValue > 0 && (
-                    <div className="bg-brand-50 border border-brand-100 rounded-lg p-3 text-xs text-brand-700 mt-2">
+                    <div className="bg-acc-deep border border-acc/25 rounded-lg p-3 text-xs text-acc mt-2">
                       ✓ Corpus sustains {years} years of withdrawals with {fmtShort(finalValue)} remaining.
                     </div>
                   )}
                 </div>
-                <Link to="/calculators/sip" className="mt-4 bg-brand-600 text-white font-bold text-sm rounded-xl py-3 hover:bg-brand-700 transition-colors text-center">
+                <Link to="/calculators/sip" className="mt-4 bg-acc text-white font-bold text-sm rounded-xl py-3 hover:opacity-90 transition-colors text-center">
                   Build a corpus first — SIP Calculator →
                 </Link>
               </div>
@@ -160,30 +160,30 @@ export default function SWPCalculatorPage() {
 
             {/* Schedule table */}
             <div className="mt-8">
-              <h2 className="text-base font-bold text-slate-900 mb-3">Withdrawal Schedule</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-base font-bold text-ink mb-3">Withdrawal Schedule</h2>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Month</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Opening</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Interest</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Withdrawal</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Closing</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted">Month</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Opening</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Interest</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Withdrawal</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Closing</th>
                     </tr>
                   </thead>
                   <tbody>
                     {schedule.slice(0, 60).map(row => (
-                      <tr key={row.month} className="border-t border-slate-50 hover:bg-slate-50">
-                        <td className="px-4 py-2.5 font-medium text-slate-700">Month {row.month}</td>
-                        <td className="px-4 py-2.5 text-right text-slate-600">{fmtINR(row.opening)}</td>
-                        <td className="px-4 py-2.5 text-right text-green-600">{fmtINR(row.interest)}</td>
-                        <td className="px-4 py-2.5 text-right text-red-500">{fmtINR(row.withdrawal)}</td>
-                        <td className="px-4 py-2.5 text-right font-medium text-slate-700">{fmtINR(row.closing)}</td>
+                      <tr key={row.month} className="border-t border-line hover:bg-surface-2">
+                        <td className="px-4 py-2.5 font-medium text-body">Month {row.month}</td>
+                        <td className="px-4 py-2.5 text-right text-muted">{fmtINR(row.opening)}</td>
+                        <td className="px-4 py-2.5 text-right text-mint">{fmtINR(row.interest)}</td>
+                        <td className="px-4 py-2.5 text-right text-coral">{fmtINR(row.withdrawal)}</td>
+                        <td className="px-4 py-2.5 text-right font-medium text-body">{fmtINR(row.closing)}</td>
                       </tr>
                     ))}
                     {schedule.length > 60 && (
-                      <tr><td colSpan={5} className="px-4 py-3 text-center text-xs text-slate-400">Showing 60 of {schedule.length} months</td></tr>
+                      <tr><td colSpan={5} className="px-4 py-3 text-center text-xs text-faint">Showing 60 of {schedule.length} months</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -192,10 +192,10 @@ export default function SWPCalculatorPage() {
           </div>
 
           {/* ── Article (always in DOM for SEO) ── */}
-          <article className="bg-white rounded-lg shadow-lg p-6 space-y-8">
+          <article className="bg-surface rounded-[13px] border border-line p-6 space-y-8">
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">What is an SWP and how does the math work?</h2>
-              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+              <h2 className="text-xl font-bold text-ink mb-3">What is an SWP and how does the math work?</h2>
+              <div className="text-sm text-muted space-y-3 leading-relaxed">
                 <p>
                   A <strong>Systematic Withdrawal Plan (SWP)</strong> is the reverse of a SIP: instead of investing a fixed
                   amount every month, you <em>redeem</em> a fixed amount every month while the rest of the corpus stays
@@ -220,15 +220,15 @@ export default function SWPCalculatorPage() {
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">How long does {fmtShort(investment)} last? (at {rate}% return)</h2>
-              <p className="text-xs text-slate-400 mb-3">Computed with the same engine as the calculator — change the sliders above to update.</p>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-xl font-bold text-ink mb-3">How long does {fmtShort(investment)} last? (at {rate}% return)</h2>
+              <p className="text-xs text-faint mb-3">Computed with the same engine as the calculator — change the sliders above to update.</p>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-sm border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Monthly withdrawal</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Annual rate</th>
-                      <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">Corpus lasts</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-muted">Monthly withdrawal</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Annual rate</th>
+                      <th className="text-right px-4 py-3 text-xs font-semibold text-muted">Corpus lasts</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -237,11 +237,11 @@ export default function SWPCalculatorPage() {
                       if (w <= 0) return null;
                       const lasts = monthsLasting(investment, w, rate);
                       return (
-                        <tr key={f} className={`border-t border-slate-50 ${Math.abs(w - withdrawal) < 500 ? 'bg-brand-50' : ''}`}>
-                          <td className="px-4 py-2.5 font-bold text-brand-600">{fmtINR(w)}</td>
-                          <td className="px-4 py-2.5 text-right text-slate-500">{(f * 12 * 100).toFixed(1)}% of corpus/yr</td>
-                          <td className="px-4 py-2.5 text-right font-semibold text-slate-800">
-                            {lasts === 'forever' ? <span className="text-green-600">Grows forever ✓</span> : `${Math.floor(lasts / 12)}y ${lasts % 12}m`}
+                        <tr key={f} className={`border-t border-line ${Math.abs(w - withdrawal) < 500 ? 'bg-acc-deep' : ''}`}>
+                          <td className="px-4 py-2.5 font-bold text-acc">{fmtINR(w)}</td>
+                          <td className="px-4 py-2.5 text-right text-muted">{(f * 12 * 100).toFixed(1)}% of corpus/yr</td>
+                          <td className="px-4 py-2.5 text-right font-semibold text-ink">
+                            {lasts === 'forever' ? <span className="text-mint">Grows forever ✓</span> : `${Math.floor(lasts / 12)}y ${lasts % 12}m`}
                           </td>
                         </tr>
                       );
@@ -249,19 +249,19 @@ export default function SWPCalculatorPage() {
                   </tbody>
                 </table>
               </div>
-              <p className="text-[11px] text-slate-400 mt-2">"Grows forever" means monthly returns exceed the withdrawal, so the balance rises over time. Real fund returns fluctuate — build a safety margin.</p>
+              <p className="text-[11px] text-faint mt-2">"Grows forever" means monthly returns exceed the withdrawal, so the balance rises over time. Real fund returns fluctuate — build a safety margin.</p>
             </section>
 
             <section>
-              <h2 className="text-xl font-bold text-slate-900 mb-3">SWP vs FD interest vs dividend plans</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+              <h2 className="text-xl font-bold text-ink mb-3">SWP vs FD interest vs dividend plans</h2>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Feature</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">SWP</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">FD monthly payout</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Dividend (IDCW)</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Feature</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">SWP</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">FD monthly payout</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Dividend (IDCW)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -272,11 +272,11 @@ export default function SWPCalculatorPage() {
                       ['Return certainty', 'Market-linked', 'Guaranteed', 'Market-linked'],
                       ['Flexibility', 'Change/stop anytime', 'Locked till maturity', 'None'],
                     ].map(([f, a, b, c]) => (
-                      <tr key={f} className="border-t border-slate-50 align-top">
-                        <td className="px-4 py-2.5 font-semibold text-slate-700">{f}</td>
-                        <td className="px-4 py-2.5 text-slate-600">{a}</td>
-                        <td className="px-4 py-2.5 text-slate-600">{b}</td>
-                        <td className="px-4 py-2.5 text-slate-600">{c}</td>
+                      <tr key={f} className="border-t border-line align-top">
+                        <td className="px-4 py-2.5 font-semibold text-body">{f}</td>
+                        <td className="px-4 py-2.5 text-muted">{a}</td>
+                        <td className="px-4 py-2.5 text-muted">{b}</td>
+                        <td className="px-4 py-2.5 text-muted">{c}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -286,26 +286,26 @@ export default function SWPCalculatorPage() {
           </article>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {faqs.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
                   {/* Always mounted so content stays in the DOM for search engines */}
-                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
+                  <div className={`px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Related tools */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Related calculators</h2>
+          <div className="bg-surface rounded-[13px] border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Related calculators</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
                 { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Build the corpus your SWP will draw from' },
@@ -313,12 +313,12 @@ export default function SWPCalculatorPage() {
                 { path: '/calculators/fd', label: 'FD Calculator', desc: 'Compare with fixed deposit monthly payouts' },
                 { path: '/calculators/nps', label: 'NPS Calculator', desc: 'Pension corpus and annuity estimate' },
               ].map(t => (
-                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
-                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
                 </Link>
               ))}
             </div>

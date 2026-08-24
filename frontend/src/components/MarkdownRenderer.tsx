@@ -13,7 +13,7 @@ const components: Components = {
   h2: ({ children, id, ...props }) => (
     <h2
       id={id}
-      className="text-2xl font-bold text-brand-900 mt-10 mb-4 pt-8 border-t-2 border-gray-100 first:border-t-0 first:pt-0 scroll-mt-24"
+      className="text-2xl font-bold text-ink mt-10 mb-4 pt-8 border-t-2 border-line first:border-t-0 first:pt-0 scroll-mt-24"
       {...props}
     >
       {children}
@@ -21,19 +21,19 @@ const components: Components = {
   ),
 
   h3: ({ children, id, ...props }) => (
-    <h3 id={id} className="text-lg font-semibold text-brand-800 mt-7 mb-3 scroll-mt-24" {...props}>
+    <h3 id={id} className="text-lg font-semibold text-ink mt-7 mb-3 scroll-mt-24" {...props}>
       {children}
     </h3>
   ),
 
   h4: ({ children, id, ...props }) => (
-    <h4 id={id} className="text-base font-semibold text-brand-700 mt-5 mb-2 scroll-mt-24" {...props}>
+    <h4 id={id} className="text-base font-semibold text-ink mt-5 mb-2 scroll-mt-24" {...props}>
       {children}
     </h4>
   ),
 
   p: ({ children, ...props }) => (
-    <p className="text-[15px] text-gray-700 leading-[1.8] mb-4" {...props}>
+    <p className="text-[15px] text-body leading-[1.8] mb-4" {...props}>
       {children}
     </p>
   ),
@@ -41,7 +41,7 @@ const components: Components = {
   a: ({ href, children, ...props }) => {
     if (href?.startsWith('/')) {
       return (
-        <Link to={href} className="text-brand-600 hover:text-brand-800 font-semibold underline underline-offset-2 decoration-brand-200 hover:decoration-brand-400 transition">
+        <Link to={href} className="text-acc hover:text-ink font-semibold underline underline-offset-2 decoration-acc/30 hover:decoration-acc transition">
           {children}
         </Link>
       );
@@ -51,7 +51,7 @@ const components: Components = {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-brand-600 hover:text-brand-800 font-semibold underline underline-offset-2 decoration-brand-200 hover:decoration-brand-400 transition"
+        className="text-acc hover:text-ink font-semibold underline underline-offset-2 decoration-acc/30 hover:decoration-acc transition"
         {...props}
       >
         {children}
@@ -60,13 +60,13 @@ const components: Components = {
   },
 
   ul: ({ children, ...props }) => (
-    <ul className="space-y-2.5 mb-5 text-[15px] text-gray-700 ml-1 md-ul" {...props}>
+    <ul className="space-y-2.5 mb-5 text-[15px] text-body ml-1 md-ul" {...props}>
       {children}
     </ul>
   ),
 
   ol: ({ children, ...props }) => (
-    <ol className="space-y-2.5 mb-5 text-[15px] text-gray-700 ml-1 md-ol" {...props}>
+    <ol className="space-y-2.5 mb-5 text-[15px] text-body ml-1 md-ol" {...props}>
       {children}
     </ol>
   ),
@@ -79,16 +79,16 @@ const components: Components = {
 
   blockquote: ({ children, ...props }) => {
     const text = String(children);
-    let style = { border: 'border-brand-400', bg: 'bg-brand-50', icon: '💡', label: 'Info', labelColor: 'text-brand-700', labelBg: 'bg-brand-100' };
+    let style = { border: 'border-acc', bg: 'bg-acc-deep', label: 'Info', labelColor: 'text-acc', labelBg: 'bg-acc/15' };
 
     if (text.includes('⚠') || text.includes('Warning')) {
-      style = { border: 'border-amber-400', bg: 'bg-amber-50', icon: '⚠️', label: 'Warning', labelColor: 'text-amber-700', labelBg: 'bg-amber-100' };
+      style = { border: 'border-gold', bg: 'bg-gold/10', label: 'Warning', labelColor: 'text-gold', labelBg: 'bg-gold/15' };
     } else if (text.includes('💡') || text.includes('Tip') || text.includes('Pro Tip')) {
-      style = { border: 'border-emerald-400', bg: 'bg-emerald-50', icon: '💡', label: 'Pro Tip', labelColor: 'text-emerald-700', labelBg: 'bg-emerald-100' };
+      style = { border: 'border-mint', bg: 'bg-mint/10', label: 'Pro Tip', labelColor: 'text-mint', labelBg: 'bg-mint/15' };
     } else if (text.includes('📌') || text.includes('Note')) {
-      style = { border: 'border-violet-400', bg: 'bg-violet-50', icon: '📌', label: 'Note', labelColor: 'text-violet-700', labelBg: 'bg-violet-100' };
+      style = { border: 'border-violet', bg: 'bg-violet-500/10', label: 'Note', labelColor: 'text-violet', labelBg: 'bg-violet-500/15' };
     } else if (text.includes('✅') || text.includes('Success')) {
-      style = { border: 'border-green-400', bg: 'bg-green-50', icon: '✅', label: 'Success', labelColor: 'text-green-700', labelBg: 'bg-green-100' };
+      style = { border: 'border-mint', bg: 'bg-mint/10', label: 'Success', labelColor: 'text-mint', labelBg: 'bg-mint/15' };
     }
 
     return (
@@ -97,7 +97,7 @@ const components: Components = {
           <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider ${style.labelColor} ${style.labelBg} px-2 py-0.5 rounded-full mb-2`}>
             {style.label}
           </span>
-          <blockquote className="[&>p]:mb-0 [&>p]:text-sm [&>p]:leading-relaxed [&>p]:text-gray-700" {...props}>
+          <blockquote className="[&>p]:mb-0 [&>p]:text-sm [&>p]:leading-relaxed [&>p]:text-body" {...props}>
             {children}
           </blockquote>
         </div>
@@ -106,7 +106,7 @@ const components: Components = {
   },
 
   table: ({ children, ...props }) => (
-    <div className="overflow-x-auto my-8 rounded-xl border border-gray-200 shadow-sm">
+    <div className="overflow-x-auto my-8 rounded-xl border border-line shadow-sm">
       <table className="min-w-full text-sm" {...props}>
         {children}
       </table>
@@ -114,19 +114,19 @@ const components: Components = {
   ),
 
   thead: ({ children, ...props }) => (
-    <thead className="bg-gradient-to-r from-brand-700 to-brand-800" {...props}>
+    <thead className="bg-gradient-to-r from-acc to-acc-2" {...props}>
       {children}
     </thead>
   ),
 
   th: ({ children, ...props }) => (
-    <th className="px-5 py-3.5 text-left text-xs font-bold text-white uppercase tracking-wider border-b border-brand-600" {...props}>
+    <th className="px-5 py-3.5 text-left text-xs font-bold text-white uppercase tracking-wider border-b border-acc-2" {...props}>
       {children}
     </th>
   ),
 
   tr: ({ children, ...props }) => (
-    <tr className="even:bg-gray-50 hover:bg-brand-50/50 transition-colors" {...props}>
+    <tr className="even:bg-surface-2 hover:bg-acc-deep transition-colors" {...props}>
       {children}
     </tr>
   ),
@@ -135,13 +135,13 @@ const components: Components = {
     const text = String(children);
     // Style checkmarks and crosses
     if (text.trim() === '✅' || text.trim() === '✅ Yes' || text.trim() === '✅ Available') {
-      return <td className="px-5 py-3 text-emerald-600 font-semibold border-b border-gray-100" {...props}>{children}</td>;
+      return <td className="px-5 py-3 text-mint font-semibold border-b border-line" {...props}>{children}</td>;
     }
     if (text.trim() === '❌' || text.trim() === '❌ No' || text.trim() === '❌ Not Available') {
-      return <td className="px-5 py-3 text-red-400 font-semibold border-b border-gray-100" {...props}>{children}</td>;
+      return <td className="px-5 py-3 text-coral font-semibold border-b border-line" {...props}>{children}</td>;
     }
     return (
-      <td className="px-5 py-3 text-gray-700 border-b border-gray-100" {...props}>
+      <td className="px-5 py-3 text-body border-b border-line" {...props}>
         {children}
       </td>
     );
@@ -157,7 +157,7 @@ const components: Components = {
         {...props}
       />
       {alt && alt !== '' && (
-        <figcaption className="text-center text-xs text-gray-400 mt-2 italic">
+        <figcaption className="text-center text-xs text-faint mt-2 italic">
           {alt}
         </figcaption>
       )}
@@ -168,13 +168,13 @@ const components: Components = {
     const isInline = !className;
     if (isInline) {
       return (
-        <code className="bg-brand-50 text-brand-700 px-1.5 py-0.5 rounded text-[13px] font-mono border border-brand-100" {...props}>
+        <code className="bg-acc-deep text-acc px-1.5 py-0.5 rounded text-[13px] font-mono border border-acc/20" {...props}>
           {children}
         </code>
       );
     }
     return (
-      <code className={`block bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono ${className || ''}`} {...props}>
+      <code className={`block bg-bg-2 text-ink p-4 rounded-lg overflow-x-auto text-sm font-mono border border-line ${className || ''}`} {...props}>
         {children}
       </code>
     );
@@ -186,10 +186,10 @@ const components: Components = {
     </pre>
   ),
 
-  hr: () => <hr className="my-10 border-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />,
+  hr: () => <hr className="my-10 border-0 h-px bg-gradient-to-r from-transparent via-line-2 to-transparent" />,
 
   strong: ({ children, ...props }) => (
-    <strong className="font-bold text-brand-900" {...props}>
+    <strong className="font-bold text-ink" {...props}>
       {children}
     </strong>
   ),
@@ -203,23 +203,23 @@ const components: Components = {
     // Individual concept card
     if (className === 'concept-card') {
       return (
-        <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md hover:border-brand-200 transition-all" {...props}>
+        <div className="bg-surface rounded-xl border border-line p-5 hover:shadow-md hover:border-acc/40 transition-all" {...props}>
           {children}
         </div>
       );
     }
     // Concept card title
     if (className === 'concept-title') {
-      return <h4 className="text-sm font-bold text-brand-900 mb-2 flex items-center gap-2" {...props}>{children}</h4>;
+      return <h4 className="text-sm font-bold text-ink mb-2 flex items-center gap-2" {...props}>{children}</h4>;
     }
     // Concept card description
     if (className === 'concept-desc') {
-      return <p className="text-xs text-gray-500 leading-relaxed mb-0" {...props}>{children}</p>;
+      return <p className="text-xs text-faint leading-relaxed mb-0" {...props}>{children}</p>;
     }
     // Highlight box
     if (className === 'highlight-box') {
       return (
-        <div className="my-8 bg-gradient-to-r from-brand-50 to-brand-100 rounded-xl border border-brand-100 p-6" {...props}>
+        <div className="my-8 bg-acc-deep rounded-xl border border-acc/25 p-6" {...props}>
           {children}
         </div>
       );
@@ -231,23 +231,23 @@ const components: Components = {
     // Stat card
     if (className === 'stat-card') {
       return (
-        <div className="bg-white rounded-lg border border-gray-200 p-4 text-center" {...props}>
+        <div className="bg-surface rounded-lg border border-line p-4 text-center" {...props}>
           {children}
         </div>
       );
     }
     // Stat value
     if (className === 'stat-value') {
-      return <div className="text-xl font-bold text-brand-800 mb-0.5" {...props}>{children}</div>;
+      return <div className="text-xl font-bold text-acc mb-0.5" {...props}>{children}</div>;
     }
     // Stat label
     if (className === 'stat-label') {
-      return <div className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold" {...props}>{children}</div>;
+      return <div className="text-[10px] text-faint uppercase tracking-wider font-semibold" {...props}>{children}</div>;
     }
     // Verdict / summary box
     if (className === 'verdict-box') {
       return (
-        <div className="my-8 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-200 p-6" {...props}>
+        <div className="my-8 bg-mint/10 rounded-xl border border-mint/30 p-6" {...props}>
           {children}
         </div>
       );
@@ -255,7 +255,7 @@ const components: Components = {
     // CTA box
     if (className === 'cta-box') {
       return (
-        <div className="my-8 bg-gradient-to-r from-brand-700 to-brand-900 rounded-xl p-6 text-center" {...props}>
+        <div className="my-8 bg-gradient-to-r from-acc to-acc-2 rounded-xl p-6 text-center" {...props}>
           {children}
         </div>
       );
@@ -266,13 +266,13 @@ const components: Components = {
     }
     if (className === 'vs-card') {
       return (
-        <div className="bg-white rounded-xl border border-gray-200 p-5" {...props}>
+        <div className="bg-surface rounded-xl border border-line p-5" {...props}>
           {children}
         </div>
       );
     }
     if (className === 'vs-title') {
-      return <h4 className="text-base font-bold text-brand-900 mb-3 pb-2 border-b border-gray-100" {...props}>{children}</h4>;
+      return <h4 className="text-base font-bold text-ink mb-3 pb-2 border-b border-line" {...props}>{children}</h4>;
     }
     // Default div
     return <div className={className} {...props}>{children}</div>;

@@ -196,15 +196,16 @@ export default function NRIRentalIncomePage() {
         icon={Home}
       />
 
+      <div className="bg-bg">
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Property type toggle */}
-        <div className="card p-5 mb-5">
-          <div className="text-xs font-semibold text-gray-600 mb-2">Property Status</div>
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-5">
+          <div className="text-xs font-semibold text-muted mb-2">Property Status</div>
           <div className="flex gap-2">
             {[true, false].map(letOut => (
               <button key={String(letOut)} onClick={() => setIsLetOut(letOut)}
                 className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition border ${
-                  isLetOut === letOut ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                  isLetOut === letOut ? 'bg-acc text-white border-acc' : 'bg-surface text-muted border-line hover:bg-surface-2'
                 }`}
               >
                 {letOut ? '🏠 Let-Out Property' : '🏡 Self-Occupied'}
@@ -212,39 +213,39 @@ export default function NRIRentalIncomePage() {
             ))}
           </div>
           {!isLetOut && (
-            <p className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg mt-3">
+            <p className="text-xs text-gold bg-gold/10 px-3 py-2 rounded-lg mt-3">
               Self-occupied property: NAV is treated as zero. Rental income section shows notional tax. Home loan interest deduction capped at ₹2L.
             </p>
           )}
         </div>
 
         {/* Inputs */}
-        <div className="card p-5 mb-6">
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Monthly Rent (₹)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Monthly Rent (₹)</label>
               <input type="number" value={monthlyRent} onChange={e => setMonthlyRent(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Municipal / Property Tax Paid Annually (₹)</label>
+              <label className="block text-xs font-semibold text-muted mb-1.5">Municipal / Property Tax Paid Annually (₹)</label>
               <input type="number" value={municipalTax} onChange={e => setMunicipalTax(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+              <label className="block text-xs font-semibold text-muted mb-1.5">
                 Home Loan Interest Paid Annually (₹)
-                {!isLetOut && <span className="ml-1 text-amber-600">(capped at ₹2L for self-occupied)</span>}
+                {!isLetOut && <span className="ml-1 text-gold">(capped at ₹2L for self-occupied)</span>}
               </label>
               <input type="number" value={homeLoanInterest} onChange={e => setHomeLoanInterest(Number(e.target.value))}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                className="w-full border border-line rounded-lg px-3 py-2.5 text-sm bg-bg-2 text-ink focus:outline-none focus:ring-2 focus:ring-acc" />
             </div>
           </div>
         </div>
 
         {/* Computation breakdown */}
-        <div className="card p-5 mb-5">
-          <h2 className="text-sm font-bold text-gray-800 mb-4">Tax Computation Breakdown</h2>
+        <div className="bg-surface border border-line rounded-2xl p-5 mb-5">
+          <h2 className="text-sm font-bold text-ink mb-4">Tax Computation Breakdown</h2>
           <div className="space-y-2 text-sm">
             {[
               { label: 'Gross Annual Rent', value: fmt(result.grossAnnualRent), note: `${monthlyRent.toLocaleString()} × 12`, positive: true },
@@ -258,12 +259,12 @@ export default function NRIRentalIncomePage() {
               { label: 'Health & Education Cess @ 4%', value: fmt(result.cess), note: 'on tax + surcharge', positive: false },
               { label: 'Total Tax Payable', value: fmt(result.totalTax), note: `Effective rate: ${result.effectiveRate.toFixed(1)}% on gross rent`, positive: false, separator: true, bold: true },
             ].map(({ label, value, note, positive, separator, bold }) => (
-              <div key={label} className={`flex items-center justify-between py-2 ${separator ? 'border-t border-gray-200 mt-1 pt-3' : ''}`}>
+              <div key={label} className={`flex items-center justify-between py-2 ${separator ? 'border-t border-line mt-1 pt-3' : ''}`}>
                 <div>
-                  <span className={`text-sm ${bold ? 'font-bold text-gray-900' : 'text-gray-700'}`}>{label}</span>
-                  {note && <span className="text-xs text-gray-400 ml-2">{note}</span>}
+                  <span className={`text-sm ${bold ? 'font-bold text-ink' : 'text-body'}`}>{label}</span>
+                  {note && <span className="text-xs text-faint ml-2">{note}</span>}
                 </div>
-                <span className={`text-sm font-semibold ${bold ? 'text-gray-900' : positive ? 'text-gray-800' : 'text-red-600'}`}>{value}</span>
+                <span className={`text-sm font-semibold ${bold ? 'text-ink' : positive ? 'text-body' : 'text-coral'}`}>{value}</span>
               </div>
             ))}
           </div>
@@ -271,19 +272,19 @@ export default function NRIRentalIncomePage() {
 
         {/* TDS vs Actual Tax */}
         <div className="grid sm:grid-cols-2 gap-4 mb-5">
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-            <div className="text-xs text-amber-600 font-semibold mb-1">TDS Tenant Deducts</div>
-            <div className="text-2xl font-bold text-amber-800">{fmt(result.tdsOnGross)}</div>
-            <div className="text-xs text-amber-700 mt-1">31.2% on gross rent (30% + 4% cess). No threshold for NRI landlords.</div>
+          <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
+            <div className="text-xs text-gold font-semibold mb-1">TDS Tenant Deducts</div>
+            <div className="text-2xl font-bold text-gold">{fmt(result.tdsOnGross)}</div>
+            <div className="text-xs text-gold mt-1">31.2% on gross rent (30% + 4% cess). No threshold for NRI landlords.</div>
           </div>
-          <div className={`rounded-xl border p-4 ${result.refundOrPayable >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-            <div className={`text-xs font-semibold mb-1 ${result.refundOrPayable >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <div className={`rounded-xl border p-4 ${result.refundOrPayable >= 0 ? 'bg-mint/10 border-mint/30' : 'bg-coral/10 border-coral/30'}`}>
+            <div className={`text-xs font-semibold mb-1 ${result.refundOrPayable >= 0 ? 'text-mint' : 'text-coral'}`}>
               {result.refundOrPayable >= 0 ? 'TDS Refund (file ITR)' : 'Additional Tax Payable'}
             </div>
-            <div className={`text-2xl font-bold ${result.refundOrPayable >= 0 ? 'text-green-800' : 'text-red-800'}`}>
+            <div className={`text-2xl font-bold ${result.refundOrPayable >= 0 ? 'text-mint' : 'text-coral'}`}>
               {fmt(Math.abs(result.refundOrPayable))}
             </div>
-            <div className={`text-xs mt-1 ${result.refundOrPayable >= 0 ? 'text-green-700' : 'text-red-700'}`}>
+            <div className={`text-xs mt-1 ${result.refundOrPayable >= 0 ? 'text-mint' : 'text-coral'}`}>
               {result.refundOrPayable >= 0
                 ? 'TDS exceeds actual tax. File ITR to claim refund to your NRO account.'
                 : 'Actual tax exceeds TDS. Pay self-assessment tax.'}
@@ -298,9 +299,9 @@ export default function NRIRentalIncomePage() {
             { label: 'Total Tax', value: fmt(result.totalTax) },
             { label: 'Net Income After Tax', value: fmt(result.netIncomeAfterTax) },
           ].map(({ label, value }) => (
-            <div key={label} className="bg-gray-50 border border-gray-100 rounded-xl p-3">
-              <div className="text-[10px] text-gray-400 mb-1">{label}</div>
-              <div className="text-base font-bold text-gray-800">{value}</div>
+            <div key={label} className="bg-surface-2 border border-line rounded-xl p-3">
+              <div className="text-[10px] text-faint mb-1">{label}</div>
+              <div className="text-base font-bold text-ink">{value}</div>
             </div>
           ))}
         </div>
@@ -308,8 +309,8 @@ export default function NRIRentalIncomePage() {
         {/* ── Article ── */}
         <article className="space-y-8 mb-8">
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">How Indian rental income is actually taxed for NRIs</h2>
-            <div className="text-sm text-gray-600 space-y-3 leading-relaxed">
+            <h2 className="text-lg font-bold text-ink mb-3">How Indian rental income is actually taxed for NRIs</h2>
+            <div className="text-sm text-muted space-y-3 leading-relaxed">
               <p>
                 The most common misconception is that NRIs pay a flat 30% tax on Indian rent. The 30% (31.2% with cess)
                 is only the <strong>TDS the tenant must withhold</strong> under Section 195 — a prepayment, not the final tax.
@@ -336,8 +337,8 @@ export default function NRIRentalIncomePage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">NRI rental income rules at a glance</h2>
-            <div className="card p-0 overflow-hidden">
+            <h2 className="text-lg font-bold text-ink mb-3">NRI rental income rules at a glance</h2>
+            <div className="bg-surface border border-line rounded-2xl p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs border-collapse">
                   <tbody>
@@ -353,9 +354,9 @@ export default function NRIRentalIncomePage() {
                       ['DTAA', 'India always taxes Indian property rent; claim credit abroad'],
                       ['Lower TDS', 'Form 13 certificate from AO reduces TDS to near-actual tax'],
                     ].map(([k, v]) => (
-                      <tr key={k} className="border-b border-gray-50 last:border-0">
-                        <td className="px-3 py-2 font-semibold text-gray-700 whitespace-nowrap">{k}</td>
-                        <td className="px-3 py-2 text-gray-600">{v}</td>
+                      <tr key={k} className="border-b border-line last:border-0">
+                        <td className="px-3 py-2 font-semibold text-body whitespace-nowrap">{k}</td>
+                        <td className="px-3 py-2 text-muted">{v}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -365,27 +366,27 @@ export default function NRIRentalIncomePage() {
           </section>
         </article>
 
-        <div className="flex gap-2.5 bg-blue-50 border border-blue-100 rounded-xl p-4 text-xs text-blue-700 mb-8">
+        <div className="flex gap-2.5 bg-cyan/10 border border-cyan/30 rounded-xl p-4 text-xs text-cyan mb-8">
           <Info size={14} className="flex-shrink-0 mt-0.5" />
           <div>This calculator assumes rental income is your only Indian income and uses new-regime slabs for FY 2025-26 without the 87A rebate. If you have other Indian income, slabs apply to the total. DTAA relief and old-regime election may change the outcome. Consult a CA for accurate filing.</div>
         </div>
 
-        <h2 className="text-lg font-bold text-gray-900 mb-1">NRI rental income FAQs</h2>
-        <p className="text-xs text-gray-400 mb-4">Slab tax vs TDS, deductions, tenant obligations and repatriation</p>
+        <h2 className="text-lg font-bold text-ink mb-1">NRI rental income FAQs</h2>
+        <p className="text-xs text-faint mb-4">Slab tax vs TDS, deductions, tenant obligations and repatriation</p>
         <div className="space-y-2">
           {FAQS.map((faq, i) => (
-            <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+            <div key={i} className="border border-line rounded-xl overflow-hidden">
               <button
-                className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-white hover:bg-gray-50 transition"
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-surface hover:bg-surface-2 transition"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
               >
-                <span className="flex-1 text-sm font-semibold text-gray-800">{faq.q}</span>
+                <span className="flex-1 text-sm font-semibold text-ink">{faq.q}</span>
                 {openFaq === i
-                  ? <ChevronUp size={15} className="text-gray-400 flex-shrink-0" />
-                  : <ChevronDown size={15} className="text-gray-400 flex-shrink-0" />}
+                  ? <ChevronUp size={15} className="text-faint flex-shrink-0" />
+                  : <ChevronDown size={15} className="text-faint flex-shrink-0" />}
               </button>
               {/* Always mounted so content stays in the DOM for search engines */}
-              <div className={`px-4 pb-4 pt-1 border-t border-gray-100 text-sm text-gray-600 leading-relaxed ${openFaq === i ? '' : 'hidden'}`}>
+              <div className={`px-4 pb-4 pt-1 border-t border-line text-sm text-muted leading-relaxed ${openFaq === i ? '' : 'hidden'}`}>
                 {faq.a}
               </div>
             </div>
@@ -394,7 +395,7 @@ export default function NRIRentalIncomePage() {
 
         {/* ── Related tools ── */}
         <section className="mt-10">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">Related calculators</h2>
+          <h2 className="text-lg font-bold text-ink mb-3">Related calculators</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
               { path: '/calculators/nri-capital-gains', label: 'NRI Capital Gains Calculator', desc: 'Selling the property? Tax on the sale as an NRI' },
@@ -402,16 +403,17 @@ export default function NRIRentalIncomePage() {
               { path: '/calculators/rnor-status', label: 'RNOR Status Calculator', desc: 'Returning to India? Check your transitional tax status' },
               { path: '/calculators/hra-calculator', label: 'HRA Calculator', desc: 'Your tenant may be claiming HRA on this rent' },
             ].map(t => (
-              <Link key={t.path} to={t.path} className="card p-4 hover:shadow-md transition group">
+              <Link key={t.path} to={t.path} className="bg-surface border border-line rounded-2xl p-4 hover:border-acc transition group">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-gray-800 group-hover:text-brand-600 transition">{t.label}</span>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  <span className="text-sm font-semibold text-ink group-hover:text-acc transition">{t.label}</span>
+                  <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                 </div>
-                <p className="text-[11px] text-gray-400 mt-1">{t.desc}</p>
+                <p className="text-[11px] text-faint mt-1">{t.desc}</p>
               </Link>
             ))}
           </div>
         </section>
+      </div>
       </div>
     </>
   );

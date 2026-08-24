@@ -156,7 +156,7 @@ export default function MutualFundCalculatorPage() {
         })}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50">
+      <div className="min-h-screen bg-bg">
         <CalculatorHero
           crumb="Mutual Fund"
           title="Mutual Fund"
@@ -166,7 +166,7 @@ export default function MutualFundCalculatorPage() {
         />
 
         <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg border-l-4 border-brand-600 p-6">
+          <div className="bg-surface rounded-lg border border-line border-l-4 border-l-acc p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <SliderInput
@@ -197,41 +197,41 @@ export default function MutualFundCalculatorPage() {
 
                 {/* Optional final value back-calc */}
                 <div className="mt-2">
-                  <label className="block text-xs font-semibold text-slate-500 mb-1.5">Know your current value? Enter to back-calculate CAGR:</label>
+                  <label className="block text-xs font-semibold text-muted mb-1.5">Know your current value? Enter to back-calculate CAGR:</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-bold">₹</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-sm font-bold">₹</span>
                     <input
                       type="text"
                       placeholder="Enter current/final value"
                       value={finalValue}
                       onChange={e => setFinalValue(e.target.value.replace(/[^0-9]/g, ''))}
-                      className="w-full pl-7 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-brand-400"
+                      className="w-full pl-7 pr-4 py-2 border border-line rounded-lg text-sm focus:outline-none focus:border-acc"
                     />
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3">
-                <div className="bg-gradient-to-br from-brand-700 to-brand-900 rounded-xl p-5 text-white">
-                  <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-1">
+                <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/25 rounded-xl p-5 text-ink shadow-acc-glow">
+                  <div className="text-xs uppercase tracking-widest text-muted font-semibold mb-1">
                     {impliedCAGR !== null ? 'Implied CAGR' : 'Est. Returns'}
                   </div>
-                  <div className="text-3xl font-bold mb-4">{fmtShort(displayMaturity)}</div>
-                  <hr className="border-white/20 mb-3" />
+                  <div className="text-3xl font-bold mb-4 text-ink">{fmtShort(displayMaturity)}</div>
+                  <hr className="border-line mb-3" />
                   <div className="space-y-2 text-sm">
-                    <div className="flex justify-between"><span className="opacity-80">Invested</span><span className="font-bold">{fmtINR(invested)}</span></div>
-                    <div className="flex justify-between"><span className="opacity-80">Est. Gains</span><span className="font-bold text-green-300">{fmtINR(displayGains)}</span></div>
+                    <div className="flex justify-between"><span className="text-muted">Invested</span><span className="font-bold text-ink">{fmtINR(invested)}</span></div>
+                    <div className="flex justify-between"><span className="text-muted">Est. Gains</span><span className="font-bold text-mint">{fmtINR(displayGains)}</span></div>
                   </div>
                 </div>
 
-                <div className="bg-slate-50 rounded-xl p-4 space-y-2">
-                  <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Return Metrics</div>
-                  <div className="flex justify-between text-sm"><span className="text-slate-500">Absolute Return</span><span className="font-bold text-brand-600">{displayAbsRet.toFixed(2)}%</span></div>
-                  <div className="flex justify-between text-sm"><span className="text-slate-500">CAGR (Annualised)</span><span className="font-bold text-brand-600">{displayCAGR.toFixed(2)}%</span></div>
-                  <div className="flex justify-between text-sm"><span className="text-slate-500">Wealth Multiplier</span><span className="font-bold text-slate-700">{(displayMaturity / invested).toFixed(2)}x</span></div>
+                <div className="bg-surface-2 rounded-xl p-4 space-y-2">
+                  <div className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Return Metrics</div>
+                  <div className="flex justify-between text-sm"><span className="text-muted">Absolute Return</span><span className="font-bold text-acc">{displayAbsRet.toFixed(2)}%</span></div>
+                  <div className="flex justify-between text-sm"><span className="text-muted">CAGR (Annualised)</span><span className="font-bold text-acc">{displayCAGR.toFixed(2)}%</span></div>
+                  <div className="flex justify-between text-sm"><span className="text-muted">Wealth Multiplier</span><span className="font-bold text-body">{(displayMaturity / invested).toFixed(2)}x</span></div>
                 </div>
 
-                <div className="bg-brand-50 border border-brand-100 rounded-xl p-3 text-xs text-brand-700">
+                <div className="bg-acc-deep border border-acc/20 rounded-xl p-3 text-xs text-body">
                   For SIP-based return calculation, use the <Link to="/calculators/xirr" className="font-bold underline">XIRR Calculator →</Link>
                 </div>
               </div>
@@ -239,28 +239,28 @@ export default function MutualFundCalculatorPage() {
           </div>
 
           {/* Category comparison */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-base font-bold text-slate-900 mb-1">Expected Returns by Fund Category</h2>
-            <p className="text-xs text-slate-400 mb-4">Based on historical 10-year CAGR. Past performance ≠ future returns.</p>
-            <div className="overflow-x-auto rounded-lg border border-slate-100">
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-base font-bold text-ink mb-1">Expected Returns by Fund Category</h2>
+            <p className="text-xs text-faint mb-4">Based on historical 10-year CAGR. Past performance ≠ future returns.</p>
+            <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
               <table className="w-full text-sm border-collapse">
                 <thead>
-                  <tr className="bg-slate-50">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500">Fund Category</th>
-                    <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500">Typical CAGR</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-slate-500">{fmtINR(invested)} grows to (in {years}yr)</th>
+                  <tr className="bg-surface-2 sticky top-0">
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted">Fund Category</th>
+                    <th className="text-center px-4 py-3 text-xs font-semibold text-muted">Typical CAGR</th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-muted">{fmtINR(invested)} grows to (in {years}yr)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {MF_CATEGORIES.map(cat => {
                     const val = invested * Math.pow(1 + cat.typical / 100, years);
                     return (
-                      <tr key={cat.label} className={`border-t border-slate-50 hover:bg-slate-50 ${cat.typical === returnRate ? 'bg-brand-50' : ''}`}>
-                        <td className="px-4 py-3 font-medium text-slate-700">{cat.label}</td>
+                      <tr key={cat.label} className={`border-t border-line hover:bg-surface-2 ${cat.typical === returnRate ? 'bg-acc-deep' : ''}`}>
+                        <td className="px-4 py-3 font-medium text-body">{cat.label}</td>
                         <td className="px-4 py-3 text-center">
-                          <span className={`px-2 py-0.5 rounded text-xs font-semibold ${cat.typical >= 14 ? 'bg-brand-200 text-brand-800' : cat.typical >= 10 ? 'bg-brand-100 text-brand-700' : 'bg-brand-50 text-brand-600'}`}>{cat.typical}%</span>
+                          <span className={`px-2 py-0.5 rounded text-xs font-semibold ${cat.typical >= 14 ? 'bg-acc/30 text-acc' : cat.typical >= 10 ? 'bg-acc/20 text-acc' : 'bg-acc/10 text-acc'}`}>{cat.typical}%</span>
                         </td>
-                        <td className="px-4 py-3 text-right font-bold text-slate-800">{fmtShort(val)}</td>
+                        <td className="px-4 py-3 text-right font-bold text-ink">{fmtShort(val)}</td>
                       </tr>
                     );
                   })}
@@ -271,9 +271,9 @@ export default function MutualFundCalculatorPage() {
 
           {/* ── Article ── */}
           <article className="space-y-6">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-base font-bold text-slate-900 mb-3">How lumpsum mutual fund returns work</h2>
-              <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
+            <div className="bg-surface rounded-lg border border-line p-6">
+              <h2 className="text-base font-bold text-ink mb-3">How lumpsum mutual fund returns work</h2>
+              <div className="text-sm text-muted space-y-3 leading-relaxed">
                 <p>
                   A lumpsum investment compounds as <strong>Final Value = Amount × (1 + r)<sup>n</sup></strong>, where r is the
                   annual return and n the number of years. The two numbers that describe the outcome are
@@ -290,21 +290,21 @@ export default function MutualFundCalculatorPage() {
                   A quick mental shortcut is the <strong>rule of 72</strong>: money doubles in roughly 72 ÷ return-rate years.
                 </p>
               </div>
-              <div className="overflow-x-auto rounded-lg border border-slate-100 mt-4">
+              <div className="overflow-x-auto rounded-lg border border-line mt-4 max-h-[340px] overflow-y-auto">
                 <table className="w-full text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Return (p.a.)</th>
-                      <th className="text-center px-4 py-2.5 font-semibold text-slate-500">Money doubles in</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Typical of</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Return (p.a.)</th>
+                      <th className="text-center px-4 py-2.5 font-semibold text-muted">Money doubles in</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Typical of</th>
                     </tr>
                   </thead>
                   <tbody>
                     {DOUBLING.map(d => (
-                      <tr key={d.rate} className="border-t border-slate-50">
-                        <td className="px-4 py-2.5 font-semibold text-slate-700">{d.rate}%</td>
-                        <td className="px-4 py-2.5 text-center text-slate-700">{d.years}</td>
-                        <td className="px-4 py-2.5 text-slate-500">{d.label}</td>
+                      <tr key={d.rate} className="border-t border-line">
+                        <td className="px-4 py-2.5 font-semibold text-body">{d.rate}%</td>
+                        <td className="px-4 py-2.5 text-center text-body">{d.years}</td>
+                        <td className="px-4 py-2.5 text-muted">{d.label}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -312,15 +312,15 @@ export default function MutualFundCalculatorPage() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-base font-bold text-slate-900 mb-3">Mutual fund taxation — FY 2025-26</h2>
-              <div className="overflow-x-auto rounded-lg border border-slate-100">
+            <div className="bg-surface rounded-lg border border-line p-6">
+              <h2 className="text-base font-bold text-ink mb-3">Mutual fund taxation — FY 2025-26</h2>
+              <div className="overflow-x-auto rounded-lg border border-line max-h-[340px] overflow-y-auto">
                 <table className="w-full text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-50">
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Fund type</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Short-term</th>
-                      <th className="text-left px-4 py-2.5 font-semibold text-slate-500">Long-term</th>
+                    <tr className="bg-surface-2 sticky top-0">
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Fund type</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Short-term</th>
+                      <th className="text-left px-4 py-2.5 font-semibold text-muted">Long-term</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -330,23 +330,23 @@ export default function MutualFundCalculatorPage() {
                       ['Hybrid — equity-oriented (≥65% equity)', 'Same as equity funds', 'Same as equity funds'],
                       ['Gold / international / debt-oriented hybrid', 'Slab rate < 24 months', '12.5% after 24 months'],
                     ].map(([type, st, lt]) => (
-                      <tr key={type} className="border-t border-slate-50">
-                        <td className="px-4 py-2.5 font-medium text-slate-700">{type}</td>
-                        <td className="px-4 py-2.5 text-slate-600">{st}</td>
-                        <td className="px-4 py-2.5 text-slate-600">{lt}</td>
+                      <tr key={type} className="border-t border-line">
+                        <td className="px-4 py-2.5 font-medium text-body">{type}</td>
+                        <td className="px-4 py-2.5 text-muted">{st}</td>
+                        <td className="px-4 py-2.5 text-muted">{lt}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="text-xs text-slate-400 mt-3">
+              <p className="text-xs text-faint mt-3">
                 Rates per the post-July-2024 capital gains regime. Equity STCG under Section 111A, LTCG under 112A. Dividends
                 (IDCW plans) are taxed at your slab rate with 10% TDS above ₹10,000/year — growth plans defer all tax to redemption.
               </p>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-base font-bold text-slate-900 mb-3">Worked examples</h2>
+            <div className="bg-surface rounded-lg border border-line p-6">
+              <h2 className="text-base font-bold text-ink mb-3">Worked examples</h2>
               <div className="space-y-3">
                 {[
                   {
@@ -362,9 +362,9 @@ export default function MutualFundCalculatorPage() {
                     body: '₹10 lakh for 20 years at 12% (direct) grows to ₹96.5 lakh; at 11% (regular plan with ~1% extra commission) it reaches ₹80.6 lakh. The 1% fee difference costs ₹15.9 lakh — switching to direct plans is the highest-certainty "return" available.',
                   },
                 ].map(ex => (
-                  <div key={ex.title} className="border border-slate-100 rounded-lg p-4">
-                    <h3 className="text-sm font-bold text-slate-800 mb-1">{ex.title}</h3>
-                    <p className="text-xs text-slate-500 leading-relaxed">{ex.body}</p>
+                  <div key={ex.title} className="border border-line rounded-lg p-4">
+                    <h3 className="text-sm font-bold text-ink mb-1">{ex.title}</h3>
+                    <p className="text-xs text-muted leading-relaxed">{ex.body}</p>
                   </div>
                 ))}
               </div>
@@ -372,26 +372,26 @@ export default function MutualFundCalculatorPage() {
           </article>
 
           {/* FAQ */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {FAQS.map((faq, i) => (
-                <div key={i} className="border border-slate-100 rounded-lg overflow-hidden">
+                <div key={i} className="border border-line rounded-lg overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+                    className="w-full flex justify-between items-center px-4 py-3.5 text-left text-sm font-semibold text-body hover:bg-surface-2">
                     <span>{faq.q}</span>
-                    <span className={`text-slate-400 text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
+                    <span className={`text-faint text-xs ml-4 flex-shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`}>▼</span>
                   </button>
                   {/* Always mounted so content stays in the DOM for search engines */}
-                  <div className={`px-4 pb-4 pt-2 text-sm text-slate-500 leading-relaxed border-t border-slate-50 ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
+                  <div className={`px-4 pb-4 pt-2 text-sm text-muted leading-relaxed border-t border-line ${openFaq === i ? '' : 'hidden'}`}>{faq.a}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Related calculators */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-base font-bold text-slate-900 mb-3">Related calculators</h2>
+          <div className="bg-surface rounded-lg border border-line p-6">
+            <h2 className="text-base font-bold text-ink mb-3">Related calculators</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
                 { path: '/calculators/sip', label: 'SIP Calculator', desc: 'Monthly investing — corpus from regular instalments' },
@@ -399,19 +399,19 @@ export default function MutualFundCalculatorPage() {
                 { path: '/calculators/cagr', label: 'CAGR Calculator', desc: 'Annualised growth rate between any two values' },
                 { path: '/calculators/swp', label: 'SWP Calculator', desc: 'Monthly withdrawals from an accumulated corpus' },
               ].map(t => (
-                <Link key={t.path} to={t.path} className="border border-slate-100 rounded-lg p-4 hover:shadow-md transition group">
+                <Link key={t.path} to={t.path} className="border border-line rounded-lg p-4 hover:border-acc transition group">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition">{t.label}</span>
-                    <ArrowRight size={14} className="text-slate-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                    <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                    <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
+                  <p className="text-[11px] text-faint mt-1">{t.desc}</p>
                 </Link>
               ))}
             </div>
           </div>
 
-          <div className="bg-brand-50 border border-brand-100 rounded-lg p-4 text-xs text-brand-700 leading-relaxed">
-            <strong>Disclaimer:</strong> Returns shown are estimated. Actual mutual fund returns vary with market conditions and fund performance. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor.
+          <div className="bg-acc-deep border border-acc/20 rounded-lg p-4 text-xs text-body leading-relaxed">
+            <strong className="text-ink">Disclaimer:</strong> Returns shown are estimated. Actual mutual fund returns vary with market conditions and fund performance. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor.
           </div>
         </div>
       </div>

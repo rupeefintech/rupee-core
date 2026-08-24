@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { ChevronDown, TrendingUp, ShieldCheck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronRight, ChevronDown, TrendingUp, ShieldCheck } from 'lucide-react';
 import { apiClient } from '../utils/api';
 
 interface Tenure {
@@ -75,6 +76,34 @@ const FAQS = [
   },
 ];
 
+function FAQItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-b border-line last:border-0">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full text-left py-4 flex items-start justify-between gap-3 group"
+      >
+        <span className="text-sm font-semibold text-ink leading-snug group-hover:text-acc transition-colors">{q}</span>
+        <ChevronDown className={`w-4 h-4 text-muted flex-shrink-0 mt-0.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <p className="text-sm text-muted leading-relaxed pb-4">{a}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function FDCompareSBIvsPostOfficeMIS() {
   const { data, isLoading } = useQuery({
     queryKey: ['fd-rates'],
@@ -134,236 +163,224 @@ export default function FDCompareSBIvsPostOfficeMIS() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
+      {/* ── Hero ── */}
+      <header className="py-8 md:py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+            <div className="relative z-[2]">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+                <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 flex-wrap font-mono">
+                  <Link to="/"          className="hover:text-acc transition-colors">Home</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <Link to="/fd-rates"  className="hover:text-acc transition-colors">FD Rates</Link>
+                  <ChevronRight className="w-3 h-3" />
+                  <span className="text-acc font-semibold">SBI FD vs Post Office MIS</span>
+                </nav>
 
-        {/* Hero */}
-        <div className="bg-gradient-to-br from-brand-800 via-brand-900 to-slate-900 text-white">
-          <div className="max-w-5xl mx-auto px-4 py-12">
-            <nav className="flex items-center gap-1.5 text-brand-300 text-xs mb-5">
-              <Link to="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <Link to="/fd-rates" className="hover:text-white transition-colors">FD Rates</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <span className="text-white font-medium">SBI FD vs Post Office MIS</span>
-            </nav>
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <TrendingUp className="w-6 h-6 text-white" />
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 bg-acc-deep rounded-2xl flex items-center justify-center flex-shrink-0 text-acc">
+                    <TrendingUp className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">SBI FD vs Post Office MIS</h1>
+                    <p className="text-muted mt-1 text-sm">Fixed Deposit vs Monthly Income Scheme — 2026 comparison</p>
+                  </div>
+                </div>
+                <p className="text-body text-base max-w-2xl">
+                  Both offer stable returns — but they differ significantly in flexibility, tax treatment, and safety. Here's the complete picture.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="bg-bg max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+
+        {/* Rate comparison cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* SBI FD card */}
+          <div className="bg-surface rounded-2xl border border-line border-t-2 border-t-mint p-6">
+            <div className="flex items-center gap-3 mb-4">
+              {sbi?.bank.logoUrl
+                ? <img src={sbi.bank.logoUrl} alt="SBI" className="w-10 h-10 object-contain rounded-lg border border-line" />
+                : <div className="w-10 h-10 bg-mint/10 rounded-lg flex items-center justify-center text-mint font-bold">S</div>}
+              <div>
+                <div className="font-bold text-ink">State Bank of India</div>
+                <div className="text-xs text-faint">Public Sector Bank</div>
+              </div>
+            </div>
+            {isLoading
+              ? <div className="h-16 bg-surface-2 rounded-xl animate-pulse" />
+              : sbi
+                ? (
+                  <>
+                    <div className="text-3xl font-extrabold text-mint mb-1">{sbi.bestRate}% p.a.</div>
+                    <div className="text-xs text-faint mb-3">Best rate across all tenures</div>
+                    {sbi5yr && (
+                      <div className="text-sm text-body">
+                        <span className="font-semibold">5-year rate:</span> {sbi5yr.rate}% p.a.
+                        {sbi5yr.seniorRate && <span className="text-acc ml-2">({sbi5yr.seniorRate}% for seniors)</span>}
+                      </div>
+                    )}
+                  </>
+                )
+                : <div className="text-sm text-faint">SBI rates not loaded yet. <Link to="/fd-rates" className="text-acc underline">View all rates</Link></div>}
+            <div className="mt-4 space-y-1.5 text-xs text-muted">
+              <div className="flex justify-between"><span>Min deposit</span><span className="font-semibold text-body">₹1,000</span></div>
+              <div className="flex justify-between"><span>Max deposit</span><span className="font-semibold text-body">No limit</span></div>
+              <div className="flex justify-between"><span>Tenures</span><span className="font-semibold text-body">7 days – 10 years</span></div>
+              <div className="flex justify-between"><span>DICGC cover</span><span className="font-semibold text-mint">₹5 lakh</span></div>
+            </div>
+          </div>
+
+          {/* Post Office MIS card */}
+          <div className="bg-surface rounded-2xl border border-line border-t-2 border-t-gold p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span className="text-lg">🏤</span>
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold">SBI FD vs Post Office MIS</h1>
-                <p className="text-brand-200 mt-1 text-sm">Fixed Deposit vs Monthly Income Scheme — 2026 comparison</p>
+                <div className="font-bold text-ink">Post Office MIS</div>
+                <div className="text-xs text-faint">Government of India</div>
               </div>
             </div>
-            <p className="text-brand-200 text-base max-w-2xl">
-              Both offer stable returns — but they differ significantly in flexibility, tax treatment, and safety. Here's the complete picture.
-            </p>
+            <div className="text-3xl font-extrabold text-gold mb-1">{MIS_RATE}% p.a.</div>
+            <div className="text-xs text-faint mb-3">Fixed rate (w.e.f. {MIS_DATA.effectiveFrom})</div>
+            <div className="text-sm text-body mb-4">
+              <span className="font-semibold">Payout:</span> Monthly (automatic to PO savings account)
+            </div>
+            <div className="mt-1 space-y-1.5 text-xs text-muted">
+              <div className="flex justify-between"><span>Min deposit</span><span className="font-semibold text-body">₹1,000</span></div>
+              <div className="flex justify-between"><span>Max deposit</span><span className="font-semibold text-gold">₹9L (single) / ₹15L (joint)</span></div>
+              <div className="flex justify-between"><span>Tenure</span><span className="font-semibold text-body">5 years only</span></div>
+              <div className="flex justify-between"><span>Guarantee</span><span className="font-semibold text-gold">Govt. of India</span></div>
+            </div>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-
-          {/* Rate comparison cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* SBI FD card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-emerald-200 border-t-4 border-t-emerald-500 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                {sbi?.bank.logoUrl
-                  ? <img src={sbi.bank.logoUrl} alt="SBI" className="w-10 h-10 object-contain rounded-lg border border-gray-100" />
-                  : <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-700 font-bold">S</div>}
-                <div>
-                  <div className="font-bold text-gray-900">State Bank of India</div>
-                  <div className="text-xs text-gray-400">Public Sector Bank</div>
-                </div>
-              </div>
-              {isLoading
-                ? <div className="h-16 bg-gray-100 rounded-xl animate-pulse" />
-                : sbi
-                  ? (
-                    <>
-                      <div className="text-3xl font-extrabold text-emerald-700 mb-1">{sbi.bestRate}% p.a.</div>
-                      <div className="text-xs text-gray-400 mb-3">Best rate across all tenures</div>
-                      {sbi5yr && (
-                        <div className="text-sm text-gray-600">
-                          <span className="font-semibold">5-year rate:</span> {sbi5yr.rate}% p.a.
-                          {sbi5yr.seniorRate && <span className="text-blue-600 ml-2">({sbi5yr.seniorRate}% for seniors)</span>}
-                        </div>
-                      )}
-                    </>
-                  )
-                  : <div className="text-sm text-gray-400">SBI rates not loaded yet. <Link to="/fd-rates" className="text-brand-500 underline">View all rates</Link></div>}
-              <div className="mt-4 space-y-1.5 text-xs text-gray-500">
-                <div className="flex justify-between"><span>Min deposit</span><span className="font-semibold">₹1,000</span></div>
-                <div className="flex justify-between"><span>Max deposit</span><span className="font-semibold">No limit</span></div>
-                <div className="flex justify-between"><span>Tenures</span><span className="font-semibold">7 days – 10 years</span></div>
-                <div className="flex justify-between"><span>DICGC cover</span><span className="font-semibold text-emerald-600">₹5 lakh</span></div>
-              </div>
-            </div>
-
-            {/* Post Office MIS card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-orange-200 border-t-4 border-t-orange-500 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <span className="text-lg">🏤</span>
-                </div>
-                <div>
-                  <div className="font-bold text-gray-900">Post Office MIS</div>
-                  <div className="text-xs text-gray-400">Government of India</div>
-                </div>
-              </div>
-              <div className="text-3xl font-extrabold text-orange-700 mb-1">{MIS_RATE}% p.a.</div>
-              <div className="text-xs text-gray-400 mb-3">Fixed rate (w.e.f. {MIS_DATA.effectiveFrom})</div>
-              <div className="text-sm text-gray-600 mb-4">
-                <span className="font-semibold">Payout:</span> Monthly (automatic to PO savings account)
-              </div>
-              <div className="mt-1 space-y-1.5 text-xs text-gray-500">
-                <div className="flex justify-between"><span>Min deposit</span><span className="font-semibold">₹1,000</span></div>
-                <div className="flex justify-between"><span>Max deposit</span><span className="font-semibold text-orange-600">₹9L (single) / ₹15L (joint)</span></div>
-                <div className="flex justify-between"><span>Tenure</span><span className="font-semibold">5 years only</span></div>
-                <div className="flex justify-between"><span>Guarantee</span><span className="font-semibold text-orange-600">Govt. of India</span></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Monthly income calculator (static) */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-1">Monthly Income Comparison</h2>
-            <p className="text-xs text-gray-400 mb-4">For ₹5 lakh invested (at current rates)</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                {
-                  label: 'SBI FD (5-yr, monthly payout)',
-                  rate: sbi5yr?.rate ?? 6.5,
-                  color: 'emerald',
-                  note: 'TDS deducted if annual interest > ₹40,000',
-                },
-                {
-                  label: 'Post Office MIS',
-                  rate: MIS_RATE,
-                  color: 'orange',
-                  note: 'No TDS. Interest credited directly to PO savings account.',
-                },
-              ].map(item => {
-                const monthlyIncome = Math.round((500000 * item.rate) / (100 * 12));
-                return (
-                  <div key={item.label} className={`bg-${item.color}-50 rounded-xl p-4 border border-${item.color}-100`}>
-                    <div className={`text-xs font-semibold text-${item.color}-700 mb-2`}>{item.label}</div>
-                    <div className={`text-2xl font-extrabold text-${item.color}-700`}>
-                      ₹{monthlyIncome.toLocaleString('en-IN')}<span className="text-sm font-semibold">/mo</span>
-                    </div>
-                    <div className="text-[11px] text-gray-500 mt-1">{item.note}</div>
-                  </div>
-                );
-              })}
-            </div>
-            <p className="text-[11px] text-gray-400 mt-3">* Illustrative only. SBI 5-yr rate from live data. Actual payout may vary with compounding frequency and premature closure terms.</p>
-          </div>
-
-          {/* Disclaimer */}
-          <div className="flex items-start gap-2 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-700">
-            <ShieldCheck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-            <span>Post Office MIS rates are reviewed quarterly by the Government. Always verify the current rate at your nearest post office or <a href="https://www.indiapost.gov.in" target="_blank" rel="noopener noreferrer" className="underline font-semibold">indiapost.gov.in</a> before investing.</span>
-          </div>
-
-          {/* Head-to-head table */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Head-to-Head Comparison</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-100">
-                    <th className="text-left py-2 pr-4 text-gray-500 font-semibold w-1/3">Feature</th>
-                    <th className="text-center py-2 px-4 text-emerald-700 font-bold">SBI FD</th>
-                    <th className="text-center py-2 px-4 text-orange-700 font-bold">Post Office MIS</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50 text-gray-700">
-                  {COMPARISON_ROWS.map(row => (
-                    <tr key={row.feature}>
-                      <td className="py-3 pr-4 text-gray-500 font-medium">{row.feature}</td>
-                      <td className="py-3 px-4 text-center text-sm">{row.sbi}</td>
-                      <td className="py-3 px-4 text-center text-sm">{row.mis}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Who should choose */}
+        {/* Monthly income calculator (static) */}
+        <div className="bg-surface rounded-2xl border border-line p-6">
+          <h2 className="text-lg font-bold text-ink mb-1">Monthly Income Comparison</h2>
+          <p className="text-xs text-faint mb-4">For ₹5 lakh invested (at current rates)</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
-              <div className="font-bold text-emerald-800 mb-2">Choose SBI FD if…</div>
-              <ul className="text-sm text-emerald-700 space-y-1.5">
-                <li>• Need flexible tenure (not locked into 5 years)</li>
-                <li>• Want to invest more than ₹9 lakh</li>
-                <li>• Want 80C tax benefit (Tax-Saving FD)</li>
-                <li>• Prefer online booking via YONO / net banking</li>
-                <li>• Are a senior citizen (0.50% extra rate)</li>
-              </ul>
-            </div>
-            <div className="bg-orange-50 rounded-2xl p-5 border border-orange-100">
-              <div className="font-bold text-orange-800 mb-2">Choose Post Office MIS if…</div>
-              <ul className="text-sm text-orange-700 space-y-1.5">
-                <li>• Primary goal is stable monthly income</li>
-                <li>• Want sovereign-guaranteed returns (no default risk)</li>
-                <li>• Prefer no TDS hassle on monthly payouts</li>
-                <li>• Comfortable with 5-year lock-in</li>
-                <li>• Investing within the ₹9L / ₹15L cap</li>
-              </ul>
-            </div>
+            {[
+              {
+                label: 'SBI FD (5-yr, monthly payout)',
+                rate: sbi5yr?.rate ?? 6.5,
+                cls: 'mint',
+                note: 'TDS deducted if annual interest > ₹40,000',
+              },
+              {
+                label: 'Post Office MIS',
+                rate: MIS_RATE,
+                cls: 'gold',
+                note: 'No TDS. Interest credited directly to PO savings account.',
+              },
+            ].map(item => {
+              const monthlyIncome = Math.round((500000 * item.rate) / (100 * 12));
+              return (
+                <div key={item.label} className={`rounded-xl p-4 border ${item.cls === 'mint' ? 'bg-mint/10 border-mint/20' : 'bg-gold/10 border-gold/20'}`}>
+                  <div className={`text-xs font-semibold mb-2 ${item.cls === 'mint' ? 'text-mint' : 'text-gold'}`}>{item.label}</div>
+                  <div className={`text-2xl font-extrabold ${item.cls === 'mint' ? 'text-mint' : 'text-gold'}`}>
+                    ₹{monthlyIncome.toLocaleString('en-IN')}<span className="text-sm font-semibold">/mo</span>
+                  </div>
+                  <div className="text-[11px] text-muted mt-1">{item.note}</div>
+                </div>
+              );
+            })}
           </div>
-
-          {/* FAQ */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
-            <div className="space-y-2">
-              {FAQS.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
-            </div>
-          </div>
-
-          {/* Related comparisons */}
-          <div>
-            <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">More FD Comparisons</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {[
-                { to: '/compare/fd/sbi-vs-scss',        label: 'SBI FD vs SCSS',        desc: 'FD vs Senior Citizens Savings Scheme' },
-                { to: '/compare/fd/hdfc-vs-icici',      label: 'HDFC FD vs ICICI FD',   desc: 'Side-by-side rate comparison across all tenures' },
-              ].map(item => (
-                <Link key={item.to} to={item.to}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group flex flex-col gap-1">
-                  <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
-                  <div className="text-[11px] text-gray-400">{item.desc}</div>
-                </Link>
-              ))}
-            </div>
-            <div className="mt-3">
-              <Link to="/fd-rates" className="text-sm text-brand-600 hover:underline font-semibold">← Back to all FD rates</Link>
-            </div>
-          </div>
-
-          <p className="text-xs text-gray-400 text-center pb-4">
-            SBI rates manually verified. Post Office MIS rate as of {MIS_DATA.effectiveFrom} — verify before investing.{' '}
-            <Link to="/calculators/fd" className="text-brand-500 hover:underline">Calculate FD maturity →</Link>
-          </p>
+          <p className="text-[11px] text-faint mt-3">* Illustrative only. SBI 5-yr rate from live data. Actual payout may vary with compounding frequency and premature closure terms.</p>
         </div>
+
+        {/* Disclaimer */}
+        <div className="flex items-start gap-2 px-4 py-3 bg-gold/10 border border-gold/20 rounded-xl text-xs text-gold">
+          <ShieldCheck className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+          <span>Post Office MIS rates are reviewed quarterly by the Government. Always verify the current rate at your nearest post office or <a href="https://www.indiapost.gov.in" target="_blank" rel="noopener noreferrer" className="underline font-semibold">indiapost.gov.in</a> before investing.</span>
+        </div>
+
+        {/* Head-to-head table */}
+        <div className="bg-surface rounded-2xl border border-line p-6">
+          <h2 className="text-lg font-bold text-ink mb-4">Head-to-Head Comparison</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-surface-2 border-b border-line text-xs font-semibold text-muted">
+                  <th className="text-left py-2.5 px-4 w-1/3">Feature</th>
+                  <th className="text-center py-2.5 px-4 text-mint">SBI FD</th>
+                  <th className="text-center py-2.5 px-4 text-gold">Post Office MIS</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line text-body">
+                {COMPARISON_ROWS.map(row => (
+                  <tr key={row.feature} className="hover:bg-surface-2 transition-colors">
+                    <td className="py-3 px-4 text-faint font-medium">{row.feature}</td>
+                    <td className="py-3 px-4 text-center text-sm">{row.sbi}</td>
+                    <td className="py-3 px-4 text-center text-sm">{row.mis}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Who should choose */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-mint/10 rounded-2xl p-5 border border-mint/20">
+            <div className="font-bold text-mint mb-2">Choose SBI FD if…</div>
+            <ul className="text-sm text-body space-y-1.5">
+              <li>• Need flexible tenure (not locked into 5 years)</li>
+              <li>• Want to invest more than ₹9 lakh</li>
+              <li>• Want 80C tax benefit (Tax-Saving FD)</li>
+              <li>• Prefer online booking via YONO / net banking</li>
+              <li>• Are a senior citizen (0.50% extra rate)</li>
+            </ul>
+          </div>
+          <div className="bg-gold/10 rounded-2xl p-5 border border-gold/20">
+            <div className="font-bold text-gold mb-2">Choose Post Office MIS if…</div>
+            <ul className="text-sm text-body space-y-1.5">
+              <li>• Primary goal is stable monthly income</li>
+              <li>• Want sovereign-guaranteed returns (no default risk)</li>
+              <li>• Prefer no TDS hassle on monthly payouts</li>
+              <li>• Comfortable with 5-year lock-in</li>
+              <li>• Investing within the ₹9L / ₹15L cap</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* FAQ */}
+        <div className="bg-surface rounded-2xl border border-line p-5">
+          <h2 className="text-lg font-bold text-ink mb-1">Frequently Asked Questions</h2>
+          <div>
+            {FAQS.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
+          </div>
+        </div>
+
+        {/* Related comparisons */}
+        <div>
+          <h2 className="text-sm font-bold text-faint uppercase tracking-widest mb-3">More FD Comparisons</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { to: '/compare/fd/sbi-vs-scss',        label: 'SBI FD vs SCSS',        desc: 'FD vs Senior Citizens Savings Scheme' },
+              { to: '/compare/fd/hdfc-vs-icici',      label: 'HDFC FD vs ICICI FD',   desc: 'Side-by-side rate comparison across all tenures' },
+            ].map(item => (
+              <Link key={item.to} to={item.to}
+                className="bg-surface rounded-xl p-4 border border-line hover:border-acc transition-all group flex flex-col gap-1">
+                <div className="font-semibold text-ink text-sm group-hover:text-acc transition-colors">{item.label}</div>
+                <div className="text-[11px] text-faint">{item.desc}</div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-3">
+            <Link to="/fd-rates" className="text-sm text-acc hover:underline font-semibold">← Back to all FD rates</Link>
+          </div>
+        </div>
+
+        <p className="text-xs text-faint text-center pb-4">
+          SBI rates manually verified. Post Office MIS rate as of {MIS_DATA.effectiveFrom} — verify before investing.{' '}
+          <Link to="/calculators/fd" className="text-acc hover:underline">Calculate FD maturity →</Link>
+        </p>
       </div>
     </>
-  );
-}
-
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border border-gray-100 rounded-xl overflow-hidden">
-      <button onClick={() => setOpen(v => !v)} aria-expanded={open}
-        className="w-full flex justify-between items-center px-5 py-4 text-left text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors">
-        <span>{q}</span>
-        <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 ml-3 transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
-      {open && (
-        <div className="px-5 pb-5 pt-0 text-sm text-gray-500 leading-relaxed border-t border-gray-50">{a}</div>
-      )}
-    </div>
   );
 }

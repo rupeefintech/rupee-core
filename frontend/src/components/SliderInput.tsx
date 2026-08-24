@@ -16,15 +16,15 @@ interface Props {
 }
 
 const colorMap: Record<string, { bg: string; text: string; accent: string; focus: string; btn: string }> = {
-  blue:   { bg: 'bg-brand-50',   text: 'text-brand-700',   accent: 'accent-brand-600',   focus: 'focus:border-brand-400',   btn: 'bg-brand-100 hover:bg-brand-200 text-brand-700'   },
-  green:  { bg: 'bg-green-50',   text: 'text-green-700',   accent: 'accent-green-600',   focus: 'focus:border-green-400',   btn: 'bg-green-100 hover:bg-green-200 text-green-700'   },
-  amber:  { bg: 'bg-amber-50',   text: 'text-amber-700',   accent: 'accent-amber-600',   focus: 'focus:border-amber-400',   btn: 'bg-amber-100 hover:bg-amber-200 text-amber-700'   },
-  violet: { bg: 'bg-violet-50',  text: 'text-violet-700',  accent: 'accent-violet-600',  focus: 'focus:border-violet-400',  btn: 'bg-violet-100 hover:bg-violet-200 text-violet-700' },
-  rose:   { bg: 'bg-rose-50',    text: 'text-rose-700',    accent: 'accent-rose-600',    focus: 'focus:border-rose-400',    btn: 'bg-rose-100 hover:bg-rose-200 text-rose-700'       },
-  teal:   { bg: 'bg-teal-50',    text: 'text-teal-700',    accent: 'accent-teal-600',    focus: 'focus:border-teal-400',    btn: 'bg-teal-100 hover:bg-teal-200 text-teal-700'       },
-  indigo: { bg: 'bg-brand-50',   text: 'text-brand-700',   accent: 'accent-brand-600',   focus: 'focus:border-brand-400',   btn: 'bg-brand-100 hover:bg-brand-200 text-brand-700'   },
-  orange: { bg: 'bg-orange-50',  text: 'text-orange-700',  accent: 'accent-orange-600',  focus: 'focus:border-orange-400',  btn: 'bg-orange-100 hover:bg-orange-200 text-orange-700' },
-  purple: { bg: 'bg-purple-50',  text: 'text-purple-700',  accent: 'accent-purple-600',  focus: 'focus:border-purple-400',  btn: 'bg-purple-100 hover:bg-purple-200 text-purple-700' },
+  blue:   { bg: 'bg-acc-deep',      text: 'text-acc',    accent: 'accent-acc',    focus: 'focus:border-acc',    btn: 'bg-acc-deep hover:bg-acc/20 text-acc'       },
+  green:  { bg: 'bg-mint/10',       text: 'text-mint',   accent: 'accent-mint',   focus: 'focus:border-mint',   btn: 'bg-mint/10 hover:bg-mint/20 text-mint'      },
+  amber:  { bg: 'bg-gold/10',       text: 'text-gold',   accent: 'accent-gold',   focus: 'focus:border-gold',   btn: 'bg-gold/10 hover:bg-gold/20 text-gold'      },
+  violet: { bg: 'bg-violet-500/10', text: 'text-violet', accent: 'accent-violet', focus: 'focus:border-violet', btn: 'bg-violet-500/10 hover:bg-violet-500/20 text-violet' },
+  rose:   { bg: 'bg-coral/10',      text: 'text-coral',  accent: 'accent-coral',  focus: 'focus:border-coral',  btn: 'bg-coral/10 hover:bg-coral/20 text-coral'   },
+  teal:   { bg: 'bg-cyan-500/10',   text: 'text-cyan',   accent: 'accent-cyan',   focus: 'focus:border-cyan',   btn: 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan' },
+  indigo: { bg: 'bg-acc-deep',      text: 'text-acc',    accent: 'accent-acc',    focus: 'focus:border-acc',    btn: 'bg-acc-deep hover:bg-acc/20 text-acc'       },
+  orange: { bg: 'bg-gold/10',       text: 'text-gold',   accent: 'accent-gold',   focus: 'focus:border-gold',   btn: 'bg-gold/10 hover:bg-gold/20 text-gold'      },
+  purple: { bg: 'bg-violet-500/10', text: 'text-violet', accent: 'accent-violet', focus: 'focus:border-violet', btn: 'bg-violet-500/10 hover:bg-violet-500/20 text-violet' },
 };
 
 export default function SliderInput({
@@ -82,8 +82,8 @@ export default function SliderInput({
     : `₹${max.toLocaleString('en-IN')}`;
 
   const inputClass = isZero
-    ? 'bg-red-50 text-red-600 border-red-400 focus:border-red-500'
-    : `${c.bg} ${c.text} ${c.focus} border-transparent hover:border-slate-300`;
+    ? 'bg-coral/10 text-coral border-coral focus:border-coral'
+    : `${c.bg} ${c.text} ${c.focus} border-transparent hover:border-line-2`;
 
   const btnBase = `w-7 h-7 rounded-md flex items-center justify-center text-base font-bold leading-none select-none transition-colors
     ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer active:scale-95'}`;
@@ -91,13 +91,13 @@ export default function SliderInput({
   return (
     <div className="mb-5">
       <div className="flex justify-between items-center mb-2">
-        <label className="text-sm font-semibold text-slate-700">{label}</label>
+        <label className="text-sm font-semibold text-body">{label}</label>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={decrement}
             disabled={disabled || value <= min}
-            className={`${btnBase} ${isZero ? 'bg-red-100 text-red-600' : c.btn} disabled:opacity-30`}
+            className={`${btnBase} ${isZero ? 'bg-coral/10 text-coral' : c.btn} disabled:opacity-30`}
             aria-label={`Decrease ${label}`}
           >
             −
@@ -120,7 +120,7 @@ export default function SliderInput({
             type="button"
             onClick={increment}
             disabled={disabled || value >= max}
-            className={`${btnBase} ${isZero ? 'bg-red-100 text-red-600' : c.btn} disabled:opacity-30`}
+            className={`${btnBase} ${isZero ? 'bg-coral/10 text-coral' : c.btn} disabled:opacity-30`}
             aria-label={`Increase ${label}`}
           >
             +
@@ -135,13 +135,13 @@ export default function SliderInput({
         value={value}
         disabled={disabled}
         onChange={e => onChange(Number(e.target.value))}
-        className={`w-full ${isZero ? 'accent-red-500' : c.accent} cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`w-full ${isZero ? 'accent-coral' : c.accent} cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
       />
-      <div className="flex justify-between text-xs text-slate-400 mt-1">
+      <div className="flex justify-between text-xs text-faint mt-1">
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>
-      {isZero && <p className="text-xs text-red-500 mt-1">Please enter a value greater than 0</p>}
+      {isZero && <p className="text-xs text-coral mt-1">Please enter a value greater than 0</p>}
       {hint && !isZero && <p className={`text-xs mt-1 ${c.text} opacity-80`}>{hint}</p>}
     </div>
   );

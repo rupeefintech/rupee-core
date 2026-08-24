@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
-import { ChevronDown, CreditCard, Check, X, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronDown, ChevronUp, ChevronRight, CreditCard, Check, X, ExternalLink } from 'lucide-react';
 import { apiClient } from '../utils/api';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -189,16 +190,16 @@ function useCard(slug: string) {
 function CardColumn({ card, accent }: { card: CardProduct; accent: string }) {
   const activeOffer = card.offers.find(o => o.isActive) ?? card.offers[0];
   return (
-    <div className={`bg-white rounded-2xl shadow-sm border-t-4 ${accent} border border-gray-100 overflow-hidden flex flex-col`}>
+    <div className={`bg-surface rounded-2xl border-t-4 ${accent} border border-line overflow-hidden flex flex-col`}>
       {/* Header */}
-      <div className="p-5 border-b border-gray-100">
+      <div className="p-5 border-b border-line">
         <div className="flex items-center gap-3 mb-3">
           {card.bank.logo
-            ? <img src={card.bank.logo} alt={card.bank.name} className="w-9 h-9 object-contain rounded-lg border border-gray-100" />
-            : <div className="w-9 h-9 bg-brand-100 rounded-lg flex items-center justify-center text-brand-700 font-bold">{card.bank.name[0]}</div>}
+            ? <img src={card.bank.logo} alt={card.bank.name} className="w-9 h-9 object-contain rounded-lg border border-line" />
+            : <div className="w-9 h-9 bg-acc-deep rounded-lg flex items-center justify-center text-acc font-bold">{card.bank.name[0]}</div>}
           <div>
-            <div className="font-bold text-gray-900 text-sm leading-tight">{card.name}</div>
-            <div className="text-xs text-gray-400">{card.bank.name}</div>
+            <div className="font-bold text-ink text-sm leading-tight">{card.name}</div>
+            <div className="text-xs text-faint">{card.bank.name}</div>
           </div>
         </div>
         {card.cardImageUrl && (
@@ -206,52 +207,52 @@ function CardColumn({ card, accent }: { card: CardProduct; accent: string }) {
         )}
         {card.applyUrl && (
           <a href={card.applyUrl} target="_blank" rel="noopener noreferrer sponsored"
-            className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 bg-brand-700 hover:bg-brand-800 text-white rounded-xl text-xs font-bold transition">
+            className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-xl text-xs font-bold shadow-acc-glow transition-all">
             Apply Now <ExternalLink className="w-3 h-3" />
           </a>
         )}
       </div>
 
       {/* Fees */}
-      <div className="p-5 space-y-2 text-sm border-b border-gray-100">
+      <div className="p-5 space-y-2 text-sm border-b border-line">
         <div className="flex justify-between items-center">
-          <span className="text-gray-500 text-xs">Annual Fee</span>
-          <span className="font-bold text-gray-900">{formatINR(card.details.annualFee)}</span>
+          <span className="text-faint text-xs">Annual Fee</span>
+          <span className="font-bold text-ink">{formatINR(card.details.annualFee)}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-gray-500 text-xs">Joining Fee</span>
-          <span className="font-bold text-gray-900">{formatINR(card.details.joiningFee)}</span>
+          <span className="text-faint text-xs">Joining Fee</span>
+          <span className="font-bold text-ink">{formatINR(card.details.joiningFee)}</span>
         </div>
         {card.details.annualFeeWaiver && (
-          <div className="text-[11px] text-gray-400 italic">{card.details.annualFeeWaiver}</div>
+          <div className="text-[11px] text-faint italic">{card.details.annualFeeWaiver}</div>
         )}
         {card.details.minIncome && (
           <div className="flex justify-between items-center">
-            <span className="text-gray-500 text-xs">Min Income</span>
-            <span className="font-semibold text-gray-700">{formatINR(card.details.minIncome)}/yr</span>
+            <span className="text-faint text-xs">Min Income</span>
+            <span className="font-semibold text-body">{formatINR(card.details.minIncome)}/yr</span>
           </div>
         )}
         {card.details.forexMarkup != null && (
           <div className="flex justify-between items-center">
-            <span className="text-gray-500 text-xs">Forex Markup</span>
-            <span className="font-semibold text-gray-700">{card.details.forexMarkup}%</span>
+            <span className="text-faint text-xs">Forex Markup</span>
+            <span className="font-semibold text-body">{card.details.forexMarkup}%</span>
           </div>
         )}
         {card.details.loungeAccess != null && (
           <div className="flex justify-between items-center">
-            <span className="text-gray-500 text-xs">Lounge Access</span>
-            <span className="font-semibold text-gray-700">{card.details.loungeAccess}/yr</span>
+            <span className="text-faint text-xs">Lounge Access</span>
+            <span className="font-semibold text-body">{card.details.loungeAccess}/yr</span>
           </div>
         )}
       </div>
 
       {/* Top offer */}
       {activeOffer && (
-        <div className="p-5 border-b border-gray-100">
-          <div className="text-[10px] font-bold uppercase tracking-wide text-gray-400 mb-1.5">Top Offer</div>
-          <div className="text-sm font-semibold text-brand-700">{activeOffer.title}</div>
+        <div className="p-5 border-b border-line">
+          <div className="text-[10px] font-bold uppercase tracking-wide text-faint mb-1.5">Top Offer</div>
+          <div className="text-sm font-semibold text-acc">{activeOffer.title}</div>
           {activeOffer.rewardRate && (
-            <div className="text-xs text-gray-500 mt-0.5">{activeOffer.rewardRate}% cashback/rewards</div>
+            <div className="text-xs text-muted mt-0.5">{activeOffer.rewardRate}% cashback/rewards</div>
           )}
         </div>
       )}
@@ -259,20 +260,20 @@ function CardColumn({ card, accent }: { card: CardProduct; accent: string }) {
       {/* Features */}
       {card.features.length > 0 && (
         <div className="p-5 flex-1">
-          <div className="text-[10px] font-bold uppercase tracking-wide text-gray-400 mb-2">Features</div>
+          <div className="text-[10px] font-bold uppercase tracking-wide text-faint mb-2">Features</div>
           <ul className="space-y-1">
             {card.features.map(f => (
-              <li key={f} className="flex items-center gap-2 text-xs text-gray-600">
-                <Check className="w-3.5 h-3.5 text-green-500 flex-shrink-0" /> {f}
+              <li key={f} className="flex items-center gap-2 text-xs text-body">
+                <Check className="w-3.5 h-3.5 text-mint flex-shrink-0" /> {f}
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      <div className="p-5 border-t border-gray-100">
+      <div className="p-5 border-t border-line">
         <Link to={`/credit-cards/${card.slug}`}
-          className="text-xs font-semibold text-brand-600 hover:underline">
+          className="text-xs font-semibold text-acc hover:text-ink transition-colors">
           Full {card.name} review →
         </Link>
       </div>
@@ -284,32 +285,32 @@ function FeatureGrid({ card1, card2 }: { card1: CardProduct; card2: CardProduct 
   const all = [...new Set([...card1.features, ...card2.features])].sort();
   if (all.length === 0) return null;
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-100">
-        <h2 className="font-bold text-gray-900">Feature Checklist</h2>
+    <div className="bg-surface rounded-2xl border border-line overflow-hidden">
+      <div className="px-5 py-4 border-b border-line">
+        <h2 className="font-bold text-ink">Feature Checklist</h2>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-gray-50 text-xs text-gray-400 uppercase tracking-wide">
+            <tr className="bg-surface-2 text-xs text-faint uppercase tracking-wide">
               <th className="text-left px-5 py-2.5 font-semibold">Feature</th>
               <th className="text-center px-5 py-2.5 font-semibold">{card1.bank.name}</th>
               <th className="text-center px-5 py-2.5 font-semibold">{card2.bank.name}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody className="divide-y divide-line">
             {all.map(f => (
-              <tr key={f} className="hover:bg-gray-50">
-                <td className="px-5 py-3 text-gray-700">{f}</td>
+              <tr key={f} className="hover:bg-surface-2 transition-colors">
+                <td className="px-5 py-3 text-body">{f}</td>
                 <td className="px-5 py-3 text-center">
                   {card1.features.includes(f)
-                    ? <Check className="w-4 h-4 text-green-500 mx-auto" />
-                    : <X className="w-4 h-4 text-gray-300 mx-auto" />}
+                    ? <Check className="w-4 h-4 text-mint mx-auto" />
+                    : <X className="w-4 h-4 text-faint mx-auto" />}
                 </td>
                 <td className="px-5 py-3 text-center">
                   {card2.features.includes(f)
-                    ? <Check className="w-4 h-4 text-green-500 mx-auto" />
-                    : <X className="w-4 h-4 text-gray-300 mx-auto" />}
+                    ? <Check className="w-4 h-4 text-mint mx-auto" />
+                    : <X className="w-4 h-4 text-faint mx-auto" />}
                 </td>
               </tr>
             ))}
@@ -330,11 +331,11 @@ export default function CreditCardCompareByPair() {
 
   if (!config) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-24 text-center">
-        <CreditCard className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-        <h1 className="text-xl font-bold text-gray-700 mb-2">Comparison not found</h1>
-        <p className="text-gray-500 text-sm mb-4">We don't have this comparison yet.</p>
-        <Link to="/credit-cards" className="text-brand-600 underline text-sm font-semibold">Browse all credit cards →</Link>
+      <div className="bg-bg min-h-screen max-w-4xl mx-auto px-4 py-24 text-center">
+        <CreditCard className="w-12 h-12 text-faint mx-auto mb-4" />
+        <h1 className="text-xl font-bold text-ink mb-2">Comparison not found</h1>
+        <p className="text-muted text-sm mb-4">We don't have this comparison yet.</p>
+        <Link to="/credit-cards" className="text-acc hover:text-ink text-sm font-semibold">Browse all credit cards →</Link>
       </div>
     );
   }
@@ -389,67 +390,74 @@ export default function CreditCardCompareByPair() {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-bg">
 
         {/* Hero */}
-        <div className="bg-gradient-to-br from-brand-800 via-brand-900 to-slate-900 text-white">
-          <div className="max-w-5xl mx-auto px-4 py-12">
-            <nav className="flex items-center gap-1.5 text-brand-300 text-xs mb-5">
-              <Link to="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <Link to="/credit-cards" className="hover:text-white transition-colors">Credit Cards</Link>
-              <ChevronDown className="w-3 h-3 -rotate-90" />
-              <span className="text-white font-medium">{config.h1}</span>
-            </nav>
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                <CreditCard className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-extrabold">{config.h1}</h1>
-                <p className="text-brand-200 mt-1 text-sm">Credit card comparison — 2026</p>
+        <header className="py-8 md:py-10">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-10 md:py-14 px-6 md:px-10">
+              <div className="absolute inset-0 pointer-events-none overflow-hidden" />
+              <div className="relative z-[2]">
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+                  <nav className="flex items-center gap-1.5 text-xs text-faint mb-6 flex-wrap font-mono">
+                    <Link to="/" className="hover:text-acc transition-colors">Home</Link>
+                    <ChevronRight className="w-3 h-3" />
+                    <Link to="/credit-cards" className="hover:text-acc transition-colors">Credit Cards</Link>
+                    <ChevronRight className="w-3 h-3" />
+                    <span className="text-acc font-semibold">{config.h1}</span>
+                  </nav>
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-12 h-12 bg-acc-deep rounded-2xl flex items-center justify-center flex-shrink-0">
+                      <CreditCard className="w-6 h-6 text-acc" />
+                    </div>
+                    <div>
+                      <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink">{config.h1}</h1>
+                      <p className="text-muted mt-1 text-sm">Credit card comparison — 2026</p>
+                    </div>
+                  </div>
+                  <p className="text-body text-base max-w-2xl">{config.verdict}</p>
+                </motion.div>
               </div>
             </div>
-            <p className="text-brand-200 text-base max-w-2xl">{config.verdict}</p>
           </div>
-        </div>
+        </header>
 
-        <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
 
           {/* Loading */}
           {isLoading && (
-            <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
-              <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-gray-400 text-sm">Loading card details…</p>
+            <div className="bg-surface rounded-2xl p-12 text-center border border-line">
+              <div className="w-8 h-8 border-2 border-acc border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-faint text-sm">Loading card details…</p>
             </div>
           )}
 
           {/* Error / cards not in DB yet */}
           {!isLoading && hasError && (
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
-              <p className="text-amber-700 text-sm font-semibold mb-2">Card data not available yet</p>
-              <p className="text-amber-600 text-xs mb-4">We're adding these cards to our database. Check back soon or browse all cards below.</p>
-              <Link to="/credit-cards" className="text-brand-600 underline text-sm font-semibold">Browse all credit cards →</Link>
+            <div className="bg-gold/10 border border-gold/30 rounded-2xl p-6 text-center">
+              <p className="text-gold text-sm font-semibold mb-2">Card data not available yet</p>
+              <p className="text-gold/80 text-xs mb-4">We're adding these cards to our database. Check back soon or browse all cards below.</p>
+              <Link to="/credit-cards" className="text-acc hover:text-ink text-sm font-semibold">Browse all credit cards →</Link>
             </div>
           )}
 
           {/* Side-by-side card columns */}
           {!isLoading && card1 && card2 && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <CardColumn card={card1} accent="border-t-emerald-500" />
-              <CardColumn card={card2} accent="border-t-blue-500" />
+              <CardColumn card={card1} accent="border-t-mint" />
+              <CardColumn card={card2} accent="border-t-acc" />
             </div>
           )}
 
           {/* Partial load — show what we have */}
           {!isLoading && (card1 || card2) && !(card1 && card2) && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {card1 && <CardColumn card={card1} accent="border-t-emerald-500" />}
-              {card2 && <CardColumn card={card2} accent="border-t-blue-500" />}
+              {card1 && <CardColumn card={card1} accent="border-t-mint" />}
+              {card2 && <CardColumn card={card2} accent="border-t-acc" />}
               {(!card1 || !card2) && (
-                <div className="bg-white rounded-2xl border border-dashed border-gray-300 p-10 flex flex-col items-center justify-center text-center gap-3">
-                  <CreditCard className="w-10 h-10 text-gray-300" />
-                  <p className="text-sm text-gray-400">Card details coming soon</p>
+                <div className="bg-surface rounded-2xl border border-dashed border-line-2 p-10 flex flex-col items-center justify-center text-center gap-3">
+                  <CreditCard className="w-10 h-10 text-faint" />
+                  <p className="text-sm text-faint">Card details coming soon</p>
                 </div>
               )}
             </div>
@@ -460,19 +468,19 @@ export default function CreditCardCompareByPair() {
 
           {/* Who should choose */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
-              <div className="font-bold text-emerald-800 mb-1 text-sm">
+            <div className="bg-mint/10 rounded-2xl p-5 border border-mint/25">
+              <div className="font-bold text-mint mb-1 text-sm">
                 Choose {card1?.name ?? config.card1Slug.replace(/-credit-card$/, '').replace(/-/g, ' ')} if…
               </div>
-              <ul className="text-sm text-emerald-700 space-y-1.5 mt-2">
+              <ul className="text-sm text-body space-y-1.5 mt-2">
                 {config.card1Wins.map(w => <li key={w}>• {w}</li>)}
               </ul>
             </div>
-            <div className="bg-blue-50 rounded-2xl p-5 border border-blue-100">
-              <div className="font-bold text-blue-800 mb-1 text-sm">
+            <div className="bg-acc-deep rounded-2xl p-5 border border-acc/25">
+              <div className="font-bold text-acc mb-1 text-sm">
                 Choose {card2?.name ?? config.card2Slug.replace(/-credit-card$/, '').replace(/-/g, ' ')} if…
               </div>
-              <ul className="text-sm text-blue-700 space-y-1.5 mt-2">
+              <ul className="text-sm text-body space-y-1.5 mt-2">
                 {config.card2Wins.map(w => <li key={w}>• {w}</li>)}
               </ul>
             </div>
@@ -480,7 +488,7 @@ export default function CreditCardCompareByPair() {
 
           {/* FAQ */}
           <div>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-xl font-bold text-ink mb-4">Frequently Asked Questions</h2>
             <div className="space-y-2">
               {config.faqs.map(f => <FAQItem key={f.q} q={f.q} a={f.a} />)}
             </div>
@@ -489,22 +497,22 @@ export default function CreditCardCompareByPair() {
           {/* Other comparisons */}
           {otherPairs.length > 0 && (
             <div>
-              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">More Card Comparisons</h2>
+              <h2 className="text-sm font-bold text-faint uppercase tracking-widest mb-3">More Card Comparisons</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {otherPairs.map(item => (
                   <Link key={item.to} to={item.to}
-                    className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group">
-                    <div className="font-semibold text-gray-900 text-sm group-hover:text-brand-700 transition-colors">{item.label}</div>
+                    className="bg-surface rounded-xl p-4 border border-line hover:border-acc transition-all group">
+                    <div className="font-semibold text-ink text-sm group-hover:text-acc transition-colors">{item.label}</div>
                   </Link>
                 ))}
               </div>
               <div className="mt-3">
-                <Link to="/credit-cards" className="text-sm text-brand-600 hover:underline font-semibold">← Browse all credit cards</Link>
+                <Link to="/credit-cards" className="text-sm text-acc hover:text-ink font-semibold transition-colors">← Browse all credit cards</Link>
               </div>
             </div>
           )}
 
-          <p className="text-xs text-gray-400 text-center pb-4">
+          <p className="text-xs text-faint text-center pb-4">
             Card details sourced from official bank websites. Always verify fees and offers before applying.
           </p>
         </div>
@@ -516,14 +524,17 @@ export default function CreditCardCompareByPair() {
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-gray-100 rounded-xl overflow-hidden">
+    <div className="border-b border-line last:border-0 sm:border-0 sm:bg-surface sm:rounded-xl sm:border sm:border-line sm:overflow-hidden">
       <button onClick={() => setOpen(v => !v)} aria-expanded={open}
-        className="w-full flex justify-between items-center px-5 py-4 text-left text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors">
+        className="w-full flex justify-between items-center py-4 sm:px-5 text-left text-sm font-semibold text-ink hover:text-acc sm:hover:bg-surface-2 transition-colors">
         <span>{q}</span>
-        <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 ml-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+        {open
+          ? <ChevronUp className="w-4 h-4 text-acc flex-shrink-0 ml-3" />
+          : <ChevronDown className="w-4 h-4 text-muted flex-shrink-0 ml-3" />
+        }
       </button>
       {open && (
-        <div className="px-5 pb-5 pt-0 text-sm text-gray-500 leading-relaxed border-t border-gray-50">{a}</div>
+        <div className="pb-4 sm:px-5 text-sm text-muted leading-relaxed sm:border-t sm:border-line sm:pt-3">{a}</div>
       )}
     </div>
   );

@@ -1,10 +1,13 @@
+import defaultColors from 'tailwindcss/colors.js';
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ['class', '[data-theme="dark"]'],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        // Indigo brand — matches the PIN code page design language
+        // Legacy indigo scale — kept for pages not yet migrated to the token system below.
         brand: {
           50:  '#EEF2FF',
           100: '#E0E7FF',
@@ -27,13 +30,45 @@ export default {
           400: '#FCD34D',
           500: '#F59E0B',
           600: '#D97706',
+          DEFAULT: 'rgb(var(--gold-rgb) / <alpha-value>)',
         },
+
+        // New token system (design/DESIGN_HANDOFF.md) — CSS vars in src/styles/globals.css.
+        // Use these on any newly migrated page. No hex/slate/gray literals on migrated pages.
+        // rgb(var(--x-rgb) / <alpha-value>) — NOT plain var(--x) — so opacity modifiers like
+        // bg-acc/20 actually generate; Tailwind can't apply slash-opacity to a bare var() hex string.
+        bg: 'rgb(var(--bg-rgb) / <alpha-value>)',
+        'bg-2': 'rgb(var(--bg-2-rgb) / <alpha-value>)',
+        surface: 'rgb(var(--surf-rgb) / <alpha-value>)',
+        'surface-2': 'rgb(var(--surf-2-rgb) / <alpha-value>)',
+        raise: 'rgb(var(--raise-rgb) / <alpha-value>)',
+        ink: 'rgb(var(--ink-rgb) / <alpha-value>)',
+        body: 'rgb(var(--body-rgb) / <alpha-value>)',
+        muted: 'rgb(var(--muted-rgb) / <alpha-value>)',
+        faint: 'rgb(var(--faint-rgb) / <alpha-value>)',
+        line: 'rgb(var(--line-rgb) / <alpha-value>)',
+        'line-2': 'rgb(var(--line-2-rgb) / <alpha-value>)',
+        acc: {
+          DEFAULT: 'rgb(var(--acc-rgb) / <alpha-value>)',
+          2: 'rgb(var(--acc-2-rgb) / <alpha-value>)',
+          deep: 'rgb(var(--acc-deep-rgb) / <alpha-value>)',
+        },
+        // cyan/violet also exist as Tailwind's default palette scales (cyan-500 etc, used by
+        // several not-yet-migrated pages) — merge our token in as DEFAULT instead of replacing
+        // the whole scale, so both `text-cyan` (token) and `bg-cyan-500` (legacy) keep working.
+        cyan: { ...defaultColors.cyan, DEFAULT: 'rgb(var(--cyan-rgb) / <alpha-value>)' },
+        violet: { ...defaultColors.violet, DEFAULT: 'rgb(var(--violet-rgb) / <alpha-value>)' },
+        mint: 'rgb(var(--mint-rgb) / <alpha-value>)',
+        coral: 'rgb(var(--coral-rgb) / <alpha-value>)',
       },
       fontFamily: {
-        sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
-        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
-        body:    ['"DM Sans"', 'system-ui', 'sans-serif'],
-        mono:    ['"JetBrains Mono"', 'monospace'],
+        sans:    ['ui-sans-serif', 'system-ui', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
+        display: ['ui-sans-serif', 'system-ui', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
+        mono:    ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+      },
+      boxShadow: {
+        'acc-glow': '0 6px 22px -6px var(--acc-glow)',
+        'acc-glow-lg': '0 10px 30px -6px var(--acc-glow)',
       },
       fontSize: {
         xs:   ['13px', { lineHeight: '1.5' }],

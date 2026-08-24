@@ -26,39 +26,39 @@ function officeLabel(t: string | null) {
 // Results list — each row links to the detail page
 function ResultsList({ offices, pins }: { offices: OfficeSearchResult[]; pins: string[] }) {
   if (!offices.length) return (
-    <div className="text-center py-10 text-gray-400 text-sm">No results found.</div>
+    <div className="text-center py-10 text-faint text-sm">No results found.</div>
   );
   return (
-    <div className="overflow-x-auto rounded-xl border border-gray-100 shadow-sm">
+    <div className="overflow-x-auto rounded-xl border border-line bg-surface">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-[#f9f9ff] border-b border-gray-100">
-            <th className="px-4 py-3 text-left font-semibold text-gray-400 text-xs">Post Office</th>
-            <th className="px-4 py-3 text-left font-semibold text-gray-400 text-xs">PIN</th>
-            <th className="px-4 py-3 text-left font-semibold text-gray-400 text-xs hidden sm:table-cell">District</th>
-            <th className="px-4 py-3 text-left font-semibold text-gray-400 text-xs hidden sm:table-cell">Type</th>
-            <th className="px-4 py-3 text-left font-semibold text-gray-400 text-xs"></th>
+          <tr className="bg-surface-2 border-b border-line">
+            <th className="px-4 py-3 text-left font-semibold text-muted text-xs">Post Office</th>
+            <th className="px-4 py-3 text-left font-semibold text-muted text-xs">PIN</th>
+            <th className="px-4 py-3 text-left font-semibold text-muted text-xs hidden sm:table-cell">District</th>
+            <th className="px-4 py-3 text-left font-semibold text-muted text-xs hidden sm:table-cell">Type</th>
+            <th className="px-4 py-3 text-left font-semibold text-muted text-xs"></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-line">
           {offices.map((o, i) => {
             const pin = o.pin_code ?? pins[i] ?? '';
             return (
-              <tr key={i} className="hover:bg-[#EEF2FF] transition-colors group">
-                <td className="px-4 py-3 font-semibold text-gray-800">{tc(o.office_name)}</td>
-                <td className="px-4 py-3 font-mono font-bold text-[#3525cd]">{pin}</td>
-                <td className="px-4 py-3 text-gray-500 hidden sm:table-cell">{tc(o.district) || '—'}</td>
+              <tr key={i} className="hover:bg-surface-2 transition-colors group">
+                <td className="px-4 py-3 font-semibold text-ink">{tc(o.office_name)}</td>
+                <td className="px-4 py-3 font-mono font-bold text-acc">{pin}</td>
+                <td className="px-4 py-3 text-muted hidden sm:table-cell">{tc(o.district) || '—'}</td>
                 <td className="px-4 py-3 hidden sm:table-cell">
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                    o.office_type === 'H.O' ? 'bg-amber-100 text-amber-700' :
-                    o.office_type === 'S.O' ? 'bg-indigo-100 text-indigo-700' :
-                    'bg-emerald-100 text-emerald-700'
+                    o.office_type === 'H.O' ? 'bg-gold/10 text-gold' :
+                    o.office_type === 'S.O' ? 'bg-acc-deep text-acc' :
+                    'bg-mint/10 text-mint'
                   }`}>{officeLabel(o.office_type)}</span>
                 </td>
                 <td className="px-4 py-3">
                   <Link
                     to={`/pin/${pin}`}
-                    className="inline-flex items-center gap-1 text-[#3525cd] font-semibold text-xs hover:underline whitespace-nowrap"
+                    className="inline-flex items-center gap-1 text-acc font-semibold text-xs hover:underline whitespace-nowrap"
                   >
                     View Details <ExternalLink className="w-3 h-3" />
                   </Link>
@@ -89,13 +89,13 @@ function ByPinCode() {
     <div className="space-y-4">
       <form onSubmit={handleSearch} className="space-y-3">
         <div className="relative flex items-center">
-          <Search className="absolute left-4 w-5 h-5 text-indigo-500 pointer-events-none" />
+          <Search className="absolute left-4 w-5 h-5 text-acc pointer-events-none" />
           <input
             type="text"
             value={input}
             onChange={e => setInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
             placeholder="Enter 6-digit PIN code e.g. 500090"
-            className="w-full pl-12 sm:pr-28 pr-4 py-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 bg-white font-mono transition-all"
+            className="w-full pl-12 sm:pr-28 pr-4 py-4 bg-bg-2 border border-line-2 rounded-xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc font-mono transition-all"
             inputMode="numeric"
             maxLength={6}
           />
@@ -103,7 +103,7 @@ function ByPinCode() {
           <button
             type="submit"
             disabled={input.length !== 6}
-            className="hidden sm:block absolute right-2 bg-[#3525cd] hover:bg-indigo-800 disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors shrink-0"
+            className="hidden sm:block absolute right-2 bg-gradient-to-br from-acc to-acc-2 hover:shadow-acc-glow disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all shrink-0"
           >
             Search
           </button>
@@ -112,18 +112,18 @@ function ByPinCode() {
         <button
           type="submit"
           disabled={input.length !== 6}
-          className="sm:hidden w-full bg-[#3525cd] hover:bg-indigo-800 disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
+          className="sm:hidden w-full bg-gradient-to-br from-acc to-acc-2 disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
         >
           Search Now <ArrowRight className="w-4 h-4" />
         </button>
       </form>
       <div className="flex flex-wrap gap-2 items-center">
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Trending:</span>
+        <span className="text-xs font-semibold text-faint uppercase tracking-wider">Trending:</span>
         {[['400001', 'Mumbai'], ['110001', 'Delhi'], ['560001', 'Bangalore']].map(([p, city]) => (
           <button
             key={p}
             onClick={() => quickSearch(p)}
-            className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold hover:bg-indigo-100 transition-colors"
+            className="bg-acc-deep text-acc px-3 py-1 rounded-full text-xs font-semibold hover:bg-acc/20 transition-colors"
           >
             {p} ({city})
           </button>
@@ -154,19 +154,19 @@ function ByPostOffice() {
     <div className="space-y-5">
       <form onSubmit={handleSearch} className="space-y-3">
         <div className="relative flex items-center">
-          <Search className="absolute left-4 w-5 h-5 text-indigo-500 pointer-events-none" />
+          <Search className="absolute left-4 w-5 h-5 text-acc pointer-events-none" />
           <input
             type="text"
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="Post office name e.g. Nizampet, Bachupally…"
-            className="w-full pl-12 sm:pr-28 pr-4 py-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 bg-white transition-all"
+            className="w-full pl-12 sm:pr-28 pr-4 py-4 bg-bg-2 border border-line-2 rounded-xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc transition-all"
             minLength={3}
           />
           <button
             type="submit"
             disabled={input.trim().length < 3}
-            className="hidden sm:block absolute right-2 bg-[#3525cd] hover:bg-indigo-800 disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors shrink-0"
+            className="hidden sm:block absolute right-2 bg-gradient-to-br from-acc to-acc-2 hover:shadow-acc-glow disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all shrink-0"
           >
             Search
           </button>
@@ -174,17 +174,17 @@ function ByPostOffice() {
         <button
           type="submit"
           disabled={input.trim().length < 3}
-          className="sm:hidden w-full bg-[#3525cd] hover:bg-indigo-800 disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
+          className="sm:hidden w-full bg-gradient-to-br from-acc to-acc-2 disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
         >
           Search Now <ArrowRight className="w-4 h-4" />
         </button>
       </form>
 
-      {isFetching && <div className="text-center py-8 text-gray-400 text-sm">Searching…</div>}
+      {isFetching && <div className="text-center py-8 text-faint text-sm">Searching…</div>}
       {results && !isFetching && (
         <div>
-          <p className="text-sm text-gray-500 mb-3">
-            {results.length} result{results.length !== 1 ? 's' : ''} for "<span className="font-medium">{query}</span>" — click any row to view full details
+          <p className="text-sm text-muted mb-3">
+            {results.length} result{results.length !== 1 ? 's' : ''} for "<span className="font-medium text-body">{query}</span>" — click any row to view full details
           </p>
           <ResultsList offices={results} pins={results.map(r => r.pin_code)} />
         </div>
@@ -220,13 +220,13 @@ function ByLocation() {
     staleTime: 12 * 60 * 60 * 1000,
   });
 
-  const selClass = "w-full py-4 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 bg-white disabled:bg-gray-50 disabled:text-gray-400 appearance-none cursor-pointer transition-all";
+  const selClass = "w-full py-4 px-4 bg-bg-2 border border-line-2 rounded-xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-acc/20 focus:border-acc disabled:bg-surface-2 disabled:text-faint appearance-none cursor-pointer transition-all";
 
   return (
     <div className="space-y-5">
       <div className="grid sm:grid-cols-3 gap-3">
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">State</label>
+          <label className="block text-xs font-semibold text-faint uppercase tracking-wider mb-1.5">State</label>
           <select
             value={state}
             onChange={e => { setState(e.target.value); setDistrict(''); setPin(''); }}
@@ -238,7 +238,7 @@ function ByLocation() {
           </select>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">District</label>
+          <label className="block text-xs font-semibold text-faint uppercase tracking-wider mb-1.5">District</label>
           <select
             value={district}
             onChange={e => { setDistrict(e.target.value); setPin(''); }}
@@ -250,7 +250,7 @@ function ByLocation() {
           </select>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">PIN Code</label>
+          <label className="block text-xs font-semibold text-faint uppercase tracking-wider mb-1.5">PIN Code</label>
           <select
             value={pin}
             onChange={e => setPin(e.target.value)}
@@ -266,13 +266,13 @@ function ByLocation() {
       {pin && (
         <button
           onClick={() => navigate(`/pin/${pin}`)}
-          className="w-full flex items-center justify-center gap-2 bg-[#3525cd] hover:bg-indigo-800 text-white font-semibold py-3.5 rounded-xl text-sm transition-all shadow-md shadow-indigo-500/20"
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold py-3.5 rounded-xl text-sm transition-all shadow-acc-glow"
         >
           View PIN Code Details <ExternalLink className="w-4 h-4" />
         </button>
       )}
       {!pin && district && !pinsLoading && (
-        <p className="text-sm text-gray-400 text-center">Select a PIN code above to view its details</p>
+        <p className="text-sm text-faint text-center">Select a PIN code above to view its details</p>
       )}
     </div>
   );
@@ -282,16 +282,16 @@ function ByLocation() {
 function LandingFAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-gray-100 rounded-2xl overflow-hidden bg-white shadow-sm">
+    <div className="border border-line rounded-2xl overflow-hidden bg-surface">
       <button
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-[#EEF2FF] transition-colors"
+        className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-surface-2 transition-colors"
       >
-        <span className="font-semibold text-gray-800 text-sm pr-4">{q}</span>
-        <ChevronDown className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <span className="font-semibold text-ink text-sm pr-4">{q}</span>
+        <ChevronDown className={`w-4 h-4 text-muted shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {/* Always mounted so content stays in the DOM for search engines */}
-      <div className={`px-6 pb-5 pt-1 text-sm text-gray-500 leading-relaxed border-t border-gray-100 ${open ? '' : 'hidden'}`}>
+      <div className={`px-6 pb-5 pt-1 text-sm text-muted leading-relaxed border-t border-line ${open ? '' : 'hidden'}`}>
         {a}
       </div>
     </div>
@@ -372,34 +372,36 @@ export default function PinCodesPage() {
       </Helmet>
 
       {/* Hero with integrated search */}
-      <section className="bg-[#f9f9ff] py-8 md:py-24 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-400/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
-        </div>
-        <div className="max-w-3xl mx-auto relative z-10">
-          <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wider">
+      <header className="py-8 md:py-10 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="relative overflow-hidden force-dark rounded-3xl border border-line bg-surface py-8 md:py-16 px-4 sm:px-8">
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 opacity-30"
+                   style={{ background: 'radial-gradient(50% 50% at 50% 50%, var(--acc-glow), transparent 70%)' }} />
+            </div>
+        <div className="max-w-3xl mx-auto relative z-[2]">
+          <div className="inline-flex items-center gap-2 bg-acc-deep text-acc text-xs font-bold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wider border border-acc/30">
             <MapPin className="w-3.5 h-3.5" /> India Post PIN Directory
           </div>
-          <h1 className="text-2xl md:text-5xl font-extrabold text-gray-900 mb-3 md:mb-4 leading-tight tracking-tight">
-            Find Every PIN Code<br /><span className="text-[#3525cd]">Across India</span>
+          <h1 className="font-display text-2xl md:text-5xl font-extrabold text-ink mb-3 md:mb-4 leading-tight tracking-tight">
+            Find Every PIN Code<br /><span className="bg-gradient-to-r from-acc to-cyan bg-clip-text text-transparent">Across India</span>
           </h1>
-          <p className="text-sm md:text-lg text-gray-500 mb-6 md:mb-10 max-w-xl">
+          <p className="text-sm md:text-lg text-muted mb-6 md:mb-10 max-w-xl">
             Search post offices, bank branches, and administrative data for any India Post PIN code.
           </p>
 
           {/* Search Card */}
-          <div className="bg-white rounded-2xl shadow-[0_4px_24px_-4px_rgba(109,40,217,0.12)] border border-indigo-100/50 overflow-hidden">
+          <div className="bg-surface rounded-2xl shadow-[0_4px_24px_-4px_var(--acc-glow)] border border-line-2 overflow-hidden">
             {/* Mobile: pill tabs */}
-            <div className="sm:hidden flex p-2 bg-[#e9edff] gap-1">
+            <div className="sm:hidden flex p-2 bg-bg-2 gap-1">
               {TABS.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => setTab(id)}
                   className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold transition-all ${
                     tab === id
-                      ? 'bg-white text-[#3525cd] shadow-sm'
-                      : 'text-gray-500'
+                      ? 'bg-raise text-acc'
+                      : 'text-muted'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -408,15 +410,15 @@ export default function PinCodesPage() {
               ))}
             </div>
             {/* Desktop: bottom-border tabs */}
-            <div className="hidden sm:flex border-b border-gray-100">
+            <div className="hidden sm:flex border-b border-line">
               {TABS.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => setTab(id)}
                   className={`flex-1 flex items-center justify-center gap-2 py-4 text-sm font-semibold transition-all border-b-2 -mb-px ${
                     tab === id
-                      ? 'text-indigo-700 border-indigo-600 bg-indigo-50/50'
-                      : 'text-gray-400 border-transparent hover:text-gray-600 hover:bg-gray-50'
+                      ? 'text-acc border-acc bg-acc-deep'
+                      : 'text-faint border-transparent hover:text-body hover:bg-surface-2'
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />
@@ -435,30 +437,32 @@ export default function PinCodesPage() {
           <div className="sm:hidden grid grid-cols-2 gap-3 mt-2">
             <button
               onClick={() => setTab('location')}
-              className="bg-[#e9edff] rounded-xl p-4 flex flex-col gap-2 text-left active:scale-95 transition-all"
+              className="bg-surface border border-line rounded-xl p-4 flex flex-col gap-2 text-left active:scale-95 transition-all"
             >
-              <LocateFixed className="w-5 h-5 text-[#3525cd]" />
-              <span className="text-sm font-semibold text-gray-800">Browse by State</span>
+              <LocateFixed className="w-5 h-5 text-acc" />
+              <span className="text-sm font-semibold text-ink">Browse by State</span>
             </button>
             <a
               href="/ifsc-finder"
-              className="bg-[#e9edff] rounded-xl p-4 flex flex-col gap-2 active:scale-95 transition-all"
+              className="bg-surface border border-line rounded-xl p-4 flex flex-col gap-2 active:scale-95 transition-all"
             >
-              <Building2 className="w-5 h-5 text-[#3525cd]" />
-              <span className="text-sm font-semibold text-gray-800">IFSC Finder</span>
+              <Building2 className="w-5 h-5 text-acc" />
+              <span className="text-sm font-semibold text-ink">IFSC Finder</span>
             </a>
           </div>
         </div>
-      </section>
+          </div>
+        </div>
+      </header>
 
       {/* Why Use Our Pincode Finder */}
-      <section className="py-16 px-4 bg-[#f9f9ff]">
+      <section className="py-16 px-4 bg-bg-2 border-b border-line">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">
+            <h2 className="font-display text-3xl font-extrabold text-ink mb-3 tracking-tight">
               Why Choose Rupeepedia PIN Finder?
             </h2>
-            <p className="text-gray-500 max-w-xl mx-auto text-sm">
+            <p className="text-muted max-w-xl mx-auto text-sm">
               Official data sources combined with powerful search — the most reliable PIN code directory in India.
             </p>
           </div>
@@ -466,35 +470,35 @@ export default function PinCodesPage() {
             {([
               {
                 icon: <Zap className="w-6 h-6 text-white" />,
-                gradient: 'from-indigo-400 to-[#3525cd]',
+                gradient: 'from-acc to-acc-2',
                 title: 'Pan-India Database',
                 desc: 'Access a full directory of 150,000+ post offices across 28 states and 8 union territories.',
               },
               {
                 icon: <Database className="w-6 h-6 text-white" />,
-                gradient: 'from-[#4f46e5] to-indigo-800',
+                gradient: 'from-violet-500 to-acc-2',
                 title: 'Verified Records',
                 desc: 'All postal index numbers are cross-referenced with official Indian postal data records.',
               },
               {
                 icon: <Smartphone className="w-6 h-6 text-white" />,
-                gradient: 'from-indigo-500 to-[#3525cd]',
+                gradient: 'from-cyan to-acc',
                 title: 'Instant Access',
                 desc: 'Optimised for high speed — find area codes by locality name or PIN code in milliseconds.',
               },
               {
                 icon: <Filter className="w-6 h-6 text-white" />,
-                gradient: 'from-[#3525cd] to-indigo-900',
+                gradient: 'from-acc-2 to-violet-500',
                 title: '100% Free Tool',
                 desc: 'Unlimited searches for courier tracking, address verification, or logistics — no sign-up needed.',
               },
             ] as { icon: React.ReactNode; gradient: string; title: string; desc: string }[]).map(({ icon, gradient, title, desc }) => (
-              <div key={title} className="bg-white rounded-2xl p-6 shadow-sm border border-indigo-100/60 flex flex-col items-center text-center gap-4 hover:-translate-y-1 transition-transform duration-300">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg shadow-indigo-500/25`}>
+              <div key={title} className="bg-surface rounded-2xl p-6 border border-line flex flex-col items-center text-center gap-4 hover:-translate-y-1 transition-transform duration-300">
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-acc-glow`}>
                   {icon}
                 </div>
-                <h3 className="font-bold text-gray-900 text-base leading-snug">{title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                <h3 className="font-bold text-ink text-base leading-snug">{title}</h3>
+                <p className="text-sm text-muted leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -502,11 +506,11 @@ export default function PinCodesPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-bg">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">Frequently Asked Questions</h2>
-            <p className="text-gray-500 text-sm">Get expert answers about Indian PIN codes and branch office protocols.</p>
+            <h2 className="font-display text-3xl font-extrabold text-ink mb-2 tracking-tight">Frequently Asked Questions</h2>
+            <p className="text-muted text-sm">Get expert answers about Indian PIN codes and branch office protocols.</p>
           </div>
           <div className="space-y-3">
             {([
@@ -538,17 +542,17 @@ export default function PinCodesPage() {
       </section>
 
       {/* CTA */}
-      <section className="px-4 pb-20">
-        <div className="max-w-5xl mx-auto bg-gradient-to-br from-indigo-50 to-indigo-50 rounded-3xl p-8 md:p-14 text-center border border-indigo-100/50">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-4 tracking-tight">
+      <section className="px-4 pb-20 bg-bg">
+        <div className="max-w-5xl mx-auto bg-gradient-to-br from-acc-deep to-surface rounded-3xl p-8 md:p-14 text-center border border-acc/25">
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold text-ink mb-4 tracking-tight">
             Also looking for IFSC codes?
           </h2>
-          <p className="text-gray-500 mb-8 max-w-md mx-auto">
+          <p className="text-muted mb-8 max-w-md mx-auto">
             Search all bank branches by PIN code, city, or bank name using our IFSC finder.
           </p>
           <a
             href="/ifsc-finder"
-            className="inline-flex items-center gap-2 bg-indigo-700 text-white font-bold px-8 py-4 rounded-xl hover:bg-indigo-800 transition-all shadow-lg shadow-indigo-500/25 hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-acc-glow hover:-translate-y-0.5"
           >
             <Search className="w-5 h-5" /> IFSC Code Finder
           </a>

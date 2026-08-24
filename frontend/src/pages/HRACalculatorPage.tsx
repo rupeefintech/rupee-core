@@ -14,14 +14,14 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "HRA exemption under Section 10(13A) and Rule 2A is the minimum of three amounts: (1) actual HRA received from your employer, (2) rent paid minus 10% of basic salary plus DA, and (3) 50% of basic salary plus DA for metro cities (Delhi, Mumbai, Chennai, Kolkata) or 40% for all other cities. Whatever HRA you receive above this exempt amount is added to your taxable salary.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>Exempt HRA = the <strong>minimum</strong> of three amounts:</p>
         <ol className="list-decimal ml-5 space-y-1 text-xs">
           <li>Actual HRA received from your employer</li>
           <li>Rent paid − 10% of (Basic + DA)</li>
           <li>50% of (Basic + DA) in a metro city, 40% elsewhere</li>
         </ol>
-        <p className="text-xs text-gray-500">Anything you receive above the minimum is taxable salary. The calculation is done for the period rent was actually paid — if salary or rent changed during the year, compute month by month.</p>
+        <p className="text-xs text-muted">Anything you receive above the minimum is taxable salary. The calculation is done for the period rent was actually paid — if salary or rent changed during the year, compute month by month.</p>
       </div>
     ),
   },
@@ -30,9 +30,9 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "No. HRA exemption is available only under the old tax regime. If you opt for the new (default) tax regime, the entire HRA received is taxable as salary. If your HRA exemption is large, it can be one of the strongest reasons to stay in the old regime — compare both regimes before choosing.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p><strong>No.</strong> HRA exemption exists only in the <strong>old regime</strong>. Under the new (default) regime the entire HRA is taxed as salary.</p>
-        <p className="text-xs text-gray-500">A big HRA exemption is often the deciding factor between regimes. Run both through our <Link to="/calculators/income-tax" className="text-brand-600 font-semibold hover:underline">Income Tax Calculator</Link> before picking.</p>
+        <p className="text-xs text-muted">A big HRA exemption is often the deciding factor between regimes. Run both through our <Link to="/calculators/income-tax" className="text-acc font-semibold hover:underline">Income Tax Calculator</Link> before picking.</p>
       </div>
     ),
   },
@@ -41,7 +41,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "Only four cities qualify as metro for HRA: Delhi, Mumbai, Chennai and Kolkata, where the limit is 50% of basic plus DA. Bengaluru, Hyderabad, Pune, Gurgaon, Noida and every other city are non-metro for HRA purposes — the limit there is 40% — even though they are metros in common usage.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>Only <strong>Delhi, Mumbai, Chennai and Kolkata</strong> (50% limit). Everything else — including Bengaluru, Hyderabad, Pune, Gurgaon, Noida — is non-metro (40% limit) for HRA, regardless of how big the city is.</p>
       </div>
     ),
@@ -51,7 +51,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "Yes, paying rent to parents is legal and accepted, provided the house is owned by the parent (not by you or jointly with you), you actually transfer the rent (bank transfer recommended), there is a rent agreement, and the parent declares the rent as income in their tax return. Rent paid to a spouse is generally not accepted.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p><strong>Yes</strong>, if done properly:</p>
         <ul className="list-disc ml-5 space-y-1 text-xs">
           <li>House must be owned by the parent — not by you, and preferably not jointly with you</li>
@@ -59,7 +59,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
           <li>Keep a rent agreement and rent receipts</li>
           <li>Parent must show the rent as income in their ITR (they get the 30% standard deduction on it)</li>
         </ul>
-        <p className="text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg">Rent paid to a <strong>spouse</strong> is usually disallowed — courts have gone both ways, and it invites scrutiny.</p>
+        <p className="text-xs text-gold bg-gold/10 px-3 py-2 rounded-lg">Rent paid to a <strong>spouse</strong> is usually disallowed — courts have gone both ways, and it invites scrutiny.</p>
       </div>
     ),
   },
@@ -68,7 +68,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "If your annual rent exceeds ₹1 lakh (more than about ₹8,333 per month), you must report the landlord's PAN to your employer to claim HRA through payroll. If the landlord has no PAN, they must give a signed declaration. Additionally, if monthly rent exceeds ₹50,000, you must deduct TDS at 2% under Section 194-IB.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>Two thresholds:</p>
         <ul className="list-disc ml-5 space-y-1 text-xs">
           <li><strong>Rent &gt; ₹1 lakh/year:</strong> landlord's PAN must be reported to your employer (or a no-PAN declaration)</li>
@@ -82,14 +82,14 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "Keep rent receipts (with revenue stamp where applicable), the rent agreement, proof of payment such as bank statements or UPI records, and the landlord's PAN if rent exceeds ₹1 lakh a year. Your employer collects these for payroll; keep copies for at least 6 years in case the tax department asks during scrutiny.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <ul className="list-disc ml-5 space-y-1 text-xs">
           <li>Rent agreement in your name</li>
           <li>Monthly rent receipts</li>
           <li>Bank statement / UPI trail showing rent payments (cash payments are red flags)</li>
           <li>Landlord's PAN if annual rent &gt; ₹1 lakh</li>
         </ul>
-        <p className="text-xs text-gray-500">Employer collects proofs around January–February. Keep copies ~6 years; HRA claims are a common scrutiny item.</p>
+        <p className="text-xs text-muted">Employer collects proofs around January–February. Keep copies ~6 years; HRA claims are a common scrutiny item.</p>
       </div>
     ),
   },
@@ -98,7 +98,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "Yes, you can claim HRA and home loan benefits (Section 24b interest and 80C principal) together if you genuinely live in a rented house while owning another — for example, your owned house is in a different city, or is rented out, or is too far from your workplace. Owning and living in the same city as your rental needs a credible reason.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p><strong>Yes</strong>, when the facts support it:</p>
         <ul className="list-disc ml-5 space-y-1 text-xs">
           <li>Own house in city A, work and rent in city B — clean case</li>
@@ -113,7 +113,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "Dearness Allowance is included with basic salary for HRA calculation only if it forms part of salary for retirement benefits (which is typical for government and PSU employees). Most private-sector pay structures have no DA, in which case only basic salary is used. Other allowances and bonuses are never included.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>DA counts <strong>only if it forms part of retirement benefits</strong> (common in government/PSU jobs). Private-sector CTCs usually have no DA — then use basic salary alone. Bonuses, special allowance, LTA etc. are never included.</p>
       </div>
     ),
@@ -123,14 +123,14 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "Yes, under Section 80GG (old regime only) — the least of ₹5,000 per month, 25% of total income, or rent paid minus 10% of total income. Conditions: you, your spouse or minor child must not own a house in your city of work, and you must file Form 10BA. Self-employed people use the same section.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>Use <strong>Section 80GG</strong> (old regime only). Deduction = least of:</p>
         <ul className="list-disc ml-5 space-y-1 text-xs">
           <li>₹5,000 per month (₹60,000/year)</li>
           <li>25% of total income</li>
           <li>Rent paid − 10% of total income</li>
         </ul>
-        <p className="text-xs text-gray-500">Conditions: no house owned by you/spouse/minor child in your work city, and file Form 10BA. Also the route for self-employed renters.</p>
+        <p className="text-xs text-muted">Conditions: no house owned by you/spouse/minor child in your work city, and file Form 10BA. Also the route for self-employed renters.</p>
       </div>
     ),
   },
@@ -139,7 +139,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "HRA exemption is computed only for the months rent was actually paid. If you moved cities, changed rent, or got a salary revision mid-year, the exemption should be worked out separately for each period with its own rent, salary and metro status, then added up. Employers' payroll software does this automatically from your declarations.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>Exemption applies only to months rent was paid. Mid-year changes (new city, rent revision, salary hike) mean the min-of-three test runs separately for each period. Enter monthly figures in this calculator for the period in question, and multiply by the number of months it applied.</p>
       </div>
     ),
@@ -149,7 +149,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "No. HRA exemption requires actual payment of rent for accommodation you occupy. If you live in your own house or pay no rent, the entire HRA received is taxable. Claiming HRA with fake rent receipts is tax evasion — the department cross-checks landlord PAN, bank trails, and Annual Information Statements.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p><strong>No.</strong> No rent paid → full HRA is taxable. Fake rent receipts are tax evasion; the department cross-checks landlord PANs, AIS data and bank trails, and penalties run up to 200% of tax evaded.</p>
       </div>
     ),
@@ -159,7 +159,7 @@ const FAQS: { q: string; schemaText: string; a: React.ReactNode }[] = [
     schemaText:
       "Enter your monthly basic salary (plus DA if applicable), HRA received, rent paid, and select whether you live in a metro city. The calculator computes all three limits under Rule 2A — actual HRA, rent minus 10% of basic, and 50%/40% of basic — and shows the minimum as your exempt HRA, plus the taxable portion, both monthly and annually.",
     a: (
-      <div className="space-y-2 text-sm text-gray-600">
+      <div className="space-y-2 text-sm text-muted">
         <p>Enter monthly Basic (+DA), HRA received, rent paid, and metro status. It evaluates all three Rule 2A limits, highlights which one binds, and shows exempt vs taxable HRA per month and per year.</p>
       </div>
     ),
@@ -266,16 +266,17 @@ export default function HRACalculatorPage() {
         icon={Home}
       />
 
+      <div className="bg-bg">
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <p className="text-sm text-gray-500">
-            Calculate how much of your HRA is <strong className="text-gray-700">tax-exempt</strong> under Section 10(13A) and how much is taxable — with the full min-of-three breakdown.
+          <p className="text-sm text-muted">
+            Calculate how much of your HRA is <strong className="text-body">tax-exempt</strong> under Section 10(13A) and how much is taxable — with the full min-of-three breakdown.
           </p>
         </div>
 
         {/* Calculator */}
-        <div className="card p-5 mb-5">
+        <div className="bg-surface rounded-2xl border border-line p-5 mb-5">
           <div className="grid sm:grid-cols-3 gap-4 mb-4">
             {[
               { label: "Basic Salary + DA (monthly)", value: basic, set: setBasic },
@@ -283,14 +284,14 @@ export default function HRACalculatorPage() {
               { label: "Rent Paid (monthly)", value: rent, set: setRent },
             ].map(f => (
               <div key={f.label}>
-                <label className="block text-[11px] font-semibold text-gray-500 mb-1">{f.label}</label>
+                <label className="block text-[11px] font-semibold text-muted mb-1">{f.label}</label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-faint text-sm">₹</span>
                   <input
                     type="number"
                     value={f.value}
                     onChange={e => f.set(Number(e.target.value))}
-                    className="w-full pl-7 pr-3 py-2 border border-gray-200 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-brand-400"
+                    className="w-full pl-7 pr-3 py-2 border border-line rounded-lg text-sm text-ink bg-bg-2 font-semibold focus:outline-none focus:ring-2 focus:ring-acc/30"
                   />
                 </div>
               </div>
@@ -298,8 +299,8 @@ export default function HRACalculatorPage() {
           </div>
 
           <label className="flex items-center gap-2 text-sm cursor-pointer mb-5">
-            <input type="checkbox" checked={isMetro} onChange={() => setIsMetro(!isMetro)} className="w-4 h-4 accent-brand-600" />
-            <span className="text-gray-700">Metro city <span className="text-gray-400 text-xs">(only Delhi, Mumbai, Chennai, Kolkata)</span></span>
+            <input type="checkbox" checked={isMetro} onChange={() => setIsMetro(!isMetro)} className="w-4 h-4 accent-acc" />
+            <span className="text-body">Metro city <span className="text-faint text-xs">(only Delhi, Mumbai, Chennai, Kolkata)</span></span>
           </label>
 
           {/* Min-of-three breakdown */}
@@ -307,13 +308,13 @@ export default function HRACalculatorPage() {
             {conditions.map(c => {
               const isMin = c.value === exemption;
               return (
-                <div key={c.label} className={`flex items-start gap-2.5 px-3 py-2.5 rounded-lg border ${isMin ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-100"}`}>
-                  {isMin ? <CheckCircle size={14} className="text-green-500 flex-shrink-0 mt-0.5" /> : <AlertCircle size={14} className="text-gray-300 flex-shrink-0 mt-0.5" />}
+                <div key={c.label} className={`flex items-start gap-2.5 px-3 py-2.5 rounded-lg border ${isMin ? "bg-mint/10 border-mint/30" : "bg-surface-2 border-line"}`}>
+                  {isMin ? <CheckCircle size={14} className="text-mint flex-shrink-0 mt-0.5" /> : <AlertCircle size={14} className="text-faint flex-shrink-0 mt-0.5" />}
                   <div className="flex-1 min-w-0">
-                    <div className={`font-semibold text-xs ${isMin ? "text-green-700" : "text-gray-600"}`}>{c.label}{isMin && " — lowest, this applies"}</div>
-                    <div className="text-[11px] text-gray-400 mt-0.5">{c.desc}</div>
+                    <div className={`font-semibold text-xs ${isMin ? "text-mint" : "text-muted"}`}>{c.label}{isMin && " — lowest, this applies"}</div>
+                    <div className="text-[11px] text-faint mt-0.5">{c.desc}</div>
                   </div>
-                  <div className={`text-sm font-bold flex-shrink-0 ${isMin ? "text-green-700" : "text-gray-400"}`}>{fmt(c.value)}</div>
+                  <div className={`text-sm font-bold flex-shrink-0 ${isMin ? "text-mint" : "text-faint"}`}>{fmt(c.value)}</div>
                 </div>
               );
             })}
@@ -321,19 +322,19 @@ export default function HRACalculatorPage() {
 
           {/* Result */}
           <div className="grid sm:grid-cols-2 gap-3">
-            <div className="bg-brand-50 border border-brand-100 rounded-xl p-4">
-              <div className="text-xs text-brand-600 font-semibold">Exempt HRA</div>
-              <div className="text-xl font-bold text-brand-700">{fmt(exemption)}<span className="text-xs font-medium text-brand-500"> /month</span></div>
-              <div className="text-[11px] text-brand-500 mt-0.5">{fmt(exemption * 12)} per year — not taxed (old regime)</div>
+            <div className="bg-acc-deep border border-acc/25 rounded-xl p-4">
+              <div className="text-xs text-acc font-semibold">Exempt HRA</div>
+              <div className="text-xl font-bold text-ink">{fmt(exemption)}<span className="text-xs font-medium text-muted"> /month</span></div>
+              <div className="text-[11px] text-muted mt-0.5">{fmt(exemption * 12)} per year — not taxed (old regime)</div>
             </div>
-            <div className="bg-red-50 border border-red-100 rounded-xl p-4">
-              <div className="text-xs text-red-600 font-semibold">Taxable HRA</div>
-              <div className="text-xl font-bold text-red-700">{fmt(taxableHRA)}<span className="text-xs font-medium text-red-400"> /month</span></div>
-              <div className="text-[11px] text-red-400 mt-0.5">{fmt(taxableHRA * 12)} per year — added to salary income</div>
+            <div className="bg-coral/10 border border-coral/25 rounded-xl p-4">
+              <div className="text-xs text-coral font-semibold">Taxable HRA</div>
+              <div className="text-xl font-bold text-coral">{fmt(taxableHRA)}<span className="text-xs font-medium text-coral/70"> /month</span></div>
+              <div className="text-[11px] text-coral/70 mt-0.5">{fmt(taxableHRA * 12)} per year — added to salary income</div>
             </div>
           </div>
 
-          <p className="text-[11px] text-amber-700 bg-amber-50 rounded-lg px-3 py-2 mt-3">
+          <p className="text-[11px] text-gold bg-gold/10 rounded-lg px-3 py-2 mt-3">
             <strong>New regime warning:</strong> HRA exemption applies only in the old tax regime. Under the new (default) regime, the entire {fmt(hra)}/month is taxable.
           </p>
         </div>
@@ -341,8 +342,8 @@ export default function HRACalculatorPage() {
         {/* ── Article ── */}
         <article className="mt-10 space-y-10">
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">What is HRA and how does the exemption work?</h2>
-            <div className="text-sm text-gray-600 space-y-3 leading-relaxed">
+            <h2 className="text-lg font-bold text-ink mb-3">What is HRA and how does the exemption work?</h2>
+            <div className="text-sm text-muted space-y-3 leading-relaxed">
               <p>
                 <strong>House Rent Allowance (HRA)</strong> is a salary component employers pay to help cover rent. Under
                 <strong> Section 10(13A)</strong> of the Income Tax Act, read with <strong>Rule 2A</strong>, part of that HRA is
@@ -367,25 +368,25 @@ export default function HRACalculatorPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">HRA exemption — worked examples</h2>
+            <h2 className="text-lg font-bold text-ink mb-3">HRA exemption — worked examples</h2>
             <div className="space-y-3">
               {EXAMPLES.map(ex => (
-                <div key={ex.title} className="card p-4">
-                  <h3 className="text-sm font-bold text-gray-900 mb-1">{ex.title}</h3>
-                  <p className="text-xs text-gray-500 mb-2">{ex.inputs}</p>
-                  <ul className="text-xs text-gray-600 space-y-0.5 mb-2">
-                    {ex.calc.map(c => <li key={c} className="flex gap-2"><span className="text-brand-400">▸</span>{c}</li>)}
+                <div key={ex.title} className="bg-surface rounded-2xl border border-line p-4">
+                  <h3 className="text-sm font-bold text-ink mb-1">{ex.title}</h3>
+                  <p className="text-xs text-muted mb-2">{ex.inputs}</p>
+                  <ul className="text-xs text-muted space-y-0.5 mb-2">
+                    {ex.calc.map(c => <li key={c} className="flex gap-2"><span className="text-acc/70">▸</span>{c}</li>)}
                   </ul>
-                  <p className="text-xs font-semibold text-green-700 bg-green-50 rounded-md px-2.5 py-1.5">{ex.result}</p>
-                  <p className="text-[11px] text-gray-400 mt-1.5">{ex.binding}</p>
+                  <p className="text-xs font-semibold text-mint bg-mint/10 rounded-md px-2.5 py-1.5">{ex.result}</p>
+                  <p className="text-[11px] text-faint mt-1.5">{ex.binding}</p>
                 </div>
               ))}
             </div>
           </section>
 
           <section>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">HRA rules at a glance</h2>
-            <div className="card p-0 overflow-hidden">
+            <h2 className="text-lg font-bold text-ink mb-3">HRA rules at a glance</h2>
+            <div className="bg-surface rounded-2xl border border-line p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-xs border-collapse">
                   <tbody>
@@ -401,9 +402,9 @@ export default function HRACalculatorPage() {
                       ["No HRA in salary?", "Claim Section 80GG instead (max ₹60,000/year, conditions apply)"],
                       ["Own house, no rent", "No exemption — entire HRA taxable"],
                     ].map(([k, v]) => (
-                      <tr key={k} className="border-b border-gray-50 last:border-0">
-                        <td className="px-3 py-2 font-semibold text-gray-700 whitespace-nowrap">{k}</td>
-                        <td className="px-3 py-2 text-gray-600">{v}</td>
+                      <tr key={k} className="border-b border-line last:border-0">
+                        <td className="px-3 py-2 font-semibold text-body whitespace-nowrap">{k}</td>
+                        <td className="px-3 py-2 text-muted">{v}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -415,22 +416,22 @@ export default function HRACalculatorPage() {
 
         {/* ── FAQ ── */}
         <div className="mt-10">
-          <h2 className="text-lg font-bold text-gray-900 mb-1">HRA FAQs</h2>
-          <p className="text-xs text-gray-400 mb-4">Rules, documents, edge cases and how this calculator applies them</p>
+          <h2 className="text-lg font-bold text-ink mb-1">HRA FAQs</h2>
+          <p className="text-xs text-faint mb-4">Rules, documents, edge cases and how this calculator applies them</p>
           <div className="space-y-2">
             {FAQS.map((faq, i) => (
-              <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+              <div key={i} className="border border-line rounded-xl overflow-hidden">
                 <button
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-white hover:bg-gray-50 transition"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-left bg-surface hover:bg-surface-2 transition"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                 >
-                  <span className="flex-1 text-sm font-semibold text-gray-800">{faq.q}</span>
+                  <span className="flex-1 text-sm font-semibold text-body">{faq.q}</span>
                   {openFaq === i
-                    ? <ChevronUp size={15} className="text-gray-400 flex-shrink-0" />
-                    : <ChevronDown size={15} className="text-gray-400 flex-shrink-0" />}
+                    ? <ChevronUp size={15} className="text-faint flex-shrink-0" />
+                    : <ChevronDown size={15} className="text-faint flex-shrink-0" />}
                 </button>
                 {/* Always mounted so content stays in the DOM for search engines */}
-                <div className={`px-4 pb-4 pt-1 border-t border-gray-100 bg-white ${openFaq === i ? "" : "hidden"}`}>
+                <div className={`px-4 pb-4 pt-1 border-t border-line bg-surface ${openFaq === i ? "" : "hidden"}`}>
                   {faq.a}
                 </div>
               </div>
@@ -440,7 +441,7 @@ export default function HRACalculatorPage() {
 
         {/* ── Related tools ── */}
         <section className="mt-10">
-          <h2 className="text-lg font-bold text-gray-900 mb-3">Related calculators</h2>
+          <h2 className="text-lg font-bold text-ink mb-3">Related calculators</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
               { path: "/calculators/income-tax", label: "Income Tax Calculator", desc: "Old vs new regime — see if your HRA tips the balance" },
@@ -448,16 +449,17 @@ export default function HRACalculatorPage() {
               { path: "/calculators/home-loan-emi", label: "Home Loan EMI Calculator", desc: "Planning to buy instead of rent? Check the EMI" },
               { path: "/calculators/home-loan-eligibility", label: "Home Loan Eligibility", desc: "How much loan your salary qualifies for" },
             ].map(t => (
-              <Link key={t.path} to={t.path} className="card p-4 hover:shadow-md transition group">
+              <Link key={t.path} to={t.path} className="bg-surface rounded-2xl border border-line p-4 hover:border-acc transition group">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold text-gray-800 group-hover:text-brand-600 transition">{t.label}</span>
-                  <ArrowRight size={14} className="text-gray-300 group-hover:text-brand-500 transition flex-shrink-0" />
+                  <span className="text-sm font-semibold text-body group-hover:text-acc transition">{t.label}</span>
+                  <ArrowRight size={14} className="text-faint group-hover:text-acc transition flex-shrink-0" />
                 </div>
-                <p className="text-[11px] text-gray-400 mt-1">{t.desc}</p>
+                <p className="text-[11px] text-faint mt-1">{t.desc}</p>
               </Link>
             ))}
           </div>
         </section>
+      </div>
       </div>
     </>
   );
