@@ -272,11 +272,12 @@ export default function IFSCFinderPage() {
         {/* Search Card */}
         <motion.div id="guided-search" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="scroll-mt-24">
           <Card className="p-6 sm:p-8 relative z-[2]">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="font-display text-lg font-bold text-ink flex items-center gap-2">
-                <Search className="w-5 h-5 text-acc" /> Select Bank, State, District &amp; Branch
-              </h2>
-              <span className="text-xs text-faint font-medium shrink-0">Step {currentStep} of 4</span>
+            <div className="flex items-start justify-between mb-5 gap-3">
+              <div>
+                <h2 className="font-display text-lg font-bold text-ink">Step-by-Step Branch Explorer</h2>
+                <p className="text-sm text-faint mt-0.5">Drill down by selecting Bank, State, District, and Branch location.</p>
+              </div>
+              <span className="text-xs text-faint font-medium shrink-0 mt-1">Step {currentStep} of 4</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
