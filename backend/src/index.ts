@@ -375,7 +375,7 @@ app.get('/sitemap-banks.xml', async (_req, res) => {
     for (const bank of banks) {
       if (!bank.slug) continue;
       xml += '  <url>\n';
-      xml += `    <loc>${xmlEscape(`${baseUrl}/bank/${bank.slug}`)}</loc>\n`;
+      xml += `    <loc>${xmlEscape(`${baseUrl}/bank/${encodeURIComponent(bank.slug)}`)}</loc>\n`;
       xml += `    <lastmod>${bank.updatedAt ? bank.updatedAt.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.8</priority>\n';
@@ -407,7 +407,7 @@ app.get('/sitemap-states.xml', async (_req, res) => {
     for (const p of presences) {
       if (!p.bank.slug || !p.state.slug) continue;
       xml += '  <url>\n';
-      xml += `    <loc>${xmlEscape(`${baseUrl}/state/${p.bank.slug}/${p.state.slug}`)}</loc>\n`;
+      xml += `    <loc>${xmlEscape(`${baseUrl}/state/${encodeURIComponent(p.bank.slug)}/${encodeURIComponent(p.state.slug)}`)}</loc>\n`;
       xml += `    <lastmod>${p.updatedAt ? p.updatedAt.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
       xml += '    <changefreq>monthly</changefreq>\n';
       xml += '    <priority>0.6</priority>\n';
