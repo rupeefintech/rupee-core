@@ -1,48 +1,11 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { Card } from "../components/ui/Card";
 import { SearchTabs, type SearchTab } from "../components/ui/SearchTabs";
-import { api } from "../utils/api";
 import {
   Landmark, ArrowRight, MapPin, Building,
 } from "lucide-react";
-
-function inr(n: number | undefined): string {
-  if (n == null) return '—';
-  return '₹' + Math.round(n).toLocaleString('en-IN');
-}
-
-function LiveRatesTicker() {
-  const { data } = useQuery({
-    queryKey: ['commodity-prices'],
-    queryFn: () => api.getCommodityPrices(),
-    staleTime: 25 * 60 * 1000,
-    retry: 2,
-  });
-
-  const stats = [
-    { label: 'Gold 24K', value: data ? `${inr(data.gold.price_24k_per_gram)}/g` : null, to: '/gold-rate-today', cls: 'text-gold' },
-    { label: 'Silver', value: data ? `${inr(data.silver.price_per_kg)}/kg` : null, to: '/gold-rate-today', cls: 'text-ink' },
-    { label: 'USD/INR', value: data ? `₹${data.usd_inr.toFixed(2)}` : null, to: '/currency-converter', cls: 'text-cyan' },
-  ];
-
-  return (
-    <div className="inline-flex items-center flex-wrap justify-center gap-x-5 gap-y-2 bg-bg-2 border border-line-2 rounded-full px-5 py-2 mb-6">
-      <span className="flex items-center gap-1.5 text-[.72rem] font-bold uppercase tracking-wider text-faint">
-        <span className="w-1.5 h-1.5 bg-mint rounded-full animate-pulse" />
-        Live
-      </span>
-      {stats.map((s) => (
-        <Link key={s.label} to={s.to} className="flex items-baseline gap-1.5 text-[.8rem] hover:opacity-80 transition-opacity">
-          <span className="text-faint font-medium">{s.label}:</span>
-          <span className={`font-bold font-mono ${s.cls}`}>{s.value ?? '···'}</span>
-        </Link>
-      ))}
-    </div>
-  );
-}
 
 const SEARCH_TABS: SearchTab[] = [
   { key: 'ifsc', label: 'IFSC Code', icon: <Building className="w-full h-full" />, placeholder: 'Enter IFSC code, e.g. HDFC0000001', examples: ['HDFC0000001', 'SBIN0000691', 'ICIC0000011'] },
@@ -148,10 +111,6 @@ export default function HomePage() {
             </div>
 
             <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 relative z-[2]">
-              <div className="flex justify-center">
-                <LiveRatesTicker />
-              </div>
-
               <div className="inline-flex items-center gap-2 bg-bg-2 border border-line-2 rounded-full pl-3 pr-4 py-1.5 mb-6">
                 <span className="w-2 h-2 bg-acc rounded-full animate-pulse" />
                 <span className="text-[.8rem] font-semibold text-ink">India's Most Comprehensive Financial Encyclopedia &amp; Directory</span>
