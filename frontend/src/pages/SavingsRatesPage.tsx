@@ -204,8 +204,15 @@ const ACCOUNT_TYPES = [
   { value: 'all',  label: 'All Accounts', Icon: PiggyBank },
   { value: 'zero', label: 'Zero Balance', Icon: Zap       },
 ];
-const BANK_TYPES = ['All', 'Public Sector', 'Private Sector', 'Small Finance Bank', 'Foreign Bank', 'Payments Bank'];
-const SECTOR_ORDER = ['Small Finance Bank', 'Private Sector', 'Public Sector', 'Foreign Bank', 'Payments Bank'];
+// API's bank_type column is a lowercase snake_case enum (public, private, small_finance,
+// foreign, payments, cooperative) — not the display labels shown in the UI. Map between them
+// instead of comparing raw enum values against display strings (which always failed).
+const BANK_TYPE_LABELS: Record<string, string> = {
+  public: 'Public Sector', private: 'Private Sector', small_finance: 'Small Finance Bank',
+  foreign: 'Foreign Bank', payments: 'Payments Bank', cooperative: 'Co-operative Bank',
+};
+const BANK_TYPES = ['All', ...Object.values(BANK_TYPE_LABELS)];
+const SECTOR_ORDER = ['Small Finance Bank', 'Private Sector', 'Public Sector', 'Foreign Bank', 'Payments Bank', 'Co-operative Bank'];
 
 const VS_ROWS = [
   { f: 'Returns',       s: '2.7% – 9%',          fd: '6% – 9.5%',         better: 'fd'  },
@@ -303,7 +310,8 @@ export default function SavingsRatesPage() {
 
   const filtered = useMemo(() => {
     return banks.filter(b => {
-      if (bankTypeFilter !== 'All' && b.bank.bankType !== bankTypeFilter) return false;
+      const sectorLabel = b.bank.bankType ? BANK_TYPE_LABELS[b.bank.bankType] ?? b.bank.bankType : null;
+      if (bankTypeFilter !== 'All' && sectorLabel !== bankTypeFilter) return false;
       if (search && !b.bank.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (accountFilter === 'zero'   && !b.tenures.some(t => isZeroBalance(t))) return false;
       return true;
@@ -313,7 +321,7 @@ export default function SavingsRatesPage() {
   const grouped = useMemo(() => {
     const map = new Map<string, BankRates[]>();
     for (const b of filtered) {
-      const k = b.bank.bankType ?? 'Other';
+      const k = b.bank.bankType ? BANK_TYPE_LABELS[b.bank.bankType] ?? b.bank.bankType : 'Other';
       if (!map.has(k)) map.set(k, []);
       map.get(k)!.push(b);
     }

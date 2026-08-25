@@ -23,7 +23,15 @@ interface BankRates {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-const BANK_TYPES = ['All', 'Public Sector', 'Private Sector', 'Small Finance Bank', 'Foreign Bank', 'Cooperative Bank', 'Regional Rural Bank'];
+// API's bank_type column is a lowercase snake_case enum (public, private, small_finance,
+// foreign, payments, cooperative) — not the display labels shown in the UI. Map between them
+// instead of comparing raw enum values against display strings (which always failed).
+const BANK_TYPE_LABELS: Record<string, string> = {
+  public: 'Public Sector', private: 'Private Sector', small_finance: 'Small Finance Bank',
+  foreign: 'Foreign Bank', payments: 'Payments Bank', cooperative: 'Cooperative Bank',
+};
+const bankTypeLabel = (t: string | null) => t ? BANK_TYPE_LABELS[t] ?? t : 'Bank';
+const BANK_TYPES = ['All', ...Object.values(BANK_TYPE_LABELS)];
 
 function daysSince(iso: string) {
   return Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
@@ -123,7 +131,7 @@ export default function FDRatesPage() {
 
   const filtered = useMemo(() => {
     return banks.filter(b => {
-      if (bankTypeFilter !== 'All' && b.bank.bankType !== bankTypeFilter) return false;
+      if (bankTypeFilter !== 'All' && bankTypeLabel(b.bank.bankType) !== bankTypeFilter) return false;
       if (search && !b.bank.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (tenureFilter !== 'All' && !b.tenures.some(t => t.label === tenureFilter)) return false;
       return true;
@@ -304,7 +312,7 @@ export default function FDRatesPage() {
                   <div key={b.bank.id} className={`bg-surface rounded-2xl border border-line border-t-4 ${c.border} p-5 flex flex-col gap-3 hover:border-acc/30 transition-colors`}>
                     <div>
                       <span className={`text-[10px] font-bold px-2 py-0.5 border rounded-full ${c.badge}`}>{medal[idx]}</span>
-                      <p className="text-[11px] text-faint mt-2 font-semibold uppercase tracking-wide">{b.bank.bankType ?? 'Bank'}</p>
+                      <p className="text-[11px] text-faint mt-2 font-semibold uppercase tracking-wide">{bankTypeLabel(b.bank.bankType)}</p>
                       <div className="flex items-center gap-2 mt-0.5">
                         {b.bank.logoUrl && (
                           <img src={b.bank.logoUrl} alt={b.bank.name} className="w-5 h-5 object-contain rounded flex-shrink-0" />
@@ -376,7 +384,7 @@ export default function FDRatesPage() {
                       <div className="min-w-0">
                         <div className="font-semibold text-ink truncate">{b.bank.name}</div>
                         <div className="text-xs text-faint flex items-center gap-2 flex-wrap">
-                          <span>{b.bank.bankType ?? 'Bank'}</span>
+                          <span>{bankTypeLabel(b.bank.bankType)}</span>
                           <FreshBadge lastVerified={b.lastVerified} />
                         </div>
                       </div>
