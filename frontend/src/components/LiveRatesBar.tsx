@@ -22,8 +22,8 @@ export default function LiveRatesBar() {
   ];
 
   return (
-    <div className="force-dark bg-bg border-b border-line">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-center flex-wrap gap-x-6 gap-y-1 py-1.5 text-[.76rem]">
+    <div className="force-dark bg-bg border-b border-line sticky top-0 z-[1000] h-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-full flex items-center justify-center flex-wrap gap-x-6 gap-y-1 text-[.76rem]">
         <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-faint shrink-0">
           <span className="w-1.5 h-1.5 bg-mint rounded-full animate-pulse" />
           Live Rates
