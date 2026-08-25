@@ -307,42 +307,67 @@ app.get('/sitemap-calculators.xml', (_req, res) => {
   res.send(xml);
 });
 
-// Helper: stream IFSC sitemap for a given alphabetic IFSC range.
+// In-memory cache for generated sitemap XML — these are 10MB+/50k-URL DB streams
+// that took 24s+ to build live, which is why Googlebot logged "Couldn't fetch" on
+// sitemap-ifsc-4.xml. Cache the built string and serve it instantly; refresh in the
+// background once stale instead of blocking the request that triggers the refresh.
+const sitemapCache = new Map<string, { xml: string; builtAt: number }>();
+const SITEMAP_CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6h — IFSC data syncs monthly at most
+
+// Helper: build IFSC sitemap XML for a given alphabetic IFSC range, with caching.
 // Uses WHERE range filter (index range scan, O(result)) instead of OFFSET (O(table)).
 async function streamIfscSitemap(res: any, where: Record<string, any>, label: string) {
-  const { prisma } = require('./lib/prisma');
-  const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
-  const BATCH = 5000; // keeps each query fast + short-lived so it can't hog a DB connection and starve /health
-  try {
+  const cached = sitemapCache.get(label);
+  const isStale = !cached || (Date.now() - cached.builtAt) > SITEMAP_CACHE_TTL_MS;
+
+  if (cached) {
     res.setHeader('Content-Type', 'application/xml');
     res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n');
+    res.send(cached.xml);
+    if (isStale) buildIfscSitemap(where, label).catch((e) => console.error(`Background refresh failed for ${label}:`, e));
+    return;
+  }
 
-    let cursor: string | undefined;
-    for (;;) {
-      const branches = await prisma.branch.findMany({
-        select: { ifsc: true, lastUpdated: true },
-        where: cursor ? { ...where, ifsc: { ...(where.ifsc || {}), gt: cursor } } : where,
-        orderBy: { ifsc: 'asc' },
-        take: BATCH,
-      });
-
-      for (const branch of branches) {
-        const lastmod = branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15';
-        res.write(`  <url>\n    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`);
-      }
-
-      if (branches.length < BATCH) break;
-      cursor = branches[branches.length - 1].ifsc;
-    }
-
-    res.write('</urlset>');
-    res.end();
+  try {
+    const xml = await buildIfscSitemap(where, label);
+    res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(xml);
   } catch (error) {
     console.error(`Error generating ${label}:`, error);
     if (!res.headersSent) res.status(500).send('Error generating sitemap');
     else res.end();
   }
+}
+
+async function buildIfscSitemap(where: Record<string, any>, label: string): Promise<string> {
+  const { prisma } = require('./lib/prisma');
+  const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+  const BATCH = 5000; // keeps each query fast + short-lived so it can't hog a DB connection and starve /health
+
+  const parts: string[] = ['<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'];
+  let cursor: string | undefined;
+  for (;;) {
+    const branches = await prisma.branch.findMany({
+      select: { ifsc: true, lastUpdated: true },
+      where: cursor ? { ...where, ifsc: { ...(where.ifsc || {}), gt: cursor } } : where,
+      orderBy: { ifsc: 'asc' },
+      take: BATCH,
+    });
+
+    for (const branch of branches) {
+      const lastmod = branch.lastUpdated ? branch.lastUpdated.toISOString().split('T')[0] : '2025-01-15';
+      parts.push(`  <url>\n    <loc>${baseUrl}/ifsc/${branch.ifsc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`);
+    }
+
+    if (branches.length < BATCH) break;
+    cursor = branches[branches.length - 1].ifsc;
+  }
+  parts.push('</urlset>');
+
+  const xml = parts.join('');
+  sitemapCache.set(label, { xml, builtAt: Date.now() });
+  return xml;
 }
 
 // IFSC sitemaps split by alphabetic IFSC range — no OFFSET, fast index range scans:
@@ -581,18 +606,25 @@ const server = app.listen(PORT, async () => {
     await Promise.all([
       fetch('/api/states').then(() => console.log('  ✓ States cache warmed')),
       fetch('/api/banks').then(() => console.log('  ✓ Banks cache warmed')),
+      fetch('/sitemap-ifsc-1.xml').then(() => console.log('  ✓ Sitemap ifsc-1 warmed')),
+      fetch('/sitemap-ifsc-2.xml').then(() => console.log('  ✓ Sitemap ifsc-2 warmed')),
+      fetch('/sitemap-ifsc-3.xml').then(() => console.log('  ✓ Sitemap ifsc-3 warmed')),
+      fetch('/sitemap-ifsc-4.xml').then(() => console.log('  ✓ Sitemap ifsc-4 warmed')),
     ])
   } catch {
     console.warn('  ⚠ Cache warm-up failed (non-critical)')
   }
 
-  // Keep Render free tier alive — ping self every 14 minutes
+  // Keep Render free tier alive — ping the PUBLIC url every 14 minutes.
+  // A loopback ping to localhost never reaches Render's edge, so it does not
+  // reset their inactivity timer — must hit the externally-routed URL.
   if (NODE_ENV === 'production') {
-    const http = await import('http')
+    const https = await import('https')
+    const externalUrl = process.env.RENDER_EXTERNAL_URL || 'https://rupeepedia-backend.onrender.com'
     setInterval(() => {
-      http.get(`http://localhost:${PORT}/health`, (res) => res.resume()).on('error', () => {})
+      https.get(`${externalUrl}/health`, (res) => res.resume()).on('error', () => {})
     }, 14 * 60 * 1000)
-    console.log('  ✓ Self-ping active (14 min interval)')
+    console.log(`  ✓ Self-ping active (14 min interval, ${externalUrl})`)
   }
 })
 
