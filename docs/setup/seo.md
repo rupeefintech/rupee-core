@@ -84,10 +84,17 @@ Sitemaps are served by the backend Express server:
 | `/sitemap.xml` | Index pointing to all sub-sitemaps |
 | `/sitemap-static.xml` | Homepage, IFSC finder, about |
 | `/sitemap-calculators.xml` | All 20+ calculator pages |
-| `/sitemap-ifsc-1.xml` | IFSC codes 0–50k |
-| `/sitemap-ifsc-2.xml` | IFSC codes 50k–100k |
-| `/sitemap-ifsc-3.xml` | IFSC codes 100k–150k |
-| `/sitemap-ifsc-4.xml` | IFSC codes 150k+ |
+| `/sitemap-banks.xml` | All `/bank/:slug` pages |
+| `/sitemap-states.xml` | All `/state/:bankSlug/:stateSlug` hub pages (from `bank_state_presence`) |
+| `/sitemap-blogs.xml` | All `/money-guides/:slug` posts |
+| `/sitemap-pin.xml` | All PIN code pages |
+| `/sitemap-credit-cards.xml` | All credit card pages |
+| `/sitemap-ifsc-1.xml` | IFSC A–G |
+| `/sitemap-ifsc-2.xml` | IFSC H–L |
+| `/sitemap-ifsc-3.xml` | IFSC M–R |
+| `/sitemap-ifsc-4.xml` | IFSC S–Z |
+
+Note: `/city/:bankSlug/:stateSlug/:city` pages exist and are bot-rendered but have no sitemap entry (no precomputed bank+state+city list exists yet — would need a new distinct-city query). They're only discoverable via internal links from state pages for now.
 
 - Generated dynamically from DB in `backend/src/index.ts`
 - Sitemap URL referenced in `frontend/public/robots.txt`

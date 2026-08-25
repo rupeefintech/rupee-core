@@ -78,6 +78,7 @@ app.get('/sitemap.xml', async (req, res) => {
   <sitemap><loc>https://rupeepedia.in/sitemap-static.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-calculators.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-banks.xml</loc><lastmod>${today}</lastmod></sitemap>
+  <sitemap><loc>https://rupeepedia.in/sitemap-states.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-blogs.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-1.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-2.xml</loc><lastmod>${today}</lastmod></sitemap>
@@ -386,6 +387,38 @@ app.get('/sitemap-banks.xml', async (_req, res) => {
     res.send(xml);
   } catch (error) {
     console.error('Error generating sitemap-banks:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
+// States sitemap — all /state/:bankSlug/:stateSlug hub pages (bank x state presence)
+app.get('/sitemap-states.xml', async (_req, res) => {
+  try {
+    const { prisma } = require('./lib/prisma');
+    const baseUrl = process.env.FRONTEND_URL || 'https://rupeepedia.in';
+
+    const presences = await prisma.bankStatePresence.findMany({
+      select: { updatedAt: true, bank: { select: { slug: true } }, state: { select: { slug: true } } },
+      where: { bank: { slug: { not: null }, isActive: true }, state: { slug: { not: null } } },
+    });
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    for (const p of presences) {
+      if (!p.bank.slug || !p.state.slug) continue;
+      xml += '  <url>\n';
+      xml += `    <loc>${xmlEscape(`${baseUrl}/state/${p.bank.slug}/${p.state.slug}`)}</loc>\n`;
+      xml += `    <lastmod>${p.updatedAt ? p.updatedAt.toISOString().split('T')[0] : '2025-01-15'}</lastmod>\n`;
+      xml += '    <changefreq>monthly</changefreq>\n';
+      xml += '    <priority>0.6</priority>\n';
+      xml += '  </url>\n';
+    }
+    xml += '</urlset>';
+    res.setHeader('Content-Type', 'application/xml');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(xml);
+  } catch (error) {
+    console.error('Error generating sitemap-states:', error);
     res.status(500).send('Error generating sitemap');
   }
 });
