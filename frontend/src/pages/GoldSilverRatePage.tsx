@@ -46,7 +46,7 @@ function JewelryPriceCalculator({ data, city }: { data: CommodityPrices; city: s
               <button key={p} onClick={() => setPurity(p)}
                 className={`py-1.5 rounded-lg text-xs font-bold border transition-all ${
                   purity === p
-                    ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                    ? 'bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow'
                     : 'bg-bg-2 text-muted border-line hover:border-acc/40'
                 }`}>
                 {p}
@@ -321,7 +321,7 @@ export default function GoldSilverRatePage() {
                   Live City-wise Indian Bullion Rates (24K / 22K / 18K &amp; Silver)
                 </div>
                 <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ink tracking-tight leading-[1.1] mb-4">
-                  Today&apos;s <span className="bg-gradient-to-r from-acc to-cyan bg-clip-text text-transparent">Gold &amp; Silver Rates</span> in India
+                  Today&apos;s <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Gold &amp; Silver Rates</span> in India
                 </h1>
                 <p className="text-body text-sm md:text-base leading-relaxed">
                   Real-time gold prices across {CITIES.length} Indian metros with transparent jewelry making-charge breakdowns, a 3% GST calculator, and BIS Hallmark purity verification.
@@ -383,7 +383,7 @@ export default function GoldSilverRatePage() {
               <button key={p} onClick={() => setPurity(p)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                   purity === p
-                    ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                    ? 'bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow'
                     : 'bg-surface text-muted border-line hover:border-acc/40'
                 }`}>
                 {p} <span className="font-normal opacity-70">{p === '24K' ? '99.9%' : p === '22K' ? '91.6%' : p === '18K' ? '75%' : '58.3%'}</span>
@@ -528,7 +528,7 @@ export default function GoldSilverRatePage() {
               <button key={c} onClick={() => setCity(c)}
                 className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all whitespace-nowrap ${
                   city === c
-                    ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                    ? 'bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow'
                     : 'bg-bg-2 text-muted border-line hover:border-acc/40'
                 }`}>
                 {c}

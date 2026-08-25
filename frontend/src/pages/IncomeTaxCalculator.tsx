@@ -215,7 +215,7 @@ export default function TaxCalculatorPage() {
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                   <div>
                     <h1 className="text-ink text-4xl font-extrabold flex items-center gap-3">
-                      <Calculator className="text-ink w-10 h-10" /> Tax <span className="text-ink">Calculator</span>
+                      <Calculator className="text-ink w-10 h-10" /> Tax <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Calculator</span>
                     </h1>
                     <p className="text-muted mt-3 text-lg max-w-md border-l-2 border-line pl-4">
                       Assessment Year 2026-27 comparison engine.

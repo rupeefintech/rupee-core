@@ -125,7 +125,7 @@ function SwiftBreakdown({ swift }: { swift: string }) {
   const parts = parseSwiftParts(swift);
   return (
     <div className="flex items-stretch rounded-xl overflow-hidden border border-acc/30 w-fit text-center">
-      <div className="bg-gradient-to-br from-acc to-acc-2 text-white px-4 py-2.5">
+      <div className="bg-gradient-to-br from-mint to-acc text-white px-4 py-2.5">
         <p className="ifsc-mono text-lg font-bold tracking-widest">{parts.bankCode}</p>
         <p className="text-[10px] text-white/70 mt-0.5">Bank</p>
       </div>
@@ -423,7 +423,7 @@ export default function SwiftCodePage() {
                     <Globe className="w-6 h-6" />
                   </div>
                   <div>
-                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink leading-tight">SWIFT / BIC Code Lookup</h1>
+                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink leading-tight">SWIFT / BIC Code <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Lookup</span></h1>
                     <p className="text-body mt-1 text-sm">India's most complete SWIFT code directory — 1,000+ banks</p>
                   </div>
                 </div>
@@ -449,7 +449,7 @@ export default function SwiftCodePage() {
                       />
                     </div>
                     <button onClick={doSearch}
-                      className="px-6 py-4 bg-gradient-to-br from-acc to-acc-2 text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all text-sm whitespace-nowrap">
+                      className="px-6 py-4 bg-gradient-to-br from-mint to-acc text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all text-sm whitespace-nowrap">
                       Search
                     </button>
                   </div>

@@ -201,7 +201,7 @@ export default function IFSCFinderPage() {
                     <Shield className="w-3.5 h-3.5" /> RBI Verified Data · Updated Fortnightly
                   </span>
                   <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink mb-3 leading-tight">
-                    IFSC &amp; MICR Code Finder
+                    IFSC &amp; MICR Code <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Finder</span>
                   </h1>
                   <p className="text-muted text-lg max-w-xl mx-auto mb-8">
                     Search 1,78,000+ RBI-verified bank branches by IFSC code, bank name, or branch location
@@ -222,7 +222,7 @@ export default function IFSCFinderPage() {
                     </div>
                     <button
                       onClick={handleQuickSearch}
-                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-sm font-semibold px-6 py-3.5 rounded-xl shadow-acc-glow hover:-translate-y-px transition-all shrink-0"
+                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-br from-mint to-acc text-white text-sm font-semibold px-6 py-3.5 rounded-xl shadow-acc-glow hover:-translate-y-px transition-all shrink-0"
                     >
                       <Search className="w-4 h-4" /> Search
                     </button>
@@ -245,7 +245,7 @@ export default function IFSCFinderPage() {
                           onClick={() => { if (matchedBank) handleBankChange(String(matchedBank.id)); }}
                           className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
                             isSelected
-                              ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                              ? 'bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow'
                               : 'bg-bg-2 text-body border-line-2 hover:border-acc/40'
                           }`}
                         >
@@ -343,7 +343,7 @@ export default function IFSCFinderPage() {
             <button
               onClick={handleSearch}
               disabled={!selectedBranch || searching}
-              className="mt-5 inline-flex items-center gap-2 text-base font-semibold px-[18px] py-[13px] rounded-[13px] bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all disabled:opacity-60 disabled:pointer-events-none"
+              className="mt-5 inline-flex items-center gap-2 text-base font-semibold px-[18px] py-[13px] rounded-[13px] bg-gradient-to-br from-mint to-acc text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all disabled:opacity-60 disabled:pointer-events-none"
             >
               {searching
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> Searching…</>

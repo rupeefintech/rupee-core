@@ -253,7 +253,7 @@ export default function WhyGoldPricesChangePage() {
 
         <div className="bg-gold/10 border border-gold/30 rounded-2xl p-6 text-center">
           <p className="text-ink font-semibold mb-3">Check today's live gold rate — updated every 30 minutes</p>
-          <Link to="/gold-rate-today" className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
+          <Link to="/gold-rate-today" className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
             <TrendingUp className="w-4 h-4" /> View Gold Rate Today →
           </Link>
         </div>

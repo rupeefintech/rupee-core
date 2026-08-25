@@ -16,10 +16,10 @@ function fmtShort(n: number) {
   return '₹' + Math.round(n).toLocaleString('en-IN');
 }
 
-const TAB_META: Record<SIPTab, { title: string; desc: string; h1: string }> = {
-  sip:     { h1: 'SIP Calculator',      title: 'SIP Calculator 2026 — Calculate Monthly SIP Returns | RupeePedia',           desc: 'Free SIP Calculator — calculate SIP returns, see how your monthly investments grow over time.' },
-  lumpsum: { h1: 'Lumpsum Calculator',  title: 'Lumpsum Calculator 2026 — Calculate One-time Investment Returns | RupeePedia', desc: 'Free Lumpsum Calculator — calculate how a one-time investment grows over time at expected returns.' },
-  goal:    { h1: 'Goal SIP Calculator', title: 'Goal SIP Calculator 2026 — Find Monthly SIP Needed for Your Goal | RupeePedia', desc: 'Free Goal SIP Calculator — find the monthly SIP amount needed to reach your financial goal.' },
+const TAB_META: Record<SIPTab, { title: string; desc: string; h1: string; accent: string }> = {
+  sip:     { h1: 'SIP',      accent: 'Calculator', title: 'SIP Calculator 2026 — Calculate Monthly SIP Returns | RupeePedia',           desc: 'Free SIP Calculator — calculate SIP returns, see how your monthly investments grow over time.' },
+  lumpsum: { h1: 'Lumpsum',  accent: 'Calculator', title: 'Lumpsum Calculator 2026 — Calculate One-time Investment Returns | RupeePedia', desc: 'Free Lumpsum Calculator — calculate how a one-time investment grows over time at expected returns.' },
+  goal:    { h1: 'Goal SIP', accent: 'Calculator', title: 'Goal SIP Calculator 2026 — Find Monthly SIP Needed for Your Goal | RupeePedia', desc: 'Free Goal SIP Calculator — find the monthly SIP amount needed to reach your financial goal.' },
 };
 
 export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
@@ -133,7 +133,7 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
           itemListElement: [
             { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://rupeepedia.in' },
             { '@type': 'ListItem', position: 2, name: 'Calculators', item: 'https://rupeepedia.in/calculators' },
-            { '@type': 'ListItem', position: 3, name: meta.h1, item: `https://rupeepedia.in/calculators/${tab === 'sip' ? 'sip' : tab === 'lumpsum' ? 'lumpsum' : 'goal-sip'}` },
+            { '@type': 'ListItem', position: 3, name: `${meta.h1} ${meta.accent}`, item: `https://rupeepedia.in/calculators/${tab === 'sip' ? 'sip' : tab === 'lumpsum' ? 'lumpsum' : 'goal-sip'}` },
           ],
         })}</script>
       </Helmet>
@@ -142,6 +142,7 @@ export default function SIPCalculatorPage({ defaultTab = 'sip' }: Props) {
         <CalculatorHero
           crumb="SIP"
           title={meta.h1}
+          accent={meta.accent}
           subtitle={meta.desc}
         />
 

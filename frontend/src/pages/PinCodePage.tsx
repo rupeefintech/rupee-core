@@ -427,7 +427,7 @@ export default function PinCodePage() {
                 )}
               </div>
               <div className="flex gap-3">
-                <button className="flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white sm:px-5 px-3 py-2.5 rounded-xl text-sm font-semibold shadow-acc-glow transition-all active:scale-95">
+                <button className="flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white sm:px-5 px-3 py-2.5 rounded-xl text-sm font-semibold shadow-acc-glow transition-all active:scale-95">
                   <Share2 className="w-4 h-4" /> <span className="hidden sm:inline">Share</span>
                 </button>
                 <button className="flex items-center justify-center p-2.5 rounded-xl border border-line bg-surface text-acc hover:bg-surface-2 transition-all active:scale-95">
@@ -770,7 +770,7 @@ export default function PinCodePage() {
               <p className="text-sm text-muted mb-4">Search all bank branches by PIN code, city, or bank name.</p>
               <Link
                 to="/ifsc-finder"
-                className="flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors w-full shadow-acc-glow"
+                className="flex items-center justify-center gap-2 bg-gradient-to-br from-mint to-acc text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors w-full shadow-acc-glow"
               >
                 <Search className="w-4 h-4" /> IFSC Finder
               </Link>

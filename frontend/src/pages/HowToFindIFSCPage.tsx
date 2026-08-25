@@ -101,7 +101,7 @@ export default function HowToFindIFSCPage() {
         {/* Method 1 — RupeePedia */}
         <section className="bg-surface rounded-2xl border border-line p-6">
           <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <span className="w-8 h-8 rounded-full bg-gradient-to-br from-acc to-acc-2 text-white flex items-center justify-center font-bold text-sm shrink-0">1</span>
+            <span className="w-8 h-8 rounded-full bg-gradient-to-br from-mint to-acc text-white flex items-center justify-center font-bold text-sm shrink-0">1</span>
             <div className="flex items-center gap-2">
               <Search className="w-5 h-5 text-acc" />
               <h2 className="text-lg font-bold text-ink">Use RupeePedia IFSC Finder (Fastest)</h2>
@@ -123,7 +123,7 @@ export default function HowToFindIFSCPage() {
               </div>
             ))}
           </div>
-          <Link to="/ifsc-finder" className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
+          <Link to="/ifsc-finder" className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
             <Search className="w-4 h-4" /> Open IFSC Finder Now
           </Link>
         </section>
@@ -241,7 +241,7 @@ export default function HowToFindIFSCPage() {
         <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/25 rounded-2xl p-6 text-center">
           <p className="text-ink font-semibold mb-1">Search IFSC codes for 1,78,000+ bank branches instantly</p>
           <p className="text-muted text-sm mb-4">Select bank → state → district → branch — no registration needed</p>
-          <Link to="/ifsc-finder" className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
+          <Link to="/ifsc-finder" className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
             <Search className="w-4 h-4" /> Find My IFSC Code
           </Link>
         </div>

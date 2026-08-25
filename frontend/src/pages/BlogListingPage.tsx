@@ -110,7 +110,7 @@ export default function BlogListingPage() {
               onClick={() => handleCategoryChange(cat)}
               className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 activeCategory === cat
-                  ? 'bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow'
+                  ? 'bg-gradient-to-br from-mint to-acc text-white shadow-acc-glow'
                   : 'bg-surface text-body hover:bg-surface-2 border border-line'
               }`}
             >
@@ -184,7 +184,7 @@ export default function BlogListingPage() {
                     onClick={() => setPage(p)}
                     className={`w-8 h-8 rounded-lg text-sm font-medium transition-all ${
                       page === p
-                        ? 'bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow'
+                        ? 'bg-gradient-to-br from-mint to-acc text-white shadow-acc-glow'
                         : 'text-body hover:bg-surface-2'
                     }`}
                   >

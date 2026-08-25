@@ -314,7 +314,7 @@ export default function SalaryCalculatorPage() {
 
                   <IndianRupee className="w-8 h-8" />
 
-                  Salary Calculator
+                  Salary <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Calculator</span>
 
                 </h1>
 

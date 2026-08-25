@@ -35,7 +35,7 @@ export default function CalculatorHero({ crumb, title, accent, subtitle, icon: I
             </nav>
             <h1 className="font-display text-3xl md:text-4xl font-extrabold flex items-center gap-3 text-ink">
               <Icon className="text-acc w-9 h-9 flex-shrink-0" />
-              <span>{title}{accent ? <> <span className="text-acc">{accent}</span></> : null}</span>
+              <span>{title}{accent ? <> <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">{accent}</span></> : null}</span>
             </h1>
             <p className="text-body mt-3 text-lg max-w-xl border-l-2 border-acc/30 pl-4">{subtitle}</p>
           </div>

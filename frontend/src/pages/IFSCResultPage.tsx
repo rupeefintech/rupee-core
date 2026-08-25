@@ -90,7 +90,7 @@ export default function IFSCResultPage() {
               </button>
               <Link
                 to="/ifsc"
-                className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
+                className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
               >
                 New Search
               </Link>

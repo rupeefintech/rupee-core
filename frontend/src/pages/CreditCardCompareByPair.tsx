@@ -207,7 +207,7 @@ function CardColumn({ card, accent }: { card: CardProduct; accent: string }) {
         )}
         {card.applyUrl && (
           <a href={card.applyUrl} target="_blank" rel="noopener noreferrer sponsored"
-            className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-xl text-xs font-bold shadow-acc-glow transition-all">
+            className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 bg-gradient-to-br from-mint to-acc hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-xl text-xs font-bold shadow-acc-glow transition-all">
             Apply Now <ExternalLink className="w-3 h-3" />
           </a>
         )}

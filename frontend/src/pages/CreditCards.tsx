@@ -298,7 +298,7 @@ const CreditCards: React.FC = () => {
             onClick={() => setCategory("")}
             className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all whitespace-nowrap ${
               !category
-                ? "bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow"
+                ? "bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow"
                 : "bg-surface text-muted border-line hover:border-acc/40"
             }`}
           >
@@ -310,7 +310,7 @@ const CreditCards: React.FC = () => {
               onClick={() => setCategory(category === c.name ? "" : c.name)}
               className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all whitespace-nowrap ${
                 category === c.name
-                  ? "bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow"
+                  ? "bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow"
                   : "bg-surface text-muted border-line hover:border-acc/40"
               }`}
             >
@@ -479,7 +479,7 @@ const CreditCards: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer sponsored"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-semibold px-3 py-1.5 bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-lg shadow-acc-glow transition-all"
+                          className="text-xs font-semibold px-3 py-1.5 bg-gradient-to-br from-mint to-acc hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-lg shadow-acc-glow transition-all"
                         >
                           Apply Now →
                         </a>
@@ -487,7 +487,7 @@ const CreditCards: React.FC = () => {
                         <Link
                           to={`/credit-cards/${card.slug}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-semibold px-3 py-1.5 bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-lg shadow-acc-glow transition-all"
+                          className="text-xs font-semibold px-3 py-1.5 bg-gradient-to-br from-mint to-acc hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-lg shadow-acc-glow transition-all"
                         >
                           View Details →
                         </Link>
@@ -580,7 +580,7 @@ const CreditCards: React.FC = () => {
                 onClick={(e) => { if (compareIds.length < 2) e.preventDefault(); }}
                 className={`flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all ${
                   compareIds.length >= 2
-                    ? "bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg"
+                    ? "bg-gradient-to-br from-mint to-acc text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg"
                     : "bg-surface-2 text-faint cursor-not-allowed border border-line"
                 }`}
               >

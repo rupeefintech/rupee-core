@@ -40,7 +40,7 @@ function IFSCBreakdown({ ifsc }: { ifsc: string }) {
   const branch = ifsc.slice(5);
   return (
     <div className="flex items-stretch rounded-xl overflow-hidden border border-acc/30 w-fit text-center">
-      <div className="bg-gradient-to-br from-acc to-acc-2 text-white px-5 py-3">
+      <div className="bg-gradient-to-br from-mint to-acc text-white px-5 py-3">
         <p className="ifsc-mono text-xl font-bold tracking-widest">{bank}</p>
         <p className="text-xs text-white/70 mt-1">Bank code</p>
       </div>
@@ -266,7 +266,7 @@ export default function IFSCDetailPage() {
               <button onClick={() => refetch()} className="inline-flex items-center gap-2 bg-surface text-ink border border-line-2 hover:bg-surface-2 hover:border-acc font-semibold px-6 py-3 rounded-xl transition-all">
                 <RefreshCw className="w-4 h-4" /> Try Again
               </button>
-              <Link to="/ifsc" className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow transition-all">New Search</Link>
+              <Link to="/ifsc" className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow transition-all">New Search</Link>
             </div>
           </motion.div>
         </div>
@@ -742,7 +742,7 @@ export default function IFSCDetailPage() {
               </div>
               <Link
                 to={`/credit-cards?bank=${encodeURIComponent(branch.bank_name)}`}
-                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-acc-glow transition-colors"
+                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-gradient-to-br from-mint to-acc text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-acc-glow transition-colors"
               >
                 View Cards <ChevronRight className="w-3.5 h-3.5" />
               </Link>
@@ -784,7 +784,7 @@ export default function IFSCDetailPage() {
                 </div>
               </div>
               <Link to="/savings-rates"
-                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-acc-glow transition-colors">
+                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-gradient-to-br from-mint to-acc text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-acc-glow transition-colors">
                 Compare <ChevronRight className="w-3.5 h-3.5" />
               </Link>
             </div>

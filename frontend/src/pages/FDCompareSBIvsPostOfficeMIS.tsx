@@ -182,7 +182,7 @@ export default function FDCompareSBIvsPostOfficeMIS() {
                     <TrendingUp className="w-6 h-6" />
                   </div>
                   <div>
-                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">SBI FD vs Post Office MIS</h1>
+                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">SBI FD vs <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Post Office MIS</span></h1>
                     <p className="text-muted mt-1 text-sm">Fixed Deposit vs Monthly Income Scheme — 2026 comparison</p>
                   </div>
                 </div>

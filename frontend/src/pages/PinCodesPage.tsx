@@ -103,7 +103,7 @@ function ByPinCode() {
           <button
             type="submit"
             disabled={input.length !== 6}
-            className="hidden sm:block absolute right-2 bg-gradient-to-br from-acc to-acc-2 hover:shadow-acc-glow disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all shrink-0"
+            className="hidden sm:block absolute right-2 bg-gradient-to-br from-mint to-acc hover:shadow-acc-glow disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all shrink-0"
           >
             Search
           </button>
@@ -112,7 +112,7 @@ function ByPinCode() {
         <button
           type="submit"
           disabled={input.length !== 6}
-          className="sm:hidden w-full bg-gradient-to-br from-acc to-acc-2 disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
+          className="sm:hidden w-full bg-gradient-to-br from-mint to-acc disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
         >
           Search Now <ArrowRight className="w-4 h-4" />
         </button>
@@ -166,7 +166,7 @@ function ByPostOffice() {
           <button
             type="submit"
             disabled={input.trim().length < 3}
-            className="hidden sm:block absolute right-2 bg-gradient-to-br from-acc to-acc-2 hover:shadow-acc-glow disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all shrink-0"
+            className="hidden sm:block absolute right-2 bg-gradient-to-br from-mint to-acc hover:shadow-acc-glow disabled:opacity-40 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-all shrink-0"
           >
             Search
           </button>
@@ -174,7 +174,7 @@ function ByPostOffice() {
         <button
           type="submit"
           disabled={input.trim().length < 3}
-          className="sm:hidden w-full bg-gradient-to-br from-acc to-acc-2 disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
+          className="sm:hidden w-full bg-gradient-to-br from-mint to-acc disabled:opacity-40 text-white font-semibold py-4 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 active:scale-95"
         >
           Search Now <ArrowRight className="w-4 h-4" />
         </button>
@@ -266,7 +266,7 @@ function ByLocation() {
       {pin && (
         <button
           onClick={() => navigate(`/pin/${pin}`)}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold py-3.5 rounded-xl text-sm transition-all shadow-acc-glow"
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-semibold py-3.5 rounded-xl text-sm transition-all shadow-acc-glow"
         >
           View PIN Code Details <ExternalLink className="w-4 h-4" />
         </button>
@@ -384,7 +384,7 @@ export default function PinCodesPage() {
             <MapPin className="w-3.5 h-3.5" /> India Post PIN Directory
           </div>
           <h1 className="font-display text-2xl md:text-5xl font-extrabold text-ink mb-3 md:mb-4 leading-tight tracking-tight">
-            Find Every PIN Code<br /><span className="bg-gradient-to-r from-acc to-cyan bg-clip-text text-transparent">Across India</span>
+            Find Every PIN Code<br /><span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Across India</span>
           </h1>
           <p className="text-sm md:text-lg text-muted mb-6 md:mb-10 max-w-xl">
             Search post offices, bank branches, and administrative data for any India Post PIN code.
@@ -552,7 +552,7 @@ export default function PinCodesPage() {
           </p>
           <a
             href="/ifsc-finder"
-            className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-acc-glow hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-bold px-8 py-4 rounded-xl transition-all shadow-acc-glow hover:-translate-y-0.5"
           >
             <Search className="w-5 h-5" /> IFSC Code Finder
           </a>

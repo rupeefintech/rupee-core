@@ -49,7 +49,7 @@ export default function BlogDetailPage() {
         <p className="text-muted mb-6">The article you're looking for doesn't exist or has been removed.</p>
         <Link
           to="/money-guides"
-          className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
+          className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
         >
           <ArrowLeft size={16} /> Back to Guides
         </Link>
@@ -236,7 +236,7 @@ export default function BlogDetailPage() {
             {/* Back to guides CTA */}
             <Link
               to="/money-guides"
-              className="flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
+              className="flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
             >
               <ArrowLeft size={14} />
               All Money Guides

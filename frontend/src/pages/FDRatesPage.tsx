@@ -205,7 +205,7 @@ export default function FDRatesPage() {
                     <TrendingUp className="w-6 h-6" />
                   </div>
                   <div>
-                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">Best FD Interest Rates 2026</h1>
+                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">Best FD <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Interest Rates</span> 2026</h1>
                     <p className="text-body mt-1 text-sm">Compare fixed deposit rates across all Indian banks</p>
                   </div>
                 </div>
@@ -474,7 +474,7 @@ export default function FDRatesPage() {
               <p className="text-xs text-faint mt-0.5">Savings accounts up to 9% p.a. — no lock-in, withdraw anytime.</p>
             </div>
             <Link to="/savings-rates"
-              className="flex items-center gap-1 px-3 py-2 bg-gradient-to-br from-acc to-acc-2 text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all whitespace-nowrap text-xs flex-shrink-0">
+              className="flex items-center gap-1 px-3 py-2 bg-gradient-to-br from-mint to-acc text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all whitespace-nowrap text-xs flex-shrink-0">
               Compare <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -487,7 +487,7 @@ export default function FDRatesPage() {
               <p className="text-xs text-faint mt-0.5">Enter principal, rate & tenure — see exact returns with compounding.</p>
             </div>
             <Link to="/calculators/fd"
-              className="flex items-center gap-1 px-3 py-2 bg-gradient-to-br from-acc to-acc-2 text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all whitespace-nowrap text-xs flex-shrink-0">
+              className="flex items-center gap-1 px-3 py-2 bg-gradient-to-br from-mint to-acc text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all whitespace-nowrap text-xs flex-shrink-0">
               Open <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>

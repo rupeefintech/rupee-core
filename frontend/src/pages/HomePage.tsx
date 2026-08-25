@@ -117,7 +117,7 @@ export default function HomePage() {
               </div>
 
               <h1 className="font-display text-4xl md:text-6xl font-bold text-ink leading-[1.08] tracking-tight">
-                Banking Codes, <span className="bg-gradient-to-r from-acc to-cyan bg-clip-text text-transparent">Pincodes</span> &amp;<br className="hidden md:block" /><span className="bg-gradient-to-r from-cyan to-acc bg-clip-text text-transparent">Financial Tools</span>
+                Banking Codes, <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Pincodes</span> &amp;<br className="hidden md:block" /><span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Financial Tools</span>
               </h1>
 
               <p className="text-body mb-2 mt-5 text-lg max-w-2xl mx-auto">

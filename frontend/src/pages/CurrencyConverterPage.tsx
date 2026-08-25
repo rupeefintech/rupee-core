@@ -222,7 +222,7 @@ export default function CurrencyConverterPage() {
                   <ArrowLeftRight className="w-3.5 h-3.5" /> Real-time FX Converter (RBI Reference Benchmarks)
                 </div>
                 <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ink tracking-tight leading-[1.1] mb-3">
-                  Live Foreign Currency Exchange Rates to Indian Rupee (INR)
+                  Live Foreign <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Currency Exchange Rates</span> to Indian Rupee (INR)
                 </h1>
                 <p className="text-body text-sm md:text-base leading-relaxed max-w-2xl">
                   Calculate live conversion rates for {availableForTable.slice(0, 7).join(', ')} with an estimated bank spread and forex-card markup savings.

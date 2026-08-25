@@ -45,7 +45,7 @@ export default function AboutPage() {
                   <span className="text-acc font-semibold">About</span>
                 </nav>
 
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-acc to-acc-2 flex items-center justify-center text-white font-black text-3xl shadow-acc-glow mx-auto mb-6 select-none">₹</div>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint to-acc flex items-center justify-center text-white font-black text-3xl shadow-acc-glow mx-auto mb-6 select-none">₹</div>
                 <h1 className="font-display text-4xl sm:text-5xl font-bold text-ink mb-6 leading-tight">
                   About RupeePedia
                 </h1>

@@ -363,7 +363,7 @@ const profile = getLoanProfile();
                 </p>
                 <Link
                   to={`/loans?amount=${amount}&emi=${Math.round(emi)}&type=${loanType}`}
-                  className="bg-gradient-to-br from-acc to-acc-2 text-white font-bold text-sm rounded-lg py-3 text-center block shadow-acc-glow"
+                  className="bg-gradient-to-br from-mint to-acc text-white font-bold text-sm rounded-lg py-3 text-center block shadow-acc-glow"
                 >
                   Check Best Loan Offers →
                 </Link>

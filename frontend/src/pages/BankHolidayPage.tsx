@@ -181,7 +181,7 @@ export default function BankHolidayPage() {
                 <div className="inline-flex items-center gap-2 bg-acc-deep text-acc text-xs font-bold px-3 py-1.5 rounded-full mb-4 uppercase tracking-wider">
                   <Calendar className="w-3.5 h-3.5" /> RBI Holiday Calendar
                 </div>
-                <h1 className="font-display text-2xl md:text-3xl font-bold text-ink mb-2">Bank Holidays {year} — India</h1>
+                <h1 className="font-display text-2xl md:text-3xl font-bold text-ink mb-2"><span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Bank Holidays</span> {year} — India</h1>
                 <p className="text-body text-sm max-w-lg mx-auto">
                   Complete state-wise bank holiday list as per RBI NI Act circular. {filtered.length} holidays for {state === 'All India' ? 'all states' : state}.
                 </p>
@@ -198,7 +198,7 @@ export default function BankHolidayPage() {
           <div className="flex gap-2">
             {[2025, 2026].map(y => (
               <button key={y} onClick={() => setYear(y)}
-                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${year === y ? 'bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow' : 'bg-surface-2 text-muted hover:bg-surface hover:text-body'}`}>
+                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${year === y ? 'bg-gradient-to-br from-mint to-acc text-white shadow-acc-glow' : 'bg-surface-2 text-muted hover:bg-surface hover:text-body'}`}>
                 {y}
               </button>
             ))}
@@ -381,7 +381,7 @@ export default function BankHolidayPage() {
               </p>
               <Link
                 to="/calculators/fd"
-                className="flex items-center justify-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all w-full"
+                className="flex items-center justify-center gap-2 bg-gradient-to-br from-mint to-acc text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all w-full"
               >
                 <Calendar className="w-3.5 h-3.5" /> FD Calculator →
               </Link>

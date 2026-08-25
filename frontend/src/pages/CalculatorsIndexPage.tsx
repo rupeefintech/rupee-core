@@ -154,7 +154,7 @@ export default function CalculatorsIndexPage() {
                   {totalCalcCount}+ Free Indian Financial Calculators
                 </div>
                 <h1 className="font-display text-3xl md:text-5xl font-extrabold text-ink tracking-tight leading-[1.1] mb-4">
-                  Plan, Calculate &amp; <span className="bg-gradient-to-r from-acc to-cyan bg-clip-text text-transparent">Optimize Every Rupee</span>
+                  Plan, Calculate &amp; <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Optimize Every Rupee</span>
                 </h1>
                 <p className="text-body text-sm md:text-base leading-relaxed max-w-2xl mx-auto mb-6">
                   Verified calculators for Home Loan EMI, SIP wealth projection, Old vs New tax regime, PPF, NPS, and NRI planning — instant results, no signup.
@@ -181,7 +181,7 @@ export default function CalculatorsIndexPage() {
               onClick={() => setActiveCat(null)}
               className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all whitespace-nowrap ${
                 activeCat === null && !q
-                  ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                  ? 'bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow'
                   : 'bg-surface text-muted border-line hover:border-acc/40'
               }`}
             >
@@ -196,7 +196,7 @@ export default function CalculatorsIndexPage() {
                   onClick={() => setActiveCat(active ? null : cat.title)}
                   className={`shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all whitespace-nowrap ${
                     active
-                      ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                      ? 'bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow'
                       : 'bg-surface text-muted border-line hover:border-acc/40'
                   }`}
                 >

@@ -221,7 +221,7 @@ export default function CreditCardCompare() {
                   <td key={c.id} className="p-3 text-center">
                     <Link
                       to={`/credit-cards/${c.slug}`}
-                      className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-xl text-sm font-semibold shadow-acc-glow transition-all"
+                      className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gradient-to-br from-mint to-acc hover:-translate-y-px hover:shadow-acc-glow-lg text-white rounded-xl text-sm font-semibold shadow-acc-glow transition-all"
                     >
                       View Details
                     </Link>

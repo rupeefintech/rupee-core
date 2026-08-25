@@ -223,7 +223,7 @@ export default function WhatIsIFSCPage() {
         {/* CTA */}
         <div className="bg-gradient-to-br from-acc-deep to-surface border border-acc/25 rounded-2xl p-6 text-center">
           <p className="text-ink font-semibold mb-3">Find the IFSC code for any bank branch in India</p>
-          <Link to="/ifsc-finder" className="inline-flex items-center gap-2 bg-gradient-to-br from-acc to-acc-2 text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
+          <Link to="/ifsc-finder" className="inline-flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white font-semibold px-6 py-3 rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
             <Search className="w-4 h-4" /> Open IFSC Finder
           </Link>
         </div>

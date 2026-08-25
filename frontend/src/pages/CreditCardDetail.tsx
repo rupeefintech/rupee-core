@@ -374,7 +374,7 @@ export default function CreditCardDetail() {
                 href={card.applyUrl || `https://www.google.com/search?q=${encodeURIComponent(card.name + " " + card.bank.name + " eligibility")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-acc to-acc-2 hover:-translate-y-px hover:shadow-acc-glow-lg rounded-xl shadow-acc-glow transition-all"
+                className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-mint to-acc hover:-translate-y-px hover:shadow-acc-glow-lg rounded-xl shadow-acc-glow transition-all"
               >
                 Check on {card.bank.name}
                 <ExternalLink size={13} />

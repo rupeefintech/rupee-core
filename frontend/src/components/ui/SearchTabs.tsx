@@ -63,7 +63,7 @@ export function SearchTabs({
         </label>
         <button
           onClick={onSubmit}
-          className="px-[22px] py-[15px] rounded-[13px] text-[1rem] font-semibold bg-gradient-to-br from-acc to-acc-2 text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
+          className="px-[22px] py-[15px] rounded-[13px] text-[1rem] font-semibold bg-gradient-to-br from-mint to-acc text-white shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all"
         >
           Search
         </button>

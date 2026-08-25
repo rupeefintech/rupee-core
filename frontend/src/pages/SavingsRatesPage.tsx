@@ -381,7 +381,7 @@ export default function SavingsRatesPage() {
                     <PiggyBank className="w-6 h-6" />
                   </div>
                   <div>
-                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">Best Savings Account Interest Rates 2026</h1>
+                    <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">Best Savings Account <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Interest Rates</span> 2026</h1>
                     <p className="text-body mt-1 text-sm">Compare savings account rates across all Indian banks</p>
                   </div>
                 </div>
@@ -422,7 +422,7 @@ export default function SavingsRatesPage() {
               <button key={f.value} onClick={() => setAccountFilter(f.value)}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border whitespace-nowrap transition-all flex-shrink-0 ${
                   active
-                    ? 'bg-gradient-to-br from-acc to-acc-2 text-white border-transparent shadow-acc-glow'
+                    ? 'bg-gradient-to-br from-mint to-acc text-white border-transparent shadow-acc-glow'
                     : 'bg-surface text-muted border-line hover:border-acc/40 hover:text-acc'
                 }`}>
                 <Icon className="w-3.5 h-3.5" />
@@ -752,7 +752,7 @@ export default function SavingsRatesPage() {
             <p className="text-xs text-faint mt-0.5">Fixed Deposits offer up to 9.5% p.a. — rate is locked in at booking, no market risk.</p>
           </div>
           <Link to="/fd-rates"
-            className="flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-br from-acc to-acc-2 text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all whitespace-nowrap text-sm flex-shrink-0">
+            className="flex items-center gap-1.5 px-4 py-2.5 bg-gradient-to-br from-mint to-acc text-white font-bold rounded-xl shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all whitespace-nowrap text-sm flex-shrink-0">
             Compare FD Rates <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -803,7 +803,7 @@ export default function SavingsRatesPage() {
           <div className="divide-y divide-line">
             {OPEN_STEPS.map((step, i) => (
               <div key={i} className="px-6 py-5 flex items-start gap-5">
-                <div className="w-9 h-9 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-extrabold rounded-full flex items-center justify-center flex-shrink-0 shadow-acc-glow">
+                <div className="w-9 h-9 bg-gradient-to-br from-mint to-acc text-white text-xs font-extrabold rounded-full flex items-center justify-center flex-shrink-0 shadow-acc-glow">
                   {step.n}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -822,7 +822,7 @@ export default function SavingsRatesPage() {
         <div className="bg-surface rounded-2xl border border-line overflow-hidden">
           <div className="px-5 py-4 border-b border-line flex items-center justify-between">
             <h2 className="font-bold text-ink">Savings Account vs Fixed Deposit</h2>
-            <Link to="/fd-rates" className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-br from-acc to-acc-2 text-white text-xs font-bold rounded-lg shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
+            <Link to="/fd-rates" className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-br from-mint to-acc text-white text-xs font-bold rounded-lg shadow-acc-glow hover:-translate-y-px hover:shadow-acc-glow-lg transition-all">
             Compare FD Rates <ChevronRight className="w-3.5 h-3.5" />
           </Link>
           </div>
