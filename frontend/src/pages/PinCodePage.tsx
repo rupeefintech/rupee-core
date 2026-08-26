@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import {
   MapPin, Building2, ChevronRight, Search,
   ArrowLeft, AlertCircle, ChevronDown, ChevronUp,
-  Hash, Info, Share2, Bookmark,
+  Hash, Info, Share2, Bookmark, BookmarkCheck,
 } from 'lucide-react';
 import { api, PinDetail, PostOfficeEntry, PinBranch } from '../utils/api';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -247,10 +248,48 @@ function MobileBankRow({ b }: { b: PinBranch }) {
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
+const BOOKMARKS_KEY = 'rupee_bookmarked_pins';
+
+function getBookmarkedPins(): string[] {
+  try { return JSON.parse(localStorage.getItem(BOOKMARKS_KEY) ?? '[]'); } catch { return []; }
+}
+
 export default function PinCodePage() {
   const { pincode } = useParams<{ pincode: string }>();
   const [bankFilter, setBankFilter] = useState('');
   const [showAllBanks, setShowAllBanks] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  useEffect(() => {
+    if (pincode) setIsBookmarked(getBookmarkedPins().includes(pincode));
+  }, [pincode]);
+
+  function handleBookmarkToggle() {
+    if (!pincode) return;
+    const current = getBookmarkedPins();
+    const next = isBookmarked ? current.filter(p => p !== pincode) : [...current, pincode];
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(next));
+    setIsBookmarked(!isBookmarked);
+    toast.success(isBookmarked ? `Removed PIN ${pincode} from saved` : `Saved PIN ${pincode}`);
+  }
+
+  async function handleShare(shareUrl: string, shareTitle: string) {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shareTitle, url: shareUrl });
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') fallbackCopy(shareUrl);
+      }
+    } else {
+      fallbackCopy(shareUrl);
+    }
+  }
+
+  function fallbackCopy(url: string) {
+    navigator.clipboard.writeText(url)
+      .then(() => toast.success('Link copied to clipboard'))
+      .catch(() => toast.error('Could not copy link'));
+  }
 
   const { data, isLoading, isError } = useQuery<PinDetail>({
     queryKey:  ['pin', pincode],
@@ -427,11 +466,15 @@ export default function PinCodePage() {
                 )}
               </div>
               <div className="flex gap-3">
-                <button className="flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white sm:px-5 px-3 py-2.5 rounded-xl text-sm font-semibold shadow-acc-glow transition-all active:scale-95">
+                <button onClick={() => handleShare(canonicalUrl, pageTitle)}
+                  className="flex items-center gap-2 bg-gradient-to-br from-mint to-acc text-white sm:px-5 px-3 py-2.5 rounded-xl text-sm font-semibold shadow-acc-glow transition-all active:scale-95">
                   <Share2 className="w-4 h-4" /> <span className="hidden sm:inline">Share</span>
                 </button>
-                <button className="flex items-center justify-center p-2.5 rounded-xl border border-line bg-surface text-acc hover:bg-surface-2 transition-all active:scale-95">
-                  <Bookmark className="w-4 h-4" />
+                <button onClick={handleBookmarkToggle}
+                  title={isBookmarked ? 'Remove from saved' : 'Save this PIN code'}
+                  className={`flex items-center justify-center p-2.5 rounded-xl border transition-all active:scale-95 ${
+                    isBookmarked ? 'border-acc bg-acc-deep text-acc' : 'border-line bg-surface text-acc hover:bg-surface-2'}`}>
+                  {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
                 </button>
               </div>
             </div>
