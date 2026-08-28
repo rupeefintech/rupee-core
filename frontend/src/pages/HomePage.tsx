@@ -74,11 +74,11 @@ export default function HomePage() {
   return (
     <div className="bg-bg">
       <Helmet>
-        <title>RupeePedia — IFSC Codes, Credit Cards, EMI &amp; SIP Calculators India</title>
-        <meta name="description" content="Find IFSC codes for 178,000+ bank branches, compare credit cards, use free EMI/SIP/FD/tax calculators, and read money guides. India's most comprehensive financial toolkit." />
+        <title>RupeePedia — IFSC &amp; PIN Codes, Rates, Cards, EMI India</title>
+        <meta name="description" content="Find IFSC &amp; PIN codes for 178,000+ bank branches, compare FD/savings rates, credit cards &amp; live gold rates, plus 30+ free calculators." />
         <link rel="canonical" href="https://rupeepedia.in/" />
-        <meta property="og:title"       content="RupeePedia — IFSC Codes, Credit Cards &amp; Financial Calculators India" />
-        <meta property="og:description" content="Find IFSC codes for 178,000+ bank branches, compare credit cards, use free EMI/SIP/FD/tax calculators, and read money guides." />
+        <meta property="og:title"       content="RupeePedia — IFSC &amp; PIN Codes, Rates, Cards, EMI India" />
+        <meta property="og:description" content="Find IFSC &amp; PIN codes for 178,000+ bank branches, compare FD/savings rates, credit cards &amp; live gold rates, plus 30+ free calculators." />
         <meta property="og:url"         content="https://rupeepedia.in/" />
         <meta property="og:type"        content="website" />
         <meta name="twitter:card"       content="summary" />
@@ -176,6 +176,33 @@ export default function HomePage() {
                 </Card>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT / SEO CONTENT ── */}
+      <section className="py-14 border-t border-line">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <h2 className="font-display text-2xl font-bold text-ink mb-4 tracking-tight">India's banking &amp; money toolkit, in one place</h2>
+          <div className="space-y-4 text-[.95rem] text-muted leading-relaxed">
+            <p>
+              RupeePedia started as an IFSC code finder and grew into a full personal-finance toolkit.
+              Look up the IFSC code or PIN code for any of 178,000+ bank branches across India, drill
+              down from bank to state to city, and get NEFT/RTGS/IMPS/UPI support details for every branch —
+              all pulled from RBI-published data.
+            </p>
+            <p>
+              Beyond codes, compare FD and savings account rates across banks and small finance banks,
+              check today's gold and silver rates by city, and browse 50+ credit cards side by side on
+              annual fee, rewards and cashback before you apply. Every comparison table updates from
+              live rate data, not stale screenshots.
+            </p>
+            <p>
+              For planning, RupeePedia's calculator suite covers SIP, EMI, CAGR, XIRR, SWP, income tax
+              and NRI/RNOR residency status — 30+ calculators in total, each with instant results and no
+              signup. Whether you're transferring money, opening a fixed deposit, or planning a SIP,
+              it's built to answer the question in one search.
+            </p>
           </div>
         </div>
       </section>
