@@ -26,6 +26,7 @@
     { "src": "^/sitemap-ifsc-2.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-2.xml" },
     { "src": "^/sitemap-ifsc-3.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-3.xml" },
     { "src": "^/sitemap-ifsc-4.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-4.xml" },
+    { "src": "^/sitemap-ifsc-5.xml$", "dest": "https://api.rupeepedia.in/sitemap-ifsc-5.xml" },
     { "src": "^/sitemap-banks.xml$", "dest": "https://api.rupeepedia.in/sitemap-banks.xml" },
     { "src": "^/sitemap-states.xml$", "dest": "https://api.rupeepedia.in/sitemap-states.xml" },
     { "src": "^/sitemap-blogs.xml$", "dest": "https://api.rupeepedia.in/sitemap-blogs.xml" },

@@ -113,15 +113,15 @@ export default function HomePage() {
             <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 relative z-[2]">
               <div className="inline-flex items-center gap-2 bg-bg-2 border border-line-2 rounded-full pl-3 pr-4 py-1.5 mb-6">
                 <span className="w-2 h-2 bg-acc rounded-full animate-pulse" />
-                <span className="text-[.8rem] font-semibold text-ink">India's Most Comprehensive Financial Encyclopedia &amp; Directory</span>
+                <span className="text-[.8rem] font-semibold text-ink">Free. No sign-up. No paywall.</span>
               </div>
 
               <h1 className="font-display text-4xl md:text-6xl font-bold text-ink leading-[1.08] tracking-tight">
-                Banking Codes, <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Pincodes</span> &amp;<br className="hidden md:block" /><span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Financial Tools</span>
+                India's <span className="bg-gradient-to-r from-mint to-acc bg-clip-text text-transparent">Banking &amp; Personal Finance</span> Toolkit
               </h1>
 
               <p className="text-body mb-2 mt-5 text-lg max-w-2xl mx-auto">
-                Instant RBI-verified IFSC lookup, 19,300+ India Post PIN codes, 30+ free financial calculators, and credit card comparisons with live offers.
+                Find IFSC &amp; PIN codes, calculate SIP/EMI/tax, compare credit cards &amp; FD rates — one place, 178,000+ branches, 30+ calculators, no ads getting in the way.
               </p>
 
               <SearchTabs
@@ -140,6 +140,7 @@ export default function HomePage() {
                   { label: 'Pincodes',         to: '/pin-codes' },
                   { label: 'Home Loan EMI',    to: '/calculators/home-loan-emi' },
                   { label: 'SIP Planner',      to: '/calculators/sip' },
+                  { label: 'Bank Holidays',    to: '/bank-holidays' },
                   { label: 'Lifetime Free Cards', to: '/credit-cards?category=Lifetime Free' },
                 ].map(item => (
                   <Link key={item.to} to={item.to}

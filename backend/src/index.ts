@@ -69,7 +69,7 @@ app.get("/ping", (req, res) => res.send("pong"))
 // ════════════════════════════════════════════════════════════════════════════
 
 // Sitemap Index (master sitemap pointing to sub-sitemaps)
-// Handles up to 150k+ IFSC codes split into 3 files
+// Handles up to 180k+ IFSC codes split into 5 files (each under the 50k/sitemap cap)
 app.get('/sitemap.xml', async (req, res) => {
   const today = new Date().toISOString().split('T')[0];
   res.set('Content-Type', 'application/xml');
@@ -84,6 +84,7 @@ app.get('/sitemap.xml', async (req, res) => {
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-2.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-3.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-4.xml</loc><lastmod>${today}</lastmod></sitemap>
+  <sitemap><loc>https://rupeepedia.in/sitemap-ifsc-5.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-pin.xml</loc><lastmod>${today}</lastmod></sitemap>
   <sitemap><loc>https://rupeepedia.in/sitemap-credit-cards.xml</loc><lastmod>${today}</lastmod></sitemap>
 </sitemapindex>`);
@@ -370,15 +371,20 @@ async function buildIfscSitemap(where: Record<string, any>, label: string): Prom
   return xml;
 }
 
-// IFSC sitemaps split by alphabetic IFSC range — no OFFSET, fast index range scans:
+// IFSC sitemaps split by alphabetic IFSC range — no OFFSET, fast index range scans.
+// S–Z used to be one shard but SBIN (S, ~29k) + UTIB/Axis (U, ~23k) alone total 58,733
+// URLs — over the 50,000/sitemap protocol cap, which is why GSC reported "Too many
+// URLs" / "Sitemap could not be read" on sitemap-ifsc-4.xml. Split that range in two:
 //   Part 1: A–G  (ABHY … GSFS  ~A-G bank codes)
 //   Part 2: H–L  (HDFC … LVCB)
 //   Part 3: M–R  (MAHB … RATN, includes PUNB/PNB)
-//   Part 4: S–Z  (SBIN/SBI + remaining)
+//   Part 4: S–U  (SBIN/SBI, ~32k)
+//   Part 5: U–Z  (UTIB/Axis + remaining, ~27k)
 app.get('/sitemap-ifsc-1.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { lt: 'H' } }, 'sitemap-ifsc-1'));
 app.get('/sitemap-ifsc-2.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'H', lt: 'M' } }, 'sitemap-ifsc-2'));
 app.get('/sitemap-ifsc-3.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'M', lt: 'S' } }, 'sitemap-ifsc-3'));
-app.get('/sitemap-ifsc-4.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'S' } }, 'sitemap-ifsc-4'));
+app.get('/sitemap-ifsc-4.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'S', lt: 'U' } }, 'sitemap-ifsc-4'));
+app.get('/sitemap-ifsc-5.xml', (_req, res) => streamIfscSitemap(res, { ifsc: { gte: 'U' } }, 'sitemap-ifsc-5'));
 
 const xmlEscape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 // encodeURIComponent leaves ' ( ) * ! unescaped per spec — bank/state slugs like
@@ -613,6 +619,7 @@ const server = app.listen(PORT, async () => {
       fetch('/sitemap-ifsc-2.xml').then(() => console.log('  ✓ Sitemap ifsc-2 warmed')),
       fetch('/sitemap-ifsc-3.xml').then(() => console.log('  ✓ Sitemap ifsc-3 warmed')),
       fetch('/sitemap-ifsc-4.xml').then(() => console.log('  ✓ Sitemap ifsc-4 warmed')),
+      fetch('/sitemap-ifsc-5.xml').then(() => console.log('  ✓ Sitemap ifsc-5 warmed')),
     ])
   } catch {
     console.warn('  ⚠ Cache warm-up failed (non-critical)')

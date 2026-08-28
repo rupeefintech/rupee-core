@@ -451,7 +451,7 @@ ${head(title, desc, canonical, [placeLd, breadcrumbLd])}
     <p>
       PIN code <strong>${esc(pin)}</strong> serves <strong>${esc(locality)}</strong> with
       ${stats.post_office_count || offices.length} post office${(stats.post_office_count || offices.length) === 1 ? '' : 's'}
-      (${stats.delivery_offices || 0} delivery)${stats.branch_count ? ` and ${stats.branch_count} bank branches from ${stats.bank_count} banks` : ''}.
+      (${stats.delivery_offices || 0} delivery)${stats.branch_count ? ` and ${stats.branch_count} bank branch${stats.branch_count === 1 ? '' : 'es'} from ${stats.bank_count} bank${stats.bank_count === 1 ? '' : 's'}` : ''}.
       Use this postal code (zip code) for addressing mail, courier deliveries and online forms for ${esc(district || state)}.
     </p>
 
